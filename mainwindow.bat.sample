@@ -1,0 +1,12 @@
+set OSGEO4W_ROOT=C:\Program Files (x86)\LUMENS
+set GDAL_DATA=%OSGEO4W_ROOT%\share\epsg_csv
+set QGIS_PREFIX=%OSGEO4W_ROOT%\apps\qgis
+set RPATH=C:\Program Files\R\R-3.2.0
+set PATH=%OSGEO4W_ROOT%\bin;%QGIS_PREFIX%\bin;%RPATH%\bin;%PATH%
+set PYTHONHOME=%OSGEO4W_ROOT%\apps\Python27
+set PYTHONPATH=%QGIS_PREFIX%\python;%QGIS_PREFIX%\python\plugins;%OSGEO4W_ROOT%\apps\Python27;%PYTHONPATH%
+set RLIBS=C:\Users\ANugraha\Documents\R\win-library\3.2
+set RSCRIPTS=%QGIS_PREFIX%\python\plugins\processing\r\scripts
+
+python mainwindow.py
+PAUSE

@@ -1,0 +1,42 @@
+<RCC>
+    <qresource prefix="/">
+        <file>ui/icons/iconActionAdd.png</file>
+        <file>ui/icons/iconActionDelete.png</file>
+        <file>ui/icons/iconActionZoomIn.png</file>
+        <file>ui/icons/iconActionZoomOut.png</file>
+        <file>ui/icons/iconActionPan.png</file>
+        <file>ui/icons/iconActionSelect.png</file>
+        <file>ui/icons/iconActionInfo.png</file>
+        <file>ui/icons/iconActionRefresh.png</file>
+        <file>ui/icons/iconActionZoomFull.png</file>
+        <file>ui/icons/iconActionZoomLayer.png</file>
+        <file>ui/icons/iconActionZoomSelected.png</file>
+        <file>ui/icons/iconActionPanSelected.png</file>
+        <file>ui/icons/iconActionZoomLast.png</file>
+        <file>ui/icons/iconActionZoomNext.png</file>
+        <file>ui/icons/iconActionHelp.png</file>
+        <file>ui/icons/iconActionLayerAttributeTable.png</file>
+        <file>ui/icons/iconActionLayerProperties.png</file>
+        <file>ui/icons/iconActionFeatureSelectExpression.png</file>
+        <file>ui/icons/iconActionToggleEdit.png</file>
+        <file>ui/icons/iconActionClear.png</file>
+        <file>ui/icons/iconActionDialogLumensDefault.png</file>
+        <file>ui/icons/iconActionDialogCreateLumensDatabase.png</file>
+        <file>ui/icons/iconActionLumensOpenDatabase.png</file>
+        <file>ui/icons/iconActionLumensCloseDatabase.png</file>
+        <file>ui/icons/iconActionLumensDatabaseStatus.png</file>
+        <file>ui/icons/iconActionDialogLumensAddData.png</file>
+        <file>ui/icons/iconActionLumensDeleteData.png</file>
+        <file>ui/icons/iconActionConfigure.png</file>
+        <file>ui/icons/iconSubtabPreQUES.png</file>
+        <file>ui/icons/iconSubtabQUESB.png</file>
+        <file>ui/icons/iconSubtabQUESC.png</file>
+        <file>ui/icons/iconSubtabQUESH.png</file>
+        <file>ui/icons/iconSubtabReconcileAHP.png</file>
+        <file>ui/icons/iconSubtabReconcileReference.png</file>
+        <file>ui/icons/iconActionDialogLumensSCIENDO.png</file>
+        <file>ui/icons/iconActionDialogLumensTA.png</file>
+        <file>ui/icons/iconActionDialogLumensPUR.png</file>
+        <file>ui/icons/iconActionDialogLumensQUES.png</file>
+    </qresource>
+</RCC>
