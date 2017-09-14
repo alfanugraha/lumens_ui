@@ -1,2 +1,2 @@
-# lumens_ui
-LUMENS User Interface
+# LUMENS User Interface
+Python repository for LUMENS User Interface
