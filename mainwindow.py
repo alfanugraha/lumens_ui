@@ -506,7 +506,6 @@ class MainWindow(QtGui.QMainWindow):
         
         # App action handlers
         self.actionQuit.triggered.connect(self.close)
-        self.actionToggleSidebar.triggered.connect(self.handlerToggleSidebar)
         self.actionToggleToolbar.triggered.connect(self.handlerToggleToolbar)
         self.actionToggleDialogToolbar.triggered.connect(self.handlerToggleDialogToolbar)
         self.actionZoomIn.triggered.connect(self.handlerZoomIn)
@@ -674,10 +673,6 @@ class MainWindow(QtGui.QMainWindow):
         self.actionQuit = QtGui.QAction('Quit', self)
         self.actionQuit.setShortcut(QtGui.QKeySequence.Quit)
         
-        self.actionToggleSidebar = QtGui.QAction('Dashboard', self) # Formerly 'Sidebar'
-        self.actionToggleSidebar.setCheckable(True)
-        self.actionToggleSidebar.setChecked(True)
-        
         self.actionToggleDialogToolbar = QtGui.QAction('Top Toolbar', self)
         self.actionToggleDialogToolbar.setCheckable(True)
         self.actionToggleDialogToolbar.setChecked(True)
@@ -771,20 +766,6 @@ class MainWindow(QtGui.QMainWindow):
         self.fileMenu.addAction(self.actionQuit)
         
         self.addAction(self.actionToggleMenubar)
-        self.viewMenu.addAction(self.actionToggleMenubar)
-        self.viewMenu.addAction(self.actionToggleSidebar)
-        self.viewMenu.addAction(self.actionToggleDialogToolbar)
-        self.viewMenu.addAction(self.actionToggleToolbar)
-        self.viewMenu.addSeparator()
-        self.viewMenu.addAction(self.actionZoomIn)
-        self.viewMenu.addAction(self.actionZoomOut)
-        self.viewMenu.addAction(self.actionPanSelected)
-        self.viewMenu.addAction(self.actionZoomFull)
-        self.viewMenu.addAction(self.actionZoomLayer)
-        self.viewMenu.addAction(self.actionZoomSelected)
-        self.viewMenu.addAction(self.actionZoomLast)
-        self.viewMenu.addAction(self.actionZoomNext)
-        self.viewMenu.addAction(self.actionRefresh)
         
         self.modeMenu.addAction(self.actionPan)
         self.modeMenu.addAction(self.actionSelect)
@@ -1797,6 +1778,23 @@ class MainWindow(QtGui.QMainWindow):
         self.sidebarDockWidget.setStyleSheet('QDockWidget { background-color: #222; } QToolBar { border: none; }') # Remove border for all child QToolBar in sidebar
         self.sidebarDockWidget.setFloating(True)
         self.sidebarDockWidget.setMinimumHeight(520)
+        self.sidebarDockWidgetAction = self.sidebarDockWidget.toggleViewAction()
+        
+        # Add view menu
+        self.viewMenu.addAction(self.actionToggleMenubar)
+        self.viewMenu.addAction(self.sidebarDockWidgetAction)
+        self.viewMenu.addAction(self.actionToggleDialogToolbar)
+        self.viewMenu.addAction(self.actionToggleToolbar)
+        self.viewMenu.addSeparator()
+        self.viewMenu.addAction(self.actionZoomIn)
+        self.viewMenu.addAction(self.actionZoomOut)
+        self.viewMenu.addAction(self.actionPanSelected)
+        self.viewMenu.addAction(self.actionZoomFull)
+        self.viewMenu.addAction(self.actionZoomLayer)
+        self.viewMenu.addAction(self.actionZoomSelected)
+        self.viewMenu.addAction(self.actionZoomLast)
+        self.viewMenu.addAction(self.actionZoomNext)
+        self.viewMenu.addAction(self.actionRefresh)        
         
         # LayoutBody holds the map canvas widget
         self.layoutBody = QtGui.QHBoxLayout()
@@ -2681,7 +2679,7 @@ class MainWindow(QtGui.QMainWindow):
         """
         self.contextMenu = QtGui.QMenu()
         self.contextMenu.addAction(self.actionToggleMenubar)
-        self.contextMenu.addAction(self.actionToggleSidebar)
+        self.contextMenu.addAction(self.sidebarDockWidgetAction)
         self.contextMenu.addAction(self.actionToggleDialogToolbar)
         self.contextMenu.addAction(self.actionToggleToolbar)
         
@@ -3310,15 +3308,6 @@ class MainWindow(QtGui.QMainWindow):
             __version__, platform.python_version(),
             QtCore.QT_VERSION_STR, QtCore.PYQT_VERSION_STR,
             platform.system()))
-    
-    
-    def handlerToggleSidebar(self):
-        """Slot method for toggling the sidebar visibility.
-        """
-        if not self.actionToggleSidebar.isChecked():
-            self.sidebarDockWidget.setVisible(False)
-        else:
-            self.sidebarDockWidget.setVisible(True)
     
     
     def handlerToggleMenuBar(self):
