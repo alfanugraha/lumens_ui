@@ -647,7 +647,8 @@ class MainWindow(QtGui.QMainWindow):
         self.toolBar.setStyleSheet('QToolBar { background-color: #222; }')
         self.addToolBar(QtCore.Qt.LeftToolBarArea, self.toolBar)
         self.toolBar.setOrientation(QtCore.Qt.Vertical)
-        self.toolBar.setAllowedAreas(QtCore.Qt.NoToolBarArea)
+        self.toolBar.setFloatable(False)
+        self.toolBar.setAllowedAreas(QtCore.Qt.LeftToolBarArea)
         self.toolBar.setFixedWidth(40)
         self.toolBar.setFixedHeight(570)
         
@@ -1866,12 +1867,9 @@ class MainWindow(QtGui.QMainWindow):
         """
         parentPosition = self.mapToGlobal(QtCore.QPoint(0, 0))
         
-        self.toolBar.setWindowFlags(QtCore.Qt.Tool|QtCore.Qt.FramelessWindowHint|QtCore.Qt.X11BypassWindowManagerHint)
-        
         yMargin = 100
         
         # Near top left
-        self.toolBar.move(parentPosition.x() + 20, parentPosition.y() + yMargin)
         self.toolBar.adjustSize()
         self.toolBar.show()
         
