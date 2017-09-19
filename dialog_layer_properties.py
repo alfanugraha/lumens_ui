@@ -43,8 +43,6 @@ class DialogLayerProperties(QtGui.QDialog):
         
         self.loadLayerSettings()
         
-        self.comboBoxStyleType.currentIndexChanged.connect(self.handlerChangeStyleType)
-        self.handlerChangeStyleType(0)
         self.buttonAddStyleCategorized.clicked.connect(self.handlerAddStyleCategorized)
         self.buttonAddStyleGraduated.clicked.connect(self.handlerAddStyleGraduated)
         self.buttonAddStyleRuleBased.clicked.connect(self.handlerAddStyleRuleBased)
@@ -64,6 +62,7 @@ class DialogLayerProperties(QtGui.QDialog):
         self.buttonLabelColor.clicked.connect(self.handlerSelectLabelColor)
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
+        self.buttonApply.clicked.connect(self.applyStyle)
     
     
     def setupUi(self, parent):
@@ -83,11 +82,7 @@ class DialogLayerProperties(QtGui.QDialog):
         self.layoutLayerStyle = QtGui.QVBoxLayout()
         self.layoutGroupBoxLayerStyle.addLayout(self.layoutLayerStyleInfo)
         
-        styleTypes = ['Single', 'Categorized', 'Graduated', 'Rule-based']
-        self.comboBoxStyleType = QtGui.QComboBox()
-        self.comboBoxStyleType.addItems(styleTypes)
-        
-        self.layoutGroupBoxLayerStyle.addWidget(self.comboBoxStyleType)
+        # styleTypes = ['Single', 'Categorized', 'Graduated', 'Rule-based']
         self.layoutGroupBoxLayerStyle.addLayout(self.layoutLayerStyle)
         
         self.groupBoxLayerTransparency = QtGui.QGroupBox('Transparency')
@@ -411,11 +406,17 @@ class DialogLayerProperties(QtGui.QDialog):
         self.buttonLabelColor.setStyleSheet('background-color: {0};'.format(self.labelColor.name()))
         self.layoutLayerLabel.addWidget(self.buttonLabelColor, 3, 1)
         
+        self.layoutButtonBox = QtGui.QHBoxLayout()
+        self.layoutButtonBox.setAlignment(QtCore.Qt.AlignRight)
         self.buttonBox = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok|QtGui.QDialogButtonBox.Cancel)
+        self.buttonApply = QtGui.QPushButton()
+        self.buttonApply.setText('Apply')
+        self.layoutButtonBox.addWidget(self.buttonBox)
+        self.layoutButtonBox.addWidget(self.buttonApply)
         
         self.dialogLayout.addWidget(self.groupBoxLayerStyle)
         self.dialogLayout.addWidget(self.groupBoxLayerLabel)
-        self.dialogLayout.addWidget(self.buttonBox)
+        self.dialogLayout.addLayout(self.layoutButtonBox)
         
         self.setLayout(self.dialogLayout)
         self.setWindowTitle(self.dialogTitle)
@@ -484,7 +485,6 @@ class DialogLayerProperties(QtGui.QDialog):
                 self.buttonStyleCategorizedFillColor.setStyleSheet('background-color: {0};'.format(self.styleCategorizedColor.name()))
             attribute = renderer.classAttribute()
             self.comboBoxStyleCategorizedAttribute.setCurrentIndex(self.comboBoxStyleCategorizedAttribute.findText(attribute))
-            self.comboBoxStyleType.setCurrentIndex(self.comboBoxStyleType.findText('Categorized'))
         elif isinstance(renderer, QgsGraduatedSymbolRendererV2):
             ranges = renderer.ranges()
             for range in ranges:
@@ -497,7 +497,6 @@ class DialogLayerProperties(QtGui.QDialog):
                 self.buttonStyleGraduatedFillColor.setStyleSheet('background-color: {0};'.format(self.styleGraduatedColor.name()))
             attribute = renderer.classAttribute()
             self.comboBoxStyleGraduatedAttribute.setCurrentIndex(self.comboBoxStyleGraduatedAttribute.findText(attribute))
-            self.comboBoxStyleType.setCurrentIndex(self.comboBoxStyleType.findText('Graduated'))
         elif isinstance(renderer, QgsRuleBasedRendererV2):
             rootRule = renderer.rootRule()
             rules = rootRule.children()
@@ -510,7 +509,6 @@ class DialogLayerProperties(QtGui.QDialog):
                 self.addStyleRuleBased(color, rule, minScale, maxScale, label)
                 self.styleRuleBasedColor = color
                 self.buttonStyleRuleBasedFillColor.setStyleSheet('background-color: {0};'.format(self.styleRuleBasedColor.name()))
-            self.comboBoxStyleType.setCurrentIndex(self.comboBoxStyleType.findText('Rule-based'))
         
         # Get layer label settings
         self.p = QgsPalLayerSettings()
@@ -645,23 +643,6 @@ class DialogLayerProperties(QtGui.QDialog):
             self.buttonLabelColor.setStyleSheet('background-color: {0};'.format(self.labelColor.name()))
     
     
-    def handlerChangeStyleType(self, currentIndex):
-        """Slot method for selecting the style tab.
-        
-        Args:
-            currentIndex (int): the index number of the selected combobox item.
-        """
-        styleType = self.comboBoxStyleType.currentText()
-        if styleType == 'Single':
-            self.styleTabWidget.setCurrentWidget(self.tabStyleSingle)
-        elif styleType == 'Categorized':
-            self.styleTabWidget.setCurrentWidget(self.tabStyleCategorized)
-        elif styleType == 'Graduated':
-            self.styleTabWidget.setCurrentWidget(self.tabStyleGraduated)
-        elif styleType == 'Rule-based':
-            self.styleTabWidget.setCurrentWidget(self.tabStyleRuleBased)
-    
-    
     def handlerAddStyleCategorized(self):
         """Slot method for adding a categorized style.
         """
@@ -776,13 +757,14 @@ class DialogLayerProperties(QtGui.QDialog):
     #***********************************************************
     # Process dialog
     #***********************************************************
-    def accept(self):
+    def applyStyle(self):
         """Overload method when the dialog is accepted.
         """
         # Process layer transparency setting
         self.layer.setLayerTransparency(self.sliderLayerTransparency.value())
         
-        styleType = self.comboBoxStyleType.currentText()
+        index = self.styleTabWidget.currentIndex()
+        styleType = self.styleTabWidget.tabText(index)
         
         if styleType == 'Single':
             # Process layer symbol fill color
@@ -868,8 +850,13 @@ class DialogLayerProperties(QtGui.QDialog):
         # Finally fresh the MapCanvas and close the dialog
         self.main.mapCanvas.refresh()
         
+        
+    def accept(self):
+        """Overload method when the dialog is accepted.
+        """
+        self.applyStyle()
         QtGui.QDialog.accept(self)
-    
+        
     
     def reject(self):
         """Overload method when the dialog is rejected/closed.
