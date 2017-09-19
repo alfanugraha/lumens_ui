@@ -2599,8 +2599,8 @@ class MainWindow(QtGui.QMainWindow):
             # FIX 20151118:
             # since on-the-fly CRS reprojection is enabled no need to set layer CRS
             # setting canvas extent to layer extent causes canvas to turn blank
-            ###self.qgsLayerList[layerName].setCrs(QgsCoordinateReferenceSystem(self.appSettings['defaultCRS'], QgsCoordinateReferenceSystem.EpsgCrsId))
-            ###self.mapCanvas.setExtent(self.qgsLayerList[layerName].extent())
+            self.qgsLayerList[layerName].setCrs(QgsCoordinateReferenceSystem(self.appSettings['defaultCRS'], QgsCoordinateReferenceSystem.EpsgCrsId))
+            self.mapCanvas.setExtent(self.qgsLayerList[layerName].extent())
             self.showVisibleLayers()
     
     
