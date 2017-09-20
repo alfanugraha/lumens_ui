@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #-*- coding:utf-8 -*-
 
-import os, platform, sys, logging, subprocess, argparse, csv, zipfile
+import os, platform, sys, logging, subprocess, argparse, csv, zipfile, tempfile
 
 from qgis.core import *
 from qgis.gui import *
@@ -121,8 +121,8 @@ class MainWindow(QtGui.QMainWindow):
             'folderQUES': 'QUES',
             'folderTA': 'TA',
             'folderSCIENDO': 'SCIENDO',
-            'folderDATA': 'DATA',
             'folderHelp': 'help',
+            'folderTemp': os.path.join(tempfile.gettempdir(), 'LUMENS'),
             'acceptedDocumentFormats': ('.doc', 'docx', '.rtf', '.xls', '.xlsx', '.txt', '.log', '.csv'),
             'acceptedWebFormats': ('.html', '.htm'),
             'acceptedSpatialFormats': ('.shp', '.tif'),
@@ -1865,8 +1865,6 @@ class MainWindow(QtGui.QMainWindow):
         yMargin = 100
         
         # Near top left
-        self.toolBar.move(parentPosition.x() + 20, parentPosition.y() + yMargin)
-        self.toolBar.adjustSize()
         self.toolBar.show()
         
         # Near top right
@@ -2237,13 +2235,10 @@ class MainWindow(QtGui.QMainWindow):
         """
         self.clearAddedDataInfo()
         
-        projectFolder = self.appSettings['DialogLumensOpenDatabase']['projectFolder']
-        projectDataDir = os.path.join(projectFolder, self.appSettings['folderDATA'])
-        
-        csvDataLandUseCover = os.path.join(projectFolder, 'csv_land_use_cover.csv')
-        csvDataPlanningUnit = os.path.join(projectFolder, 'csv_planning_unit.csv')
-        csvDataFactor = os.path.join(projectFolder, 'csv_factor_data.csv')
-        csvDataTable = os.path.join(projectFolder, 'csv_lookup_table.csv')
+        csvDataLandUseCover = os.path.join(self.appSettings['folderTemp'], 'csv_land_use_cover.csv')
+        csvDataPlanningUnit = os.path.join(self.appSettings['folderTemp'], 'csv_planning_unit.csv')
+        csvDataFactor = os.path.join(self.appSettings['folderTemp'], 'csv_factor_data.csv')
+        csvDataTable = os.path.join(self.appSettings['folderTemp'], 'csv_lookup_table.csv')
         
         if os.path.exists(csvDataLandUseCover):
             with open(csvDataLandUseCover, 'rb') as f:
@@ -2375,13 +2370,6 @@ class MainWindow(QtGui.QMainWindow):
             self.projectTreeView.setRootIndex(self.projectModel.index(self.appSettings['DialogLumensOpenDatabase']['projectFolder']))
             self.addRecentProject(lumensDatabase)
             
-            # Offer to load the QGIS project file in the project folder (if any)
-            qgsProjectFile = os.path.splitext(lumensDatabase)[0] + self.appSettings['selectQgsProjectfileExt']
-            qgsProjectFilePath = os.path.join(projectFolder, self.appSettings['folderDATA'], qgsProjectFile)
-            
-            if os.path.exists(qgsProjectFilePath):
-                self.lumensLoadQgsProjectLayers(qgsProjectFilePath)
-            
             # Keep track of added data stored in the open project's DATA dir
             self.loadAddedDataInfo()
             
@@ -2429,8 +2417,12 @@ class MainWindow(QtGui.QMainWindow):
         of the project's module templates will be unlisted from the main window's dashboard tab.
         """
         logging.getLogger(type(self).__name__).info('start: LUMENS Close Database')
-        
         self.actionLumensCloseDatabase.setDisabled(True)
+        
+        outputs = general.runalg(
+            'r:dbclose',
+            self.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
+        )        
         
         self.appSettings['DialogLumensOpenDatabase']['projectFile'] = ''
         self.appSettings['DialogLumensOpenDatabase']['projectFolder'] = ''
@@ -2456,7 +2448,7 @@ class MainWindow(QtGui.QMainWindow):
         logging.getLogger(type(self).__name__).info('start: lumensdatabasestatus')
         self.actionLumensDatabaseStatus.setDisabled(True)
         
-        outputs = general.runalg('r:lumensdatabasestatus', self.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/'), None)
+        outputs = general.runalg('r:dbstatus', self.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/'), None)
         
         if outputs:
             self.webContentDatabaseStatus.load(QtCore.QUrl.fromLocalFile(os.path.join(self.appSettings['DialogLumensOpenDatabase']['projectFolder'], "status_LUMENS_database.html")))
