@@ -284,7 +284,6 @@ class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
         dialog = DialogLumensAddDataProperties(self, dataType, dataFile)
         if dialog.exec_():
             buttonDataProperties = self.contentAddData.findChild(QtGui.QPushButton, 'buttonDataProperties_' + tableRow)
-            buttonDataProperties.setDisabled(True)
             # Set the hidden fields
             lineEditDataDescription = self.contentAddData.findChild(QtGui.QLineEdit, 'lineEditDataDescription_' + tableRow)
             lineEditDataDescription.setText(dialog.getDataDescription())

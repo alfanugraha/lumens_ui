@@ -85,6 +85,10 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
             self.loadRasterDataTable()
         elif self.isVectorFile:
             self.loadDataFieldAttributes()
+            
+        if self.parent.main.appSettings['dataMappingFile']:
+            self.lineEditDataMapping.setText(self.parent.main.appSettings['dataMappingFile'])
+            self.processDataMapping(self.parent.main.appSettings['dataMappingFile'])   
         
         self.buttonProcessDissolve.clicked.connect(self.handlerProcessDissolve)
         self.buttonProcessSave.clicked.connect(self.handlerProcessSave)
@@ -503,6 +507,8 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
             self.lineEditDataMapping.setText(dataMappingFile)
             
             self.processDataMapping(dataMappingFile)
+            
+            self.parent.main.appSettings['dataMappingFile'] = dataMappingFile
     
     
     def processDataMapping(self, dataMappingFile):

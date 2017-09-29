@@ -1246,7 +1246,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         """Slot method to pass the form values and execute the "PUR" R algorithms.
         
         The "PUR" process calls the following algorithms:
-        1. r:pursetupreferenceplanningunit
+        1. r:pursetup
         """
         self.setAppSettings()
         
@@ -1255,7 +1255,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
             logging.getLogger(self.historyLog).info('Processing PUR start: %s' % self.dialogTitle)
             self.buttonProcessSetup.setDisabled(True)
             
-            algName = 'r:pursetupreferenceandplanningunit'
+            algName = 'r:pursetup'
             
             # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
             self.main.setWindowState(QtCore.Qt.WindowMinimized)
@@ -1320,9 +1320,9 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         """Slot method to handle reconciling unresolved cases in the reconcile tab.
         
         The Reconcile process calls the following algorithms:
-        1. r:purfinalizereconciliation
+        1. r:purreconciliation
         """
-        algName = 'r:purfinalizereconciliation'
+        algName = 'r:purreconciliation'
         
         outputs = self.outputsPURSetup
         reconKey = 'PUR_rec1_shp'
