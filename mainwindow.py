@@ -1771,7 +1771,7 @@ class MainWindow(QtGui.QMainWindow):
         # Floating sidebar
         self.sidebarDockWidget = QtGui.QDockWidget('Dashboard', self) # Formerly 'Sidebar'
         self.sidebarDockWidget.setContentsMargins(5, 10, 5, 5)
-        self.sidebarDockWidget.setFeatures(self.sidebarDockWidget.features() & ~QtGui.QDockWidget.DockWidgetClosable)
+        self.sidebarDockWidget.setFeatures(self.sidebarDockWidget.features() & QtGui.QDockWidget.AllDockWidgetFeatures)
         self.sidebarDockWidget.setWidget(self.sidebarTabWidget)
         self.sidebarDockWidget.setStyleSheet('QDockWidget { background-color: #222; } QToolBar { border: none; }') # Remove border for all child QToolBar in sidebar
         self.sidebarDockWidget.setFloating(True)
@@ -2294,7 +2294,6 @@ class MainWindow(QtGui.QMainWindow):
                   dataFactor[row[0]] = {
                       'RST_DATA': row[0],
                       'RST_NAME': row[1],
-                      'RST_PATH': row[2],
                   }
               
               self.dataFactor = dataFactor
