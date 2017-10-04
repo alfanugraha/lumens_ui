@@ -1646,8 +1646,8 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         """Slot method to pass the form values and execute the "SCIENDO Low Emission Development Analysis" R algorithms.
         
         Depending on the checked groupbox, the "SCIENDO Low Emission Development Analysis" process calls the following algorithms:
-        1. r:projectionhistoricalbaseline
-        2. r:historicalbaselineannualprojection
+        1. r:sciendoperiodprojection
+        2. r:sciendoannualprojection
         3. modeler:drivers_analysis
         4. r:abacususingabsolutearea
         """
@@ -1656,7 +1656,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         
         if self.checkBoxHistoricalBaselineProjection.isChecked():
             formName = 'DialogLumensSCIENDOHistoricalBaselineProjection'
-            algName = 'r:projectionhistoricalbaseline'
+            algName = 'r:sciendoperiodprojection'
             
             if self.validForm(formName):
                 logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
@@ -1691,7 +1691,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         if self.checkBoxHistoricalBaselineAnnualProjection.isChecked():
             if len(self.listOfQUESCDatabase) > 1:
                 formName = 'DialogLumensSCIENDOHistoricalBaselineAnnualProjection'
-                algName = 'r:historicalbaselineannualprojection'
+                algName = 'r:sciendoannualprojection'
                 
                 self.listOfQUESCDatabase.sort()
                 QUESCDatabaseCsv = self.writeListCsv(self.listOfQUESCDatabase, True)
@@ -1707,8 +1707,8 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
                     outputs = general.runalg(
                         algName,
                         activeProject,
-                        self.main.appSettings[formName]['iteration'],
                         QUESCDatabaseCsv,
+                        self.main.appSettings[formName]['iteration'],
                         None,
                     )
                     
