@@ -729,6 +729,8 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         
         self.main = parent
         self.dialogTitle = 'LUMENS Quantification Environmental Services'
+        self.checkBoxQUESCDatabaseCount = 0
+        self.listOfQUESCDatabase = []
         self.settingsPath = os.path.join(self.main.appSettings['DialogLumensOpenDatabase']['projectFolder'], self.main.appSettings['folderQUES'])
         self.habitatLookupPath = self.main.appSettings['defaultHabitatLookupTable']
         self.currentPreQUESTemplate = None
@@ -1190,6 +1192,8 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.SMPCheckBox.setChecked(True)
         self.layoutSummarizeMultiplePeriod.addWidget(self.SMPCheckBox, 0, 1)
         self.labelSMPCheckBox.setBuddy(self.SMPCheckBox)
+        
+        self.populateQUESCDatabase()
         
         # Process tab button
         self.layoutButtonQUESC = QtGui.QHBoxLayout()
@@ -2116,7 +2120,32 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         """
         if self.tabWidget.widget(index) == self.tabLog:
             self.log_box.widget.verticalScrollBar().triggerAction(QtGui.QAbstractSlider.SliderToMaximum)
-                    
+    
+    
+    def populateQUESCDatabase(self):
+        layoutCheckBoxQUESCDatabase = QtGui.QVBoxLayout()
+        self.checkBoxQUESCDatabaseCount = 0
+        if len(self.main.dataTable):
+            dataTable = self.main.dataTable
+            dataQUESCDatabase = []
+            for value in dataTable.values():
+                dataTableName = value[list(value)[0]]
+                if 'out_hist_quesc_' in dataTableName:
+                    dataQUESCDatabase.append(dataTableName)
+            for name in dataQUESCDatabase:
+                self.checkBoxQUESCDatabaseCount = self.checkBoxQUESCDatabaseCount + 1
+                checkBoxSummarizeMultiplePeriodQUESCDatabase = QtGui.QCheckBox()
+                checkBoxSummarizeMultiplePeriodQUESCDatabase.setObjectName('checkBoxSummarizeMultiplePeriodQUESCDatabase_{0}'.format(str(self.checkBoxQUESCDatabaseCount)))
+                checkBoxSummarizeMultiplePeriodQUESCDatabase.setText(name)
+                layoutCheckBoxQUESCDatabase.addWidget(checkBoxSummarizeMultiplePeriodQUESCDatabase)
+                checkBoxSummarizeMultiplePeriodQUESCDatabase.toggled.connect(self.toggleSummarizeMultiplePeriodQUESCDatabase)
+        else:
+            labelQUESCDatabaseSummarizeMultiplePeriod = QtGui.QLabel()
+            labelQUESCDatabaseSummarizeMultiplePeriod.setText('\nNo QUES-C Database found!\n')
+            layoutCheckBoxQUESCDatabase.addWidget(labelQUESCDatabaseSummarizeMultiplePeriod)
+
+        self.layoutOptionsSummarizeMultiplePeriod.addLayout(layoutCheckBoxQUESCDatabase)
+        
     
     #***********************************************************
     # 'QUES-C' tab QGroupBox toggle handlers
@@ -2155,6 +2184,25 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             self.contentOptionsSummarizeMultiplePeriod.setEnabled(True)
         else:
             self.contentOptionsSummarizeMultiplePeriod.setDisabled(True)
+            
+            
+    def toggleSummarizeMultiplePeriodQUESCDatabase(self, checked):
+        """Slot method for handling checkbox toggling.
+
+        Args:
+            checked (bool): the checkbox status.
+        """
+        checkBoxSender = self.sender()
+        objectName = checkBoxSender.objectName()
+        checkBoxIndex = objectName.split('_')[1]
+
+        checkBoxQUESCDatabase = self.contentOptionsSummarizeMultiplePeriod.findChild(QtGui.QCheckBox, 'checkBoxSummarizeMultiplePeriodQUESCDatabase_' + checkBoxIndex)
+        checkBoxName = checkBoxQUESCDatabase.text()
+
+        if checked:
+            self.listOfQUESCDatabase.append(checkBoxName)
+        else:
+            self.listOfQUESCDatabase.remove(checkBoxName)            
     
     
     #***********************************************************
