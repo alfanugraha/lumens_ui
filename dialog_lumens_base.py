@@ -193,3 +193,24 @@ class DialogLumensBase:
         
         # Table unused, or something wrong with the table
         return ''
+
+
+    def writeListCsv(self, listOfData, forwardDirSeparator=False):
+        """Method for writing the dissolved table to a temp csv file. Inspired from DialogLumensViewer.
+        
+        Args:
+            listOfData (list): a list which is contained the list of checked QUES-C database 
+            forwardDirSeparator (bool): return the temp csv file path with forward slash dir separator.
+        """        
+        handle, csvFilePath = tempfile.mkstemp(suffix='.csv')
+        
+        with os.fdopen(handle, 'w') as f:
+            writer = csv.writer(f)
+            
+            for tableRow in listOfData:
+                writer.writerow([tableRow])
+            
+        if forwardDirSeparator:
+            return csvFilePath.replace(os.path.sep, '/')
+            
+        return csvFilePath

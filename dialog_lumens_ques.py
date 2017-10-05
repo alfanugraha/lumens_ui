@@ -3171,37 +3171,46 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         
         
         if self.checkBoxSummarizeMultiplePeriod.isChecked():
-            formName = 'DialogLumensQUESCSummarizeMultiplePeriod'
-            algName = 'r:summarizemultipleperiode'
-            
-            if self.validForm(formName):
-                logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
-                logging.getLogger(self.historyLog).info('alg start: %s' % formName)
-                self.buttonProcessQUESC.setDisabled(True)
-                
-                # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
-                self.main.setWindowState(QtCore.Qt.WindowMinimized)
-                
-                outputs = general.runalg(
-                    algName,
-                    self.main.appSettings[formName]['checkbox'],
-                )
-                
-                # Display ROut file in debug mode
-                if self.main.appSettings['debug']:
-                    dialog = DialogLumensViewer(self, 'DEBUG "{0}" ({1})'.format(algName, 'processing_script.r.Rout'), 'text', self.main.appSettings['ROutFile'])
-                    dialog.exec_()
-                
-                ##print outputs
-                
-                # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
-                self.main.setWindowState(QtCore.Qt.WindowActive)
-                
-                self.outputsMessageBox(algName, outputs, '', '')
-                
-                self.buttonProcessQUESC.setEnabled(True)
-                logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
-                logging.getLogger(self.historyLog).info('alg end: %s' % formName)
+            if len(self.listOfQUESCDatabase) > 2:
+                formName = 'DialogLumensQUESCSummarizeMultiplePeriod'
+                algName = 'r:quessummarizeperiods'
+
+                self.listOfQUESCDatabase.sort()
+                QUESCDatabaseCsv = self.writeListCsv(self.listOfQUESCDatabase, True)
+
+                if self.validForm(formName):
+                    logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
+                    logging.getLogger(self.historyLog).info('alg start: %s' % formName)
+                    self.buttonProcessQUESC.setDisabled(True)
+
+                    # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
+                    self.main.setWindowState(QtCore.Qt.WindowMinimized)
+
+                    outputs = general.runalg(
+                        algName,
+                        activeProject,
+                        QUESCDatabaseCsv,
+                        None,
+                    )
+
+                    # Display ROut file in debug mode
+                    if self.main.appSettings['debug']:
+                        dialog = DialogLumensViewer(self, 'DEBUG "{0}" ({1})'.format(algName, 'processing_script.r.Rout'), 'text', self.main.appSettings['ROutFile'])
+                        dialog.exec_()
+
+                    ##print outputs
+
+                    # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
+                    self.main.setWindowState(QtCore.Qt.WindowActive)
+
+                    self.outputsMessageBox(algName, outputs, '', '')
+
+                    self.buttonProcessQUESC.setEnabled(True)
+                    logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
+                    logging.getLogger(self.historyLog).info('alg end: %s' % formName)
+            else:
+                QtGui.QMessageBox.information(self, 'Summarize Multiple Period', 'Choose at least three QUES-C Database.')
+                return
     
     
     def handlerProcessQUESB(self):
