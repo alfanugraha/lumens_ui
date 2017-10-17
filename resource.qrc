@@ -38,5 +38,7 @@
         <file>ui/icons/iconActionDialogLumensTA.png</file>
         <file>ui/icons/iconActionDialogLumensPUR.png</file>
         <file>ui/icons/iconActionDialogLumensQUES.png</file>
+        <file>ui/icons/iconActionLumensExportDatabase.png</file>
+        <file>ui/icons/iconActionLumensImportDatabase.png</file>
     </qresource>
 </RCC>
