@@ -48,7 +48,6 @@ from dialog_layer_properties import DialogLayerProperties
 from dialog_lumens_viewer import DialogLumensViewer
 
 from dialog_lumens_createdatabase import DialogLumensCreateDatabase
-from dialog_lumens_importdatabase import DialogLumensImportDatabase
 from dialog_lumens_adddata import DialogLumensAddData
 
 from dialog_lumens_pur import DialogLumensPUR
@@ -146,10 +145,6 @@ class MainWindow(QtGui.QMainWindow):
             'DialogLumensOpenDatabase': { # OBSOLETE
                 'projectFile': '',
                 'projectFolder': '',
-            },
-            'DialogLumensImportDatabase': {
-                'workingDir': '',
-                'projectFile': '',
             },
             'DialogLumensAddLandcoverRaster': {
                 'rasterfile': '',
@@ -553,9 +548,10 @@ class MainWindow(QtGui.QMainWindow):
         self.actionDialogLumensCreateDatabase.triggered.connect(self.handlerDialogLumensCreateDatabase)
         self.actionLumensOpenDatabase.triggered.connect(self.handlerLumensOpenDatabase)
         self.actionLumensCloseDatabase.triggered.connect(self.handlerLumensCloseDatabase)
-        self.actionLumensDatabaseStatus.triggered.connect(self.handlerLumensDatabaseStatus)
+        self.actionLumensExportDatabase.triggered.connect(self.handlerLumensExportDatabase)
         self.actionDialogLumensAddData.triggered.connect(self.handlerDialogLumensAddData)
         self.actionLumensDeleteData.triggered.connect(self.handlerLumensDeleteData)
+        self.actionLumensDatabaseStatus.triggered.connect(self.handlerLumensDatabaseStatus)
         
         # PUR menu
         self.actionDialogLumensPUR.triggered.connect(self.handlerDialogLumensPUR)
@@ -798,21 +794,22 @@ class MainWindow(QtGui.QMainWindow):
         self.actionLumensOpenDatabase = QtGui.QAction(icon, 'Open LUMENS database', self)
         icon = QtGui.QIcon(':/ui/icons/iconActionLumensCloseDatabase.png')
         self.actionLumensCloseDatabase = QtGui.QAction(icon, 'Close LUMENS database', self)
-        icon = QtGui.QIcon(':/ui/icons/iconActionLumensDatabaseStatus.png')
-        self.actionLumensDatabaseStatus = QtGui.QAction(icon, 'LUMENS database status', self)
+        icon = QtGui.QIcon(':/ui/icons/iconActionLumensExportDatabase.png')
+        self.actionLumensExportDatabase = QtGui.QAction(icon, 'Export LUMENS database', self)
         icon = QtGui.QIcon(':/ui/icons/iconActionDialogLumensAddData.png')
         self.actionDialogLumensAddData = QtGui.QAction(icon, 'Add data to LUMENS database', self)
         icon = QtGui.QIcon(':/ui/icons/iconActionLumensDeleteData.png')
         self.actionLumensDeleteData = QtGui.QAction(icon, 'Delete LUMENS data', self)
-        self.actionDialogLumensImportDatabase = QtGui.QAction('Import LUMENS database', self)
+        icon = QtGui.QIcon(':/ui/icons/iconActionLumensDatabaseStatus.png')
+        self.actionLumensDatabaseStatus = QtGui.QAction(icon, 'LUMENS database status', self)
         
         self.databaseMenu.addAction(self.actionDialogLumensCreateDatabase)
         self.databaseMenu.addAction(self.actionLumensOpenDatabase)
         self.databaseMenu.addAction(self.actionLumensCloseDatabase)
-        self.databaseMenu.addAction(self.actionLumensDatabaseStatus)
+        self.databaseMenu.addAction(self.actionLumensExportDatabase)
         self.databaseMenu.addAction(self.actionDialogLumensAddData)
         self.databaseMenu.addAction(self.actionLumensDeleteData)
-        self.databaseMenu.addAction(self.actionDialogLumensImportDatabase)
+        self.databaseMenu.addAction(self.actionLumensDatabaseStatus)
         
         # PUR menu
         icon = QtGui.QIcon(':/ui/icons/iconActionDialogLumensPUR.png')
@@ -1754,6 +1751,7 @@ class MainWindow(QtGui.QMainWindow):
         self.databaseToolBar.addAction(self.actionDialogLumensCreateDatabase)
         self.databaseToolBar.addAction(self.actionLumensOpenDatabase)
         self.databaseToolBar.addAction(self.actionLumensCloseDatabase)
+        self.databaseToolBar.addAction(self.actionLumensExportDatabase)
         self.databaseToolBar.addAction(self.actionDialogLumensAddData)
         self.databaseToolBar.addAction(self.actionLumensDeleteData)
         self.databaseToolBar.addAction(self.actionLumensDatabaseStatus)
@@ -2041,6 +2039,7 @@ class MainWindow(QtGui.QMainWindow):
         """
         # Database menu
         self.actionLumensCloseDatabase.setEnabled(True)
+        self.actionLumensExportDatabase.setEnabled(True)
         self.actionLumensDatabaseStatus.setEnabled(True)
         self.actionLumensDeleteData.setEnabled(True)
         self.actionDialogLumensAddData.setEnabled(True)
@@ -2072,6 +2071,7 @@ class MainWindow(QtGui.QMainWindow):
         """Method for disabling menus that require an open LUMENS project.
         """
         # Database menu
+        self.actionLumensExportDatabase.setDisabled(True)
         self.actionLumensDatabaseStatus.setDisabled(True)
         self.actionDialogLumensAddData.setDisabled(True)
         self.actionLumensDeleteData.setDisabled(True)
@@ -2386,27 +2386,44 @@ class MainWindow(QtGui.QMainWindow):
     def lumensImportDatabase(self, workingDir, lumensDatabase):
         """Method for importing an archived LUMENS project database  
         
-        Imports an archived LUMENS project using "r:lumensimportdatabase" R algorithm.
+        Imports an archived LUMENS project using "r:dbimport" R algorithm.
         An archived file can be obtained from export database function. It will be 
         imported lpj file and the folder DATA which are previously generated from other
         process to selected new working directory.
         
         
         Args:
+            zipFile: an archived file (.zip)
             workingDir: new working directory to be imported
-            lumensDatabase: an archived file (.zip) consists of lpj and DATA folder
         """
         logging.getLogger(type(self).__name__).info('start: LUMENS Import Database')
         self.actionLumensOpenDatabase.setDisabled(True)
         
         outputs = general.runalg(
-            'r:lumensimportdatabase',
+            'r:dbimport',
+            zipFile.replace(os.path.sep, '/'),
             workingDir.replace(os.path.sep, '/'),
-            lumensDatabase.replace(os.path.sep, '/')
+            None,
+            None,
         )
         
         self.actionLumensOpenDatabase.setEnabled(True)
-        logging.getLogger(type(self).__name__).info('end: LUMENS Import Database')        
+        logging.getLogger(type(self).__name__).info('end: LUMENS Import Database') 
+        
+        return outputs
+        
+        
+    def lumensExportDatabase(self):
+        """Method for exporting a LUMENS project database
+
+        Export a whole directory, subdirectory, project files, database
+        and archive into a zip file
+        """
+        logging.getLogger(type(self).__name__).info('start: LUMENS Export Database'))
+
+        general.runalg('r:dbexport', self.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/'))
+
+        logging.getLogger(type(self).__name__).info('end: LUMENS Export Database'))        
 
     
     def lumensCloseDatabase(self):
@@ -3161,28 +3178,18 @@ class MainWindow(QtGui.QMainWindow):
             logging.getLogger(type(self).__name__).info('select LUMENS database: %s', lumensDatabase)
             
             if lumensDatabaseExt == self.appSettings['selectZipfileExt'] and zipfile.is_zipfile(lumensDatabase):
-                zFile = zipfile.ZipFile(lumensDatabase, 'r')
-                importedLumenDatabaseProject = zFile.namelist()[0]
-                importedLumensDatabaseName, importedLumensDatabaseExt = os.path.splitext(importedLumenDatabaseProject)
-                
-                if importedLumensDatabaseExt == self.appSettings['selectProjectfileExt']:
-                    
-                    workingDir = unicode(QtGui.QFileDialog.getExistingDirectory(self, 'Select Working Directory'))
-                    
-                    if workingDir:
-                        logging.getLogger(type(self).__name__).info('select new working directory: %s', workingDir)
-                        
-                        self.lumensImportDatabase(workingDir, lumensDatabase)
-                        
-                        lumensDatabase = os.path.join(workingDir, importedLumensDatabaseName, importedLumenDatabaseProject).replace(os.path.sep, '/')
-                    else:
-                        print 'ERROR: Invalid working directory!'
-                        return
+                workingDir = unicode(QtGui.QFileDialog.getExistingDirectory(self, 'Select Working Directory'))
+                if workingDir:
+                    logging.getLogger(type(self).__name__).info('select new working directory: %s', workingDir)
+                    outputs = self.lumensImportDatabase(lumensDatabase, workingDir)
                 else:
-                    print 'ERROR: Invalid archived LUMENS file!'
+                    print 'ERROR: Invalid working directory!'
                     return
+            else:
+                print 'ERROR: Invalid archived LUMENS file!'
+                return
               
-            self.lumensOpenDatabase(lumensDatabase)
+            self.lumensOpenDatabase(outputs['proj.file'])
             
             
     def handlerLumensDeleteData(self):
@@ -3209,10 +3216,10 @@ class MainWindow(QtGui.QMainWindow):
         self.openDialog(DialogLumensAddData)
     
     
-    def handlerDialogLumensImportDatabase(self):
+    def handlerLumensExportDatabase(self):
         """Slot method for opening a dialog window.
         """
-        self.openDialog(DialogLumensImportDatabase)
+        self.lumensExportDatabase()
     
     
     def handlerDialogLumensPUR(self):
