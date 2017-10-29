@@ -14,7 +14,7 @@ QgsApplication.initQgis()
 
 app = QtGui.QApplication(sys.argv)
 
-splashImage = QtGui.QPixmap('ui/images/splash.png')
+splashImage = QtGui.QPixmap('ui/images/splashbw.png')
 splashScreen = QtGui.QSplashScreen(splashImage, QtCore.Qt.WindowStaysOnTopHint)
 splashScreen.setMask(splashImage.mask())
 splashScreen.show()
