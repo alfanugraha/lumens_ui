@@ -2419,11 +2419,11 @@ class MainWindow(QtGui.QMainWindow):
         Export a whole directory, subdirectory, project files, database
         and archive into a zip file
         """
-        logging.getLogger(type(self).__name__).info('start: LUMENS Export Database'))
+        logging.getLogger(type(self).__name__).info('start: LUMENS Export Database')
 
         general.runalg('r:dbexport', self.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/'))
 
-        logging.getLogger(type(self).__name__).info('end: LUMENS Export Database'))        
+        logging.getLogger(type(self).__name__).info('end: LUMENS Export Database')        
 
     
     def lumensCloseDatabase(self):
