@@ -403,6 +403,8 @@ class DialogLumensTAOpportunityCost(QtGui.QDialog, DialogLumensBase):
         QTabBar::tab {
             background-color: #222;
             color: #fff;
+            height: 50px; 
+            width: 100px;                  
         }
         QTabBar::tab:selected, QTabBar::tab:hover {
             background-color: #fff;

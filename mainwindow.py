@@ -649,7 +649,7 @@ class MainWindow(QtGui.QMainWindow):
         self.dialogToolBar.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
         self.dialogToolBar.setIconSize(QtCore.QSize(32, 32))
         self.dialogToolBar.setMovable(False)
-        self.dialogToolBar.setStyleSheet('QToolBar { background: url(./ui/images/logo.png) right no-repeat; background-color: #222; } QToolButton { color: #fff; }')
+        self.dialogToolBar.setStyleSheet('QToolBar { background: url(./ui/images/logo.png) right no-repeat; padding: 5px; background-color: #222; } QToolButton { color: #fff; }')
         self.addToolBar(QtCore.Qt.TopToolBarArea, self.dialogToolBar)
         
         self.statusBar = QtGui.QStatusBar(self)
@@ -903,6 +903,8 @@ class MainWindow(QtGui.QMainWindow):
         QTabBar::tab {
             background-color: #222;
             color: #fff;
+            height: 50px; 
+            width: 100px;
         }
         QTabBar::tab:selected, QTabBar::tab:hover {
             background-color: #fff;
@@ -986,6 +988,8 @@ class MainWindow(QtGui.QMainWindow):
         QTabBar::tab {
             background-color: rgb(180, 199, 231);
             color: #000;
+            height: 50px; 
+            width: 100px;            
         }
         QTabBar::tab:selected, QTabBar::tab:hover {
             background-color: rgb(223, 231, 245);
@@ -1035,6 +1039,8 @@ class MainWindow(QtGui.QMainWindow):
         QTabBar::tab {
             background-color: rgb(255, 230, 153);
             color: #000;
+            height: 50px; 
+            width: 100px;             
         }
         QTabBar::tab:selected, QTabBar::tab:hover {
             background-color: rgb(255, 242, 204);
@@ -1070,6 +1076,8 @@ class MainWindow(QtGui.QMainWindow):
         QTabBar::tab {
             background-color: rgb(255, 220, 109);
             color: #000;
+            height: 50px; 
+            width: 100px;            
         }
         QTabBar::tab:selected, QTabBar::tab:hover {
             background-color: rgb(231, 255, 109);
