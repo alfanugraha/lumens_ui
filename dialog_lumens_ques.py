@@ -3043,12 +3043,12 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         """Slot method to pass the form values and execute the "PreQUES" R algorithms.
         
         The "PreQUES" process calls the following algorithms:
-        1. r:prequesanalysis
+        1. r:quespre
         """
         self.setAppSettings()
         
         formName = 'DialogLumensPreQUESLandcoverTrajectoriesAnalysis'
-        algName = 'r:prequesanalysis'
+        algName = 'r:quespre'
         activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
         
         if self.validForm(formName):
