@@ -288,23 +288,35 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         Args:
             parent: the dialog's parent instance.
         """
-        self.setStyleSheet('QDialog { background-color: #222; }')
+        self.setStyleSheet('QDialog { background-color: rgb(225, 229, 237); }')
         self.dialogLayout = QtGui.QVBoxLayout()
+
+        self.groupBoxPURDialog = QtGui.QGroupBox('Planning Unit Reconciliation')
+        self.layoutGroupBoxPURDialog = QtGui.QVBoxLayout()
+        self.groupBoxPURDialog.setLayout(self.layoutGroupBoxPURDialog)
+        self.labelPURDialog = QtGui.QLabel()
+        self.labelPURDialog.setText('Lorem ipsum dolor sit amet...\nLorem ipsum dolor sit amet\n')
+        self.layoutGroupBoxPURDialog.addWidget(self.labelPURDialog)
+
         self.tabWidget = QtGui.QTabWidget()
         tabWidgetStylesheet = """
         QTabWidget::pane {
             border: none;
-            background-color: #fff;
+            background-color: rgb(244, 248, 252);
         }
         QTabBar::tab {
-            background-color: #222;
-            color: #fff;
-            height: 50px; 
-            width: 100px;                  
+            background-color: rgb(174, 176, 178);
+            color: rgb(95, 98, 102);
+            height: 40px; 
+            width: 100px;  
+            font-size: 13px;                
         }
         QTabBar::tab:selected, QTabBar::tab:hover {
-            background-color: #fff;
-            color: #000;
+            background-color: rgb(244, 248, 252);
+            color: rgb(56, 65, 73);
+        }
+        QTabBar::tab::selected{
+            font: bold;
         }
         """
         self.tabWidget.setStyleSheet(tabWidgetStylesheet)
@@ -321,7 +333,8 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         self.layoutTabSetup = QtGui.QGridLayout()
         self.layoutTabReconcile = QtGui.QVBoxLayout()
         self.layoutTabLog = QtGui.QVBoxLayout()
-        
+
+        self.dialogLayout.addWidget(self.groupBoxPURDialog)
         self.dialogLayout.addWidget(self.tabWidget)
         #self.setStyleSheet('QWidget { background-color: #ccc; }')
         ##self.dialogLayout.setContentsMargins(10, 10, 10, 10)
@@ -521,7 +534,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         self.layoutTabSetup.addWidget(self.groupBoxPURTemplate, 0, 1, 3, 1)
         self.layoutTabSetup.setColumnStretch(0, 3)
         self.layoutTabSetup.setColumnStretch(1, 1) # Smaller template column
-        
+
         self.tabSetup.setLayout(self.layoutTabSetup)
         
         #***********************************************************
@@ -1309,6 +1322,9 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
             self.main.setWindowState(QtCore.Qt.WindowActive)
             
             algSuccess = self.outputsMessageBox(algName, self.outputsPURSetup, 'PUR setup completed successfully!', 'Something happened.')
+
+            if algSuccess:
+                self.main.loadAddedDataInfo()
             
             self.buttonProcessSetup.setEnabled(True)
             logging.getLogger(type(self).__name__).info('Processing PUR end: %s' % self.dialogTitle)
@@ -1361,7 +1377,10 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
             self.main.setWindowState(QtCore.Qt.WindowActive)
             
             algSuccess = self.outputsMessageBox(algName, outputsReconcile, 'PUR reconciliation completed successfully!', 'Something happened.')
-            
+
+            if algSuccess:
+                self.main.loadAddedDataInfo()
+
             self.buttonProcessReconcile.setEnabled(True)
             logging.getLogger(type(self).__name__).info('Reconcile PUR end')
             logging.getLogger(self.historyLog).info('Reconcile PUR end')
