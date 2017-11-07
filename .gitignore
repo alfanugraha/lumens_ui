@@ -22,3 +22,4 @@ data/raster/*
 data/vector/*
 !data/vector/.gitkeep
 .Rproj.user
+mainwindow.bat

@@ -103,7 +103,7 @@ class MainWindow(QtGui.QMainWindow):
             'defaultBasemapFilePath': '',
             'defaultVectorFile': 'landmarks.shp',
             'defaultVectorFilePath': '',
-            'defaultHabitatLookupTable': 'C:/LUMENS_test/GGP_Papua/forDemo/5_Tabular/Tabel_habitat2.csv',
+            'defaultHabitatLookupTable': '',
             'selectQgsProjectfileExt': '.qgs',
             'selectShapefileExt': '.shp',
             'selectRasterfileExt': '.tif',
@@ -2493,6 +2493,8 @@ class MainWindow(QtGui.QMainWindow):
         self.actionLumensDeleteData.setDisabled(True)
         
         outputs = general.runalg('r:lumensdeletedata')
+        
+        self.loadAddedDataInfo()
         
         self.actionLumensDeleteData.setEnabled(True)
         logging.getLogger(type(self).__name__).info('end: lumensdeletedata')
