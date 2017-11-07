@@ -172,29 +172,29 @@ class MainWindow(QtGui.QMainWindow):
                 'referenceMapping': '',
                 'planningUnits': '',
             },
-            'DialogLumensPURCreateReferenceData': {'QToolBar { background-color: #225, 229, 237; }'
+            'DialogLumensPURCreateReferenceData': {
                 'shapefile': '',
                 'shapefileAttr': '',
                 'dataTitle': '',
             },
-            'DialogLumensPURPreparePlanningUnit': {'QToolBar { background-color: #225, 229, 237; }'
+            'DialogLumensPURPreparePlanningUnit': {
                 'shapefile': '',
                 'shapefileAttr': '',
                 'planningUnitTitle': '',
                 'planningUnitType': '',
             },
-            'DialogLumensPURReconcilePlanningUnit': {'QToolBar { background-color: #225, 229, 237; }'
+            'DialogLumensPURReconcilePlanningUnit': {
                 'outputFile': '',
             },
-            'DialogLumensPURFinalization': {'QToolBar { background-color: #225, 229, 237; }'
+            'DialogLumensPURFinalization': {
                 'shapefile': '',
             },
-            'DialogLumensPreQUESLandcoverChangeAnalysis': {'QToolBar { background-color: #225, 229, 237; }'
+            'DialogLumensPreQUESLandcoverChangeAnalysis': {
                 'csvfile': '',
                 'option': '',
                 'nodata': '',
             },
-            'DialogLumensPreQUESLandcoverTrajectoriesAnalysis': {'QToolBar { background-color: #225, 229, 237; }'
+            'DialogLumensPreQUESLandcoverTrajectoriesAnalysis': {
                 'landUse1': '',
                 'landUse2': '',
                 'planningUnit': '',
@@ -202,20 +202,20 @@ class MainWindow(QtGui.QMainWindow):
                 'analysisOption': '',
                 'nodata': '',
             },
-            'DialogLumensQUESCCarbonAccounting': {'QToolBar { background-color: #225, 229, 237; }'
+            'DialogLumensQUESCCarbonAccounting': {
                 'landUse1': '',
                 'landUse2': '',
                 'planningUnit': '',
                 'carbonTable': '',
                 'nodata': '',
             },
-            'DialogLumensQUESCPeatlandCarbonAccounting': {'QToolBar { background-color: #225, 229, 237; }'
+            'DialogLumensQUESCPeatlandCarbonAccounting': {
                 'csvfile': '',
             },
-            'DialogLumensQUESCSummarizeMultiplePeriod': {'QToolBar { background-color: #225, 229, 237; }'
+            'DialogLumensQUESCSummarizeMultiplePeriod': {
                 'checkbox': '',
             },
-            'DialogLumensQUESBAnalysis': {'QToolBar { background-color: #225, 229, 237; }'
+            'DialogLumensQUESBAnalysis': {
                 'planningUnit': '',
                 'samplingGridRes': '',
                 'samplingWindowSize': '',
@@ -224,7 +224,7 @@ class MainWindow(QtGui.QMainWindow):
                 'edgeContrast': '',
                 'habitatLookup': '',
             },
-            'DialogLumensQUESHWatershedModelEvaluation': {'QToolBar { background-color: #225, 229, 237; }'
+            'DialogLumensQUESHWatershedModelEvaluation': {
                 'dateInitial': '',
                 'dateFinal': '',
                 'SWATModel': '',
@@ -233,7 +233,7 @@ class MainWindow(QtGui.QMainWindow):
                 'observedDebitFile': '',
                 'outputWatershedModelEvaluation': '',
             },
-            'DialogLumensQUESHWatershedIndicators': {'QToolBar { background-color: #225, 229, 237; }'
+            'DialogLumensQUESHWatershedIndicators': {
                 'SWATTXTINOUTDir': '',
                 'dateInitial': '',
                 'dateFinal': '',
@@ -243,7 +243,7 @@ class MainWindow(QtGui.QMainWindow):
                 'outputInitialYearSubWatershedLevelIndicators': '',
                 'outputFinalYearSubWatershedLevelIndicators': '',
             },
-            'DialogLumensQUESHDominantHRU': {'QToolBar { background-color: #225, 229, 237; }'
+            'DialogLumensQUESHDominantHRU': {
                 'landUseMap': '',
                 'soilMap': '',
                 'slopeMap': '',
@@ -254,7 +254,7 @@ class MainWindow(QtGui.QMainWindow):
                 'areaName': '',
                 'period': '',
             },
-            'DialogLumensQUESHDominantLUSSL': {'QToolBar { background-color: #225, 229, 237; }'
+            'DialogLumensQUESHDominantLUSSL': {
                 'landUseMap': '',
                 'soilMap': '',
                 'slopeMap': '',
@@ -265,7 +265,7 @@ class MainWindow(QtGui.QMainWindow):
                 'areaName': '',
                 'period': '',
             },
-            'DialogLumensQUESHMultipleHRU': {'QToolBar { background-color: #225, 229, 237; }'
+            'DialogLumensQUESHMultipleHRU': {
                 'landUseMap': '',
                 'soilMap': '',
                 'slopeMap': '',
@@ -279,19 +279,19 @@ class MainWindow(QtGui.QMainWindow):
                 'soilThreshold': '',
                 'slopeThreshold': '',
             },
-            'DialogLumensTAAbacusOpportunityCostCurve': {'QToolBar { background-color: #225, 229, 237; }'
+            'DialogLumensTAAbacusOpportunityCostCurve': {
                 'projectFile': '',
             },
-            'DialogLumensTAOpportunityCostCurve': {'QToolBar { background-color: #225, 229, 237; }'
+            'DialogLumensTAOpportunityCostCurve': {
                 'csvNPVTable': '',
                 'costThreshold': '',
                 'outputOpportunityCostDatabase': '',
                 'outputOpportunityCostReport': '',
             },
-            'DialogLumensTAOpportunityCostMap': {'QToolBar { background-color: #225, 229, 237; }'
+            'DialogLumensTAOpportunityCostMap': {
                 'csvProfitability': '',
             },
-            'DialogLumensTARegionalEconomySingleIODescriptiveAnalysis': {'QToolBar { background-color: #225, 229, 237; }'
+            'DialogLumensTARegionalEconomySingleIODescriptiveAnalysis': {
                 'intermediateConsumptionMatrix': '',
                 'valueAddedMatrix': '',
                 'finalConsumptionMatrix': '',
@@ -303,7 +303,7 @@ class MainWindow(QtGui.QMainWindow):
                 'areaName': '',
                 'period': '',
             },
-            'DialogLumensTARegionalEconomyTimeSeriesIODescriptiveAnalysis': {'QToolBar { background-color: #225, 229, 237; }'
+            'DialogLumensTARegionalEconomyTimeSeriesIODescriptiveAnalysis': {
                 'intermediateConsumptionMatrixP1': '',
                 'intermediateConsumptionMatrixP2': '',
                 'valueAddedMatrixP1': '',
@@ -320,7 +320,7 @@ class MainWindow(QtGui.QMainWindow):
                 'period1': '',
                 'period2': '',
             },
-            'DialogLumensTARegionalEconomyLandDistributionRequirementAnalysis': {'QToolBar { background-color: #225, 229, 237; }'
+            'DialogLumensTARegionalEconomyLandDistributionRequirementAnalysis': {
                 'intermediateConsumptionMatrix': '',
                 'valueAddedMatrix': '',
                 'finalConsumptionMatrix': '',
@@ -334,7 +334,7 @@ class MainWindow(QtGui.QMainWindow):
                 'areaName': '',
                 'period': '',
             },
-            'DialogLumensTAImpactofLandUsetoRegionalEconomyIndicatorAnalysis': {'QToolBar { background-color: #225, 229, 237; }'
+            'DialogLumensTAImpactofLandUsetoRegionalEconomyIndicatorAnalysis': {
                 'intermediateConsumptionMatrix': '',
                 'valueAddedMatrix': '',
                 'finalConsumptionMatrix': '',
@@ -349,7 +349,7 @@ class MainWindow(QtGui.QMainWindow):
                 'areaName': '',
                 'period': '',
             },
-            'DialogLumensTARegionalEconomyFinalDemandChangeMultiplierAnalysis': {'QToolBar { background-color: #225, 229, 237; }'
+            'DialogLumensTARegionalEconomyFinalDemandChangeMultiplierAnalysis': {
                 'intermediateConsumptionMatrix': '',
                 'valueAddedMatrix': '',
                 'finalConsumptionMatrix': '',
@@ -365,7 +365,7 @@ class MainWindow(QtGui.QMainWindow):
                 'period': '',
                 'finalDemandChangeScenario': '',
             },
-            'DialogLumensTARegionalEconomyGDPChangeMultiplierAnalysis': {'QToolBar { background-color: #225, 229, 237; }'
+            'DialogLumensTARegionalEconomyGDPChangeMultiplierAnalysis': {
                 'intermediateConsumptionMatrix': '',
                 'valueAddedMatrix': '',
                 'finalConsumptionMatrix': '',
@@ -381,45 +381,45 @@ class MainWindow(QtGui.QMainWindow):
                 'areaName': '',
                 'period': '',
             },
-            'DialogLumensSCIENDOHistoricalBaselineProjection': {'QToolBar { background-color: #225, 229, 237; }'
+            'DialogLumensSCIENDOHistoricalBaselineProjection': {
                 'QUESCDatabase': '',
                 'iteration': '',
             },
-            'DialogLumensSCIENDOHistoricalBaselineAnnualProjection': {'QToolBar { background-color: #225, 229, 237; }'
+            'DialogLumensSCIENDOHistoricalBaselineAnnualProjection': {
                 'iteration': '',
             },
-            'DialogLumensSCIENDODriversAnalysis': {'QToolBar { background-color: #225, 229, 237; }'
+            'DialogLumensSCIENDODriversAnalysis': {
                 'landUseCoverChangeDrivers': '',
                 'landUseCoverChangeType': '',
             },
-            'DialogLumensSCIENDOBuildScenario': {'QToolBar { background-color: #225, 229, 237; }'
+            'DialogLumensSCIENDOBuildScenario': {
                 'historicalBaselineCar': '',
             },
-            'DialogLumensSCIENDOCalculateTransitionMatrix': {'QToolBar { background-color: #225, 229, 237; }'
+            'DialogLumensSCIENDOCalculateTransitionMatrix': {
                 'factorsDir': '',
                 'landUseLookup': '',
                 'baseYear': '',
                 'location': '',
             },
-            'DialogLumensSCIENDOCreateRasterCube': {'QToolBar { background-color: #225, 229, 237; }'
+            'DialogLumensSCIENDOCreateRasterCube': {
                 'factorsDir': '',
                 'landUseLookup': '',
                 'baseYear': '',
                 'location': '',
             },
-            'DialogLumensSCIENDOCalculateWeightofEvidence': {'QToolBar { background-color: #225, 229, 237; }'
+            'DialogLumensSCIENDOCalculateWeightofEvidence': {
                 'factorsDir': '',
                 'landUseLookup': '',
                 'baseYear': '',
                 'location': '',
             },
-            'DialogLumensSCIENDOSimulateLandUseChange': {'QToolBar { background-color: #225, 229, 237; }'
+            'DialogLumensSCIENDOSimulateLandUseChange': {
                 'factorsDir': '',
                 'landUseLookup': '',
                 'baseYear': '',
                 'location': '',
             },
-            'DialogLumensSCIENDOSimulateWithScenario': {'QToolBar { background-color: #225, 229, 237; }'
+            'DialogLumensSCIENDOSimulateWithScenario': {
                 'factorsDir': '',
                 'landUseLookup': '',
                 'baseYear': '',
@@ -611,7 +611,7 @@ class MainWindow(QtGui.QMainWindow):
         self.setWindowTitle(self.windowTitle.format(__version__, ''))
 
         self.centralWidget = QtGui.QWidget(self)
-        self.centralWidget.setStyleSheet('QWidget { background-color: #225, 229, 237; }')
+        self.centralWidget.setStyleSheet('QWidget { background-color: rgb(225, 229, 237); }')
         self.centralWidget.setMinimumSize(1024, 600)
         self.setCentralWidget(self.centralWidget)
         
@@ -640,7 +640,7 @@ class MainWindow(QtGui.QMainWindow):
         
         # Floating toolbar
         self.toolBar = QtGui.QToolBar(self)
-        self.toolBar.setStyleSheet('QToolBar { background-color: #225, 229, 237; } QToolButton { color: #173, 185, 202; }')
+        self.toolBar.setStyleSheet('QToolBar { background-color: rgb(225, 229, 237); } QToolButton { color: rgb(173, 185, 202); }')
         self.addToolBar(QtCore.Qt.LeftToolBarArea, self.toolBar)
         self.toolBar.setOrientation(QtCore.Qt.Vertical)
         self.toolBar.setAllowedAreas(QtCore.Qt.LeftToolBarArea)
@@ -649,15 +649,15 @@ class MainWindow(QtGui.QMainWindow):
         self.dialogToolBar.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
         self.dialogToolBar.setIconSize(QtCore.QSize(50, 50))
         self.dialogToolBar.setMovable(False)
-        self.dialogToolBar.setStyleSheet('QToolBar { background: url(./ui/images/logo.png) right no-repeat; padding: 10px; background-color: #225, 229, 237; } QToolButton { color: #173, 185, 202; }')
+        self.dialogToolBar.setStyleSheet('QToolBar { background: url(./ui/images/logo.png) right no-repeat; padding: 10px; background-color: rgb(225, 229, 237); } QToolButton { color: rgb(173, 185, 202); }')
         self.addToolBar(QtCore.Qt.TopToolBarArea, self.dialogToolBar)
         
         self.statusBar = QtGui.QStatusBar(self)
-        self.statusBar.setStyleSheet('QStatusBar { background-color: #225, 229, 237;; }')
+        self.statusBar.setStyleSheet('QStatusBar { background-color: rgb(225, 229, 237); }')
         self.statusBar.setSizeGripEnabled(False)
         
         self.labelMapCanvasCoordinate = QtGui.QLabel(self)
-        self.labelMapCanvasCoordinate.setStyleSheet('QLabel { margin-right: 10px; color: #173, 185, 202; }')
+        self.labelMapCanvasCoordinate.setStyleSheet('QLabel { margin-right: 10px; color: rgb(173, 185, 202); }')
         self.labelMapCanvasCoordinate.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignVCenter)
         
         self.statusBar.addPermanentWidget(self.labelMapCanvasCoordinate)
@@ -863,12 +863,12 @@ class MainWindow(QtGui.QMainWindow):
         self.layoutActiveProject = QtGui.QHBoxLayout()
         self.labelActiveProject = QtGui.QLabel(self)
         self.labelActiveProject.setText('Active project:')
-        self.labelActiveProject.setStyleSheet('QLabel { color: #244, 248, 252; }')
+        self.labelActiveProject.setStyleSheet('QLabel { color: rgb(95, 98, 102); }')
         self.layoutActiveProject.addWidget(self.labelActiveProject)
         
         self.lineEditActiveProject = QtGui.QLineEdit(self)
         self.lineEditActiveProject.setReadOnly(True)
-        self.lineEditActiveProject.setStyleSheet('QLineEdit { background-color: #244, 248, 252; }')
+        self.lineEditActiveProject.setStyleSheet('QLineEdit { background-color: rgb(244, 248, 252); }')
         self.layoutActiveProject.addWidget(self.lineEditActiveProject)
         
         self.layerListView = QtGui.QListView(self)
@@ -898,17 +898,21 @@ class MainWindow(QtGui.QMainWindow):
         sidebarTabWidgetStylesheet = """
         QTabWidget::pane {
             border: none;
-            background-color: #244, 248, 252;
+            background-color: rgb(244, 248, 252);
         }
         QTabBar::tab {
-            background-color: #244, 248, 252;
-            color: #244, 248, 252;
+            background-color: rgb(174, 176, 178);
+            color: rgb(95, 98, 102);
             height: 50px; 
             width: 100px;
+            font-size: 14px;
         }
         QTabBar::tab:selected, QTabBar::tab:hover {
-            background-color: #244, 248, 252;
-            color: #244, 248, 252;
+            background-color: rgb(244, 248, 252);
+            color: rgb(56, 65, 73);
+        }
+        QTabBar::tab::selected{
+            font: bold;
         }
         """
         self.sidebarTabWidget.setStyleSheet(sidebarTabWidgetStylesheet)
@@ -918,22 +922,22 @@ class MainWindow(QtGui.QMainWindow):
         
         self.tabLayers = QtGui.QWidget()
         self.tabDatabase = QtGui.QWidget()
-        self.tabDatabase.setStyleSheet('background-color: rgb(225, 229, 237);')
-        self.tabDashboard = QtGui.QWidget()
+        self.tabDatabase.setStyleSheet('QWidget{ background-color: rgb(244, 248, 252); }')
+        # self.tabDashboard = QtGui.QWidget()
         #self.tabProject = QtGui.QWidget()
         self.tabHelp = QtGui.QWidget()
-        self.tabHelp.setStyleSheet('background-color: rgb(225, 229, 237);')
+        self.tabHelp.setStyleSheet('QWidget{ background-color: rgb(244, 248, 252); }')
         
         self.layoutTabLayers = QtGui.QVBoxLayout()
         self.layoutTabDatabase = QtGui.QVBoxLayout()
         self.layoutTabDatabase.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
-        self.layoutTabDashboard = QtGui.QVBoxLayout()
+        # self.layoutTabDashboard = QtGui.QVBoxLayout()
         #self.layoutTabProject = QtGui.QVBoxLayout()
         self.layoutTabHelp = QtGui.QVBoxLayout()
         
         self.tabLayers.setLayout(self.layoutTabLayers)
         self.tabDatabase.setLayout(self.layoutTabDatabase)
-        self.tabDashboard.setLayout(self.layoutTabDashboard)
+        # self.tabDashboard.setLayout(self.layoutTabDashboard)
         #self.tabProject.setLayout(self.layoutTabProject)
         self.tabHelp.setLayout(self.layoutTabHelp)
         
@@ -941,13 +945,10 @@ class MainWindow(QtGui.QMainWindow):
         # Setup 'Dashboard' tab => 'Templates' tab
         #***********************************************************
         self.tabDashboardPUR = QtGui.QWidget()
-        self.tabDashboardPUR.setStyleSheet('background-color: rgb(225, 229, 237);')
+        self.tabDashboardPUR.setStyleSheet('QWidget{ background-color: rgb(244, 248, 252); }')
         self.tabDashboardQUES = QtGui.QWidget()
-        self.tabDashboardQUES.setStyleSheet('background-color: rgb(1225, 229, 237);')
         self.tabDashboardTA = QtGui.QWidget()
-        self.tabDashboardTA.setStyleSheet('background-color: rgb(225, 229, 237);')
         self.tabDashboardSCIENDO = QtGui.QWidget()
-        self.tabDashboardSCIENDO.setStyleSheet('background-color: rgb(225, 229, 237);')
         
         self.layoutDashboardPUR = QtGui.QGridLayout()
         self.layoutDashboardQUES = QtGui.QVBoxLayout()
@@ -983,17 +984,17 @@ class MainWindow(QtGui.QMainWindow):
         self.QUESTabWidget = QtGui.QTabWidget()
         QUESTabWidgetStylesheet = """
         QTabWidget QWidget { 
-            background-color: rgb(244, 248, 252);
+            background-color: rgb(217, 229, 252);
+            color: rgb(95, 98, 102);
         }
         QTabBar::tab {
             background-color: rgb(244, 248, 252);
-            color: #244, 248, 252;
             height: 50px; 
-            width: 100px;            
+            width: 120px;            
         }
         QTabBar::tab:selected, QTabBar::tab:hover {
-            background-color: rgb(244, 248, 252);
-            color: #244, 248, 252;
+            background-color: rgb(217, 229, 252);
+            font: bold;
         }
         """
         self.QUESTabWidget.setStyleSheet(QUESTabWidgetStylesheet)
@@ -1034,17 +1035,17 @@ class MainWindow(QtGui.QMainWindow):
         self.TATabWidget = QtGui.QTabWidget()
         TATabWidgetStylesheet = """
         QTabWidget QWidget { 
-            background-color: rgb(244, 248, 252);
+            background-color: rgb(217, 229, 252);
+            color: rgb(95, 98, 102);
         }
         QTabBar::tab {
             background-color: rgb(244, 248, 252);
-            color: #244, 248, 252;
             height: 50px; 
-            width: 100px;             
+            width: 200px;             
         }
         QTabBar::tab:selected, QTabBar::tab:hover {
-            background-color: rgb(244, 248, 252);
-            color: #244, 248, 252;
+            background-color: rgb(217, 229, 252);
+            font: bold;
         }
         """
         self.TATabWidget.setStyleSheet(TATabWidgetStylesheet)
@@ -1071,17 +1072,17 @@ class MainWindow(QtGui.QMainWindow):
         self.SCIENDOTabWidget = QtGui.QTabWidget()
         SCIENDOTabWidgetStylesheet = """
         QTabWidget QWidget { 
-            background-color: rgb(244, 248, 252);
+            background-color: rgb(217, 229, 252);
+            color: rgb(95, 98, 102);
         }
         QTabBar::tab {
             background-color: rgb(244, 248, 252);
-            color: #244, 248, 252;
             height: 50px; 
-            width: 100px;            
+            width: 280px;             
         }
         QTabBar::tab:selected, QTabBar::tab:hover {
-            background-color: rgb(244, 248, 252);
-            color: #244, 248, 252;
+            background-color: rgb(217, 229, 252);
+            font: bold;
         }
         """
         self.SCIENDOTabWidget.setStyleSheet(SCIENDOTabWidgetStylesheet)
@@ -1742,7 +1743,7 @@ class MainWindow(QtGui.QMainWindow):
         self.layoutGroupBoxProjectExplore.addWidget(self.projectTreeView)
         self.layoutTabLayers.addWidget(self.groupBoxProjectLayers)
         self.layoutTabLayers.addWidget(self.groupBoxProjectExplore)
-        self.layoutTabDashboard.addWidget(self.dashboardTabWidget)
+        #self.layoutTabDashboard.addWidget(self.dashboardTabWidget)
         #self.layoutTabProject.addWidget(self.projectTreeView)
         
         self.layersToolBar = QtGui.QToolBar(self)
@@ -1779,7 +1780,7 @@ class MainWindow(QtGui.QMainWindow):
         self.sidebarDockWidget.setContentsMargins(5, 10, 5, 5)
         self.sidebarDockWidget.setFeatures(self.sidebarDockWidget.features() & QtGui.QDockWidget.AllDockWidgetFeatures)
         self.sidebarDockWidget.setWidget(self.sidebarTabWidget)
-        self.sidebarDockWidget.setStyleSheet('QDockWidget { background-color: #225, 229, 237; } QToolBar { border: none; }') # Remove border for all child QToolBar in sidebar
+        self.sidebarDockWidget.setStyleSheet('QDockWidget { background-color: rgb(225, 229, 237); } QToolBar { border: none; }') # Remove border for all child QToolBar in sidebar
         self.sidebarDockWidget.setFloating(True)
         self.sidebarDockWidget.setMinimumHeight(520)
         self.sidebarDockWidgetAction = self.sidebarDockWidget.toggleViewAction()
@@ -1814,7 +1815,7 @@ class MainWindow(QtGui.QMainWindow):
         self.contentBody.setLayout(self.layoutBody)
         
         self.log_box = QPlainTextEditLogger(self)
-        self.log_box.widget.setStyleSheet('QPlainTextEdit { color: #225, 229, 237; }')
+        self.log_box.widget.setStyleSheet('QPlainTextEdit { color: rgb(225, 229, 237); }')
         # Show the logging widget only in debug mode
         if not self.appSettings['debug']:
             self.log_box.widget.setVisible(False)
