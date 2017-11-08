@@ -103,7 +103,7 @@ class MainWindow(QtGui.QMainWindow):
             'defaultBasemapFilePath': '',
             'defaultVectorFile': 'landmarks.shp',
             'defaultVectorFilePath': '',
-            'defaultHabitatLookupTable': 'C:/LUMENS_test/GGP_Papua/forDemo/5_Tabular/Tabel_habitat2.csv',
+            'defaultHabitatLookupTable': '',
             'selectQgsProjectfileExt': '.qgs',
             'selectShapefileExt': '.shp',
             'selectRasterfileExt': '.tif',
@@ -607,7 +607,7 @@ class MainWindow(QtGui.QMainWindow):
         9. QgsMapCanvas instance
         10. Map tools
         """
-        self.windowTitle = 'LUMENS v {0} {1}'
+        self.windowTitle = 'LUMENS v{0} {1}'
         self.setWindowTitle(self.windowTitle.format(__version__, ''))
 
         self.centralWidget = QtGui.QWidget(self)
@@ -649,7 +649,7 @@ class MainWindow(QtGui.QMainWindow):
         self.dialogToolBar.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
         self.dialogToolBar.setIconSize(QtCore.QSize(50, 50))
         self.dialogToolBar.setMovable(False)
-        self.dialogToolBar.setStyleSheet('QToolBar { background: url(./ui/images/logo.png) right no-repeat; padding: 10px; background-color: rgb(225, 229, 237); } QToolButton { color: rgb(173, 185, 202); }')
+        self.dialogToolBar.setStyleSheet('QToolBar { background: url(./ui/images/logo.png) right no-repeat; padding: 10px; background-color: rgb(225, 229, 237); } QToolButton { color: rgb(95, 98, 102); }')
         self.addToolBar(QtCore.Qt.TopToolBarArea, self.dialogToolBar)
         
         self.statusBar = QtGui.QStatusBar(self)
@@ -2493,6 +2493,8 @@ class MainWindow(QtGui.QMainWindow):
         self.actionLumensDeleteData.setDisabled(True)
         
         outputs = general.runalg('r:lumensdeletedata')
+        
+        self.loadAddedDataInfo()
         
         self.actionLumensDeleteData.setEnabled(True)
         logging.getLogger(type(self).__name__).info('end: lumensdeletedata')
