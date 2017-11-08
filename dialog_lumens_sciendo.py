@@ -407,24 +407,37 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         Args:
             parent: the dialog's parent instance.
         """
-        self.setStyleSheet('QDialog { background-color: #222; } QMessageBox QLabel{ color: #fff; }')
+        self.setStyleSheet('QDialog { background-color: rgb(225, 229, 237); } QMessageBox QLabel{ color: #fff; }')
         self.dialogLayout = QtGui.QVBoxLayout()
+
+        self.groupBoxSCIENDODialog = QtGui.QGroupBox('Scenario Simulation Development')
+        self.layoutGroupBoxSCIENDODialog = QtGui.QVBoxLayout()
+        self.layoutGroupBoxSCIENDODialog.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.groupBoxSCIENDODialog.setLayout(self.layoutGroupBoxSCIENDODialog)
+        self.labelSCIENDODialogInfo = QtGui.QLabel()
+        self.labelSCIENDODialogInfo.setText('Lorem ipsum dolor sit amet...')
+        self.layoutGroupBoxSCIENDODialog.addWidget(self.labelSCIENDODialogInfo)
+
         self.tabWidget = QtGui.QTabWidget()
         tabWidgetStylesheet = """
         QTabWidget::pane {
             border: none;
-            background-color: #fff;
+            background-color: rgb(244, 248, 252);
         }
         QTabBar::tab {
-            background-color: #222;
-            color: #fff;
-            height: 50px; 
-            width: 100px;                  
+            background-color: rgb(174, 176, 178);
+            color: rgb(95, 98, 102);
+            height: 35px; 
+            width: 200px;  
+            font-size: 13px;                 
         }
         QTabBar::tab:selected, QTabBar::tab:hover {
-            background-color: #fff;
-            color: #000;
+            background-color: rgb(244, 248, 252);
+            color: rgb(56, 65, 73);
         }
+        QTabBar::tab:selected{
+            font: bold;
+        }        
         """
         self.tabWidget.setStyleSheet(tabWidgetStylesheet)
         
@@ -432,7 +445,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.tabLandUseChangeModeling = QtGui.QWidget()
         self.tabLog = QtGui.QWidget()
         
-        self.tabWidget.addTab(self.tabLowEmissionDevelopmentAnalysis, 'Low Emission Development Analysis')
+        self.tabWidget.addTab(self.tabLowEmissionDevelopmentAnalysis, 'LED Analysis')
         self.tabWidget.addTab(self.tabLandUseChangeModeling, 'Land Use Change Modeling')
         self.tabWidget.addTab(self.tabLog, 'Log')
         
@@ -445,7 +458,8 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.tabLowEmissionDevelopmentAnalysis.setLayout(self.layoutTabLowEmissionDevelopmentAnalysis)
         self.tabLandUseChangeModeling.setLayout(self.layoutTabLandUseChangeModeling)
         self.tabLog.setLayout(self.layoutTabLog)
-        
+
+        self.dialogLayout.addWidget(self.groupBoxSCIENDODialog)
         self.dialogLayout.addWidget(self.tabWidget)
         
         #***********************************************************
@@ -686,6 +700,22 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         # Setup 'Land Use Change Modeling' tab
         #***********************************************************
         self.tabWidgetLandUseChangeModeling = QtGui.QTabWidget()
+        LandUseChangeModelingTabWidgetStylesheet = """
+        QTabWidget QWidget {
+            background-color: rgb(217, 229, 252);
+            color: rgb(95, 98, 102);
+        }
+        QTabBar::tab {
+            background-color: rgb(244, 248, 252);
+            height: 35px;
+            width: 240px;
+        }
+        QTabBar::tab:selected, QTabBar::tab:hover {
+            background-color: rgb(217, 229, 252);
+            font: bold;
+        }
+        """
+        self.tabWidgetLandUseChangeModeling.setStyleSheet(LandUseChangeModelingTabWidgetStylesheet)
         
         self.tabCreateRasterCubeOfFactors = QtGui.QWidget()
         self.tabCalculateTransitionMatrix = QtGui.QWidget()
@@ -695,7 +725,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.tabWidgetLandUseChangeModeling.addTab(self.tabCreateRasterCubeOfFactors, 'Create Raster Cube Of Factors')
         self.tabWidgetLandUseChangeModeling.addTab(self.tabCalculateTransitionMatrix, 'Calculate Transition Matrix')
         # self.tabWidgetLandUseChangeModeling.addTab(self.tabCalculateWeightOfEvidence, 'Calculate Weight Of Evidence')
-        self.tabWidgetLandUseChangeModeling.addTab(self.tabSimulateLandUseChangeModeling, 'Simulate Land Use Change Modeling')
+        self.tabWidgetLandUseChangeModeling.addTab(self.tabSimulateLandUseChangeModeling, 'Simulate LUC Modeling')
         
         self.layoutTabLandUseChangeModeling.addWidget(self.tabWidgetLandUseChangeModeling)
         
@@ -1663,7 +1693,10 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
                 # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
                 self.main.setWindowState(QtCore.Qt.WindowActive)
                 
-                self.outputsMessageBox(algName, outputs, '', '')
+                algSuccess = self.outputsMessageBox(algName, outputs, '', '')
+                
+                if algSuccess:
+                    self.main.loadAddedDataInfo()
                 
                 self.buttonProcessLowEmissionDevelopmentAnalysis.setEnabled(True)
                 logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
@@ -1703,7 +1736,10 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
                     # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
                     self.main.setWindowState(QtCore.Qt.WindowActive)
                     
-                    self.outputsMessageBox(algName, outputs, '', '')
+                    algSuccess = self.outputsMessageBox(algName, outputs, '', '')
+                    
+                    if algSuccess:
+                        self.main.loadAddedDataInfo()
                     
                     self.buttonProcessLowEmissionDevelopmentAnalysis.setEnabled(True)
                     logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
@@ -1741,7 +1777,10 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
                 # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
                 self.main.setWindowState(QtCore.Qt.WindowActive)
                 
-                self.outputsMessageBox(algName, outputs, '', '')
+                algSuccess = self.outputsMessageBox(algName, outputs, '', '')
+                
+                if algSuccess:
+                    self.main.loadAddedDataInfo()                
                 
                 self.buttonProcessLowEmissionDevelopmentAnalysis.setEnabled(True)
                 logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
@@ -1930,7 +1969,10 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
                 # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
                 self.main.setWindowState(QtCore.Qt.WindowActive)
                 
-                self.outputsMessageBox(algName, outputs, '', '')
+                algSuccess = self.outputsMessageBox(algName, outputs, '', '')
+                
+                if algSuccess:
+                    self.main.loadAddedDataInfo()                
                 
                 self.buttonProcessLandUseChangeModeling.setEnabled(True)
                 logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
@@ -1966,7 +2008,10 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
                 # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
                 self.main.setWindowState(QtCore.Qt.WindowActive)
                 
-                self.outputsMessageBox(algName, outputs, '', '')
+                algSuccess = self.outputsMessageBox(algName, outputs, '', '')
+                
+                if algSuccess:
+                    self.main.loadAddedDataInfo()                
                 
                 self.buttonProcessLandUseChangeModeling.setEnabled(True)
                 logging.getLogger(type(self).__name__).info('alg end: %s' % formName)

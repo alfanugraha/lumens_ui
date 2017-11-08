@@ -628,13 +628,13 @@ class MainWindow(QtGui.QMainWindow):
         self.quesMenu = self.menubar.addMenu('&QUES')
         self.taMenu = self.menubar.addMenu('&TA')
         self.sciendoMenu = self.menubar.addMenu('&SCIENDO')
-        self.aboutMenu = self.menubar.addMenu('&About')
+        self.helpMenu = self.menubar.addMenu('&Help')
         
         # 20160601: the menu bar must be hidden
         self.actionToggleMenubar = QtGui.QAction('Menu bar', self)
         self.actionToggleMenubar.setShortcut('f11')
         self.actionToggleMenubar.setCheckable(True)
-        self.actionToggleMenubar.setChecked(True)
+        self.actionToggleMenubar.setChecked(False)
         self.actionToggleMenubar.triggered.connect(self.handlerToggleMenuBar)
         self.actionToggleMenubar.trigger()
         
@@ -817,6 +817,7 @@ class MainWindow(QtGui.QMainWindow):
         self.actionDialogLumensPUR.setIconText('PUR')
         
         self.purMenu.addAction(self.actionDialogLumensPUR)
+        self.purMenu.menuAction().setVisible(False)
         
         # QUES menu
         icon = QtGui.QIcon(':/ui/icons/iconActionDialogLumensQUES.png')
@@ -824,6 +825,7 @@ class MainWindow(QtGui.QMainWindow):
         self.actionDialogLumensQUES.setIconText('QUES')
         
         self.quesMenu.addAction(self.actionDialogLumensQUES)
+        self.quesMenu.menuAction().setVisible(False)
         
         # TA menu
         icon = QtGui.QIcon(':/ui/icons/iconActionDialogLumensTA.png')
@@ -833,24 +835,26 @@ class MainWindow(QtGui.QMainWindow):
         
         self.taMenu.addAction(self.actionDialogLumensTAOpportunityCost)
         self.taMenu.addAction(self.actionDialogLumensTARegionalEconomy)
-        
+        self.taMenu.menuAction().setVisible(False)
+
         # SCIENDO menu
         icon = QtGui.QIcon(':/ui/icons/iconActionDialogLumensSCIENDO.png')
         self.actionDialogLumensSCIENDO = QtGui.QAction(icon, 'SCIENDO', self)
         self.actionDialogLumensSCIENDO.setIconText('SCIENDO')
         
         self.sciendoMenu.addAction(self.actionDialogLumensSCIENDO)
-        
+        self.sciendoMenu.menuAction().setVisible(False)
+
         # About menu
         icon = QtGui.QIcon(':/ui/icons/iconActionHelp.png')
         ##self.actionDialogLumensGuide = QtGui.QAction(icon, 'Open Guide', self)
         self.actionDialogLumensHelp = QtGui.QAction(icon, 'Open Help', self)
         self.actionDialogLumensAbout = QtGui.QAction('About LUMENS', self)
         
-        ##self.aboutMenu.addAction(self.actionDialogLumensGuide)
-        self.aboutMenu.addAction(self.actionDialogLumensHelp)
-        self.aboutMenu.addSeparator()
-        self.aboutMenu.addAction(self.actionDialogLumensAbout)
+        ##self.helpMenu.addAction(self.actionDialogLumensGuide)
+        self.helpMenu.addAction(self.actionDialogLumensHelp)
+        self.helpMenu.addSeparator()
+        self.helpMenu.addAction(self.actionDialogLumensAbout)
         
         # Dialog toolbar
         self.dialogToolBar.addAction(self.actionDialogLumensPUR)
@@ -903,7 +907,7 @@ class MainWindow(QtGui.QMainWindow):
         QTabBar::tab {
             background-color: rgb(174, 176, 178);
             color: rgb(95, 98, 102);
-            height: 50px; 
+            height: 40px; 
             width: 100px;
             font-size: 14px;
         }
@@ -911,7 +915,7 @@ class MainWindow(QtGui.QMainWindow):
             background-color: rgb(244, 248, 252);
             color: rgb(56, 65, 73);
         }
-        QTabBar::tab::selected{
+        QTabBar::tab:selected{
             font: bold;
         }
         """
@@ -989,7 +993,7 @@ class MainWindow(QtGui.QMainWindow):
         }
         QTabBar::tab {
             background-color: rgb(244, 248, 252);
-            height: 50px; 
+            height: 35px; 
             width: 120px;            
         }
         QTabBar::tab:selected, QTabBar::tab:hover {
@@ -1040,7 +1044,7 @@ class MainWindow(QtGui.QMainWindow):
         }
         QTabBar::tab {
             background-color: rgb(244, 248, 252);
-            height: 50px; 
+            height: 35px; 
             width: 200px;             
         }
         QTabBar::tab:selected, QTabBar::tab:hover {
@@ -1077,7 +1081,7 @@ class MainWindow(QtGui.QMainWindow):
         }
         QTabBar::tab {
             background-color: rgb(244, 248, 252);
-            height: 50px; 
+            height: 35px; 
             width: 280px;             
         }
         QTabBar::tab:selected, QTabBar::tab:hover {

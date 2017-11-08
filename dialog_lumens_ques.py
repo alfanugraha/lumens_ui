@@ -845,23 +845,36 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         Args:
             parent: the dialog's parent instance.
         """
-        self.setStyleSheet('QDialog { background-color: #222; } QMessageBox QLabel { color: #fff; }')
+        self.setStyleSheet('QDialog { background-color: rgb(225, 229, 237); } QMessageBox QLabel { color: #fff; }')
         self.dialogLayout = QtGui.QVBoxLayout()
+
+        self.groupBoxQUESDialog = QtGui.QGroupBox('Quantification of Environmental Services')
+        self.layoutGroupBoxQUESDialog = QtGui.QVBoxLayout()
+        self.layoutGroupBoxQUESDialog.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.groupBoxQUESDialog.setLayout(self.layoutGroupBoxQUESDialog)
+        self.labelQUESDialogInfo = QtGui.QLabel()
+        self.labelQUESDialogInfo.setText('Lorem ipsum dolor sit amet...')
+        self.layoutGroupBoxQUESDialog.addWidget(self.labelQUESDialogInfo)
+
         self.tabWidget = QtGui.QTabWidget()
         tabWidgetStylesheet = """
         QTabWidget::pane {
             border: none;
-            background-color: #fff;
+            background-color: rgb(244, 248, 252);
         }
         QTabBar::tab {
-            background-color: #222;
-            color: #fff;
-            height: 50px; 
+            background-color: rgb(174, 176, 178);
+            color: rgb(95, 98, 102);
+            height: 35px; 
             width: 100px;                  
+            font-size: 13px;
         }
         QTabBar::tab:selected, QTabBar::tab:hover {
-            background-color: #fff;
-            color: #000;
+            background-color: rgb(244, 248, 252);
+            color: rgb(56, 65, 73);
+        }
+        QTabBar::tab:selected{
+            font: bold;
         }
         """
         self.tabWidget.setStyleSheet(tabWidgetStylesheet)
@@ -896,7 +909,8 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.tabQUESH.setLayout(self.layoutTabQUESH)
         self.tabReclassification.setLayout(self.layoutTabReclassification)
         self.tabLog.setLayout(self.layoutTabLog)
-        
+
+        self.dialogLayout.addWidget(self.groupBoxQUESDialog)
         self.dialogLayout.addWidget(self.tabWidget)
         
         #***********************************************************
@@ -1425,6 +1439,22 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         # Setup 'QUES-H' tab
         #***********************************************************
         self.tabWidgetQUESH = QtGui.QTabWidget()
+        QUESHTabWidgetStylesheet = """
+        QTabWidget QWidget {
+            background-color: rgb(217, 229, 252);
+            color: rgb(95, 98, 102);
+        }
+        QTabBar::tab {
+            background-color: rgb(244, 248, 252);
+            height: 35px;
+            width: 200px;
+        }
+        QTabBar::tab:selected, QTabBar::tab:hover {
+            background-color: rgb(217, 229, 252);
+            font: bold;
+        }
+        """
+        self.tabWidgetQUESH.setStyleSheet(QUESHTabWidgetStylesheet)
         
         self.tabWatershedDelineation = QtGui.QWidget()
         self.tabHRUDefinition = QtGui.QWidget()
@@ -1432,7 +1462,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.tabWatershedIndicators = QtGui.QWidget()
         
         ###self.tabWidgetQUESH.addTab(self.tabWatershedDelineation, 'Watershed Delineation')
-        self.tabWidgetQUESH.addTab(self.tabHRUDefinition, 'Hydrological Response Unit Definition')
+        self.tabWidgetQUESH.addTab(self.tabHRUDefinition, 'HRU Definition')
         self.tabWidgetQUESH.addTab(self.tabWatershedModelEvaluation, 'Watershed Model Evaluation')
         self.tabWidgetQUESH.addTab(self.tabWatershedIndicators, 'Watershed Indicators')
         
@@ -3081,7 +3111,10 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
             self.main.setWindowState(QtCore.Qt.WindowActive)
             
-            self.outputsMessageBox(algName, outputs, '', '')
+            algSuccess = self.outputsMessageBox(algName, outputs, '', '')
+
+            if algSuccess:
+                self.main.loadAddedDataInfo()
             
             self.buttonProcessPreQUES.setEnabled(True)
             logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
@@ -3132,8 +3165,11 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                 # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
                 self.main.setWindowState(QtCore.Qt.WindowActive)
                 
-                self.outputsMessageBox(algName, outputs, '', '')
-                
+                algSuccess = self.outputsMessageBox(algName, outputs, '', '')
+
+                if algSuccess:
+                    self.main.loadAddedDataInfo()
+
                 self.buttonProcessQUESC.setEnabled(True)
                 logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
                 logging.getLogger(self.historyLog).info('alg end: %s' % formName)
@@ -3165,8 +3201,11 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                 # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
                 self.main.setWindowState(QtCore.Qt.WindowActive)
                 
-                self.outputsMessageBox(algName, outputs, '', '')
-                
+                algSuccess = self.outputsMessageBox(algName, outputs, '', '')
+
+                if algSuccess:
+                    self.main.loadAddedDataInfo()
+
                 self.buttonProcessQUESC.setEnabled(True)
                 logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
                 logging.getLogger(self.historyLog).info('alg end: %s' % formName)
@@ -3205,7 +3244,10 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                     # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
                     self.main.setWindowState(QtCore.Qt.WindowActive)
 
-                    self.outputsMessageBox(algName, outputs, '', '')
+                    algSuccess = self.outputsMessageBox(algName, outputs, '', '')
+
+                    if algSuccess:
+                        self.main.loadAddedDataInfo()
 
                     self.buttonProcessQUESC.setEnabled(True)
                     logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
@@ -3257,7 +3299,10 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
             self.main.setWindowState(QtCore.Qt.WindowActive)
             
-            self.outputsMessageBox(algName, outputs, '', '')
+            algSuccess = self.outputsMessageBox(algName, outputs, '', '')
+
+            if algSuccess:
+                self.main.loadAddedDataInfo()
             
             self.buttonProcessQUESB.setEnabled(True)
             logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
@@ -3309,7 +3354,10 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                 # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
                 self.main.setWindowState(QtCore.Qt.WindowActive)
                 
-                self.outputsMessageBox(algName, outputs, '', '')
+                algSuccess = self.outputsMessageBox(algName, outputs, '', '')
+
+                if algSuccess:
+                    self.main.loadAddedDataInfo()
                 
                 self.buttonProcessHRUDefinition.setEnabled(True)
                 logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
@@ -3350,7 +3398,10 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                 # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
                 self.main.setWindowState(QtCore.Qt.WindowActive)
                 
-                self.outputsMessageBox(algName, outputs, '', '')
+                algSuccess = self.outputsMessageBox(algName, outputs, '', '')
+
+                if algSuccess:
+                    self.main.loadAddedDataInfo()
                 
                 self.buttonProcessHRUDefinition.setEnabled(True)
                 logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
@@ -3394,7 +3445,10 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                 # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
                 self.main.setWindowState(QtCore.Qt.WindowActive)
                 
-                self.outputsMessageBox(algName, outputs, '', '')
+                algSuccess = self.outputsMessageBox(algName, outputs, '', '')
+
+                if algSuccess:
+                    self.main.loadAddedDataInfo()
                 
                 self.buttonProcessHRUDefinition.setEnabled(True)
                 logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
@@ -3446,7 +3500,10 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
             self.main.setWindowState(QtCore.Qt.WindowActive)
             
-            self.outputsMessageBox(algName, outputs, '', '')
+            algSuccess = self.outputsMessageBox(algName, outputs, '', '')
+
+            if algSuccess:
+                self.main.loadAddedDataInfo()
             
             self.buttonProcessWatershedModelEvaluation.setEnabled(True)
             logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
@@ -3503,7 +3560,10 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
             self.main.setWindowState(QtCore.Qt.WindowActive)
             
-            self.outputsMessageBox(algName, outputs, '', '')
+            algSuccess = self.outputsMessageBox(algName, outputs, '', '')
+
+            if algSuccess:
+                self.main.loadAddedDataInfo()
             
             self.buttonProcessWatershedIndicators.setEnabled(True)
             logging.getLogger(type(self).__name__).info('alg end: %s' % formName)

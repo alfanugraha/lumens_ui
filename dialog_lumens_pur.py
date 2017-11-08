@@ -293,10 +293,11 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
 
         self.groupBoxPURDialog = QtGui.QGroupBox('Planning Unit Reconciliation')
         self.layoutGroupBoxPURDialog = QtGui.QVBoxLayout()
+        self.layoutGroupBoxPURDialog.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxPURDialog.setLayout(self.layoutGroupBoxPURDialog)
-        self.labelPURDialog = QtGui.QLabel()
-        self.labelPURDialog.setText('Lorem ipsum dolor sit amet...\nLorem ipsum dolor sit amet\n')
-        self.layoutGroupBoxPURDialog.addWidget(self.labelPURDialog)
+        self.labelPURDialogInfo = QtGui.QLabel()
+        self.labelPURDialogInfo.setText('Lorem ipsum dolor sit amet...')
+        self.layoutGroupBoxPURDialog.addWidget(self.labelPURDialogInfo)
 
         self.tabWidget = QtGui.QTabWidget()
         tabWidgetStylesheet = """
@@ -307,7 +308,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         QTabBar::tab {
             background-color: rgb(174, 176, 178);
             color: rgb(95, 98, 102);
-            height: 40px; 
+            height: 35px; 
             width: 100px;  
             font-size: 13px;                
         }
@@ -315,7 +316,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
             background-color: rgb(244, 248, 252);
             color: rgb(56, 65, 73);
         }
-        QTabBar::tab::selected{
+        QTabBar::tab:selected{
             font: bold;
         }
         """

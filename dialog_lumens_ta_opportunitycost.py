@@ -392,23 +392,36 @@ class DialogLumensTAOpportunityCost(QtGui.QDialog, DialogLumensBase):
         Args:
             parent: the dialog's parent instance.
         """
-        self.setStyleSheet('QDialog { background-color: #222; }')
+        self.setStyleSheet('QDialog { background-color: rgb(225, 229, 237); }')
         self.dialogLayout = QtGui.QVBoxLayout()
+
+        self.groupBoxTADialog = QtGui.QGroupBox('Trade-Off Analysis')
+        self.layoutGroupBoxTADialog = QtGui.QVBoxLayout()
+        self.layoutGroupBoxTADialog.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.groupBoxTADialog.setLayout(self.layoutGroupBoxTADialog)
+        self.labelTADialogInfo = QtGui.QLabel()
+        self.labelTADialogInfo.setText('Lorem ipsum dolor sit amet...')
+        self.layoutGroupBoxTADialog.addWidget(self.labelTADialogInfo)
+
         self.tabWidget = QtGui.QTabWidget()
         tabWidgetStylesheet = """
         QTabWidget::pane {
             border: none;
-            background-color: #fff;
+            background-color: rgb(244, 248, 252);
         }
         QTabBar::tab {
-            background-color: #222;
-            color: #fff;
-            height: 50px; 
-            width: 100px;                  
+            background-color: rgb(174, 176, 178);
+            color: rgb(95, 98, 102);
+            height: 35px; 
+            width: 190px;      
+            font-size: 13px;             
         }
         QTabBar::tab:selected, QTabBar::tab:hover {
-            background-color: #fff;
-            color: #000;
+            background-color: rgb(244, 248, 252);
+            color: rgb(56, 65, 73);
+        }
+        QTabBar::tab:selected{
+            font: bold;
         }
         """
         self.tabWidget.setStyleSheet(tabWidgetStylesheet)
@@ -435,7 +448,8 @@ class DialogLumensTAOpportunityCost(QtGui.QDialog, DialogLumensBase):
         self.tabOpportunityCostCurve.setLayout(self.layoutTabOpportunityCostCurve)
         self.tabOpportunityCostMap.setLayout(self.layoutTabOpportunityCostMap)
         self.tabLog.setLayout(self.layoutTabLog)
-        
+
+        self.dialogLayout.addWidget(self.groupBoxTADialog)
         self.dialogLayout.addWidget(self.tabWidget)
         
         #***********************************************************
