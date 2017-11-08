@@ -206,7 +206,10 @@ class DialogLumensDeleteData(QtGui.QDialog, DialogLumensBase):
                 dialog = DialogLumensViewer(self, 'DEBUG "{0}" ({1})'.format(algName, 'processing_script.r.Rout'), 'text', self.main.appSettings['ROutFile'])
                 dialog.exec_()
 
-            self.outputsMessageBox(algName, outputs, '', '')
+            algSuccess = self.outputsMessageBox(algName, outputs, '', '')
+            
+            if algSuccess:
+                self.main.loadAddedDataInfo()
 
             logging.getLogger(type(self).__name__).info('end: LUMENS Delete Data')
         else:

@@ -49,6 +49,7 @@ from dialog_lumens_viewer import DialogLumensViewer
 
 from dialog_lumens_createdatabase import DialogLumensCreateDatabase
 from dialog_lumens_adddata import DialogLumensAddData
+from dialog_lumens_deletedata import DialogLumensDeleteData
 
 from dialog_lumens_pur import DialogLumensPUR
 from dialog_lumens_ques import DialogLumensQUES
@@ -836,7 +837,7 @@ class MainWindow(QtGui.QMainWindow):
         self.taMenu.addAction(self.actionDialogLumensTAOpportunityCost)
         self.taMenu.addAction(self.actionDialogLumensTARegionalEconomy)
         self.taMenu.menuAction().setVisible(False)
-
+        
         # SCIENDO menu
         icon = QtGui.QIcon(':/ui/icons/iconActionDialogLumensSCIENDO.png')
         self.actionDialogLumensSCIENDO = QtGui.QAction(icon, 'SCIENDO', self)
@@ -844,7 +845,7 @@ class MainWindow(QtGui.QMainWindow):
         
         self.sciendoMenu.addAction(self.actionDialogLumensSCIENDO)
         self.sciendoMenu.menuAction().setVisible(False)
-
+        
         # About menu
         icon = QtGui.QIcon(':/ui/icons/iconActionHelp.png')
         ##self.actionDialogLumensGuide = QtGui.QAction(icon, 'Open Guide', self)
@@ -2490,20 +2491,6 @@ class MainWindow(QtGui.QMainWindow):
         logging.getLogger(type(self).__name__).info('end: lumensdatabasestatus')
     
     
-    def lumensDeleteData(self):
-        """Method for calling the "r:lumensdeletedata" R algorithm.
-        """
-        logging.getLogger(type(self).__name__).info('start: lumensdeletedata')
-        self.actionLumensDeleteData.setDisabled(True)
-        
-        outputs = general.runalg('r:lumensdeletedata')
-        
-        self.loadAddedDataInfo()
-        
-        self.actionLumensDeleteData.setEnabled(True)
-        logging.getLogger(type(self).__name__).info('end: lumensdeletedata')
-    
-    
     def checkDefaultBasemap(self):
         """Method for checking the default basemap file.
         """
@@ -3210,7 +3197,7 @@ class MainWindow(QtGui.QMainWindow):
     def handlerLumensDeleteData(self):
         """Slot method for triggering the delete data operation.
         """
-        self.lumensDeleteData()
+        self.openDialog(DialogLumensDeleteData)
     
     
     def handlerLumensCloseDatabase(self):
