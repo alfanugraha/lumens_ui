@@ -415,8 +415,9 @@ class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
         R algorithm is called.
         
         The "Add Data" process calls the following algorithms:
-        1. r:lumensaddrasterdata
-        2. r:lumensaddvectordata
+        1. r:dbaddraster
+        2. r:dbaddvector
+        3. r:dbaddlut
         """
         self.setAppSettings()
         
