@@ -910,7 +910,6 @@ class MainWindow(QtGui.QMainWindow):
             color: rgb(95, 98, 102);
             height: 40px; 
             width: 100px;
-            font-size: 14px;
         }
         QTabBar::tab:selected, QTabBar::tab:hover {
             background-color: rgb(244, 248, 252);
@@ -2397,7 +2396,7 @@ class MainWindow(QtGui.QMainWindow):
         logging.getLogger(type(self).__name__).info('end: LUMENS Open Database')
 
 
-    def lumensImportDatabase(self, workingDir, lumensDatabase):
+    def lumensImportDatabase(self, zipFile, workingDir):
         """Method for importing an archived LUMENS project database  
         
         Imports an archived LUMENS project using "r:dbimport" R algorithm.
