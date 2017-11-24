@@ -300,41 +300,55 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             settings.beginGroup('DialogLumensQUESBAnalysis')
             
             templateSettings['DialogLumensQUESBAnalysis'] = {}
+            templateSettings['DialogLumensQUESBAnalysis']['landUse1'] = landUse1 = settings.value('landUse1')
+            templateSettings['DialogLumensQUESBAnalysis']['landUse2'] = landUse2 = settings.value('landUse2')
+            templateSettings['DialogLumensQUESBAnalysis']['landUse3'] = landUse3 = settings.value('landUse3')
             templateSettings['DialogLumensQUESBAnalysis']['planningUnit'] = planningUnit = settings.value('planningUnit')
-            templateSettings['DialogLumensQUESBAnalysis']['samplingGridRes'] = samplingGridRes = settings.value('samplingGridRes')
-            templateSettings['DialogLumensQUESBAnalysis']['samplingWindowSize'] = samplingWindowSize = settings.value('samplingWindowSize')
-            templateSettings['DialogLumensQUESBAnalysis']['windowShape'] = windowShape = settings.value('windowShape')
             templateSettings['DialogLumensQUESBAnalysis']['nodata'] = nodata = settings.value('nodata')
             templateSettings['DialogLumensQUESBAnalysis']['edgeContrast'] = edgeContrast = settings.value('edgeContrast')
             templateSettings['DialogLumensQUESBAnalysis']['habitatLookup'] = habitatLookup = settings.value('habitatLookup')
+            templateSettings['DialogLumensQUESBAnalysis']['windowShape'] = windowShape = settings.value('windowShape')
+            templateSettings['DialogLumensQUESBAnalysis']['samplingWindowSize'] = samplingWindowSize = settings.value('samplingWindowSize')
+            templateSettings['DialogLumensQUESBAnalysis']['samplingGridRes'] = samplingGridRes = settings.value('samplingGridRes')
             
             if not returnTemplateSettings:
+                if landUse1:
+                    indexLandCoverLandUse1 = self.comboBoxQUESBLandCoverLandUse1.findText(landUse1)
+                    if indexLandCoverLandUse1 != -1:
+                        self.comboBoxQUESBLandCoverLandUse1.setCurrentIndex(indexLandCoverLandUse1)
+                if landUse2:
+                    indexLandCoverLandUse2 = self.comboBoxQUESBLandCoverLandUse2.findText(landUse2)
+                    if indexLandCoverLandUse2 != -1:
+                        self.comboBoxQUESBLandCoverLandUse1.setCurrentIndex(indexLandCoverLandUse2)
+                if landUse3:
+                    indexLandCoverLandUse3 = self.comboBoxQUESBLandCoverLandUse3.findText(landUse3)
+                    if indexLandCoverLandUse3 != -1:
+                        self.comboBoxQUESBLandCoverLandUse3.setCurrentIndex(indexLandCoverLandUse3)                       
                 if planningUnit:
                     indexPlanningUnit = self.comboBoxQUESBPlanningUnit.findText(planningUnit)
                     if indexPlanningUnit != -1:
                         self.comboBoxQUESBPlanningUnit.setCurrentIndex(indexPlanningUnit)
-                if samplingGridRes:
-                    self.spinBoxQUESBSamplingGridRes.setValue(int(samplingGridRes))
+                if nodata:
+                    self.spinBoxQUESBNodata.setValue(int(nodata))
                 else:
-                    self.spinBoxQUESBSamplingGridRes.setValue(9999)
+                    self.spinBoxQUESBNodata.setValue(0)  
+                if edgeContrast:
+                    indexEdgeContrast = self.comboBoxQUESBEdgeContrast.findText(edgeContrast)
+                    if indexEdgeContrast != -1:
+                        self.comboBoxQUESBEdgeContrast.setCurrentIndex(indexEdgeContrast)                    
+                if habitatLookup:  
+                    pass  #find solution 
+                if windowShape:
+                    self.comboBoxQUESBWindowShapeOptions.setCurrentIndex(int(windowShape))                    
                 if samplingWindowSize:
                     self.spinBoxQUESBSamplingWindowSize.setValue(int(samplingWindowSize))
                 else:
                     self.spinBoxQUESBSamplingWindowSize.setValue(1000)
-                if windowShape:
-                    self.spinBoxQUESBWindowShape.setValue(int(windowShape))
+                if samplingGridRes:
+                    self.spinBoxQUESBSamplingGridRes.setValue(int(samplingGridRes))
                 else:
-                    self.spinBoxQUESBWindowShape.setValue(1000)
-                if nodata:
-                    self.spinBoxQUESBNodata.setValue(int(nodata))
-                else:
-                    self.spinBoxQUESBNodata.setValue(0)
-                if edgeContrast:
-                    indexEdgeContrast = self.comboBoxQUESBEdgeContrast.findText(edgeContrast)
-                    if indexEdgeContrast != -1:
-                        self.comboBoxQUESBEdgeContrast.setCurrentIndex(indexEdgeContrast)
-                if habitatLookup:
-                    pass
+                    self.spinBoxQUESBSamplingGridRes.setValue(1000)                    
+
                 
                 self.currentQUESBTemplate = templateFile
                 self.loadedQUESBTemplate.setText(templateFile)
@@ -1282,7 +1296,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         # 'Parameters' GroupBox
         self.groupBoxQUESBParameters = QtGui.QGroupBox('Parameters')
         self.layoutGroupBoxQUESBParameters = QtGui.QVBoxLayout()
-        self.layoutGroupBoxQUESBParameters.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.layoutGroupBoxQUESBParameters.setAlignment(QtCore.Qt.AlignTop)
         self.groupBoxQUESBParameters.setLayout(self.layoutGroupBoxQUESBParameters)
         self.layoutQUESBParametersInfo = QtGui.QVBoxLayout()
         self.layoutQUESBParameters = QtGui.QGridLayout()
@@ -1293,84 +1307,110 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.labelQUESBParametersInfo.setText('Lorem ipsum dolor sit amet...\n')
         self.layoutQUESBParametersInfo.addWidget(self.labelQUESBParametersInfo)
 
+        self.labelQUESBLandCoverLandUse1 = QtGui.QLabel()
+        self.labelQUESBLandCoverLandUse1.setText('Tutupan lahan t1:')
+        self.layoutQUESBParameters.addWidget(self.labelQUESBLandCoverLandUse1, 0, 0)
+
+        self.comboBoxQUESBLandCoverLandUse1 = QtGui.QComboBox()
+        self.comboBoxQUESBLandCoverLandUse1.setDisabled(True)
+        self.layoutQUESBParameters.addWidget(self.comboBoxQUESBLandCoverLandUse1, 0, 1)
+        
+        self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxQUESBLandCoverLandUse1)
+
+        self.labelQUESBLandCoverLandUse2 = QtGui.QLabel()
+        self.labelQUESBLandCoverLandUse2.setText('Tutupan lahan t2:')
+        self.layoutQUESBParameters.addWidget(self.labelQUESBLandCoverLandUse2, 1, 0)
+
+        self.comboBoxQUESBLandCoverLandUse2 = QtGui.QComboBox()
+        self.comboBoxQUESBLandCoverLandUse2.setDisabled(True)
+        self.layoutQUESBParameters.addWidget(self.comboBoxQUESBLandCoverLandUse2, 1, 1)
+        
+        self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxQUESBLandCoverLandUse2)
+
+        self.labelQUESBLandCoverLandUse3 = QtGui.QLabel()
+        self.labelQUESBLandCoverLandUse3.setText('Tutupan lahan utuh:')
+        self.layoutQUESBParameters.addWidget(self.labelQUESBLandCoverLandUse3, 2, 0)
+
+        self.comboBoxQUESBLandCoverLandUse3 = QtGui.QComboBox()
+        self.comboBoxQUESBLandCoverLandUse3.setDisabled(True)
+        self.layoutQUESBParameters.addWidget(self.comboBoxQUESBLandCoverLandUse3, 2, 1)
+        
+        self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxQUESBLandCoverLandUse3)
+
         self.labelQUESBPlanningUnit = QtGui.QLabel()
-        self.labelQUESBPlanningUnit.setText('Planning unit:')
-        self.layoutQUESBParameters.addWidget(self.labelQUESBPlanningUnit, 0, 0)
+        self.labelQUESBPlanningUnit.setText('Unit perencanaan:')
+        self.layoutQUESBParameters.addWidget(self.labelQUESBPlanningUnit, 3, 0)
         
         self.comboBoxQUESBPlanningUnit = QtGui.QComboBox()
         self.comboBoxQUESBPlanningUnit.setDisabled(True)
-        self.layoutQUESBParameters.addWidget(self.comboBoxQUESBPlanningUnit, 0, 1)
+        self.layoutQUESBParameters.addWidget(self.comboBoxQUESBPlanningUnit, 3, 1)
         
         self.handlerPopulateNameFromLookupData(self.main.dataPlanningUnit, self.comboBoxQUESBPlanningUnit)
         
-        self.labelQUESBSamplingGridRes = QtGui.QLabel()
-        self.labelQUESBSamplingGridRes.setText('Sampling grid &resolution:')
-        self.layoutQUESBParameters.addWidget(self.labelQUESBSamplingGridRes, 1, 0)
-        
-        self.spinBoxQUESBSamplingGridRes = QtGui.QSpinBox()
-        self.spinBoxQUESBSamplingGridRes.setRange(1, 9999)
-        self.spinBoxQUESBSamplingGridRes.setValue(10000)
-        self.layoutQUESBParameters.addWidget(self.spinBoxQUESBSamplingGridRes, 1, 1)
-        self.labelQUESBSamplingGridRes.setBuddy(self.spinBoxQUESBSamplingGridRes)
-        
-        self.labelQUESBSamplingWindowSize = QtGui.QLabel()
-        self.labelQUESBSamplingWindowSize.setText('Sampling &window size:')
-        self.layoutQUESBParameters.addWidget(self.labelQUESBSamplingWindowSize, 2, 0)
-        
-        self.spinBoxQUESBSamplingWindowSize = QtGui.QSpinBox()
-        self.spinBoxQUESBSamplingWindowSize.setRange(1, 9999)
-        self.spinBoxQUESBSamplingWindowSize.setValue(1000)
-        self.layoutQUESBParameters.addWidget(self.spinBoxQUESBSamplingWindowSize, 2, 1)
-        self.labelQUESBSamplingWindowSize.setBuddy(self.spinBoxQUESBSamplingWindowSize)
-        
-        self.labelQUESBWindowShape = QtGui.QLabel()
-        self.labelQUESBWindowShape.setText('Window &shape:')
-        self.layoutQUESBParameters.addWidget(self.labelQUESBWindowShape, 3, 0)
-        
-        self.spinBoxQUESBWindowShape = QtGui.QSpinBox()
-        self.spinBoxQUESBWindowShape.setRange(1, 9999)
-        self.spinBoxQUESBWindowShape.setValue(1)
-        self.layoutQUESBParameters.addWidget(self.spinBoxQUESBWindowShape, 3, 1)
-        self.labelQUESBWindowShape.setBuddy(self.spinBoxQUESBWindowShape)
-        
         self.labelQUESBNodata = QtGui.QLabel()
-        self.labelQUESBNodata.setText('&No data value:')
+        self.labelQUESBNodata.setText('No data value:')
         self.layoutQUESBParameters.addWidget(self.labelQUESBNodata, 4, 0)
         
         self.spinBoxQUESBNodata = QtGui.QSpinBox()
-        self.spinBoxQUESBNodata.setRange(-9999, 9999)
+        self.spinBoxQUESBNodata.setRange(0, 999)
         self.spinBoxQUESBNodata.setValue(0)
         self.layoutQUESBParameters.addWidget(self.spinBoxQUESBNodata, 4, 1)
-        self.labelQUESBNodata.setBuddy(self.spinBoxQUESBNodata)
         
-        self.labelQUESBCsvClassDescriptors = QtGui.QLabel()
-        self.labelQUESBCsvClassDescriptors.setText('Class descriptors:')
-        self.layoutQUESBParameters.addWidget(self.labelQUESBCsvClassDescriptors, 5, 0)
-        
-        self.comboBoxQUESBCsvClassDescriptors = QtGui.QComboBox()
-        self.comboBoxQUESBCsvClassDescriptors.setDisabled(True)
-        self.layoutQUESBParameters.addWidget(self.comboBoxQUESBCsvClassDescriptors, 5, 1)
-        
-        self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxQUESBCsvClassDescriptors)         
-
         self.labelQUESBEdgeContrast = QtGui.QLabel()
-        self.labelQUESBEdgeContrast.setText('Edge contrast:')
-        self.layoutQUESBParameters.addWidget(self.labelQUESBEdgeContrast, 6, 0)
+        self.labelQUESBEdgeContrast.setText('Bobot kontras tepi')
+        self.layoutQUESBParameters.addWidget(self.labelQUESBEdgeContrast, 5, 0)        
         
         self.comboBoxQUESBEdgeContrast = QtGui.QComboBox()
         self.comboBoxQUESBEdgeContrast.setDisabled(True)
-        self.layoutQUESBParameters.addWidget(self.comboBoxQUESBEdgeContrast, 6, 1)
+        self.layoutQUESBParameters.addWidget(self.comboBoxQUESBEdgeContrast, 5, 1)
         
-        self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxQUESBEdgeContrast)         
-
+        self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxQUESBEdgeContrast)
+        
         self.labelQUESBHabitat = QtGui.QLabel()
-        self.labelQUESBHabitat.setText('Habitat:')
-        self.layoutQUESBParameters.addWidget(self.labelQUESBHabitat, 7, 0, QtCore.Qt.AlignTop)
+        self.labelQUESBHabitat.setText('Kelas tutupan area fokal:')
+        self.layoutQUESBParameters.addWidget(self.labelQUESBHabitat, 6, 0, QtCore.Qt.AlignTop)
       
         self.tableHabitat = QtGui.QTableWidget()
         self.tableHabitat.setDisabled(True)
         self.tableHabitat.verticalHeader().setVisible(False)
-        self.layoutQUESBParameters.addWidget(self.tableHabitat, 8, 0, 1, 2)
+        self.layoutQUESBParameters.addWidget(self.tableHabitat, 7, 0, 1, 3)
+        
+        self.groupBoxQUESBMovingWindow = QtGui.QGroupBox('Jendela berpindah')
+        self.layoutGroupBoxMovingWindow = QtGui.QGridLayout()
+        self.layoutGroupBoxMovingWindow.setAlignment(QtCore.Qt.AlignTop)
+        self.groupBoxQUESBMovingWindow.setLayout(self.layoutGroupBoxMovingWindow)
+        
+        self.labelQUESBWindowShape = QtGui.QLabel()
+        self.labelQUESBWindowShape.setText('Bentuk:')
+        self.layoutGroupBoxMovingWindow.addWidget(self.labelQUESBWindowShape, 0, 0)
+        
+        WindowShapeOptions = [
+            'Bujur sangkar',
+            'Lingkaran',
+        ]
+        self.comboBoxQUESBWindowShapeOptions = QtGui.QComboBox()
+        self.comboBoxQUESBWindowShapeOptions.addItems(WindowShapeOptions)
+        self.layoutGroupBoxMovingWindow.addWidget(self.comboBoxQUESBWindowShapeOptions, 0, 1)
+        
+        self.labelQUESBSamplingWindowSize = QtGui.QLabel()
+        self.labelQUESBSamplingWindowSize.setText('Dimensi (meter):')
+        self.layoutGroupBoxMovingWindow.addWidget(self.labelQUESBSamplingWindowSize, 1, 0)
+        
+        self.spinBoxQUESBSamplingWindowSize = QtGui.QSpinBox()
+        self.spinBoxQUESBSamplingWindowSize.setRange(1, 9999)
+        self.spinBoxQUESBSamplingWindowSize.setValue(1000)
+        self.layoutGroupBoxMovingWindow.addWidget(self.spinBoxQUESBSamplingWindowSize, 1, 1)
+        
+        self.layoutQUESBParameters.addWidget(self.groupBoxQUESBMovingWindow, 8, 0, 1, 2)
+        
+        self.labelQUESBSamplingGridRes = QtGui.QLabel()
+        self.labelQUESBSamplingGridRes.setText('Sampling grid resolution:')
+        self.layoutQUESBParameters.addWidget(self.labelQUESBSamplingGridRes, 9, 0)
+        
+        self.spinBoxQUESBSamplingGridRes = QtGui.QSpinBox()
+        self.spinBoxQUESBSamplingGridRes.setRange(1, 10000)
+        self.spinBoxQUESBSamplingGridRes.setValue(1000)
+        self.layoutQUESBParameters.addWidget(self.spinBoxQUESBSamplingGridRes, 9, 1)
         
         # Process tab button
         self.layoutButtonQUESB = QtGui.QHBoxLayout()
@@ -2974,20 +3014,29 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             = includePeat
         
         # 'QUES-B' tab fields
+        self.main.appSettings['DialogLumensQUESBAnalysis']['landUse1'] \
+            = unicode(self.comboBoxQUESBLandCoverLandUse1.currentText())
+        self.main.appSettings['DialogLumensQUESBAnalysis']['landUse2'] \
+            = unicode(self.comboBoxQUESBLandCoverLandUse2.currentText())
+        self.main.appSettings['DialogLumensQUESBAnalysis']['landUse3'] \
+            = unicode(self.comboBoxQUESBLandCoverLandUse3.currentText())
         self.main.appSettings['DialogLumensQUESBAnalysis']['planningUnit'] \
             = unicode(self.comboBoxQUESBPlanningUnit.currentText())
-        self.main.appSettings['DialogLumensQUESBAnalysis']['samplingGridRes'] \
-            = self.spinBoxQUESBSamplingGridRes.value()
-        self.main.appSettings['DialogLumensQUESBAnalysis']['samplingWindowSize'] \
-            = self.spinBoxQUESBSamplingWindowSize.value()
-        self.main.appSettings['DialogLumensQUESBAnalysis']['windowShape'] \
-            = self.spinBoxQUESBWindowShape.value()
         self.main.appSettings['DialogLumensQUESBAnalysis']['nodata'] \
             = self.spinBoxQUESBNodata.value()
         self.main.appSettings['DialogLumensQUESBAnalysis']['edgeContrast'] \
             = unicode(self.comboBoxQUESBEdgeContrast.currentText())
         # self.main.appSettings['DialogLumensQUESBAnalysis']['habitatLookup'] \
-        #     = unicode(self.comboBoxQUESBHabitat.currentText())
+        #     = unicode(self.comboBoxQUESBHabitat.currentText())            
+        WindowShapeOptions = unicode(self.comboBoxLandCoverAnalysisOption.currentText())
+        if WindowShapeOptions == 'Bujur sangkar':
+            WindowShapeOptions = 0
+        else:
+            WindowShapeOptions = 1            
+        self.main.appSettings['DialogLumensQUESBAnalysis']['samplingWindowSize'] \
+            = self.spinBoxQUESBSamplingWindowSize.value()            
+        self.main.appSettings['DialogLumensQUESBAnalysis']['samplingGridRes'] \
+            = self.spinBoxQUESBSamplingGridRes.value()
         
         # 'QUES-H' Hydrological Response Unit Definition sub tab fields
         self.main.appSettings['DialogLumensQUESHDominantHRU']['landUseMap'] \
@@ -3125,7 +3174,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         """Slot method to pass the form values and execute the "QUES-C" R algorithms.
         
         Depending on the checked groupbox, the "QUES-C" process calls the following algorithms:
-        1. r:ques-c
+        1. r:quescarbon
         2. modeler:ques-c_peat
         3. r:summarizemultipleperiode
         """
@@ -3261,52 +3310,71 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         """Slot method to pass the form values and execute the "QUES-B" R algorithm.
         
         The "QUES-B" process calls the following algorithm:
-        1. r:ques-b
+        1. r:quesbiodiv
         """
         self.setAppSettings()
         
         formName = 'DialogLumensQUESBAnalysis'
-        algName = 'r:ques-b'
+        algName = 'r:quesbiodiv'
         activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
+        checkedEnabled = []
         
-        if self.validForm(formName):
-            logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
-            logging.getLogger(self.historyLog).info('alg start: %s' % formName)
-            self.buttonProcessQUESB.setDisabled(True)
-            
-            # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
-            self.main.setWindowState(QtCore.Qt.WindowMinimized)
-            
-            outputs = general.runalg(
-                algName,
-                activeProject,
-                self.main.appSettings[formName]['planningUnit'],
-                self.main.appSettings[formName]['samplingGridRes'],
-                self.main.appSettings[formName]['samplingWindowSize'],
-                self.main.appSettings[formName]['windowShape'],
-                self.main.appSettings[formName]['nodata'],
-                self.main.appSettings[formName]['edgeContrast'],
-                self.main.appSettings[formName]['habitatLookup'],
-            )
-            
-            # Display ROut file in debug mode
-            if self.main.appSettings['debug']:
-                dialog = DialogLumensViewer(self, 'DEBUG "{0}" ({1})'.format(algName, 'processing_script.r.Rout'), 'text', self.main.appSettings['ROutFile'])
-                dialog.exec_()
-            
-            ##print outputs
-            
-            # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
-            self.main.setWindowState(QtCore.Qt.WindowActive)
-            
-            algSuccess = self.outputsMessageBox(algName, outputs, '', '')
-
-            if algSuccess:
-                self.main.loadAddedDataInfo()
-            
-            self.buttonProcessQUESB.setEnabled(True)
-            logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
-            logging.getLogger(self.historyLog).info('alg end: %s' % formName)
+        numOfRow = self.tableHabitat.rowCount()
+        numOfCol = self.tableHabitat.columnCount()
+        for i in range(numOfRow):
+            if self.tableHabitat.item(i, numOfCol - 1).checkState() == QtCore.Qt.Checked:
+                checkedEnabled.append(self.tableHabitat.item(i, 0).text())
+        
+        if len(checkedEnabled) > 0:
+            checkedEnabled.sort()
+            checkedEnabledCsv = self.writeListCsv(checkedEnabled, True)
+          
+            if self.validForm(formName):
+                logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
+                logging.getLogger(self.historyLog).info('alg start: %s' % formName)
+                self.buttonProcessQUESB.setDisabled(True)
+                
+                # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
+                self.main.setWindowState(QtCore.Qt.WindowMinimized)
+                
+                outputs = general.runalg(
+                    algName,
+                    activeProject,
+                    self.main.appSettings[formName]['landUse1'],
+                    self.main.appSettings[formName]['landUse2'],
+                    self.main.appSettings[formName]['landUse3'],
+                    self.main.appSettings[formName]['planningUnit'],
+                    self.main.appSettings[formName]['nodata'],
+                    checkedEnabledCsv,
+                    self.main.appSettings[formName]['edgeContrast'],
+                    self.main.appSettings[formName]['windowShape'],
+                    self.main.appSettings[formName]['samplingWindowSize'],
+                    self.main.appSettings[formName]['samplingGridRes'],
+                    None,
+                )
+                
+                # Display ROut file in debug mode
+                if self.main.appSettings['debug']:
+                    dialog = DialogLumensViewer(self, 'DEBUG "{0}" ({1})'.format(algName, 'processing_script.r.Rout'), 'text', self.main.appSettings['ROutFile'])
+                    dialog.exec_()
+                
+                ##print outputs
+                
+                # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
+                self.main.setWindowState(QtCore.Qt.WindowActive)
+                
+                algSuccess = self.outputsMessageBox(algName, outputs, '', '')
+    
+                if algSuccess:
+                    self.main.loadAddedDataInfo()
+                
+                self.buttonProcessQUESB.setEnabled(True)
+                logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
+                logging.getLogger(self.historyLog).info('alg end: %s' % formName)
+        else:
+            QtGui.QMessageBox.information(self, self.dialogTitle, 'Please select focal area.')
+            return
+          
     
     
     def handlerProcessQUESHHRUDefinition(self):

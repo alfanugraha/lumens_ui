@@ -104,7 +104,7 @@ class MainWindow(QtGui.QMainWindow):
             'defaultBasemapFilePath': '',
             'defaultVectorFile': 'landmarks.shp',
             'defaultVectorFilePath': '',
-            'defaultHabitatLookupTable': '',
+            'defaultHabitatLookupTable': 'C:/1_Testing_Data/#LUMENS_finaltesting/3_Tabular/landuse_lut.csv',
             'selectQgsProjectfileExt': '.qgs',
             'selectShapefileExt': '.shp',
             'selectRasterfileExt': '.tif',
@@ -217,13 +217,16 @@ class MainWindow(QtGui.QMainWindow):
                 'checkbox': '',
             },
             'DialogLumensQUESBAnalysis': {
+                'landUse1': '',
+                'landUse2': '',
+                'landUse3': '',
                 'planningUnit': '',
-                'samplingGridRes': '',
-                'samplingWindowSize': '',
-                'windowShape': '',
                 'nodata': '',
                 'edgeContrast': '',
                 'habitatLookup': '',
+                'windowShape': '',
+                'samplingWindowSize': '',
+                'samplingGridRes': '',
             },
             'DialogLumensQUESHWatershedModelEvaluation': {
                 'dateInitial': '',
@@ -811,6 +814,7 @@ class MainWindow(QtGui.QMainWindow):
         self.databaseMenu.addAction(self.actionDialogLumensAddData)
         self.databaseMenu.addAction(self.actionLumensDeleteData)
         self.databaseMenu.addAction(self.actionLumensDatabaseStatus)
+        self.databaseMenu.menuAction().setVisible(False)
         
         # PUR menu
         icon = QtGui.QIcon(':/ui/icons/iconActionDialogLumensPUR.png')
@@ -2344,7 +2348,7 @@ class MainWindow(QtGui.QMainWindow):
     def lumensOpenDatabase(self, lumensDatabase=False):
         """Method for opening a LUMENS project database.
         
-        Opens a LUMENS project database file (*.lpj) using "r:lumensopendatabase" R algorithm.
+        Opens a LUMENS project database file (*.lpj) using "r:dbopen" R algorithm.
         This is called when opening a recent project from the file menu or the "Open LUMENS database" menu.
         When a LUMENS project is opened, menus that depend on an open project will be enabled and all
         of the project's module templates will be listed on the main window's dashboard tab.
@@ -2417,8 +2421,11 @@ class MainWindow(QtGui.QMainWindow):
             zipFile.replace(os.path.sep, '/'),
             workingDir.replace(os.path.sep, '/'),
             None,
-            None,
         )
+        
+        if self.appSettings['debug']:
+            dialog = DialogLumensViewer(self, 'DEBUG "{0}" ({1})'.format('r:dbimport', 'processing_script.r.Rout'), 'text', self.appSettings['ROutFile'])
+            dialog.exec_()
         
         self.actionLumensOpenDatabase.setEnabled(True)
         logging.getLogger(type(self).__name__).info('end: LUMENS Import Database') 
@@ -3176,21 +3183,32 @@ class MainWindow(QtGui.QMainWindow):
         lumensDatabaseName, lumensDatabaseExt = os.path.splitext(lumensDatabase)
         
         if lumensDatabase:
-            logging.getLogger(type(self).__name__).info('select LUMENS database: %s', lumensDatabase)
+            logging.getLogger(type(self).__name__).info('Select LUMENS database: %s', lumensDatabase)
             
             if lumensDatabaseExt == self.appSettings['selectZipfileExt'] and zipfile.is_zipfile(lumensDatabase):
                 workingDir = unicode(QtGui.QFileDialog.getExistingDirectory(self, 'Select Working Directory'))
                 if workingDir:
-                    logging.getLogger(type(self).__name__).info('select new working directory: %s', workingDir)
+                    logging.getLogger(type(self).__name__).info('Select new working directory: %s', workingDir)
                     outputs = self.lumensImportDatabase(lumensDatabase, workingDir)
+                    
+                    if os.path.exists(outputs['statusoutput']):
+                        projectName = os.path.basename(lumensDatabaseName)
+                        importedDatabase = os.path.join(workingDir, projectName, projectName + '.lpj')
+                        self.lumensOpenDatabase(importedDatabase.replace(os.path.sep, '/'))
+                    else:
+                        QtGui.QMessageBox.warning(self, 'ERROR', 'Failed to open imported database!')
+                        print 'ERROR: Failed to open imported database!'
+                        return
                 else:
+                    QtGui.QMessageBox.warning(self, 'ERROR', 'Invalid working directory')
                     print 'ERROR: Invalid working directory!'
                     return
+            elif lumensDatabaseExt == self.appSettings['selectProjectfileExt']:
+                self.lumensOpenDatabase(lumensDatabase)  
             else:
-                print 'ERROR: Invalid archived LUMENS file!'
+                QtGui.QMessageBox.warning(self, 'ERROR', 'Invalid LUMENS Project file')
+                print 'ERROR: Invalid LUMENS project file!'
                 return
-              
-            self.lumensOpenDatabase(outputs['proj.file'])
             
             
     def handlerLumensDeleteData(self):
