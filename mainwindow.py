@@ -627,6 +627,7 @@ class MainWindow(QtGui.QMainWindow):
         self.fileMenu = self.menubar.addMenu('&File')
         self.viewMenu = self.menubar.addMenu('&View')
         self.modeMenu = self.menubar.addMenu('&Mode')
+        self.toolsMenu = self.menubar.addMenu('&Tools')
         self.databaseMenu = self.menubar.addMenu('&Database')
         self.purMenu = self.menubar.addMenu('&PUR')
         self.quesMenu = self.menubar.addMenu('&QUES')
@@ -708,6 +709,10 @@ class MainWindow(QtGui.QMainWindow):
         icon = QtGui.QIcon(':/ui/icons/iconActionDelete.png')
         self.actionDeleteLayer = QtGui.QAction(icon, 'Delete Layer', self)
         self.actionDeleteLayer.setDisabled(True)
+        
+        icon = QtGui.QIcon(':/ui/icons/iconActionTableEditor.png')
+        self.actionTableEditor = QtGui.QAction(icon, 'Table Editor', self)
+        self.actionTableEditor.setDisabled(True)
         
         icon = QtGui.QIcon(':/ui/icons/iconActionRefresh.png')
         self.actionRefresh = QtGui.QAction(icon, 'Refresh', self)
@@ -850,7 +855,11 @@ class MainWindow(QtGui.QMainWindow):
         self.sciendoMenu.addAction(self.actionDialogLumensSCIENDO)
         self.sciendoMenu.menuAction().setVisible(False)
         
-        # About menu
+        # Tools menu
+        self.actionDialogLumensToolsPivot = QtGui.QAction('Pivot Table', self)
+        self.toolsMenu.addAction(self.actionDialogLumensToolsPivot)
+        
+        # Help menu
         icon = QtGui.QIcon(':/ui/icons/iconActionHelp.png')
         ##self.actionDialogLumensGuide = QtGui.QAction(icon, 'Open Guide', self)
         self.actionDialogLumensHelp = QtGui.QAction(icon, 'Open Help', self)
@@ -978,12 +987,12 @@ class MainWindow(QtGui.QMainWindow):
         #self.dashboardTabWidget.addTab(self.tabDashboardQUES, 'QUES')
         #self.dashboardTabWidget.addTab(self.tabDashboardTA, 'TA')
         #self.dashboardTabWidget.addTab(self.tabDashboardSCIENDO, 'SCIENDO')
-        self.sidebarTabWidget.addTab(self.tabLayers, 'Project') # Formerly 'Layers'
-        self.sidebarTabWidget.addTab(self.tabDatabase, 'Database')
-        self.sidebarTabWidget.addTab(self.tabDashboardPUR, 'PUR')
-        self.sidebarTabWidget.addTab(self.tabDashboardQUES, 'QUES')
-        self.sidebarTabWidget.addTab(self.tabDashboardTA, 'TA')
-        self.sidebarTabWidget.addTab(self.tabDashboardSCIENDO, 'SCIENDO')
+        self.sidebarTabWidget.addTab(self.tabLayers, 'Browser') # Formerly 'Layers'
+        self.sidebarTabWidget.addTab(self.tabDatabase, 'Project')
+        # self.sidebarTabWidget.addTab(self.tabDashboardPUR, 'PUR')
+        # self.sidebarTabWidget.addTab(self.tabDashboardQUES, 'QUES')
+        # self.sidebarTabWidget.addTab(self.tabDashboardTA, 'TA')
+        # self.sidebarTabWidget.addTab(self.tabDashboardSCIENDO, 'SCIENDO')
         #self.sidebarTabWidget.addTab(self.tabDashboard, 'Templates') # Formerly 'Dashboard'
         #self.sidebarTabWidget.addTab(self.tabProject, 'Project')
         self.sidebarTabWidget.addTab(self.tabHelp, 'Help')
@@ -1761,6 +1770,7 @@ class MainWindow(QtGui.QMainWindow):
         self.layersToolBar.addAction(self.actionLayerAttributeEditor)
         self.layersToolBar.addAction(self.actionLayerProperties)
         self.layersToolBar.addAction(self.actionDeleteLayer)
+        self.layersToolBar.addAction(self.actionTableEditor)
         self.layoutGroupBoxProjectLayers.addWidget(self.layersToolBar)
         
         self.databaseToolBar = QtGui.QToolBar(self)

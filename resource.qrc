@@ -40,5 +40,6 @@
         <file>ui/icons/iconActionDialogLumensQUES.png</file>
         <file>ui/icons/iconActionLumensExportDatabase.png</file>
         <file>ui/icons/iconActionLumensImportDatabase.png</file>
+        <file>ui/icons/iconActionTableEditor.png</file>
     </qresource>
 </RCC>

@@ -58,6 +58,7 @@ class DialogLumensDeleteData(QtGui.QDialog, DialogLumensBase):
 
         self.labelDeleteDataInfo = QtGui.QLabel()
         self.labelDeleteDataInfo.setText('Lorem ipsum dolor sit amet...\n')
+        self.labelDeleteDataInfo.setWordWrap(True)
         self.layoutDeleteDataInfo.addWidget(self.labelDeleteDataInfo)
 
         self.dataTable = QtGui.QTableWidget()

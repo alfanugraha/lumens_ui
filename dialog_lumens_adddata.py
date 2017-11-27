@@ -61,6 +61,7 @@ class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
         
         self.labelAddDataInfo = QtGui.QLabel()
         self.labelAddDataInfo.setText('Lorem ipsum dolor sit amet...\n')
+        self.labelAddDataInfo.setWordWrap(True)
         self.layoutAddDataInfo.addWidget(self.labelAddDataInfo)
         
         self.layoutButtonAddData = QtGui.QHBoxLayout()

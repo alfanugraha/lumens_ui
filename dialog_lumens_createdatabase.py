@@ -64,6 +64,7 @@ class DialogLumensCreateDatabase(QtGui.QDialog, DialogLumensBase):
         
         self.labelDatabaseDetailsInfo = QtGui.QLabel()
         self.labelDatabaseDetailsInfo.setText('Lorem ipsum dolor sit amet...\n')
+        self.labelDatabaseDetailsInfo.setWordWrap(True)
         self.layoutDatabaseDetailsInfo.addWidget(self.labelDatabaseDetailsInfo)
         
         self.labelProjectName = QtGui.QLabel()
@@ -172,6 +173,7 @@ class DialogLumensCreateDatabase(QtGui.QDialog, DialogLumensBase):
         self.layoutDissolvedInfo = QtGui.QVBoxLayout()
         self.labelDissolvedInfo = QtGui.QLabel()
         self.labelDissolvedInfo.setText('Lorem ipsum dolor sit amet...')
+        self.labelDissolvedInfo.setWordWrap(True)
         self.layoutDissolvedInfo.addWidget(self.labelDissolvedInfo)
         
         self.tableDissolved = QtGui.QTableWidget()
