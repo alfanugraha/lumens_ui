@@ -118,24 +118,24 @@ class DialogLumensBase:
                 statusOutputKey = 'statusoutput_ALG0'
         
         if outputs and statusOutputKey in outputs:
-          if os.path.exists(outputs[statusOutputKey]):
-              with open(outputs[statusOutputKey], 'rb') as f:
-                  hasHeader = csv.Sniffer().has_header(f.read(1024))
-                  f.seek(0)
-                  reader = csv.reader(f)
-                  if hasHeader: # Skip the header
-                      next(reader)
-                  for row in reader: # Just read the first row
-                      verb = 'failed'
-                      statusCode = row[0]
-                      successMessage = errorMessage = statusMessage = row[1] # a bit weird, still need to be simplified
-                      if int(statusCode) == 1:
-                          success = True
-                          verb = 'succeeded'
-                      outputMessage = '{0} {1} with status message: {2}'.format(outputMessage, verb, statusMessage)
-                      break
-          else:
-              outputMessage = '{0} failed.'.format(outputMessage)
+            if os.path.exists(outputs[statusOutputKey]):
+                with open(outputs[statusOutputKey], 'rb') as f:
+                    hasHeader = csv.Sniffer().has_header(f.read(1024))
+                    f.seek(0)
+                    reader = csv.reader(f)
+                    if hasHeader: # Skip the header
+                        next(reader)
+                    for row in reader: # Just read the first row
+                        verb = 'failed'
+                        statusCode = row[0]
+                        successMessage = errorMessage = statusMessage = row[1] # a bit weird, still need to be simplified
+                        if int(statusCode) == 1:
+                            success = True
+                            verb = 'succeeded'
+                        outputMessage = '{0} {1} with status message: {2}'.format(outputMessage, verb, statusMessage)
+                        break
+            else:
+                outputMessage = '{0} failed.'.format(outputMessage)
         
         if success:
             logging.getLogger(type(self).__name__).info(outputMessage)

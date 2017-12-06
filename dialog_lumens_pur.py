@@ -72,21 +72,17 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
             settings.beginGroup('DialogLumensPUR')
             
             templateSettings['DialogLumensPUR'] = {}
-            templateSettings['DialogLumensPUR']['shapefile'] = shapefile = settings.value('shapefile')
-            templateSettings['DialogLumensPUR']['shapefileAttr'] = shapefileAttr = settings.value('shapefileAttr')
+            templateSettings['DialogLumensPUR']['referenceData'] = referenceData = settings.value('referenceData')
             templateSettings['DialogLumensPUR']['dataTitle'] = dataTitle = settings.value('dataTitle')
             templateSettings['DialogLumensPUR']['referenceClasses'] = referenceClasses = settings.value('referenceClasses')
             templateSettings['DialogLumensPUR']['referenceMapping'] = referenceMapping = settings.value('referenceMapping')
             templateSettings['DialogLumensPUR']['planningUnits'] = planningUnits = settings.value('planningUnits')
             
             if not returnTemplateSettings:
-                if shapefile and os.path.exists(shapefile):
-                    if shapefileAttr:
-                        self.handlerSelectShapefile(shapefile, shapefileAttr)
-                    else:
-                        self.lineEditShapefile.setText(shapefile)
-                else:
-                    self.lineEditShapefile.setText('')
+                if referenceData:
+                    indexReferenceData = self.comboBoxReferenceData.findText(referenceData)
+                    if indexReferenceData != -1:
+                        self.comboBoxReferenceData.setCurrentIndex(referenceData)
                 if dataTitle:
                     self.lineEditDataTitle.setText(dataTitle)
                 else:
@@ -104,7 +100,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
                 self.buttonSavePURTemplate.setEnabled(True)
                 
                 # Log to history log
-                logging.getLogger(self.historyLog).info('Loaded template: %s', templateFile)
+                logging.getLogger(self.historyLog).info('Loaded configuration: %s', templateFile)
             
             settings.endGroup()
             # /dialog
@@ -168,8 +164,8 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         if duplicateTemplate:
             reply = QtGui.QMessageBox.question(
                 self,
-                'Load Existing Template',
-                'The template you are about to save matches an existing template.\nDo you want to load \'{0}\' instead?'.format(duplicateTemplate),
+                'Load Existing Configuration',
+                'The configuration you are about to save matches an existing configuration.\nDo you want to load \'{0}\' instead?'.format(duplicateTemplate),
                 QtGui.QMessageBox.Yes|QtGui.QMessageBox.No,
                 QtGui.QMessageBox.No
             )
@@ -272,9 +268,8 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         self.buttonSavePURTemplate.clicked.connect(self.handlerSavePURTemplate)
         self.buttonSaveAsPURTemplate.clicked.connect(self.handlerSaveAsPURTemplate)
         # 'Setup reference' buttons
-        self.buttonSelectShapefile.clicked.connect(self.handlerSelectShapefile)
         self.buttonEditReferenceClasses.clicked.connect(self.handlerEditReferenceClasses)
-        self.comboBoxShapefileAttribute.currentIndexChanged.connect(self.handlerChangeShapefileAttribute)
+        self.buttonLoadLookupTableReferenceData.clicked.connect(self.handlerLoadLookupTableReference)
         # 'Setup planning unit' buttons
         self.buttonAddPlanningUnitRow.clicked.connect(self.handlerButtonAddPlanningUnitRow)
         self.buttonClearAllPlanningUnits.clicked.connect(self.handlerButtonClearAllPlanningUnits)
@@ -293,10 +288,11 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
 
         self.groupBoxPURDialog = QtGui.QGroupBox('Planning Unit Reconciliation')
         self.layoutGroupBoxPURDialog = QtGui.QVBoxLayout()
-        self.layoutGroupBoxPURDialog.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.layoutGroupBoxPURDialog.setAlignment(QtCore.Qt.AlignTop)
         self.groupBoxPURDialog.setLayout(self.layoutGroupBoxPURDialog)
         self.labelPURDialogInfo = QtGui.QLabel()
         self.labelPURDialogInfo.setText('Lorem ipsum dolor sit amet...')
+        self.labelPURDialogInfo.setWordWrap(True)
         self.layoutGroupBoxPURDialog.addWidget(self.labelPURDialogInfo)
 
         self.tabWidget = QtGui.QTabWidget()
@@ -326,7 +322,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         self.tabReconcile = QtGui.QWidget()
         self.tabLog = QtGui.QWidget()
         
-        self.tabWidget.addTab(self.tabSetup, 'Setup')
+        self.tabWidget.addTab(self.tabSetup, 'Build')
         self.tabWidget.addTab(self.tabReconcile, 'Reconcile')
         self.tabWidget.addTab(self.tabLog, 'Log')
         
@@ -356,17 +352,19 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         
         self.labelSetupReferenceInfo = QtGui.QLabel()
         self.labelSetupReferenceInfo.setText('Lorem ipsum dolor sit amet...')
+        self.labelSetupReferenceInfo.setWordWrap(True)
         self.layoutSetupReferenceInfo.addWidget(self.labelSetupReferenceInfo)
         
         self.labelShapefile = QtGui.QLabel()
         self.labelShapefile.setText('Reference data:')
         self.layoutSetupReferenceOptions.addWidget(self.labelShapefile, 0, 0)
-        self.lineEditShapefile = QtGui.QLineEdit()
-        self.lineEditShapefile.setReadOnly(True)
-        self.layoutSetupReferenceOptions.addWidget(self.lineEditShapefile, 0, 1)
-        self.buttonSelectShapefile = QtGui.QPushButton()
-        self.buttonSelectShapefile.setText('&Browse')
-        self.layoutSetupReferenceOptions.addWidget(self.buttonSelectShapefile, 0, 2)
+        self.comboBoxReferenceData = QtGui.QComboBox()
+        self.comboBoxReferenceData.setDisabled(True)
+        self.layoutSetupReferenceOptions.addWidget(self.comboBoxReferenceData, 0, 1)
+        self.handlerPopulateNameFromLookupData(self.main.dataPlanningUnit, self.comboBoxReferenceData)
+        self.buttonLoadLookupTableReferenceData = QtGui.QPushButton()
+        self.buttonLoadLookupTableReferenceData.setText('Load Table')
+        self.layoutSetupReferenceOptions.addWidget(self.buttonLoadLookupTableReferenceData, 0, 2)
         self.labelReferenceClasses = QtGui.QLabel()
         self.labelReferenceClasses.setText('Reference classes:')
         self.layoutSetupReferenceOptions.addWidget(self.labelReferenceClasses, 1, 0)
@@ -374,19 +372,12 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         self.buttonEditReferenceClasses.setText('Edit Classes')
         self.buttonEditReferenceClasses.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
         self.layoutSetupReferenceOptions.addWidget(self.buttonEditReferenceClasses, 1, 1)
-        self.labelShapefileAttribute = QtGui.QLabel()
-        self.labelShapefileAttribute.setText('Reference &attribute:')
-        self.layoutSetupReferenceOptions.addWidget(self.labelShapefileAttribute, 2, 0)
-        self.comboBoxShapefileAttribute = QtGui.QComboBox()
-        self.comboBoxShapefileAttribute.setDisabled(True)
-        self.layoutSetupReferenceOptions.addWidget(self.comboBoxShapefileAttribute, 2, 1)
-        self.labelShapefileAttribute.setBuddy(self.comboBoxShapefileAttribute)
         self.labelDataTitle = QtGui.QLabel()
         self.labelDataTitle.setText('Data &title:')
-        self.layoutSetupReferenceOptions.addWidget(self.labelDataTitle, 3, 0)
+        self.layoutSetupReferenceOptions.addWidget(self.labelDataTitle, 2, 0)
         self.lineEditDataTitle = QtGui.QLineEdit()
         self.lineEditDataTitle.setText('title')
-        self.layoutSetupReferenceOptions.addWidget(self.lineEditDataTitle, 3, 1)
+        self.layoutSetupReferenceOptions.addWidget(self.lineEditDataTitle, 2, 1)
         self.labelDataTitle.setBuddy(self.lineEditDataTitle)
         
         #######################################################################
@@ -399,6 +390,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         self.layoutReferenceMappingInfo = QtGui.QVBoxLayout()
         self.labelReferenceMappingInfo = QtGui.QLabel()
         self.labelReferenceMappingInfo.setText('Lorem ipsum dolor sit amet...')
+        self.labelReferenceMappingInfo.setWordWrap(True)
         self.layoutReferenceMappingInfo.addWidget(self.labelReferenceMappingInfo)
         
         self.tableReferenceMapping = QtGui.QTableWidget()
@@ -433,6 +425,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         self.layoutSetupPlanningUnitInfo = QtGui.QVBoxLayout()
         self.labelSetupPlanningUnitInfo = QtGui.QLabel()
         self.labelSetupPlanningUnitInfo.setText('Lorem ipsum dolor sit amet...')
+        self.labelSetupPlanningUnitInfo.setWordWrap(True)
         self.layoutSetupPlanningUnitInfo.addWidget(self.labelSetupPlanningUnitInfo)
         
         self.layoutButtonSetupPlanningUnit = QtGui.QHBoxLayout()
@@ -473,7 +466,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         # Process tab button
         self.layoutButtonSetup = QtGui.QHBoxLayout()
         self.buttonProcessSetup = QtGui.QPushButton()
-        self.buttonProcessSetup.setText('&Process')
+        self.buttonProcessSetup.setText('&Build')
         icon = QtGui.QIcon(':/ui/icons/iconActionHelp.png')
         self.buttonHelp = QtGui.QPushButton()
         self.buttonHelp.setIcon(icon)
@@ -482,7 +475,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         self.layoutButtonSetup.addWidget(self.buttonHelp)
         
         # Template GroupBox
-        self.groupBoxPURTemplate = QtGui.QGroupBox('Template')
+        self.groupBoxPURTemplate = QtGui.QGroupBox('Configuration')
         self.layoutGroupBoxPURTemplate = QtGui.QVBoxLayout()
         self.layoutGroupBoxPURTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxPURTemplate.setLayout(self.layoutGroupBoxPURTemplate)
@@ -492,7 +485,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxPURTemplate.addLayout(self.layoutPURTemplate)
         
         self.labelLoadedPURTemplate = QtGui.QLabel()
-        self.labelLoadedPURTemplate.setText('Loaded template:')
+        self.labelLoadedPURTemplate.setText('Loaded configuration:')
         self.layoutPURTemplate.addWidget(self.labelLoadedPURTemplate, 0, 0)
         
         self.loadedPURTemplate = QtGui.QLabel()
@@ -500,13 +493,13 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         self.layoutPURTemplate.addWidget(self.loadedPURTemplate, 0, 1)
         
         self.labelPURTemplate = QtGui.QLabel()
-        self.labelPURTemplate.setText('Template name:')
+        self.labelPURTemplate.setText('Name:')
         self.layoutPURTemplate.addWidget(self.labelPURTemplate, 1, 0)
         
         self.comboBoxPURTemplate = QtGui.QComboBox()
         self.comboBoxPURTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
         self.comboBoxPURTemplate.setDisabled(True)
-        self.comboBoxPURTemplate.addItem('No template found')
+        self.comboBoxPURTemplate.addItem('No configuration found')
         self.layoutPURTemplate.addWidget(self.comboBoxPURTemplate, 1, 1)
         
         self.layoutButtonPURTemplate = QtGui.QHBoxLayout()
@@ -548,6 +541,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         
         self.labelReconcileInfo = QtGui.QLabel()
         self.labelReconcileInfo.setText('Lorem ipsum dolor sit amet...')
+        self.labelReconcileInfo.setWordWrap(True)
         self.layoutGroupBoxReconcile.addWidget(self.labelReconcileInfo)
         
         self.reconcileTable = QtGui.QTableWidget()
@@ -594,7 +588,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         
         self.setLayout(self.dialogLayout)
         self.setWindowTitle(self.dialogTitle)
-        self.setMinimumSize(1024, 700)
+        self.setMinimumSize(840, 500)
         self.resize(parent.sizeHint())
     
     
@@ -606,46 +600,6 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
             self.log_box.widget.setPlainText(logText)
     
     
-    def populateTableReferenceMapping(self, shapefileAttribute):
-        """Method for populating the reference mapping table from the selected shapefile attribute.
-        
-        Args:
-            shapefileAttribute (str): the selected shapefile attribute.
-        """
-        # Need to check if shapefileAttribute is set (can be empty when updating comboBoxShapefileAttribute)
-        if not shapefileAttribute:
-            return
-        
-        registry = QgsProviderRegistry.instance()
-        provider = registry.provider('ogr', unicode(self.lineEditShapefile.text()))
-        
-        if not provider.isValid():
-            logging.getLogger(type(self).__name__).error('invalid shapefile')
-            return
-        
-        attributeValues = []
-        features = provider.getFeatures()
-        
-        if features:
-            for feature in features:
-                attributeValue = str(feature.attribute(shapefileAttribute))
-                attributeValues.append(attributeValue)
-            
-            # Clear the table first
-            self.tableReferenceMapping.setRowCount(0)
-            self.tableReferenceMapping.setRowCount(len(attributeValues))
-            
-            row = 0
-            for attributeValue in sorted(attributeValues):
-                comboboxReferenceClasses = QtGui.QComboBox()
-                for key, val in self.referenceClasses.iteritems():
-                    comboboxReferenceClasses.addItem(val, key)
-                
-                self.tableReferenceMapping.setItem(row, 0, QtGui.QTableWidgetItem(attributeValue))
-                self.tableReferenceMapping.setCellWidget(row, 1, comboboxReferenceClasses)
-                row = row + 1
-    
-    
     def showEvent(self, event):
         """Overload method that is called when the dialog widget is shown.
         
@@ -653,7 +607,6 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
             event (QShowEvent): the show widget event.
         """
         super(DialogLumensPUR, self).showEvent(event)
-        self.loadSelectedVectorLayer()
     
     
     def closeEvent(self, event):
@@ -663,36 +616,6 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
             event (QCloseEvent): the close widget event.
         """
         super(DialogLumensPUR, self).closeEvent(event)
-    
-    
-    def loadSelectedVectorLayer(self):
-        """Load the attributes of the selected layer in the layer list into the shapefile attribute combobox.
-        """
-        selectedIndexes = self.main.layerListView.selectedIndexes()
-        
-        if not selectedIndexes:
-            return
-        
-        layerItemIndex = selectedIndexes[0]
-        layerItem = self.main.layerListModel.itemFromIndex(layerItemIndex)
-        layerItemData = layerItem.data()
-        
-        if layerItemData['layerType'] == 'vector':
-            provider = self.main.qgsLayerList[layerItemData['layer']].dataProvider()
-            
-            if not provider.isValid():
-                logging.getLogger(type(self).__name__).error('invalid shapefile')
-                return
-            
-            attributes = []
-            for field in provider.fields():
-                attributes.append(field.name())
-            
-            self.lineEditShapefile.setText(layerItemData['layerFile'])
-            
-            self.comboBoxShapefileAttribute.clear()
-            self.comboBoxShapefileAttribute.addItems(sorted(attributes))
-            self.comboBoxShapefileAttribute.setEnabled(True)
     
     
     def addPlanningUnitRow(self, planningUnitData=None, referenceClassID=None, planningUnitType=None):
@@ -1025,54 +948,44 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         self.clearLayout(layoutRow)
     
     
-    def handlerSelectShapefile(self, shapefile=None, shapefileAttr=None):
-        """Slot methof for selecting a .shp file and loading the attributes in the shapefile attribute combobox.
+    def handlerLoadLookupTableReference(self):
+        """Slot method for calling spesific planning unit lookup table and
+           populating the reference mapping table from the selected reference data.
+        """      
+        activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
+        selectedReferenceData = self.comboBoxReferenceData.currentText()
+        attributeValues = []
         
-        Args:
-            shapefile (str): a file path to the shapefile.
-            shapefileAttr (str): the selected attribute from the shapefile.
-        """
-        file = None
+        outputs = general.runalg(
+            'r:toolsgetlut',
+            activeProject,
+            selectedReferenceData,
+            None,
+        )        
         
-        if shapefile:
-            file = shapefile
-        else:
-            file = unicode(QtGui.QFileDialog.getOpenFileName(
-                self, 'Select Shapefile', QtCore.QDir.homePath(), 'Shapefile (*{0})'.format(self.main.appSettings['selectShapefileExt'])))
+        outputKey = 'main_data'
+        if outputs and outputKey in outputs:
+            if os.path.exists(outputs[outputKey]):
+                with open(outputs[outputKey], 'rb') as f:
+                    reader = csv.reader(f)
+                    next(reader)
+                    for attributeValue in reader:
+                        attributeValues.append(attributeValue[0])
+                    
+                    # Clear the table first
+                    self.tableReferenceMapping.setRowCount(0)
+                    self.tableReferenceMapping.setRowCount(len(attributeValues))
+                    
+                    row = 0
+                    for attributeValue in sorted(attributeValues):
+                        comboboxReferenceClasses = QtGui.QComboBox()
+                        for key, val in self.referenceClasses.iteritems():
+                            comboboxReferenceClasses.addItem(val, key)
+                        
+                        self.tableReferenceMapping.setItem(row, 0, QtGui.QTableWidgetItem(attributeValue))
+                        self.tableReferenceMapping.setCellWidget(row, 1, comboboxReferenceClasses)
+                        row = row + 1
         
-        if file:
-            self.lineEditShapefile.setText(file)
-            
-            registry = QgsProviderRegistry.instance()
-            provider = registry.provider('ogr', file)
-            
-            if not provider.isValid():
-                logging.getLogger(type(self).__name__).error('invalid shapefile')
-                return
-            
-            attributes = []
-            for field in provider.fields():
-                attributes.append(field.name())
-            
-            self.comboBoxShapefileAttribute.clear()
-            self.comboBoxShapefileAttribute.addItems(sorted(attributes))
-            self.comboBoxShapefileAttribute.setEnabled(True)
-            
-            if shapefileAttr:
-                self.comboBoxShapefileAttribute.setCurrentIndex(self.comboBoxShapefileAttribute.findText(shapefileAttr))
-            
-            logging.getLogger(type(self).__name__).info('select shapefile: %s', file)
-    
-    
-    def handlerChangeShapefileAttribute(self, currentIndex):
-        """Slot method for updating the reference map combobox when a different attribute is selected.
-        
-        Args:
-            currentIndex (int): the index number of the selected combobox item.
-        """
-        shapefileAttribute = self.comboBoxShapefileAttribute.currentText()
-        self.populateTableReferenceMapping(shapefileAttribute)
-    
     
     def handlerEditReferenceClasses(self):
         """Slot method for showing the PUR reference class editing dialog.
@@ -1203,8 +1116,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         """Set the required values from the form widgets.
         """
         # 'Setup reference' GroupBox values
-        self.main.appSettings[type(self).__name__]['shapefile'] = unicode(self.lineEditShapefile.text())
-        self.main.appSettings[type(self).__name__]['shapefileAttr'] = unicode(self.comboBoxShapefileAttribute.currentText())
+        self.main.appSettings[type(self).__name__]['referenceData'] = unicode(self.comboBoxReferenceData.currentText())
         self.main.appSettings[type(self).__name__]['dataTitle'] = unicode(self.lineEditDataTitle.text())
         self.main.appSettings[type(self).__name__]['referenceClasses'] = self.referenceClasses
         

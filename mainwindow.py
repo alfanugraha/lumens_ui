@@ -110,7 +110,7 @@ class MainWindow(QtGui.QMainWindow):
             'selectRasterfileExt': '.tif',
             'selectCsvfileExt': '.csv',
             'selectProjectfileExt': '.lpj',
-            'selectZipfileExt': '.zip',
+            'selectZipfileExt': '.lpa',
             'selectDatabasefileExt': '.dbf',
             'selectHTMLfileExt': '.html',
             'selectTextfileExt': '.txt',
@@ -166,8 +166,7 @@ class MainWindow(QtGui.QMainWindow):
                 'description': '',
             },
             'DialogLumensPUR': {
-                'shapefile': '',
-                'shapefileAttr': '',
+                'referenceData': '',
                 'dataTitle': '',
                 'referenceClasses': '',
                 'referenceMapping': '',
@@ -798,19 +797,19 @@ class MainWindow(QtGui.QMainWindow):
         
         # Database menu
         icon = QtGui.QIcon(':/ui/icons/iconActionDialogCreateLumensDatabase.png')
-        self.actionDialogLumensCreateDatabase = QtGui.QAction(icon, 'Create LUMENS database', self)
+        self.actionDialogLumensCreateDatabase = QtGui.QAction(icon, 'New', self)
         icon = QtGui.QIcon(':/ui/icons/iconActionLumensOpenDatabase.png')
-        self.actionLumensOpenDatabase = QtGui.QAction(icon, 'Open LUMENS database', self)
+        self.actionLumensOpenDatabase = QtGui.QAction(icon, 'Open', self)
         icon = QtGui.QIcon(':/ui/icons/iconActionLumensCloseDatabase.png')
-        self.actionLumensCloseDatabase = QtGui.QAction(icon, 'Close LUMENS database', self)
+        self.actionLumensCloseDatabase = QtGui.QAction(icon, 'Close', self)
         icon = QtGui.QIcon(':/ui/icons/iconActionLumensExportDatabase.png')
-        self.actionLumensExportDatabase = QtGui.QAction(icon, 'Export LUMENS database', self)
+        self.actionLumensExportDatabase = QtGui.QAction(icon, 'Export', self)
         icon = QtGui.QIcon(':/ui/icons/iconActionDialogLumensAddData.png')
-        self.actionDialogLumensAddData = QtGui.QAction(icon, 'Add data to LUMENS database', self)
+        self.actionDialogLumensAddData = QtGui.QAction(icon, 'Import Data', self)
         icon = QtGui.QIcon(':/ui/icons/iconActionLumensDeleteData.png')
-        self.actionLumensDeleteData = QtGui.QAction(icon, 'Delete LUMENS data', self)
+        self.actionLumensDeleteData = QtGui.QAction(icon, 'Remove', self)
         icon = QtGui.QIcon(':/ui/icons/iconActionLumensDatabaseStatus.png')
-        self.actionLumensDatabaseStatus = QtGui.QAction(icon, 'LUMENS database status', self)
+        self.actionLumensDatabaseStatus = QtGui.QAction(icon, 'Project Status', self)
         
         self.databaseMenu.addAction(self.actionDialogLumensCreateDatabase)
         self.databaseMenu.addAction(self.actionLumensOpenDatabase)
@@ -935,7 +934,7 @@ class MainWindow(QtGui.QMainWindow):
         self.sidebarTabWidget.setStyleSheet(sidebarTabWidgetStylesheet)
         self.sidebarTabWidget.setTabPosition(QtGui.QTabWidget.North)
         
-        self.dashboardTabWidget = QtGui.QTabWidget()
+        # self.dashboardTabWidget = QtGui.QTabWidget()
         
         self.tabLayers = QtGui.QWidget()
         self.tabDatabase = QtGui.QWidget()
@@ -1800,7 +1799,6 @@ class MainWindow(QtGui.QMainWindow):
         self.sidebarDockWidget.setWidget(self.sidebarTabWidget)
         self.sidebarDockWidget.setStyleSheet('QDockWidget { background-color: rgb(225, 229, 237); } QToolBar { border: none; }') # Remove border for all child QToolBar in sidebar
         self.sidebarDockWidget.setFloating(True)
-        self.sidebarDockWidget.setMinimumHeight(520)
         self.sidebarDockWidgetAction = self.sidebarDockWidget.toggleViewAction()
         
         # Add view menu
@@ -2410,7 +2408,7 @@ class MainWindow(QtGui.QMainWindow):
         logging.getLogger(type(self).__name__).info('end: LUMENS Open Database')
 
 
-    def lumensImportDatabase(self, zipFile, workingDir):
+    def lumensImportDatabase(self, lpaFile, workingDir):
         """Method for importing an archived LUMENS project database  
         
         Imports an archived LUMENS project using "r:dbimport" R algorithm.
@@ -2420,7 +2418,7 @@ class MainWindow(QtGui.QMainWindow):
         
         
         Args:
-            zipFile: an archived file (.zip)
+            lpaFile: an archived file (.lpa)
             workingDir: new working directory to be imported
         """
         logging.getLogger(type(self).__name__).info('start: LUMENS Import Database')
@@ -2428,7 +2426,7 @@ class MainWindow(QtGui.QMainWindow):
         
         outputs = general.runalg(
             'r:dbimport',
-            zipFile.replace(os.path.sep, '/'),
+            lpaFile.replace(os.path.sep, '/'),
             workingDir.replace(os.path.sep, '/'),
             None,
         )
@@ -3187,7 +3185,7 @@ class MainWindow(QtGui.QMainWindow):
         """Slot method for a file select dialog to open a LUMENS .lpj project database file.
         """
         lumensDatabase = unicode(QtGui.QFileDialog.getOpenFileName(
-            self, 'Select LUMENS Database', QtCore.QDir.homePath(), 'LUMENS Database (*{0});;LUMENS Archive (*{1})'
+            self, 'Select LUMENS Database', QtCore.QDir.homePath(), 'LUMENS Project File (*{0});;LUMENS Project Archive (*{1})'
                 .format(self.appSettings['selectProjectfileExt'], self.appSettings['selectZipfileExt'])))
         
         lumensDatabaseName, lumensDatabaseExt = os.path.splitext(lumensDatabase)
@@ -3231,6 +3229,7 @@ class MainWindow(QtGui.QMainWindow):
         """Slot method for triggering the close database operation.
         """
         self.lumensCloseDatabase()
+        self.handlerDeleteLayer()
     
     
     def handlerLumensDatabaseStatus(self):
