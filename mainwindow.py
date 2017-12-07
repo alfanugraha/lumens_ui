@@ -167,7 +167,6 @@ class MainWindow(QtGui.QMainWindow):
             },
             'DialogLumensPUR': {
                 'referenceData': '',
-                'dataTitle': '',
                 'referenceClasses': '',
                 'referenceMapping': '',
                 'planningUnits': '',

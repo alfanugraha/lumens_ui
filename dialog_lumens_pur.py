@@ -73,7 +73,6 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
             
             templateSettings['DialogLumensPUR'] = {}
             templateSettings['DialogLumensPUR']['referenceData'] = referenceData = settings.value('referenceData')
-            templateSettings['DialogLumensPUR']['dataTitle'] = dataTitle = settings.value('dataTitle')
             templateSettings['DialogLumensPUR']['referenceClasses'] = referenceClasses = settings.value('referenceClasses')
             templateSettings['DialogLumensPUR']['referenceMapping'] = referenceMapping = settings.value('referenceMapping')
             templateSettings['DialogLumensPUR']['planningUnits'] = planningUnits = settings.value('planningUnits')
@@ -83,10 +82,6 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
                     indexReferenceData = self.comboBoxReferenceData.findText(referenceData)
                     if indexReferenceData != -1:
                         self.comboBoxReferenceData.setCurrentIndex(referenceData)
-                if dataTitle:
-                    self.lineEditDataTitle.setText(dataTitle)
-                else:
-                    self.lineEditDataTitle.setText('')
                 if referenceClasses:
                     self.updateReferenceClasses(referenceClasses)
                 if referenceMapping:
@@ -372,13 +367,6 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         self.buttonEditReferenceClasses.setText('Edit Classes')
         self.buttonEditReferenceClasses.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
         self.layoutSetupReferenceOptions.addWidget(self.buttonEditReferenceClasses, 1, 1)
-        self.labelDataTitle = QtGui.QLabel()
-        self.labelDataTitle.setText('Data &title:')
-        self.layoutSetupReferenceOptions.addWidget(self.labelDataTitle, 2, 0)
-        self.lineEditDataTitle = QtGui.QLineEdit()
-        self.lineEditDataTitle.setText('title')
-        self.layoutSetupReferenceOptions.addWidget(self.lineEditDataTitle, 2, 1)
-        self.labelDataTitle.setBuddy(self.lineEditDataTitle)
         
         #######################################################################
         # 'Attribute reference mapping' GroupBox
@@ -1117,7 +1105,6 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         """
         # 'Setup reference' GroupBox values
         self.main.appSettings[type(self).__name__]['referenceData'] = unicode(self.comboBoxReferenceData.currentText())
-        self.main.appSettings[type(self).__name__]['dataTitle'] = unicode(self.lineEditDataTitle.text())
         self.main.appSettings[type(self).__name__]['referenceClasses'] = self.referenceClasses
         
         self.tableReferenceMappingData = {}
@@ -1213,9 +1200,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
             self.outputsPURSetup = general.runalg(
                 algName,
                 activeProject,
-                self.main.appSettings[type(self).__name__]['shapefile'].replace(os.path.sep, '/'),
-                self.main.appSettings[type(self).__name__]['shapefileAttr'],
-                self.main.appSettings[type(self).__name__]['dataTitle'],
+                self.main.appSettings[type(self).__name__]['referenceData'],
                 csvReferenceClasses.replace(os.path.sep, '/'),
                 csvReferenceMapping.replace(os.path.sep, '/'),
                 csvPlanningUnits.replace(os.path.sep, '/'),
