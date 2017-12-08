@@ -587,7 +587,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             return templateSettings
         else:
             # Log to history log
-            logging.getLogger(self.historyLog).info('Loaded template: %s', templateFile)
+            logging.getLogger(self.historyLog).info('Loaded configuration: %s', templateFile)
     
     
     def checkForDuplicateTemplates(self, tabName, templateToSkip):
@@ -655,8 +655,8 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         if duplicateTemplate:
             reply = QtGui.QMessageBox.question(
                 self,
-                'Load Existing Template',
-                'The template you are about to save matches an existing template.\nDo you want to load \'{0}\' instead?'.format(duplicateTemplate),
+                'Load Existing Configuration',
+                'The configuration you are about to save matches an existing configuration.\nDo you want to load \'{0}\' instead?'.format(duplicateTemplate),
                 QtGui.QMessageBox.Yes|QtGui.QMessageBox.No,
                 QtGui.QMessageBox.No
             )
@@ -735,7 +735,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             settings.endGroup()
             
             # Log to history log
-            logging.getLogger(self.historyLog).info('Saved template: %s', fileName)
+            logging.getLogger(self.historyLog).info('Saved configuration: %s', fileName)
     
     
     def __init__(self, parent):
@@ -746,7 +746,6 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.checkBoxQUESCDatabaseCount = 0
         self.listOfQUESCDatabase = []
         self.settingsPath = os.path.join(self.main.appSettings['DialogLumensOpenDatabase']['projectFolder'], self.main.appSettings['folderQUES'])
-        self.habitatLookupPath = self.main.appSettings['defaultHabitatLookupTable']
         self.currentPreQUESTemplate = None
         self.currentQUESCTemplate = None
         self.currentQUESBTemplate = None
@@ -800,7 +799,6 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.checkBoxSummarizeMultiplePeriod.toggled.connect(self.toggleSummarizeMultiplePeriod)
         
         # 'QUES-C' tab buttons
-        self.buttonSelectPCACsvfile.clicked.connect(self.handlerSelectPCACsvfile)
         self.buttonProcessQUESC.clicked.connect(self.handlerProcessQUESC)
         self.buttonHelpQUESC.clicked.connect(lambda:self.handlerDialogHelp('QUES'))
         self.buttonLoadQUESCTemplate.clicked.connect(self.handlerLoadQUESCTemplate)
@@ -808,12 +806,12 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.buttonSaveAsQUESCTemplate.clicked.connect(self.handlerSaveAsQUESCTemplate)
         
         # 'QUES-B' tab buttons
+        self.buttonLoadLookupTableHabitat.clicked.connect(self.handlerLoadHabitatLookupTable)
         self.buttonProcessQUESB.clicked.connect(self.handlerProcessQUESB)
         self.buttonHelpQUESB.clicked.connect(lambda:self.handlerDialogHelp('QUES'))
         self.buttonLoadQUESBTemplate.clicked.connect(self.handlerLoadQUESBTemplate)
         self.buttonSaveQUESBTemplate.clicked.connect(self.handlerSaveQUESBTemplate)
         self.buttonSaveAsQUESBTemplate.clicked.connect(self.handlerSaveAsQUESBTemplate)
-        self.loadDefaultHabitatLookupTable()
         
         # 'QUES-H' tab checkboxes
         self.checkBoxMultipleHRU.toggled.connect(self.toggleMultipleHRU)
@@ -864,10 +862,11 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
 
         self.groupBoxQUESDialog = QtGui.QGroupBox('Quantification of Environmental Services')
         self.layoutGroupBoxQUESDialog = QtGui.QVBoxLayout()
-        self.layoutGroupBoxQUESDialog.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.layoutGroupBoxQUESDialog.setAlignment(QtCore.Qt.AlignTop)
         self.groupBoxQUESDialog.setLayout(self.layoutGroupBoxQUESDialog)
         self.labelQUESDialogInfo = QtGui.QLabel()
         self.labelQUESDialogInfo.setText('Lorem ipsum dolor sit amet...')
+        self.labelQUESDialogInfo.setWordWrap(True)
         self.layoutGroupBoxQUESDialog.addWidget(self.labelQUESDialogInfo)
 
         self.tabWidget = QtGui.QTabWidget()
@@ -939,6 +938,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.layoutLandCoverInfo = QtGui.QVBoxLayout()
         self.labelLandCoverInfo = QtGui.QLabel()
         self.labelLandCoverInfo.setText('Lorem ipsum dolor sit amet...\n')
+        self.labelLandCoverInfo.setWordWrap(True)
         self.layoutLandCoverInfo.addWidget(self.labelLandCoverInfo)
         
         self.layoutLandCoverOptions = QtGui.QGridLayout()
@@ -1023,7 +1023,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.layoutButtonPreQUES.addWidget(self.buttonHelpPreQUES)
         
         # Template GroupBox
-        self.groupBoxPreQUESTemplate = QtGui.QGroupBox('Template')
+        self.groupBoxPreQUESTemplate = QtGui.QGroupBox('Configuration')
         self.layoutGroupBoxPreQUESTemplate = QtGui.QVBoxLayout()
         self.layoutGroupBoxPreQUESTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxPreQUESTemplate.setLayout(self.layoutGroupBoxPreQUESTemplate)
@@ -1033,7 +1033,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxPreQUESTemplate.addLayout(self.layoutPreQUESTemplate)
         
         self.labelLoadedPreQUESTemplate = QtGui.QLabel()
-        self.labelLoadedPreQUESTemplate.setText('Loaded template:')
+        self.labelLoadedPreQUESTemplate.setText('Loaded configuration:')
         self.layoutPreQUESTemplate.addWidget(self.labelLoadedPreQUESTemplate, 0, 0)
         
         self.loadedPreQUESTemplate = QtGui.QLabel()
@@ -1041,13 +1041,13 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.layoutPreQUESTemplate.addWidget(self.loadedPreQUESTemplate, 0, 1)
         
         self.labelPreQUESTemplate = QtGui.QLabel()
-        self.labelPreQUESTemplate.setText('Template name:')
+        self.labelPreQUESTemplate.setText('Name:')
         self.layoutPreQUESTemplate.addWidget(self.labelPreQUESTemplate, 1, 0)
         
         self.comboBoxPreQUESTemplate = QtGui.QComboBox()
         self.comboBoxPreQUESTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
         self.comboBoxPreQUESTemplate.setDisabled(True)
-        self.comboBoxPreQUESTemplate.addItem('No template found')
+        self.comboBoxPreQUESTemplate.addItem('No configuration found')
         self.layoutPreQUESTemplate.addWidget(self.comboBoxPreQUESTemplate, 1, 1)
         
         self.layoutButtonPreQUESTemplate = QtGui.QHBoxLayout()
@@ -1101,6 +1101,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         
         self.labelCarbonAccountingInfo = QtGui.QLabel()
         self.labelCarbonAccountingInfo.setText('Lorem ipsum dolor sit amet...\n')
+        self.labelCarbonAccountingInfo.setWordWrap(True)
         self.layoutCarbonAccountingInfo.addWidget(self.labelCarbonAccountingInfo)
 
         self.labelCALandCoverLandUse1 = QtGui.QLabel()
@@ -1153,41 +1154,34 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.layoutCarbonAccounting.addWidget(self.spinBoxCANoDataValue, 4, 1)
         self.labelCANoDataValue.setBuddy(self.spinBoxCANoDataValue)
         
-        # 'Peatland carbon accounting' GroupBox
-        self.groupBoxPeatlandCarbonAccounting = QtGui.QGroupBox('Peatland carbon accounting')
-        self.layoutGroupBoxPeatlandCarbonAccounting = QtGui.QHBoxLayout()
-        self.groupBoxPeatlandCarbonAccounting.setLayout(self.layoutGroupBoxPeatlandCarbonAccounting)
-        self.layoutOptionsPeatlandCarbonAccounting = QtGui.QVBoxLayout()
-        self.layoutOptionsPeatlandCarbonAccounting.setContentsMargins(5, 0, 5, 0)
-        self.contentOptionsPeatlandCarbonAccounting = QtGui.QWidget()
-        self.contentOptionsPeatlandCarbonAccounting.setLayout(self.layoutOptionsPeatlandCarbonAccounting)
-        self.layoutOptionsPeatlandCarbonAccounting.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        # Peatland carbon accounting
+        self.labelSpace = QtGui.QLabel()
+        self.labelSpace.setText(' ')
+        self.layoutCarbonAccounting.addWidget(self.labelSpace, 5, 0)
+        
+        self.labelcheckBoxPeatlandCarbonAccounting = QtGui.QLabel()
+        self.labelcheckBoxPeatlandCarbonAccounting.setText('Include peat:')
+        self.layoutCarbonAccounting.addWidget(self.labelcheckBoxPeatlandCarbonAccounting, 6, 0)
+        
         self.checkBoxPeatlandCarbonAccounting = QtGui.QCheckBox()
         self.checkBoxPeatlandCarbonAccounting.setChecked(False)
-        self.contentOptionsPeatlandCarbonAccounting.setDisabled(True)
-        self.layoutGroupBoxPeatlandCarbonAccounting.addWidget(self.checkBoxPeatlandCarbonAccounting)
-        self.layoutGroupBoxPeatlandCarbonAccounting.addWidget(self.contentOptionsPeatlandCarbonAccounting)
-        self.layoutGroupBoxPeatlandCarbonAccounting.setAlignment(self.checkBoxPeatlandCarbonAccounting, QtCore.Qt.AlignTop)
-        self.layoutPeatlandCarbonAccountingInfo = QtGui.QVBoxLayout()
-        self.layoutPeatlandCarbonAccounting = QtGui.QGridLayout()
-        self.layoutOptionsPeatlandCarbonAccounting.addLayout(self.layoutPeatlandCarbonAccountingInfo)
-        self.layoutOptionsPeatlandCarbonAccounting.addLayout(self.layoutPeatlandCarbonAccounting)
+        self.layoutCarbonAccounting.addWidget(self.checkBoxPeatlandCarbonAccounting, 6, 1)
         
-        self.labelPeatlandCarbonAccountingInfo = QtGui.QLabel()
-        self.labelPeatlandCarbonAccountingInfo.setText('Lorem ipsum dolor sit amet...\n')
-        self.layoutPeatlandCarbonAccountingInfo.addWidget(self.labelPeatlandCarbonAccountingInfo)
+        self.labelPeatlandMap = QtGui.QLabel()
+        self.labelPeatlandMap.setText('Peat map:')
+        self.layoutCarbonAccounting.addWidget(self.labelPeatlandMap, 7, 0)
+        
+        self.comboBoxPeatlandMap = QtGui.QComboBox()
+        self.comboBoxPeatlandMap.setDisabled(True)
+        self.layoutCarbonAccounting.addWidget(self.comboBoxPeatlandMap, 7, 1)
         
         self.labelPCACsvfile = QtGui.QLabel()
-        self.labelPCACsvfile.setText('Carbon stock lookup table:')
-        self.layoutPeatlandCarbonAccounting.addWidget(self.labelPCACsvfile, 0, 0)
+        self.labelPCACsvfile.setText('Peat lookup table:')
+        self.layoutCarbonAccounting.addWidget(self.labelPCACsvfile, 8, 0)
         
-        self.lineEditPCACsvfile = QtGui.QLineEdit()
-        self.lineEditPCACsvfile.setReadOnly(True)
-        self.layoutPeatlandCarbonAccounting.addWidget(self.lineEditPCACsvfile, 0, 1)
-        
-        self.buttonSelectPCACsvfile = QtGui.QPushButton()
-        self.buttonSelectPCACsvfile.setText('&Browse')
-        self.layoutPeatlandCarbonAccounting.addWidget(self.buttonSelectPCACsvfile, 0, 2)
+        self.comboBoxPCACsvfile = QtGui.QComboBox()
+        self.comboBoxPCACsvfile.setDisabled(True)
+        self.layoutCarbonAccounting.addWidget(self.comboBoxPCACsvfile, 8, 1)
         
         # 'Summarize multiple period' GroupBox
         self.groupBoxSummarizeMultiplePeriod = QtGui.QGroupBox('Summarize multiple period')
@@ -1212,16 +1206,8 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         
         self.labelSummarizeMultiplePeriodInfo = QtGui.QLabel()
         self.labelSummarizeMultiplePeriodInfo.setText('Lorem ipsum dolor sit amet...\n')
+        self.labelSummarizeMultiplePeriodInfo.setWordWrap(True)
         self.layoutSummarizeMultiplePeriodInfo.addWidget(self.labelSummarizeMultiplePeriodInfo)
-        
-        self.labelSMPCheckBox = QtGui.QLabel()
-        self.labelSMPCheckBox.setText('Include &peat:')
-        self.layoutSummarizeMultiplePeriod.addWidget(self.labelSMPCheckBox, 0, 0)
-        
-        self.SMPCheckBox = QtGui.QCheckBox()
-        self.SMPCheckBox.setChecked(True)
-        self.layoutSummarizeMultiplePeriod.addWidget(self.SMPCheckBox, 0, 1)
-        self.labelSMPCheckBox.setBuddy(self.SMPCheckBox)
         
         self.populateQUESCDatabase()
         
@@ -1236,7 +1222,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.layoutButtonQUESC.addWidget(self.buttonHelpQUESC)
         
         # Template GroupBox
-        self.groupBoxQUESCTemplate = QtGui.QGroupBox('Template')
+        self.groupBoxQUESCTemplate = QtGui.QGroupBox('Configuration')
         self.layoutGroupBoxQUESCTemplate = QtGui.QVBoxLayout()
         self.layoutGroupBoxQUESCTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxQUESCTemplate.setLayout(self.layoutGroupBoxQUESCTemplate)
@@ -1246,7 +1232,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxQUESCTemplate.addLayout(self.layoutQUESCTemplate)
         
         self.labelLoadedQUESCTemplate = QtGui.QLabel()
-        self.labelLoadedQUESCTemplate.setText('Loaded template:')
+        self.labelLoadedQUESCTemplate.setText('Loaded configuration:')
         self.layoutQUESCTemplate.addWidget(self.labelLoadedQUESCTemplate, 0, 0)
         
         self.loadedQUESCTemplate = QtGui.QLabel()
@@ -1254,13 +1240,13 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.layoutQUESCTemplate.addWidget(self.loadedQUESCTemplate, 0, 1)
         
         self.labelQUESCTemplate = QtGui.QLabel()
-        self.labelQUESCTemplate.setText('Template name:')
+        self.labelQUESCTemplate.setText('Name:')
         self.layoutQUESCTemplate.addWidget(self.labelQUESCTemplate, 1, 0)
         
         self.comboBoxQUESCTemplate = QtGui.QComboBox()
         self.comboBoxQUESCTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
         self.comboBoxQUESCTemplate.setDisabled(True)
-        self.comboBoxQUESCTemplate.addItem('No template found')
+        self.comboBoxQUESCTemplate.addItem('No configuration found')
         self.layoutQUESCTemplate.addWidget(self.comboBoxQUESCTemplate, 1, 1)
         
         self.layoutButtonQUESCTemplate = QtGui.QHBoxLayout()
@@ -1283,10 +1269,9 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         
         # Place the GroupBoxes
         self.layoutTabQUESC.addWidget(self.groupBoxCarbonAccounting, 0, 0)
-        self.layoutTabQUESC.addWidget(self.groupBoxPeatlandCarbonAccounting, 1, 0)
-        self.layoutTabQUESC.addWidget(self.groupBoxSummarizeMultiplePeriod, 2, 0)
-        self.layoutTabQUESC.addLayout(self.layoutButtonQUESC, 3, 0, 1, 2, QtCore.Qt.AlignRight)
-        self.layoutTabQUESC.addWidget(self.groupBoxQUESCTemplate, 0, 1, 3, 1)
+        self.layoutTabQUESC.addWidget(self.groupBoxSummarizeMultiplePeriod, 1, 0)
+        self.layoutTabQUESC.addLayout(self.layoutButtonQUESC, 2, 0, 1, 2, QtCore.Qt.AlignRight)
+        self.layoutTabQUESC.addWidget(self.groupBoxQUESCTemplate, 0, 1, 2, 1)
         self.layoutTabQUESC.setColumnStretch(0, 3)
         self.layoutTabQUESC.setColumnStretch(1, 1) # Smaller template column
         
@@ -1305,6 +1290,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         
         self.labelQUESBParametersInfo = QtGui.QLabel()
         self.labelQUESBParametersInfo.setText('Lorem ipsum dolor sit amet...\n')
+        self.labelQUESBParametersInfo.setWordWrap(True)
         self.layoutQUESBParametersInfo.addWidget(self.labelQUESBParametersInfo)
 
         self.labelQUESBLandCoverLandUse1 = QtGui.QLabel()
@@ -1357,7 +1343,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.layoutQUESBParameters.addWidget(self.spinBoxQUESBNodata, 4, 1)
         
         self.labelQUESBEdgeContrast = QtGui.QLabel()
-        self.labelQUESBEdgeContrast.setText('Bobot kontras tepi')
+        self.labelQUESBEdgeContrast.setText('Bobot kontras tepi:')
         self.layoutQUESBParameters.addWidget(self.labelQUESBEdgeContrast, 5, 0)        
         
         self.comboBoxQUESBEdgeContrast = QtGui.QComboBox()
@@ -1368,7 +1354,17 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         
         self.labelQUESBHabitat = QtGui.QLabel()
         self.labelQUESBHabitat.setText('Kelas tutupan area fokal:')
-        self.layoutQUESBParameters.addWidget(self.labelQUESBHabitat, 6, 0, QtCore.Qt.AlignTop)
+        self.layoutQUESBParameters.addWidget(self.labelQUESBHabitat, 6, 0)
+      
+        self.comboBoxTableHabitat = QtGui.QComboBox()
+        self.comboBoxTableHabitat.setDisabled(True)
+        self.layoutQUESBParameters.addWidget(self.comboBoxTableHabitat, 6, 1)
+        
+        self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxTableHabitat)
+        
+        self.buttonLoadLookupTableHabitat = QtGui.QPushButton()
+        self.buttonLoadLookupTableHabitat.setText('Load Table')
+        self.layoutQUESBParameters.addWidget(self.buttonLoadLookupTableHabitat, 6, 2)
       
         self.tableHabitat = QtGui.QTableWidget()
         self.tableHabitat.setDisabled(True)
@@ -1423,7 +1419,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.layoutButtonQUESB.addWidget(self.buttonHelpQUESB)
         
         # Template GroupBox
-        self.groupBoxQUESBTemplate = QtGui.QGroupBox('Template')
+        self.groupBoxQUESBTemplate = QtGui.QGroupBox('Configuration')
         self.layoutGroupBoxQUESBTemplate = QtGui.QVBoxLayout()
         self.layoutGroupBoxQUESBTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxQUESBTemplate.setLayout(self.layoutGroupBoxQUESBTemplate)
@@ -1433,7 +1429,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxQUESBTemplate.addLayout(self.layoutQUESBTemplate)
         
         self.labelLoadedQUESBTemplate = QtGui.QLabel()
-        self.labelLoadedQUESBTemplate.setText('Loaded template:')
+        self.labelLoadedQUESBTemplate.setText('Loaded configuration:')
         self.layoutQUESBTemplate.addWidget(self.labelLoadedQUESBTemplate, 0, 0)
         
         self.loadedQUESBTemplate = QtGui.QLabel()
@@ -1441,13 +1437,13 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.layoutQUESBTemplate.addWidget(self.loadedQUESBTemplate, 0, 1)
         
         self.labelQUESBTemplate = QtGui.QLabel()
-        self.labelQUESBTemplate.setText('Template name:')
+        self.labelQUESBTemplate.setText('Name:')
         self.layoutQUESBTemplate.addWidget(self.labelQUESBTemplate, 1, 0)
         
         self.comboBoxQUESBTemplate = QtGui.QComboBox()
         self.comboBoxQUESBTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
         self.comboBoxQUESBTemplate.setDisabled(True)
-        self.comboBoxQUESBTemplate.addItem('No template found')
+        self.comboBoxQUESBTemplate.addItem('No configuration found')
         self.layoutQUESBTemplate.addWidget(self.comboBoxQUESBTemplate, 1, 1)
         
         self.layoutButtonQUESBTemplate = QtGui.QHBoxLayout()
@@ -2241,9 +2237,11 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             checked (bool): the checkbox status.
         """
         if checked:
-            self.contentOptionsPeatlandCarbonAccounting.setEnabled(True)
+            self.handlerPopulateNameFromLookupData(self.main.dataPlanningUnit, self.comboBoxPeatlandMap) 
+            self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxPCACsvfile)
         else:
-            self.contentOptionsPeatlandCarbonAccounting.setDisabled(True)
+            self.comboBoxPeatlandMap.setDisabled(True)
+            self.comboBoxPCACsvfile.setDisabled(True)
     
     
     def toggleSummarizeMultiplePeriod(self, checked):
@@ -2452,17 +2450,6 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             # Load the newly saved template file
             if fileSaved:
                 self.handlerLoadQUESCTemplate(fileName)
-  
-    
-    def handlerSelectPCACsvfile(self):
-        """Slot method for a file select dialog.
-        """
-        file = unicode(QtGui.QFileDialog.getOpenFileName(
-            self, 'Select Carbon Stock Lookup Table', QtCore.QDir.homePath(), 'Carbon Stock Lookup Table (*{0})'.format(self.main.appSettings['selectCsvfileExt'])))
-        
-        if file:
-            self.lineEditPCACsvfile.setText(file)
-            logging.getLogger(type(self).__name__).info('select file: %s', file)
     
     
     #***********************************************************
@@ -2540,55 +2527,65 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             if fileSaved:
                 self.handlerLoadQUESBTemplate(fileName)
                 
-    def loadDefaultHabitatLookupTable(self):
-        if os.path.exists(self.habitatLookupPath):
-            with open(self.habitatLookupPath, 'rb') as f:
-                hasHeader = csv.Sniffer().has_header(f.read(1024))
-                f.seek(0)
-                reader = csv.reader(f)
-              
-                if hasHeader:
-                    headerRow = reader.next()
-                    fields = [str(field) for field in headerRow]
+                
+    def handlerLoadHabitatLookupTable(self):
+        """Slot method for calling spesific planning unit lookup table and
+           populating the reference mapping table from the selected reference data.
+        """      
+        activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
+        selectedTableHabitat = self.comboBoxTableHabitat.currentText()
+        
+        outputs = general.runalg(
+            'r:toolsgetlut',
+            activeProject,
+            selectedTableHabitat,
+            None,
+        )        
+      
+        outputKey = 'main_data'
+        if outputs and outputKey in outputs:
+            if os.path.exists(outputs[outputKey]):
+                with open(outputs[outputKey], 'rb') as f:
+                    reader = csv.reader(f)
+                    next(reader)
                     
-                    fields.append('Enabled')
-                    
+                    fields = ['ID', 'Focal area', 'Enabled']
+                        
                     self.tableHabitat.setColumnCount(len(fields))
                     self.tableHabitat.setHorizontalHeaderLabels(fields)
-                    
-                tableHabitat = []
-
-                for row in reader:
-                    dataRow = [QtGui.QTableWidgetItem(field) for field in row]
-                    tableHabitat.append(dataRow)
-                    
-                self.tableHabitat.setRowCount(len(tableHabitat))
-                
-                tableRow = 0
-                columnEnabled = 0
-                
-                for dataRow in tableHabitat:
-                    tableColumn = 0
-                    for fieldTableItem in dataRow:
-                        fieldTableItem.setFlags(fieldTableItem.flags() & ~QtCore.Qt.ItemIsEnabled)
-                        self.tableHabitat.setItem(tableRow, tableColumn, fieldTableItem)
-                        self.tableHabitat.horizontalHeader().setResizeMode(tableColumn, QtGui.QHeaderView.ResizeToContents)
-                        tableColumn += 1
                         
-                    # Additional columns ('Enabled')
-                    fieldEnabled = QtGui.QTableWidgetItem('Enable')
-                    fieldEnabled.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
-                    fieldEnabled.setCheckState(QtCore.Qt.Unchecked)
-                    columnEnabled = tableColumn
-                    self.tableHabitat.setItem(tableRow, tableColumn, fieldEnabled)
-                    self.tableHabitat.horizontalHeader().setResizeMode(columnEnabled, QtGui.QHeaderView.ResizeToContents)
+                    tableHabitat = []
+    
+                    for row in reader:
+                        dataRow = [QtGui.QTableWidgetItem(field) for field in row]
+                        tableHabitat.append(dataRow)
+                        
+                    self.tableHabitat.setRowCount(len(tableHabitat))
                     
-                    tableRow += 1
-                
-                self.tableHabitat.setEnabled(True)    
+                    tableRow = 0
+                    columnEnabled = 0
+                    
+                    for dataRow in tableHabitat:
+                        tableColumn = 0
+                        for fieldTableItem in dataRow:
+                            fieldTableItem.setFlags(fieldTableItem.flags() & ~QtCore.Qt.ItemIsEnabled)
+                            self.tableHabitat.setItem(tableRow, tableColumn, fieldTableItem)
+                            self.tableHabitat.horizontalHeader().setResizeMode(tableColumn, QtGui.QHeaderView.ResizeToContents)
+                            tableColumn += 1
+                            
+                        # Additional columns ('Enabled')
+                        fieldEnabled = QtGui.QTableWidgetItem('Enable')
+                        fieldEnabled.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
+                        fieldEnabled.setCheckState(QtCore.Qt.Unchecked)
+                        columnEnabled = tableColumn
+                        self.tableHabitat.setItem(tableRow, tableColumn, fieldEnabled)
+                        self.tableHabitat.horizontalHeader().setResizeMode(columnEnabled, QtGui.QHeaderView.ResizeToContents)
+                        
+                        tableRow += 1
+                    
+                    self.tableHabitat.setEnabled(True)    
                     
         
-    
     #***********************************************************
     # 'QUES-H' Hydrological Response Unit Definition tab QPushButton handlers
     #***********************************************************
@@ -3005,13 +3002,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             = unicode(self.lineEditPCACsvfile.text())
         
         # 'QUES-C' Summarize Multiple Period groupbox fields
-        includePeat = 0
-        
-        if self.SMPCheckBox.isChecked():
-            includePeat = 1
-            
-        self.main.appSettings['DialogLumensQUESCSummarizeMultiplePeriod']['checkbox'] \
-            = includePeat
+        # self.main.appSettings['DialogLumensQUESCSummarizeMultiplePeriod'][''] \ = None
         
         # 'QUES-B' tab fields
         self.main.appSettings['DialogLumensQUESBAnalysis']['landUse1'] \
@@ -3175,8 +3166,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         
         Depending on the checked groupbox, the "QUES-C" process calls the following algorithms:
         1. r:quescarbon
-        2. modeler:ques-c_peat
-        3. r:summarizemultipleperiode
+        2. r:summarizemultipleperiode
         """
         self.setAppSettings()
         activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
@@ -3202,42 +3192,6 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                     self.main.appSettings[formName]['carbonTable'],
                     self.main.appSettings[formName]['nodata'],
                     None,
-                )
-                
-                # Display ROut file in debug mode
-                if self.main.appSettings['debug']:
-                    dialog = DialogLumensViewer(self, 'DEBUG "{0}" ({1})'.format(algName, 'processing_script.r.Rout'), 'text', self.main.appSettings['ROutFile'])
-                    dialog.exec_()
-                
-                ##print outputs
-                
-                # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
-                self.main.setWindowState(QtCore.Qt.WindowActive)
-                
-                algSuccess = self.outputsMessageBox(algName, outputs, '', '')
-
-                if algSuccess:
-                    self.main.loadAddedDataInfo()
-
-                self.buttonProcessQUESC.setEnabled(True)
-                logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
-                logging.getLogger(self.historyLog).info('alg end: %s' % formName)
-        
-        if self.checkBoxPeatlandCarbonAccounting.isChecked():
-            formName = 'DialogLumensQUESCPeatlandCarbonAccounting'
-            algName = 'modeler:ques-c_peat'
-            
-            if self.validForm(formName):
-                logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
-                logging.getLogger(self.historyLog).info('alg start: %s' % formName)
-                self.buttonProcessQUESC.setDisabled(True)
-                
-                # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
-                self.main.setWindowState(QtCore.Qt.WindowMinimized)
-                
-                outputs = general.runalg(
-                    algName,
-                    self.main.appSettings[formName]['csvfile'],
                 )
                 
                 # Display ROut file in debug mode

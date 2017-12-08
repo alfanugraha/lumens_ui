@@ -104,7 +104,7 @@ class MainWindow(QtGui.QMainWindow):
             'defaultBasemapFilePath': '',
             'defaultVectorFile': 'landmarks.shp',
             'defaultVectorFilePath': '',
-            'defaultHabitatLookupTable': 'C:/1_Testing_Data/#LUMENS_finaltesting/3_Tabular/landuse_lut.csv',
+            'defaultHabitatLookupTable': '',
             'selectQgsProjectfileExt': '.qgs',
             'selectShapefileExt': '.shp',
             'selectRasterfileExt': '.tif',
@@ -211,9 +211,7 @@ class MainWindow(QtGui.QMainWindow):
             'DialogLumensQUESCPeatlandCarbonAccounting': {
                 'csvfile': '',
             },
-            'DialogLumensQUESCSummarizeMultiplePeriod': {
-                'checkbox': '',
-            },
+            # 'DialogLumensQUESCSummarizeMultiplePeriod': { '': '', },
             'DialogLumensQUESBAnalysis': {
                 'landUse1': '',
                 'landUse2': '',
