@@ -31,6 +31,7 @@ plugin = ProcessingPlugin(iface)
 ##import processing
 from processing.core.ProcessingConfig import ProcessingConfig
 from processing.core.Processing import Processing
+from processing.GroupStats.GroupStatsDialog import GroupStatsDialog
 ProcessingConfig.setSettingValue('ACTIVATE_R', True) # R provider is not activated by default
 ProcessingConfig.setSettingValue('R_FOLDER', os.environ['RPATH'])
 ProcessingConfig.setSettingValue('R_LIBS_USER', os.environ['RLIBS'])
@@ -208,9 +209,7 @@ class MainWindow(QtGui.QMainWindow):
                 'carbonTable': '',
                 'nodata': '',
             },
-            'DialogLumensQUESCPeatlandCarbonAccounting': {
-                'csvfile': '',
-            },
+            # 'DialogLumensQUESCPeatlandCarbonAccounting': { 'csvfile': '', },
             # 'DialogLumensQUESCSummarizeMultiplePeriod': { '': '', },
             'DialogLumensQUESBAnalysis': {
                 'landUse1': '',
@@ -565,6 +564,9 @@ class MainWindow(QtGui.QMainWindow):
         
         # SCIENDO menu
         self.actionDialogLumensSCIENDO.triggered.connect(self.handlerDialogLumensSCIENDO)
+        
+        # Tools menu
+        self.actionDialogLumensToolsPivot.triggered.connect(self.handlerDialogGroupStats)
         
         # Dashboard tab QPushButtons
         self.buttonProcessPURTemplate.clicked.connect(self.handlerProcessPURTemplate)
@@ -1200,11 +1202,9 @@ class MainWindow(QtGui.QMainWindow):
         self.layoutGroupBoxQUESCFeatures.addWidget(self.labelQUESCFeaturesInfo)
         
         self.checkBoxQUESCCarbonAccounting = QtGui.QCheckBox('Carbon Accounting')
-        self.checkBoxQUESCPeatlandCarbonAccounting = QtGui.QCheckBox('Peatland Carbon Accounting')
         self.checkBoxQUESCSummarizeMultiplePeriod = QtGui.QCheckBox('Summarize Multiple Period')
         
         self.layoutGroupBoxQUESCFeatures.addWidget(self.checkBoxQUESCCarbonAccounting)
-        self.layoutGroupBoxQUESCFeatures.addWidget(self.checkBoxQUESCPeatlandCarbonAccounting)
         self.layoutGroupBoxQUESCFeatures.addWidget(self.checkBoxQUESCSummarizeMultiplePeriod)
         
         self.groupBoxQUESCTemplate = QtGui.QGroupBox('Template')
@@ -2777,9 +2777,6 @@ class MainWindow(QtGui.QMainWindow):
             if self.checkBoxQUESCCarbonAccounting.isChecked():
                 dialogLumensQUES.checkBoxCarbonAccounting.setChecked(True)
             
-            if self.checkBoxQUESCPeatlandCarbonAccounting.isChecked():
-                dialogLumensQUES.checkBoxPeatlandCarbonAccounting.setChecked(True)
-            
             if self.checkBoxQUESCSummarizeMultiplePeriod.isChecked():
                 dialogLumensQUES.checkBoxSummarizeMultiplePeriod.setChecked(True)
             
@@ -3292,6 +3289,27 @@ class MainWindow(QtGui.QMainWindow):
         """
         self.openDialog(DialogLumensSCIENDO, tabName=tabName)
     
+
+    def handlerDialogGroupStats(self):
+        """Slot method for opening a GroupStats dialog window.
+        """
+        dialogGroupStats = GroupStatsDialog()
+        mapLayersInstance = QgsMapLayerRegistry.instance().mapLayers()
+        
+        selectedLayer = []
+        for id in mapLayersInstance.keys():                                
+            if mapLayersInstance[id].type()==0:
+                selectedLayer.append((mapLayersInstance[id].name(), id))
+        
+        if len(selectedLayer) == 0 or len(mapLayersInstance) == 0:
+            QMessageBox.information(None,QCoreApplication.translate('GroupStats','Information'), \
+                QCoreApplication.translate('GroupStats','Vector layers not found'))
+            return
+        dialogGroupStats.iface = iface
+        dialogGroupStats.ustawWarstwy(selectedLayer)
+        
+        dialogGroupStats.show()
+
     
     def handlerDialogLumensHelp(self):
         """Slot method for opening the LUMENS html help document.

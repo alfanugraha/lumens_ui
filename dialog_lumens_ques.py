@@ -196,8 +196,6 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         elif tabName == 'QUES-C':
             dialogsToLoad = (
                 'DialogLumensQUESCCarbonAccounting',
-                'DialogLumensQUESCPeatlandCarbonAccounting',
-                'DialogLumensQUESCSummarizeMultiplePeriod',
             )
             
             # start tab
@@ -243,40 +241,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                     self.spinBoxCANoDataValue.setValue(int(nodata))
                 else:
                     self.spinBoxCANoDataValue.setValue(0)
-            
-            settings.endGroup()
-            # /dialog
-            
-            # 'Peatland carbon accounting' groupbox widgets
-            # start dialog
-            settings.beginGroup('DialogLumensQUESCPeatlandCarbonAccounting')
-            
-            templateSettings['DialogLumensQUESCPeatlandCarbonAccounting'] = {}
-            templateSettings['DialogLumensQUESCPeatlandCarbonAccounting']['csvfile'] = csvfile = settings.value('csvfile')
-            
-            if not returnTemplateSettings:
-                if csvfile and os.path.exists(csvfile):
-                    self.lineEditPCACsvfile.setText(csvfile)
-                else:
-                    self.lineEditPCACsvfile.setText('')
-            
-            settings.endGroup()
-            # /dialog
-            
-            # 'Summarize multiple period' groupbox widgets
-            # start dialog
-            settings.beginGroup('DialogLumensQUESCSummarizeMultiplePeriod')
-            
-            templateSettings['DialogLumensQUESCSummarizeMultiplePeriod'] = {}
-            templateSettings['DialogLumensQUESCSummarizeMultiplePeriod']['checkbox'] = checkbox = settings.value('checkbox')
-            
-            if not returnTemplateSettings:
-                if csvfile == 'true':
-                    self.checkBoxSummarizeMultiplePeriod.setChecked(True)
-                else:
-                    self.checkBoxSummarizeMultiplePeriod.setChecked(False)
-            
-            if not returnTemplateSettings:
+                    
                 self.currentQUESCTemplate = templateFile
                 self.loadedQUESCTemplate.setText(templateFile)
                 self.comboBoxQUESCTemplate.setCurrentIndex(self.comboBoxQUESCTemplate.findText(templateFile))
@@ -284,7 +249,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             
             settings.endGroup()
             # /dialog
-            
+                
             settings.endGroup()
             # /tab
         elif tabName == 'QUES-B':
@@ -608,8 +573,6 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         elif tabName == 'QUES-C':
             dialogsToLoad = (
                 'DialogLumensQUESCCarbonAccounting',
-                'DialogLumensQUESCPeatlandCarbonAccounting',
-                'DialogLumensQUESCSummarizeMultiplePeriod',
             )
         elif tabName == 'QUES-B':
             dialogsToLoad = (
@@ -704,8 +667,6 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             elif tabName == 'QUES-C':
                 dialogsToSave = (
                     'DialogLumensQUESCCarbonAccounting',
-                    'DialogLumensQUESCPeatlandCarbonAccounting',
-                    'DialogLumensQUESCSummarizeMultiplePeriod',
                 )
             elif tabName == 'QUES-B':
                 dialogsToSave = (
@@ -2998,8 +2959,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             = self.spinBoxCANoDataValue.value()
         
         # 'QUES-C' Peatland Carbon Accounting groupbox fields
-        self.main.appSettings['DialogLumensQUESCPeatlandCarbonAccounting']['csvfile'] \
-            = unicode(self.lineEditPCACsvfile.text())
+        # self.main.appSettings['DialogLumensQUESCPeatlandCarbonAccounting']['csvfile'] = unicode(self.lineEditPCACsvfile.text())
         
         # 'QUES-C' Summarize Multiple Period groupbox fields
         # self.main.appSettings['DialogLumensQUESCSummarizeMultiplePeriod'][''] \ = None
@@ -3127,7 +3087,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             self.buttonProcessPreQUES.setDisabled(True)
             
             # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
-            self.main.setWindowState(QtCore.Qt.WindowMinimized)
+            # self.main.setWindowState(QtCore.Qt.WindowMinimized)
             
             outputs = general.runalg(
                 algName,
@@ -3149,7 +3109,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             ##print outputs
             
             # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
-            self.main.setWindowState(QtCore.Qt.WindowActive)
+            # self.main.setWindowState(QtCore.Qt.WindowActive)
             
             algSuccess = self.outputsMessageBox(algName, outputs, '', '')
 
@@ -3181,7 +3141,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                 self.buttonProcessQUESC.setDisabled(True)
                 
                 # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
-                self.main.setWindowState(QtCore.Qt.WindowMinimized)
+                # self.main.setWindowState(QtCore.Qt.WindowMinimized)
                 
                 outputs = general.runalg(
                     algName,
@@ -3202,7 +3162,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                 ##print outputs
                 
                 # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
-                self.main.setWindowState(QtCore.Qt.WindowActive)
+                # self.main.setWindowState(QtCore.Qt.WindowActive)
                 
                 algSuccess = self.outputsMessageBox(algName, outputs, '', '')
 
@@ -3222,39 +3182,38 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                 self.listOfQUESCDatabase.sort()
                 QUESCDatabaseCsv = self.writeListCsv(self.listOfQUESCDatabase, True)
 
-                if self.validForm(formName):
-                    logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
-                    logging.getLogger(self.historyLog).info('alg start: %s' % formName)
-                    self.buttonProcessQUESC.setDisabled(True)
+                logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
+                logging.getLogger(self.historyLog).info('alg start: %s' % formName)
+                self.buttonProcessQUESC.setDisabled(True)
 
-                    # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
-                    self.main.setWindowState(QtCore.Qt.WindowMinimized)
+                # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
+                # self.main.setWindowState(QtCore.Qt.WindowMinimized)
 
-                    outputs = general.runalg(
-                        algName,
-                        activeProject,
-                        QUESCDatabaseCsv,
-                        None,
-                    )
+                outputs = general.runalg(
+                    algName,
+                    activeProject,
+                    QUESCDatabaseCsv,
+                    None,
+                )
 
-                    # Display ROut file in debug mode
-                    if self.main.appSettings['debug']:
-                        dialog = DialogLumensViewer(self, 'DEBUG "{0}" ({1})'.format(algName, 'processing_script.r.Rout'), 'text', self.main.appSettings['ROutFile'])
-                        dialog.exec_()
+                # Display ROut file in debug mode
+                if self.main.appSettings['debug']:
+                    dialog = DialogLumensViewer(self, 'DEBUG "{0}" ({1})'.format(algName, 'processing_script.r.Rout'), 'text', self.main.appSettings['ROutFile'])
+                    dialog.exec_()
 
-                    ##print outputs
+                ##print outputs
 
-                    # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
-                    self.main.setWindowState(QtCore.Qt.WindowActive)
+                # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
+                # self.main.setWindowState(QtCore.Qt.WindowActive)
 
-                    algSuccess = self.outputsMessageBox(algName, outputs, '', '')
+                algSuccess = self.outputsMessageBox(algName, outputs, '', '')
 
-                    if algSuccess:
-                        self.main.loadAddedDataInfo()
+                if algSuccess:
+                    self.main.loadAddedDataInfo()
 
-                    self.buttonProcessQUESC.setEnabled(True)
-                    logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
-                    logging.getLogger(self.historyLog).info('alg end: %s' % formName)
+                self.buttonProcessQUESC.setEnabled(True)
+                logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
+                logging.getLogger(self.historyLog).info('alg end: %s' % formName)
             else:
                 QtGui.QMessageBox.information(self, 'Summarize Multiple Period', 'Choose at least three QUES-C Database.')
                 return
@@ -3289,7 +3248,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                 self.buttonProcessQUESB.setDisabled(True)
                 
                 # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
-                self.main.setWindowState(QtCore.Qt.WindowMinimized)
+                # self.main.setWindowState(QtCore.Qt.WindowMinimized)
                 
                 outputs = general.runalg(
                     algName,
@@ -3315,7 +3274,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                 ##print outputs
                 
                 # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
-                self.main.setWindowState(QtCore.Qt.WindowActive)
+                # self.main.setWindowState(QtCore.Qt.WindowActive)
                 
                 algSuccess = self.outputsMessageBox(algName, outputs, '', '')
     

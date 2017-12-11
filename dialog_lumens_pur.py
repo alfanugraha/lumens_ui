@@ -1173,7 +1173,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
             algName = 'r:pursetup'
             
             # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
-            self.main.setWindowState(QtCore.Qt.WindowMinimized)
+            # self.main.setWindowState(QtCore.Qt.WindowMinimized)
             
             # Pass referenceClasses, referenceMapping, planningUnits as temp csv files
             activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
@@ -1217,7 +1217,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
                 dialog.exec_()
             
             # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
-            self.main.setWindowState(QtCore.Qt.WindowActive)
+            # self.main.setWindowState(QtCore.Qt.WindowActive)
             
             algSuccess = self.outputsMessageBox(algName, self.outputsPURSetup, 'PUR setup completed successfully!', 'Something happened.')
 
@@ -1252,7 +1252,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
             reconcileTableCsv = DialogLumensPUR.writeTableCsv(self.reconcileTable, True)
             
             # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
-            self.main.setWindowState(QtCore.Qt.WindowMinimized)
+            # self.main.setWindowState(QtCore.Qt.WindowMinimized)
             
             print 'DEBUG'
             print reconcileTableCsv
@@ -1272,7 +1272,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
                 dialog.exec_()
             
             # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
-            self.main.setWindowState(QtCore.Qt.WindowActive)
+            # self.main.setWindowState(QtCore.Qt.WindowActive)
             
             algSuccess = self.outputsMessageBox(algName, outputsReconcile, 'PUR reconciliation completed successfully!', 'Something happened.')
 
