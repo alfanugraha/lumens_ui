@@ -210,7 +210,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         super(DialogLumensPUR, self).__init__(parent)
         
         self.main = parent
-        self.dialogTitle = 'LUMENS Planning Unit Reconciliation'
+        self.dialogTitle = 'Planning Unit Reconciliation'
         self.settingsPath = os.path.join(self.main.appSettings['DialogLumensOpenDatabase']['projectFolder'], self.main.appSettings['folderPUR'])
         self.currentPURTemplate = None
         
@@ -281,12 +281,12 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         self.setStyleSheet('QDialog { background-color: rgb(225, 229, 237); }')
         self.dialogLayout = QtGui.QVBoxLayout()
 
-        self.groupBoxPURDialog = QtGui.QGroupBox('Planning Unit Reconciliation')
+        self.groupBoxPURDialog = QtGui.QGroupBox('Conduct reconciliation')
         self.layoutGroupBoxPURDialog = QtGui.QVBoxLayout()
         self.layoutGroupBoxPURDialog.setAlignment(QtCore.Qt.AlignTop)
         self.groupBoxPURDialog.setLayout(self.layoutGroupBoxPURDialog)
         self.labelPURDialogInfo = QtGui.QLabel()
-        self.labelPURDialogInfo.setText('Lorem ipsum dolor sit amet...')
+        self.labelPURDialogInfo.setText('\n ')
         self.labelPURDialogInfo.setWordWrap(True)
         self.layoutGroupBoxPURDialog.addWidget(self.labelPURDialogInfo)
 
@@ -346,7 +346,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxSetupReference.addLayout(self.layoutSetupReferenceOptions)
         
         self.labelSetupReferenceInfo = QtGui.QLabel()
-        self.labelSetupReferenceInfo.setText('Lorem ipsum dolor sit amet...')
+        self.labelSetupReferenceInfo.setText('\n')
         self.labelSetupReferenceInfo.setWordWrap(True)
         self.layoutSetupReferenceInfo.addWidget(self.labelSetupReferenceInfo)
         
@@ -358,26 +358,26 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         self.layoutSetupReferenceOptions.addWidget(self.comboBoxReferenceData, 0, 1)
         self.handlerPopulateNameFromLookupData(self.main.dataPlanningUnit, self.comboBoxReferenceData)
         self.buttonLoadLookupTableReferenceData = QtGui.QPushButton()
-        self.buttonLoadLookupTableReferenceData.setText('Load Table')
+        self.buttonLoadLookupTableReferenceData.setText('Load table')
         self.layoutSetupReferenceOptions.addWidget(self.buttonLoadLookupTableReferenceData, 0, 2)
         self.labelReferenceClasses = QtGui.QLabel()
         self.labelReferenceClasses.setText('Reference classes:')
         self.layoutSetupReferenceOptions.addWidget(self.labelReferenceClasses, 1, 0)
         self.buttonEditReferenceClasses = QtGui.QPushButton()
-        self.buttonEditReferenceClasses.setText('Edit Classes')
+        self.buttonEditReferenceClasses.setText('Edit classes')
         self.buttonEditReferenceClasses.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
         self.layoutSetupReferenceOptions.addWidget(self.buttonEditReferenceClasses, 1, 1)
         
         #######################################################################
         # 'Attribute reference mapping' GroupBox
-        self.groupBoxReferenceMapping = QtGui.QGroupBox('Attribute reference mapping')
+        self.groupBoxReferenceMapping = QtGui.QGroupBox('Attribute-reference mapping')
         self.layoutGroupBoxReferenceMapping = QtGui.QVBoxLayout()
         self.layoutGroupBoxReferenceMapping.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxReferenceMapping.setLayout(self.layoutGroupBoxReferenceMapping)
         
         self.layoutReferenceMappingInfo = QtGui.QVBoxLayout()
         self.labelReferenceMappingInfo = QtGui.QLabel()
-        self.labelReferenceMappingInfo.setText('Lorem ipsum dolor sit amet...')
+        self.labelReferenceMappingInfo.setText('\n')
         self.labelReferenceMappingInfo.setWordWrap(True)
         self.layoutReferenceMappingInfo.addWidget(self.labelReferenceMappingInfo)
         
@@ -412,7 +412,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         
         self.layoutSetupPlanningUnitInfo = QtGui.QVBoxLayout()
         self.labelSetupPlanningUnitInfo = QtGui.QLabel()
-        self.labelSetupPlanningUnitInfo.setText('Lorem ipsum dolor sit amet...')
+        self.labelSetupPlanningUnitInfo.setText('\n')
         self.labelSetupPlanningUnitInfo.setWordWrap(True)
         self.layoutSetupPlanningUnitInfo.addWidget(self.labelSetupPlanningUnitInfo)
         
@@ -420,11 +420,11 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         self.layoutButtonSetupPlanningUnit.setContentsMargins(0, 0, 0, 0)
         self.layoutButtonSetupPlanningUnit.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.buttonAddPlanningUnitRow = QtGui.QPushButton()
-        self.buttonAddPlanningUnitRow.setText('Add Planning Unit')
+        self.buttonAddPlanningUnitRow.setText('Add planning unit')
         self.buttonAddPlanningUnitRow.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
         self.layoutButtonSetupPlanningUnit.addWidget(self.buttonAddPlanningUnitRow)
         self.buttonClearAllPlanningUnits = QtGui.QPushButton()
-        self.buttonClearAllPlanningUnits.setText('Clear All')
+        self.buttonClearAllPlanningUnits.setText('Clear all')
         self.buttonClearAllPlanningUnits.setVisible(False) # BUG, hide it
         self.buttonClearAllPlanningUnits.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
         self.layoutButtonSetupPlanningUnit.addWidget(self.buttonClearAllPlanningUnits)
@@ -528,7 +528,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         self.groupBoxReconcile.setLayout(self.layoutGroupBoxReconcile)
         
         self.labelReconcileInfo = QtGui.QLabel()
-        self.labelReconcileInfo.setText('Lorem ipsum dolor sit amet...')
+        self.labelReconcileInfo.setText('\n')
         self.labelReconcileInfo.setWordWrap(True)
         self.layoutGroupBoxReconcile.addWidget(self.labelReconcileInfo)
         
@@ -565,7 +565,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxHistoryLog.addLayout(self.layoutHistoryLog)
         
         self.labelHistoryLogInfo = QtGui.QLabel()
-        self.labelHistoryLogInfo.setText('Lorem ipsum dolor sit amet...\n')
+        self.labelHistoryLogInfo.setText('\n')
         self.layoutHistoryLogInfo.addWidget(self.labelHistoryLogInfo)
         
         self.log_box = QPlainTextEditLogger(self)
@@ -1209,6 +1209,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
                 None,
                 None,
                 None,
+                None,
             )
             
             # Display ROut file in debug mode
@@ -1222,6 +1223,8 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
             algSuccess = self.outputsMessageBox(algName, self.outputsPURSetup, 'PUR setup completed successfully!', 'Something happened.')
 
             if algSuccess:
+                self.main.addLayer(self.outputsPURSetup['PUR_rec1_shp'])
+                self.main.addLayer(self.outputsPURSetup['PUR_dbfinal'])
                 self.main.loadAddedDataInfo()
             
             self.buttonProcessSetup.setEnabled(True)

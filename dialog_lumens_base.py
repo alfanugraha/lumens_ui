@@ -58,6 +58,8 @@ class DialogLumensBase:
             helpDialogFile = 'helpDialogLayerPropertiesFile'
         elif dialogName == 'Create':
             helpDialogFile = 'helpDialogCreateFile'
+        elif dialogName == 'PUR Reference Classes':
+            helpDialogFile = 'helpDialogLayerPropertiesFile'
         else:
             helpDialogFile = 'helpLUMENSFile'
         

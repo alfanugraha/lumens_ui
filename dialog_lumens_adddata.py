@@ -50,7 +50,7 @@ class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
         #self.setStyleSheet('background-color: rgb(173, 185, 202);')
         self.dialogLayout = QtGui.QVBoxLayout()
         
-        self.groupBoxAddData = QtGui.QGroupBox('Add data')
+        self.groupBoxAddData = QtGui.QGroupBox('Define properties')
         self.layoutGroupBoxAddData = QtGui.QVBoxLayout()
         self.layoutGroupBoxAddData.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxAddData.setLayout(self.layoutGroupBoxAddData)
@@ -68,7 +68,7 @@ class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
         self.layoutButtonAddData.setContentsMargins(0, 0, 0, 0)
         self.layoutButtonAddData.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.buttonAddDataRow = QtGui.QPushButton()
-        self.buttonAddDataRow.setText('Add data')
+        self.buttonAddDataRow.setText('Add item')
         self.buttonAddDataRow.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
         self.layoutButtonAddData.addWidget(self.buttonAddDataRow)
         

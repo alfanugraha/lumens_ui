@@ -101,6 +101,7 @@ class MainWindow(QtGui.QMainWindow):
             'helpDialogSCIENDOFile': 'index_sciendo.html',
             'helpDialogLayerPropertiesFile': 'index_layer_properties.html',
             'helpDialogCreateFile': 'index_create.html',
+            'helpDialogLayerPropertiesFile': 'index_pur_reference.html',
             'dataDir': 'data',
             'basemapDir': 'basemap',
             'vectorDir': 'vector',
@@ -1001,7 +1002,7 @@ class MainWindow(QtGui.QMainWindow):
         # self.sidebarTabWidget.addTab(self.tabDashboardSCIENDO, 'SCIENDO')
         #self.sidebarTabWidget.addTab(self.tabDashboard, 'Templates') # Formerly 'Dashboard'
         #self.sidebarTabWidget.addTab(self.tabProject, 'Project')
-        self.sidebarTabWidget.addTab(self.tabHelp, 'Help')
+        # self.sidebarTabWidget.addTab(self.tabHelp, 'Help')
 
         # QUES sub tabs
         self.QUESTabWidget = QtGui.QTabWidget()
@@ -2595,7 +2596,7 @@ class MainWindow(QtGui.QMainWindow):
             layerType = None
             fileExt = os.path.splitext(layerName)[1].lower()
             
-            if  fileExt == '.shp':
+            if  fileExt == '.shp' or fileExt == '.dbf':
                 layerType = 'vector'
                 layer = QgsVectorLayer(layerFile, layerName, 'ogr')
             elif fileExt == '.tif':
@@ -3621,8 +3622,9 @@ class MainWindow(QtGui.QMainWindow):
         filterFormats = ' '.join(['*' + ext for ext in layerFormats])
         
         file = unicode(QtGui.QFileDialog.getOpenFileName(
-            self, 'Select Vector/Raster File', QtCore.QDir.homePath(), 'Vector/Raster File ({0})'.format(filterFormats)))
-        
+            self, 'Add Layer', QtCore.QDir.homePath(), 'Vector/Raster File (*{0});;DBF File (*{1});;CSV File (*{2})'
+                .format(filterFormats, self.appSettings['selectDatabasefileExt'], self.appSettings['selectCsvfileExt'])))
+                
         if file:
             self.addLayer(file)
     

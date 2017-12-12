@@ -24,7 +24,7 @@ class DialogLumensPURReferenceClasses(QtGui.QDialog):
         print 'DEBUG: DialogLumensPURReferenceClasses init'
         
         self.main = parent
-        self.dialogTitle = 'LUMENS Edit Reference Classes'
+        self.dialogTitle = 'Edit Reference Classes'
         self.tableRowCount = 0
         self.referenceClasses = {}
         
@@ -34,6 +34,7 @@ class DialogLumensPURReferenceClasses(QtGui.QDialog):
         self.buttonAddRow.clicked.connect(self.handlerButtonAddRow)
         self.buttonBox.accepted.connect(self.handlerButtonSave)
         self.buttonBox.rejected.connect(self.handlerButtonCancel)
+        self.buttonPURReferenceClassesHelp.clicked.connect(self.handlerPURReferenceClassesHelp)
     
     
     def setupUi(self, parent):
@@ -56,7 +57,7 @@ class DialogLumensPURReferenceClasses(QtGui.QDialog):
         self.contentButtonEditReferenceClasses.setLayout(self.layoutButtonEditReferenceClasses)
         self.layoutButtonEditReferenceClasses.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.buttonAddRow = QtGui.QPushButton()
-        self.buttonAddRow.setText('Add Reference Class')
+        self.buttonAddRow.setText('Add reference class')
         self.buttonAddRow.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
         self.layoutButtonEditReferenceClasses.addWidget(self.buttonAddRow)
         
@@ -69,15 +70,20 @@ class DialogLumensPURReferenceClasses(QtGui.QDialog):
         self.scrollEditReferenceClasses.setWidget(self.contentGroupBoxEditReferenceClasses)
         self.layoutEditReferenceClassesInfo = QtGui.QVBoxLayout()
         self.labelEditReferenceClassesInfo = QtGui.QLabel()
-        self.labelEditReferenceClassesInfo.setText('Lorem ipsum dolor sit amet...')
+        self.labelEditReferenceClassesInfo.setText('\n')
+        self.labelEditReferenceClassesInfo.setWordWrap(True)
         self.layoutEditReferenceClassesInfo.addWidget(self.labelEditReferenceClassesInfo)
         
         self.buttonBox = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Save|QtGui.QDialogButtonBox.Cancel)
+        icon = QtGui.QIcon(':/ui/icons/iconActionHelp.png')
+        self.buttonPURReferenceClassesHelp = QtGui.QPushButton()
+        self.buttonPURReferenceClassesHelp.setIcon(icon)
         
         self.layoutGroupBoxEditReferenceClasses.addLayout(self.layoutEditReferenceClassesInfo)
         self.layoutGroupBoxEditReferenceClasses.addWidget(self.contentButtonEditReferenceClasses)
         self.layoutGroupBoxEditReferenceClasses.addWidget(self.scrollEditReferenceClasses)
         self.dialogLayout.addWidget(self.buttonBox)
+        self.dialogLayout.addWidget(self.buttonPURReferenceClassesHelp)
         
         self.layoutTableReferenceClasses = QtGui.QVBoxLayout()
         self.layoutTableReferenceClasses.setAlignment(QtCore.Qt.AlignTop)
@@ -168,6 +174,18 @@ class DialogLumensPURReferenceClasses(QtGui.QDialog):
             
             layout.removeItem(item)
     
+
+    def handlerPURReferenceClassesHelp(self):
+        """Slot method for opening the dialog html help document.
+        """
+        filePath = os.path.join(self.main.appSettings['appDir'], self.main.appSettings['folderHelp'], self.main.appSettings['helpDialogPURReferenceClassesFile'])
+        
+        if os.path.exists(filePath):
+            dialog = DialogLumensViewer(self, 'LUMENS Help - {0}'.format('PUR Reference Classes'), 'html', filePath)
+            dialog.exec_()
+        else:
+            QtGui.QMessageBox.critical(self, 'LUMENS Help Not Found', "Unable to open '{0}'.".format(filePath))        
+
     
     def handlerButtonAddRow(self):
         """Slot method for adding a reference class to the reference class table.
