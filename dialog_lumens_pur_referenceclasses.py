@@ -74,16 +74,19 @@ class DialogLumensPURReferenceClasses(QtGui.QDialog):
         self.labelEditReferenceClassesInfo.setWordWrap(True)
         self.layoutEditReferenceClassesInfo.addWidget(self.labelEditReferenceClassesInfo)
         
+        self.layoutButtonBox = QtGui.QHBoxLayout()
+        self.layoutButtonBox.setAlignment(QtCore.Qt.AlignRight)
         self.buttonBox = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Save|QtGui.QDialogButtonBox.Cancel)
         icon = QtGui.QIcon(':/ui/icons/iconActionHelp.png')
         self.buttonPURReferenceClassesHelp = QtGui.QPushButton()
         self.buttonPURReferenceClassesHelp.setIcon(icon)
+        self.layoutButtonBox.addWidget(self.buttonBox)
+        self.layoutButtonBox.addWidget(self.buttonPURReferenceClassesHelp)
         
         self.layoutGroupBoxEditReferenceClasses.addLayout(self.layoutEditReferenceClassesInfo)
         self.layoutGroupBoxEditReferenceClasses.addWidget(self.contentButtonEditReferenceClasses)
         self.layoutGroupBoxEditReferenceClasses.addWidget(self.scrollEditReferenceClasses)
-        self.dialogLayout.addWidget(self.buttonBox)
-        self.dialogLayout.addWidget(self.buttonPURReferenceClassesHelp)
+        self.dialogLayout.addLayout(self.layoutButtonBox)
         
         self.layoutTableReferenceClasses = QtGui.QVBoxLayout()
         self.layoutTableReferenceClasses.setAlignment(QtCore.Qt.AlignTop)

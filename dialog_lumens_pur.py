@@ -1019,79 +1019,79 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
                 
                 if unresolvedCases:
                     # Confirm if user wants to process unresolved cases
-                    reply = QtGui.QMessageBox.question(
-                        self,
-                        'Reconcile Unresolved Cases',
-                        'Found unresolved cases.\nDo you want to manually reconcile them?',
-                        QtGui.QMessageBox.Yes|QtGui.QMessageBox.No,
-                        QtGui.QMessageBox.No
-                    )
+                    # reply = QtGui.QMessageBox.question(
+                    #     self,
+                    #     'Reconcile Unresolved Cases',
+                    #     'Found unresolved cases.\nDo you want to manually reconcile them?',
+                    #     QtGui.QMessageBox.Yes|QtGui.QMessageBox.No,
+                    #     QtGui.QMessageBox.No
+                    # )
+                    # 
+                    # if reply == QtGui.QMessageBox.Yes:
+                    attributes = []
                     
-                    if reply == QtGui.QMessageBox.Yes:
-                        attributes = []
+                    # Options for reconcile action
+                    with open(outputs[attributeKey], 'rb') as f:
+                        hasHeader = csv.Sniffer().has_header(f.read(1024))
+                        f.seek(0)
+                        reader = csv.reader(f)
+                        if hasHeader: # Skip the header
+                            next(reader)
+                        for row in reader:
+                            attribute = str(row[1])
+                            # Don't add "unresolved_caseN"
+                            if 'unresolved_' not in attribute:
+                                attributes.append(attribute)
+                    
+                    sortedAttributes = sorted(attributes)
+                    
+                    # Populate the reconcile table
+                    with open(outputs[unresolvedCasesKey], 'rb') as f:
+                        hasHeader = csv.Sniffer().has_header(f.read(1024))
+                        f.seek(0)
+                        reader = csv.reader(f)
                         
-                        # Options for reconcile action
-                        with open(outputs[attributeKey], 'rb') as f:
-                            hasHeader = csv.Sniffer().has_header(f.read(1024))
-                            f.seek(0)
-                            reader = csv.reader(f)
-                            if hasHeader: # Skip the header
-                                next(reader)
-                            for row in reader:
-                                attribute = str(row[1])
-                                # Don't add "unresolved_caseN"
-                                if 'unresolved_' not in attribute:
-                                    attributes.append(attribute)
+                        if hasHeader: # Set the column headers
+                            headerRow = reader.next()
+                            fields = [str(field) for field in headerRow]
+                            
+                            fields.append('Reconcile Action')
+                            
+                            self.reconcileTable.setColumnCount(len(fields))
+                            self.reconcileTable.setHorizontalHeaderLabels(fields)
                         
-                        sortedAttributes = sorted(attributes)
+                        dataTable = []
                         
-                        # Populate the reconcile table
-                        with open(outputs[unresolvedCasesKey], 'rb') as f:
-                            hasHeader = csv.Sniffer().has_header(f.read(1024))
-                            f.seek(0)
-                            reader = csv.reader(f)
+                        for row in reader:
+                            dataRow = [QtGui.QTableWidgetItem(field) for field in row]
+                            dataTable.append(dataRow)
+                        
+                        self.reconcileTable.setRowCount(len(dataTable))
+                        
+                        tableRow = 0
+                        
+                        for dataRow in dataTable:
+                            tableColumn = 0
                             
-                            if hasHeader: # Set the column headers
-                                headerRow = reader.next()
-                                fields = [str(field) for field in headerRow]
-                                
-                                fields.append('Reconcile Action')
-                                
-                                self.reconcileTable.setColumnCount(len(fields))
-                                self.reconcileTable.setHorizontalHeaderLabels(fields)
-                            
-                            dataTable = []
-                            
-                            for row in reader:
-                                dataRow = [QtGui.QTableWidgetItem(field) for field in row]
-                                dataTable.append(dataRow)
-                            
-                            self.reconcileTable.setRowCount(len(dataTable))
-                            
-                            tableRow = 0
-                            
-                            for dataRow in dataTable:
-                                tableColumn = 0
-                                
-                                for fieldTableItem in dataRow:
-                                    fieldTableItem.setFlags(fieldTableItem.flags() & ~QtCore.Qt.ItemIsEnabled)
-                                    self.reconcileTable.setItem(tableRow, tableColumn, fieldTableItem)
-                                    self.reconcileTable.horizontalHeader().setResizeMode(tableColumn, QtGui.QHeaderView.ResizeToContents)
-                                    tableColumn += 1
-                                
-                                comboBoxAction = QtGui.QComboBox()
-                                comboBoxAction.addItems(sortedAttributes)
-                                
-                                self.reconcileTable.setCellWidget(tableRow, tableColumn, comboBoxAction)
+                            for fieldTableItem in dataRow:
+                                fieldTableItem.setFlags(fieldTableItem.flags() & ~QtCore.Qt.ItemIsEnabled)
+                                self.reconcileTable.setItem(tableRow, tableColumn, fieldTableItem)
                                 self.reconcileTable.horizontalHeader().setResizeMode(tableColumn, QtGui.QHeaderView.ResizeToContents)
-                                
-                                tableRow += 1
+                                tableColumn += 1
                             
-                            self.reconcileTable.setEnabled(True)
-                            self.buttonProcessReconcile.setEnabled(True)
+                            comboBoxAction = QtGui.QComboBox()
+                            comboBoxAction.addItems(sortedAttributes)
                             
-                            # Switch to reconcile tab
-                            self.tabWidget.setCurrentWidget(self.tabReconcile)
+                            self.reconcileTable.setCellWidget(tableRow, tableColumn, comboBoxAction)
+                            self.reconcileTable.horizontalHeader().setResizeMode(tableColumn, QtGui.QHeaderView.ResizeToContents)
+                            
+                            tableRow += 1
+                        
+                        self.reconcileTable.setEnabled(True)
+                        self.buttonProcessReconcile.setEnabled(True)
+                        
+                        # Switch to reconcile tab
+                        self.tabWidget.setCurrentWidget(self.tabReconcile)
         else:
             logging.getLogger(type(self).__name__).error('Reconcile PUR error')
             logging.getLogger(self.historyLog).info('Reconcile PUR error')
@@ -1104,7 +1104,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         """Set the required values from the form widgets.
         """
         # 'Setup reference' GroupBox values
-        self.main.appSettings[type(self).__name__]['referenceData'] = unicode(self.comboBoxReferenceData.currentText())
+        self.main.appSettings[type(self).__name__]['referenceData'] = self.comboBoxReferenceData.currentText() # unicode
         self.main.appSettings[type(self).__name__]['referenceClasses'] = self.referenceClasses
         
         self.tableReferenceMappingData = {}
@@ -1224,7 +1224,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
 
             if algSuccess:
                 self.main.addLayer(self.outputsPURSetup['PUR_rec1_shp'])
-                self.main.addLayer(self.outputsPURSetup['PUR_dbfinal'])
+                # self.main.addLayer(self.outputsPURSetup['PUR_dbfinal'])
                 self.main.loadAddedDataInfo()
             
             self.buttonProcessSetup.setEnabled(True)
