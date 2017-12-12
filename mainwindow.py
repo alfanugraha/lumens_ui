@@ -46,6 +46,7 @@ from utils import QPlainTextEditLogger, DetailedMessageBox
 from dialog_layer_attribute_dualview import DialogLayerAttributeDualView
 from dialog_layer_attribute_table import DialogLayerAttributeTable
 from dialog_layer_properties import DialogLayerProperties
+from dialog_table_editor import DialogTableEditor
 from dialog_lumens_viewer import DialogLumensViewer
 
 from dialog_lumens_createdatabase import DialogLumensCreateDatabase
@@ -98,6 +99,7 @@ class MainWindow(QtGui.QMainWindow):
             'helpDialogQUESFile': 'index_ques.html',
             'helpDialogTAFile': 'index_ta.html',
             'helpDialogSCIENDOFile': 'index_sciendo.html',
+            'helpDialogLayerPropertiesFile': 'index_layer_properties.html',
             'dataDir': 'data',
             'basemapDir': 'basemap',
             'vectorDir': 'vector',
@@ -208,6 +210,9 @@ class MainWindow(QtGui.QMainWindow):
                 'planningUnit': '',
                 'carbonTable': '',
                 'nodata': '',
+                #'includePeat': '',
+                #'peat': '',
+                #'peatTable': '',
             },
             # 'DialogLumensQUESCPeatlandCarbonAccounting': { 'csvfile': '', },
             # 'DialogLumensQUESCSummarizeMultiplePeriod': { '': '', },
@@ -522,10 +527,12 @@ class MainWindow(QtGui.QMainWindow):
         self.actionZoomNext.triggered.connect(self.handlerZoomNext)
         self.actionLayerAttributeTable.triggered.connect(self.handlerLayerAttributeTable)
         self.actionLayerAttributeEditor.triggered.connect(self.handlerLayerAttributeEditor)
+        self.actionTableEditor.triggered.connect(self.handlerTableEditor)
         self.actionFeatureSelectExpression.triggered.connect(self.handlerFeatureSelectExpression)
         self.actionLayerProperties.triggered.connect(self.handlerLayerProperties)
         self.layerListView.customContextMenuRequested.connect(self.handlerLayerItemContextMenu)
         self.customContextMenuRequested.connect(self.handlerMainWindowContextMenu)
+        
         
         # Dashboard tab
         self.radioQUESHHRUDefinition.toggled.connect(lambda:self.handlerToggleQUESH(self.radioQUESHHRUDefinition))
@@ -2065,6 +2072,7 @@ class MainWindow(QtGui.QMainWindow):
         self.actionLumensDatabaseStatus.setEnabled(True)
         self.actionLumensDeleteData.setEnabled(True)
         self.actionDialogLumensAddData.setEnabled(True)
+        self.actionTableEditor.setEnabled(True)
         
         # PUR menu
         self.actionDialogLumensPUR.setEnabled(True)
@@ -2097,6 +2105,7 @@ class MainWindow(QtGui.QMainWindow):
         self.actionLumensDatabaseStatus.setDisabled(True)
         self.actionDialogLumensAddData.setDisabled(True)
         self.actionLumensDeleteData.setDisabled(True)
+        self.actionTableEditor.setDisabled(True)
         
         # PUR menu
         self.actionDialogLumensPUR.setDisabled(True)
@@ -3539,6 +3548,12 @@ class MainWindow(QtGui.QMainWindow):
         layerItemData = self.getSelectedLayerData()
         dialog = DialogLayerProperties(self.qgsLayerList[layerItemData['layer']], self)
         dialog.exec_()
+
+
+    def handlerTableEditor(self):
+        """Slot method for opening the table editor dialog.
+        """
+        self.openDialog(DialogTableEditor)
     
     
     def handlerDoubleClickProjectTree(self, index):

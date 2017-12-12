@@ -8,6 +8,7 @@ from qgis.gui import *
 from PyQt4 import QtCore, QtGui
 
 from utils import is_number
+from dialog_lumens_viewer import DialogLumensViewer
 
 
 class DialogLayerProperties(QtGui.QDialog):
@@ -25,7 +26,7 @@ class DialogLayerProperties(QtGui.QDialog):
         self.layer = layer
         self.main = parent
         self.dialogTitle = 'LUMENS Layer Properties - ' + self.layer.name()
-        self.layerSymbolFillColor = self.styleCategorizedColor = self.styleGraduatedColor = self.styleRuleBasedColor = self.labelColor = QtGui.QColor(0, 0, 0) # black
+        self.layerSymbolFillColor = self.styleCategorizedColor = self.styleGraduatedColor = self.styleRuleBasedColor = self.labelColor = QtGui.QColor(109, 54, 141) # purple
         
         if self.main.appSettings['debug']:
             print 'DEBUG: DialogLayerProperties init'
@@ -63,6 +64,7 @@ class DialogLayerProperties(QtGui.QDialog):
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
         self.buttonApply.clicked.connect(self.applyStyle)
+        self.buttonLayerPropertiesHelp.clicked.connect(self.handlerLayerPropertiesHelp)
     
     
     def setupUi(self, parent):
@@ -116,18 +118,19 @@ class DialogLayerProperties(QtGui.QDialog):
         self.styleTabWidget.addTab(self.tabStyleSingle, 'Single')
         self.styleTabWidget.addTab(self.tabStyleCategorized, 'Categorized')
         self.styleTabWidget.addTab(self.tabStyleGraduated, 'Graduated')
-        self.styleTabWidget.addTab(self.tabStyleRuleBased, 'Rule-based')
+        # self.styleTabWidget.addTab(self.tabStyleRuleBased, 'Rule-based')
         
         self.layoutLayerStyle.addWidget(self.groupBoxLayerTransparency)
         self.layoutLayerStyle.addWidget(self.styleTabWidget)
         
         self.labelLayerStyleInfo = QtGui.QLabel()
-        self.labelLayerStyleInfo.setText('Lorem ipsum dolor sit amet...\n')
+        self.labelLayerStyleInfo.setText('\n')
+        # self.labelLayerStyleInfo.setWordWrap(True)
         self.layoutLayerStyleInfo.addWidget(self.labelLayerStyleInfo)
         
         # Transparency groupbox widgets
         self.labelLayerTransparency = QtGui.QLabel()
-        self.labelLayerTransparency.setText('Transparency:')
+        self.labelLayerTransparency.setText('Layer Transparency:')
         self.layoutGroupBoxLayerTransparency.addWidget(self.labelLayerTransparency, 0, 0)
         
         self.sliderLayerTransparency = QtGui.QSlider()
@@ -367,7 +370,7 @@ class DialogLayerProperties(QtGui.QDialog):
         self.layoutGroupBoxLayerLabel.addLayout(self.layoutLayerLabel)
         
         self.labelLayerLabelInfo = QtGui.QLabel()
-        self.labelLayerLabelInfo.setText('Lorem ipsum dolor sit amet...\n')
+        self.labelLayerLabelInfo.setText('\n')
         self.layoutLayerLabelInfo.addWidget(self.labelLayerLabelInfo)
         
         self.labelLayerLabelEnabled = QtGui.QLabel()
@@ -411,8 +414,12 @@ class DialogLayerProperties(QtGui.QDialog):
         self.buttonBox = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok|QtGui.QDialogButtonBox.Cancel)
         self.buttonApply = QtGui.QPushButton()
         self.buttonApply.setText('Apply')
+        icon = QtGui.QIcon(':/ui/icons/iconActionHelp.png')
+        self.buttonLayerPropertiesHelp = QtGui.QPushButton()
+        self.buttonLayerPropertiesHelp.setIcon(icon)
         self.layoutButtonBox.addWidget(self.buttonBox)
         self.layoutButtonBox.addWidget(self.buttonApply)
+        self.layoutButtonBox.addWidget(self.buttonLayerPropertiesHelp)
         
         self.dialogLayout.addWidget(self.groupBoxLayerStyle)
         self.dialogLayout.addWidget(self.groupBoxLayerLabel)
@@ -752,7 +759,19 @@ class DialogLayerProperties(QtGui.QDialog):
             self.tableStyleRuleBased.setRowCount(0)
         elif reply == QtGui.QMessageBox.Cancel:
             pass
-    
+
+
+    def handlerLayerPropertiesHelp(self):
+        """Slot method for opening the dialog html help document.
+        """
+        filePath = os.path.join(self.main.appSettings['appDir'], self.main.appSettings['folderHelp'], self.main.appSettings['helpDialogLayerPropertiesFile'])
+        
+        if os.path.exists(filePath):
+            dialog = DialogLumensViewer(self, 'LUMENS Help - {0}'.format('Layer Properties'), 'html', filePath)
+            dialog.exec_()
+        else:
+            QtGui.QMessageBox.critical(self, 'LUMENS Help Not Found', "Unable to open '{0}'.".format(filePath))
+            
     
     #***********************************************************
     # Process dialog

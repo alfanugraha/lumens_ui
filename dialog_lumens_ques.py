@@ -2957,6 +2957,12 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             = unicode(self.comboBoxCALandCoverPlanningUnit.currentText())
         self.main.appSettings['DialogLumensQUESCCarbonAccounting']['nodata'] \
             = self.spinBoxCANoDataValue.value()
+        # self.main.appSettings['DialogLumensQUESCCarbonAccounting']['includePeat'] \
+        #     = self.checkBoxPeatlandCarbonAccounting.value()            
+        # self.main.appSettings['DialogLumensQUESCCarbonAccounting']['peat'] \
+        #     = self.comboBoxPeatlandMap.currentText()
+        # self.main.appSettings['DialogLumensQUESCCarbonAccounting']['peatTable'] \
+        #     = self.comboBoxPCACsvfile.currentText()            
         
         # 'QUES-C' Peatland Carbon Accounting groupbox fields
         # self.main.appSettings['DialogLumensQUESCPeatlandCarbonAccounting']['csvfile'] = unicode(self.lineEditPCACsvfile.text())
