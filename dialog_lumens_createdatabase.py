@@ -18,7 +18,7 @@ class DialogLumensCreateDatabase(QtGui.QDialog, DialogLumensBase):
         super(DialogLumensCreateDatabase, self).__init__(parent)
         
         self.main = parent
-        self.dialogTitle = 'LUMENS Create Database'
+        self.dialogTitle = 'Create'
         
         self.main.appSettings['DialogLumensCreateDatabase']['outputFolder'] = os.path.join(self.main.appSettings['appDir'], 'output')
         self.dissolvedShapefile = None # For holding the temporary dissolved shapefile path
@@ -41,6 +41,7 @@ class DialogLumensCreateDatabase(QtGui.QDialog, DialogLumensBase):
         self.buttonSelectShapefile.clicked.connect(self.handlerSelectShapefile)
         self.buttonProcessDissolve.clicked.connect(self.handlerProcessDissolve)
         self.buttonProcessCreateDatabase.clicked.connect(self.handlerProcessCreateDatabase)
+        self.buttonCreateHelp.clicked.connect(lambda:self.handlerDialogHelp('Create'))
     
     
     def setupUi(self, parent):
@@ -53,7 +54,7 @@ class DialogLumensCreateDatabase(QtGui.QDialog, DialogLumensBase):
         
         #######################################################################
         # 'Database details' GroupBox
-        self.groupBoxDatabaseDetails = QtGui.QGroupBox('Database details')
+        self.groupBoxDatabaseDetails = QtGui.QGroupBox('Project details')
         self.layoutGroupBoxDatabaseDetails = QtGui.QVBoxLayout()
         self.layoutGroupBoxDatabaseDetails.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxDatabaseDetails.setLayout(self.layoutGroupBoxDatabaseDetails)
@@ -63,7 +64,7 @@ class DialogLumensCreateDatabase(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxDatabaseDetails.addLayout(self.layoutDatabaseDetails)
         
         self.labelDatabaseDetailsInfo = QtGui.QLabel()
-        self.labelDatabaseDetailsInfo.setText('Lorem ipsum dolor sit amet...\n')
+        self.labelDatabaseDetailsInfo.setText('\n')
         self.labelDatabaseDetailsInfo.setWordWrap(True)
         self.layoutDatabaseDetailsInfo.addWidget(self.labelDatabaseDetailsInfo)
         
@@ -91,7 +92,7 @@ class DialogLumensCreateDatabase(QtGui.QDialog, DialogLumensBase):
         self.layoutDatabaseDetails.addWidget(self.buttonSelectOutputFolder, 1, 2)
         
         self.labelShapefile = QtGui.QLabel()
-        self.labelShapefile.setText('Project administrative boundary:')
+        self.labelShapefile.setText('Project boundary:')
         self.layoutDatabaseDetails.addWidget(self.labelShapefile, 2, 0)
         
         self.lineEditShapefile = QtGui.QLineEdit()
@@ -103,7 +104,7 @@ class DialogLumensCreateDatabase(QtGui.QDialog, DialogLumensBase):
         self.layoutDatabaseDetails.addWidget(self.buttonSelectShapefile, 2, 2)
         
         self.labelShapefileAttr = QtGui.QLabel()
-        self.labelShapefileAttr.setText('Administrative boundary &attribute:')
+        self.labelShapefileAttr.setText('Boundary &attribute:')
         self.layoutDatabaseDetails.addWidget(self.labelShapefileAttr, 3, 0)
         
         self.comboBoxShapefileAttr = QtGui.QComboBox()
@@ -113,7 +114,7 @@ class DialogLumensCreateDatabase(QtGui.QDialog, DialogLumensBase):
         self.labelShapefileAttr.setBuddy(self.comboBoxShapefileAttr)
         
         self.labelProjectDescription = QtGui.QLabel()
-        self.labelProjectDescription.setText('Project &description:')
+        self.labelProjectDescription.setText('&Description:')
         self.layoutDatabaseDetails.addWidget(self.labelProjectDescription, 4, 0)
         
         self.lineEditProjectDescription = QtGui.QLineEdit()
@@ -123,7 +124,7 @@ class DialogLumensCreateDatabase(QtGui.QDialog, DialogLumensBase):
         self.labelProjectDescription.setBuddy(self.lineEditProjectDescription)
         
         self.labelProjectLocation = QtGui.QLabel()
-        self.labelProjectLocation.setText('Project &location:')
+        self.labelProjectLocation.setText('&Location:')
         self.layoutDatabaseDetails.addWidget(self.labelProjectLocation, 5, 0)
         
         self.lineEditProjectLocation = QtGui.QLineEdit()
@@ -133,7 +134,7 @@ class DialogLumensCreateDatabase(QtGui.QDialog, DialogLumensBase):
         self.labelProjectLocation.setBuddy(self.lineEditProjectLocation)
         
         self.labelProjectProvince = QtGui.QLabel()
-        self.labelProjectProvince.setText('Project &province:')
+        self.labelProjectProvince.setText('&Province:')
         self.layoutDatabaseDetails.addWidget(self.labelProjectProvince, 6, 0)
         
         self.lineEditProjectProvince = QtGui.QLineEdit()
@@ -143,7 +144,7 @@ class DialogLumensCreateDatabase(QtGui.QDialog, DialogLumensBase):
         self.labelProjectProvince.setBuddy(self.lineEditProjectProvince)
         
         self.labelProjectCountry = QtGui.QLabel()
-        self.labelProjectCountry.setText('Project &country:')
+        self.labelProjectCountry.setText('&Country:')
         self.layoutDatabaseDetails.addWidget(self.labelProjectCountry, 7, 0)
         
         self.lineEditProjectCountry = QtGui.QLineEdit()
@@ -153,7 +154,7 @@ class DialogLumensCreateDatabase(QtGui.QDialog, DialogLumensBase):
         self.labelProjectCountry.setBuddy(self.lineEditProjectCountry)
         
         self.labelProjectSpatialRes = QtGui.QLabel()
-        self.labelProjectSpatialRes.setText('Project spatial &res:')
+        self.labelProjectSpatialRes.setText('Spatial &resolution:')
         self.layoutDatabaseDetails.addWidget(self.labelProjectSpatialRes, 8, 0)
         
         self.spinBoxProjectSpatialRes = QtGui.QSpinBox()
@@ -172,7 +173,7 @@ class DialogLumensCreateDatabase(QtGui.QDialog, DialogLumensBase):
         
         self.layoutDissolvedInfo = QtGui.QVBoxLayout()
         self.labelDissolvedInfo = QtGui.QLabel()
-        self.labelDissolvedInfo.setText('Lorem ipsum dolor sit amet...')
+        self.labelDissolvedInfo.setText('\n')
         self.labelDissolvedInfo.setWordWrap(True)
         self.layoutDissolvedInfo.addWidget(self.labelDissolvedInfo)
         
@@ -190,10 +191,14 @@ class DialogLumensCreateDatabase(QtGui.QDialog, DialogLumensBase):
         self.buttonProcessDissolve.setText('&Dissolve')
         self.buttonProcessCreateDatabase = QtGui.QPushButton()
         self.buttonProcessCreateDatabase.setDisabled(True)
-        self.buttonProcessCreateDatabase.setText('&Process')
+        self.buttonProcessCreateDatabase.setText('&Create')
+        icon = QtGui.QIcon(':/ui/icons/iconActionHelp.png')
+        self.buttonCreateHelp = QtGui.QPushButton()
+        self.buttonCreateHelp.setIcon(icon)
         self.layoutButtonProcess.setAlignment(QtCore.Qt.AlignRight)
         self.layoutButtonProcess.addWidget(self.buttonProcessDissolve)
         self.layoutButtonProcess.addWidget(self.buttonProcessCreateDatabase)
+        self.layoutButtonProcess.addWidget(self.buttonCreateHelp)
         
         self.dialogLayout.addWidget(self.groupBoxDatabaseDetails)
         self.dialogLayout.addWidget(self.groupBoxDissolved)
@@ -386,7 +391,7 @@ class DialogLumensCreateDatabase(QtGui.QDialog, DialogLumensBase):
             algName = 'r:dbdissolve'
             
             # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
-            self.main.setWindowState(QtCore.Qt.WindowMinimized)
+            # self.main.setWindowState(QtCore.Qt.WindowMinimized)
             
             outputs = general.runalg(
                 algName,
@@ -438,7 +443,7 @@ class DialogLumensCreateDatabase(QtGui.QDialog, DialogLumensBase):
                     self.buttonProcessCreateDatabase.setEnabled(True)
             
             # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
-            self.main.setWindowState(QtCore.Qt.WindowActive)
+            # self.main.setWindowState(QtCore.Qt.WindowActive)
             
             self.buttonProcessDissolve.setEnabled(True)
             logging.getLogger(type(self).__name__).info('end: %s' % 'LUMENS Dissolve')
@@ -463,7 +468,7 @@ class DialogLumensCreateDatabase(QtGui.QDialog, DialogLumensBase):
             algName = 'r:dbcreate'
             
             # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
-            self.main.setWindowState(QtCore.Qt.WindowMinimized)
+            # self.main.setWindowState(QtCore.Qt.WindowMinimized)
             
             outputs = general.runalg(
                 algName,
@@ -493,7 +498,7 @@ class DialogLumensCreateDatabase(QtGui.QDialog, DialogLumensBase):
             )
             
             # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
-            self.main.setWindowState(QtCore.Qt.WindowActive)
+            # self.main.setWindowState(QtCore.Qt.WindowActive)
             
             algSuccess = self.outputsMessageBox(algName, outputs, 'LUMENS database successfully created!\nClick OK to open the database.', 'Failed to create the LUMENS database.')
             

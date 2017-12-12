@@ -19,7 +19,7 @@ class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
         super(DialogLumensAddData, self).__init__(parent)
         
         self.main = parent
-        self.dialogTitle = 'LUMENS Add Data'
+        self.dialogTitle = 'Add data'
         self.tableAddDataRowCount = 0
         self.tableAddData = []
         
@@ -60,7 +60,7 @@ class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxAddData.addLayout(self.layoutAddData)
         
         self.labelAddDataInfo = QtGui.QLabel()
-        self.labelAddDataInfo.setText('Lorem ipsum dolor sit amet...\n')
+        self.labelAddDataInfo.setText('\n')
         self.labelAddDataInfo.setWordWrap(True)
         self.layoutAddDataInfo.addWidget(self.labelAddDataInfo)
         
@@ -68,7 +68,7 @@ class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
         self.layoutButtonAddData.setContentsMargins(0, 0, 0, 0)
         self.layoutButtonAddData.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.buttonAddDataRow = QtGui.QPushButton()
-        self.buttonAddDataRow.setText('Add Data')
+        self.buttonAddDataRow.setText('Add data')
         self.buttonAddDataRow.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
         self.layoutButtonAddData.addWidget(self.buttonAddDataRow)
         
@@ -172,7 +172,7 @@ class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
         layoutDataRow.addWidget(buttonDeleteDataRow)
         
         comboBoxDataType = QtGui.QComboBox()
-        comboBoxDataType.addItems(['Land Use/Cover', 'Planning Unit', 'Factor', 'Table'])
+        comboBoxDataType.addItems(['Land use/cover', 'Planning unit', 'Factor', 'Table'])
         comboBoxDataType.setObjectName('comboBoxDataType_{0}'.format(str(self.tableAddDataRowCount)))
         layoutDataRow.addWidget(comboBoxDataType)
         
@@ -182,7 +182,7 @@ class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
         layoutDataRow.addWidget(lineEditDataFile)
         
         buttonSelectDataFile = QtGui.QPushButton()
-        buttonSelectDataFile.setText('Select File')
+        buttonSelectDataFile.setText('Select file')
         buttonSelectDataFile.setObjectName('buttonSelectDataFile_{0}'.format(str(self.tableAddDataRowCount)))
         layoutDataRow.addWidget(buttonSelectDataFile)
 
@@ -338,9 +338,9 @@ class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
             dataDissolvedShapefile = unicode(lineEditDataDissolvedShapefile.text())
             dataTableCsv = unicode(lineEditDataTableCsv.text())
             
-            if dataType == 'Land Use/Cover':
+            if dataType == 'Land use/cover':
                 dataType = 0
-            elif dataType == 'Planning Unit':
+            elif dataType == 'Planning unit':
                 dataType = 1
             elif dataType == 'Factor':
                 dataType = 2
@@ -431,7 +431,7 @@ class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
             activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
             
             # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
-            self.main.setWindowState(QtCore.Qt.WindowMinimized)
+            # self.main.setWindowState(QtCore.Qt.WindowMinimized)
             
             for tableRowData in self.tableAddData:
                 # The algName to be used depends on the type of the dataFile (vector or raster)
@@ -488,7 +488,7 @@ class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
                     dialog.exec_()
             
             # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
-            self.main.setWindowState(QtCore.Qt.WindowActive)
+            # self.main.setWindowState(QtCore.Qt.WindowActive)
             
             algSuccess = self.outputsMessageBox(algName, outputs, 'Data successfully added to LUMENS database!', 'Failed to add data to LUMENS database.')
             

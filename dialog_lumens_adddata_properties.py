@@ -33,7 +33,7 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
         """
         super(DialogLumensAddDataProperties, self).__init__(parent)
         self.parent = parent
-        self.dialogTitle = 'LUMENS Data Properties'
+        self.dialogTitle = 'Data Properties'
         
         self.dataType = dataType
         self.dataFile = dataFile
@@ -46,14 +46,14 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
         
         # The classification of the data to be added
         self.classifiedOptions = {
-            1: 'Hutan primer',
-            2: 'Hutan sekunder',
-            3: 'Tanaman pohon monokultur',
-            4: 'Tanaman pohon campuran',
-            5: 'Tanaman pertanian semusim',
-            6: 'Semak, rumput, dan lahan terbuka',
-            7: 'Pemukiman',
-            8: 'Lain-lain',
+            1: 'Undisturbed forest', # Hutan primer
+            2: 'Logged-over forest', # Hutan sekunder
+            3: 'Monoculture tree-based plantation', # Tanaman pohon monokulture
+            4: 'Mixed tree-based plantation', # Tanaman pohon campuran
+            5: 'Agriculture/annual crop', # Tanaman pertanian semusim 
+            6: 'Shrub, grass, and cleared land', # Semak, rumput, dan lahan terbuka
+            7: 'Settlement and built-up area', # Pemukiman
+            8: 'Others',
         }
         self.isRasterFile = False
         self.isVectorFile = False
@@ -80,8 +80,8 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
         
         self.setupUi(self)
         
-        # Raster data table is loaded only for 'Land Use/Cover' and 'Planning Unit'
-        if self.isRasterFile and self.dataType in ('Land Use/Cover', 'Planning Unit'):
+        # Raster data table is loaded only for 'Land use/cover' and 'Planning unit'
+        if self.isRasterFile and self.dataType in ('Land use/cover', 'Planning unit'):
             self.loadRasterDataTable()
         elif self.isVectorFile:
             self.loadDataFieldAttributes()
@@ -122,7 +122,7 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
         self.layoutGroupBoxDataProperties.addLayout(self.layoutDataProperties)
         
         self.labelDataPropertiesInfo = QtGui.QLabel()
-        self.labelDataPropertiesInfo.setText('Lorem ipsum dolor sit amet...\n')
+        self.labelDataPropertiesInfo.setText('\n')
         self.layoutDataPropertiesInfo.addWidget(self.labelDataPropertiesInfo)
         
         rowCount = 0
@@ -135,13 +135,13 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
         
         td = datetime.date.today()
         self.labelDataSpinBoxPeriod = QtGui.QLabel()
-        self.labelDataSpinBoxPeriod.setText('&Period:')
+        self.labelDataSpinBoxPeriod.setText('&Year:')
         self.spinBoxDataPeriod = QtGui.QSpinBox()
         self.spinBoxDataPeriod.setRange(1, 9999)
         self.spinBoxDataPeriod.setValue(td.year)
         self.labelDataSpinBoxPeriod.setBuddy(self.spinBoxDataPeriod)
         
-        if self.dataType == 'Land Use/Cover':
+        if self.dataType == 'Land use/cover':
             # Description + Period
             self.layoutDataProperties.addWidget(self.labelDataDescription, rowCount, 0)
             self.layoutDataProperties.addWidget(self.lineEditDataDescription, rowCount, 1)
@@ -169,7 +169,7 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
         self.dataTable.verticalHeader().setVisible(False)
         
         self.labelDataMapping = QtGui.QLabel()
-        self.labelDataMapping.setText('Data mapping:')
+        self.labelDataMapping.setText('Class definition file (optional):')
         self.lineEditDataMapping = QtGui.QLineEdit()
         self.lineEditDataMapping.setReadOnly(True)
         self.buttonSelectDataMapping = QtGui.QPushButton()
@@ -178,7 +178,7 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
         
         rowCount += 1
         
-        if self.dataType == 'Land Use/Cover' or self.dataType == 'Planning Unit':
+        if self.dataType == 'Land use/cover' or self.dataType == 'Planning unit':
             dataTableColumnSpan = 2
             if self.isVectorFile or self.isRasterFile:
                 self.layoutDataProperties.addWidget(self.labelDataMapping, rowCount, 0)
@@ -273,7 +273,7 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
                     
                     fields.append('Legend') # Additional columns ('Classified' only for Land Use/Cover types)
                     
-                    if self.dataType == 'Land Use/Cover':
+                    if self.dataType == 'Land use/cover':
                         fields.append('Classified')
                     
                     self.dataTable.setColumnCount(len(fields))
@@ -305,7 +305,7 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
                     self.dataTable.setItem(tableRow, tableColumn, fieldLegend)
                     self.dataTable.horizontalHeader().setResizeMode(columnLegend, QtGui.QHeaderView.ResizeToContents)
                     
-                    if self.dataType == 'Land Use/Cover':
+                    if self.dataType == 'Land use/cover':
                         tableColumn += 1
                         columnClassified = tableColumn
                         comboBoxClassified = QtGui.QComboBox()
@@ -346,9 +346,9 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
         """
         valid = False
         
-        if self.dataType == 'Land Use/Cover' and self.isVectorFile and self.dataDescription and self.dataPeriod and self.dataFieldAttribute:
+        if self.dataType == 'Land use/cover' and self.isVectorFile and self.dataDescription and self.dataPeriod and self.dataFieldAttribute:
             valid = True
-        elif self.dataType == 'Planning Unit' and self.isVectorFile and self.dataDescription and self.dataFieldAttribute:
+        elif self.dataType == 'Planning unit' and self.isVectorFile and self.dataDescription and self.dataFieldAttribute:
             valid = True
         else:
             QtGui.QMessageBox.critical(self, 'Error', 'Missing some input. Please complete the fields.')
@@ -361,13 +361,13 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
         """
         valid = False
         
-        if self.dataType == 'Land Use/Cover' and self.isRasterFile and self.dataDescription and self.dataPeriod and self.dataTableCsv:
+        if self.dataType == 'Land use/cover' and self.isRasterFile and self.dataDescription and self.dataPeriod and self.dataTableCsv:
             valid = True
-        elif self.dataType == 'Land Use/Cover' and self.isVectorFile and self.dataDescription and self.dataPeriod and self.dataFieldAttribute and self.dataTableCsv:
+        elif self.dataType == 'Land use/cover' and self.isVectorFile and self.dataDescription and self.dataPeriod and self.dataFieldAttribute and self.dataTableCsv:
             valid = True
-        elif self.dataType == 'Planning Unit' and self.isRasterFile and self.dataDescription and self.dataTableCsv:
+        elif self.dataType == 'Planning unit' and self.isRasterFile and self.dataDescription and self.dataTableCsv:
             valid = True
-        elif self.dataType == 'Planning Unit' and self.isVectorFile and self.dataDescription and self.dataFieldAttribute and self.dataTableCsv:
+        elif self.dataType == 'Planning unit' and self.isVectorFile and self.dataDescription and self.dataFieldAttribute and self.dataTableCsv:
             valid = True
         elif self.dataType == 'Factor' and self.isRasterFile and self.dataDescription:
             valid = True
@@ -431,7 +431,7 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
                     attributes.append(field.name())
                 
                 # Additional columns ('Legend', 'Classified' only for Land Use/Cover types)
-                if self.dataType == 'Land Use/Cover':
+                if self.dataType == 'Land use/cover':
                     attributes.append('Legend')
                     attributes.append('Classified')
                 
@@ -453,7 +453,7 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
                                 continue
                             attributeValue = str(feature.attribute(attribute))
                             attributeValueTableItem = QtGui.QTableWidgetItem(attributeValue)
-                            if tableColumn == 1 and self.dataType == 'Planning Unit': # Editable second column for Vector Planning Units
+                            if tableColumn == 1 and self.dataType == 'Planning unit': # Editable second column for Vector Planning Units
                                 pass
                             else:
                                 attributeValueTableItem.setFlags(attributeValueTableItem.flags() & ~QtCore.Qt.ItemIsEnabled)
@@ -462,7 +462,7 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
                             tableColumn += 1
                         
                         # Additional columns ('Legend', 'Classified' only for Land Use/Cover types)
-                        if self.dataType == 'Land Use/Cover':
+                        if self.dataType == 'Land use/cover':
                             fieldLegend = QtGui.QTableWidgetItem('Unidentified Landuse {0}'.format(tableRow + 1))
                             columnLegend = tableColumn
                             self.dataTable.setItem(tableRow, tableColumn, fieldLegend)
@@ -530,7 +530,7 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
             if hasHeader: # Skip the header
                 next(reader)
             
-            if self.dataType == 'Planning Unit':
+            if self.dataType == 'Planning unit':
                 for row in reader:
                     dataMappingZone[str(row[0]).lower()] = str(row[1])
                 
@@ -559,7 +559,7 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
                         newFieldLegend = QtGui.QTableWidgetItem(legend)
                         self.dataTable.setItem(tableRow, zoneColumn, newFieldLegend)                  
             
-            if self.dataType == 'Land Use/Cover':
+            if self.dataType == 'Land use/cover':
                 for row in reader:
                     dataMappingLegend[str(row[0]).lower()] = str(row[1])
                     dataMappingClassified[str(row[0]).lower()] = str(row[2]).lower()

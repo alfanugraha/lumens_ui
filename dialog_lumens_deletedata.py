@@ -18,7 +18,7 @@ class DialogLumensDeleteData(QtGui.QDialog, DialogLumensBase):
         super(DialogLumensDeleteData, self).__init__(parent)
 
         self.main = parent
-        self.dialogTitle = 'LUMENS Delete Data'
+        self.dialogTitle = 'Delete Data'
 
         if self.main.appSettings['debug']:
             print 'DEBUG: DialogLumensDeleteData init'
@@ -47,7 +47,7 @@ class DialogLumensDeleteData(QtGui.QDialog, DialogLumensBase):
         """
         self.dialogLayout = QtGui.QVBoxLayout()
 
-        self.groupBoxDeleteData = QtGui.QGroupBox('Delete Data')
+        self.groupBoxDeleteData = QtGui.QGroupBox('Delete data')
         self.layoutGroupBoxDeleteData = QtGui.QVBoxLayout()
         self.layoutGroupBoxDeleteData.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxDeleteData.setLayout(self.layoutGroupBoxDeleteData)
@@ -57,7 +57,7 @@ class DialogLumensDeleteData(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxDeleteData.addLayout(self.layoutDeleteData)
 
         self.labelDeleteDataInfo = QtGui.QLabel()
-        self.labelDeleteDataInfo.setText('Lorem ipsum dolor sit amet...\n')
+        self.labelDeleteDataInfo.setText('\n')
         self.labelDeleteDataInfo.setWordWrap(True)
         self.layoutDeleteDataInfo.addWidget(self.labelDeleteDataInfo)
 

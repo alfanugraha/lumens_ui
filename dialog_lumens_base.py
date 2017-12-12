@@ -56,6 +56,8 @@ class DialogLumensBase:
             helpDialogFile = 'helpDialogSCIENDOFile'
         elif dialogName == 'Layer Properties':
             helpDialogFile = 'helpDialogLayerPropertiesFile'
+        elif dialogName == 'Create':
+            helpDialogFile = 'helpDialogCreateFile'
         else:
             helpDialogFile = 'helpLUMENSFile'
         

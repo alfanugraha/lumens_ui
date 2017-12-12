@@ -100,6 +100,7 @@ class MainWindow(QtGui.QMainWindow):
             'helpDialogTAFile': 'index_ta.html',
             'helpDialogSCIENDOFile': 'index_sciendo.html',
             'helpDialogLayerPropertiesFile': 'index_layer_properties.html',
+            'helpDialogCreateFile': 'index_create.html',
             'dataDir': 'data',
             'basemapDir': 'basemap',
             'vectorDir': 'vector',
@@ -522,7 +523,7 @@ class MainWindow(QtGui.QMainWindow):
         self.actionRefresh.triggered.connect(self.handlerRefresh)
         self.mapCanvas.zoomLastStatusChanged.connect(self.handlerZoomLastStatus)
         self.mapCanvas.zoomNextStatusChanged.connect(self.handlerZoomNextStatus)
-        self.mapCanvas.xyCoordinates.connect(self.handlerUpdateCoordinates)
+        # self.mapCanvas.xyCoordinates.connect(self.handlerUpdateCoordinates)
         self.actionZoomLast.triggered.connect(self.handlerZoomLast)
         self.actionZoomNext.triggered.connect(self.handlerZoomNext)
         self.actionLayerAttributeTable.triggered.connect(self.handlerLayerAttributeTable)
@@ -670,7 +671,7 @@ class MainWindow(QtGui.QMainWindow):
         self.labelMapCanvasCoordinate.setStyleSheet('QLabel { margin-right: 10px; color: rgb(173, 185, 202); }')
         self.labelMapCanvasCoordinate.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignVCenter)
         
-        self.statusBar.addPermanentWidget(self.labelMapCanvasCoordinate)
+        # self.statusBar.addPermanentWidget(self.labelMapCanvasCoordinate)
         self.setStatusBar(self.statusBar)
         
         # Create the actions and assigned them to the menus
@@ -811,11 +812,11 @@ class MainWindow(QtGui.QMainWindow):
         icon = QtGui.QIcon(':/ui/icons/iconActionLumensExportDatabase.png')
         self.actionLumensExportDatabase = QtGui.QAction(icon, 'Export', self)
         icon = QtGui.QIcon(':/ui/icons/iconActionDialogLumensAddData.png')
-        self.actionDialogLumensAddData = QtGui.QAction(icon, 'Import Data', self)
+        self.actionDialogLumensAddData = QtGui.QAction(icon, 'Add data', self)
         icon = QtGui.QIcon(':/ui/icons/iconActionLumensDeleteData.png')
-        self.actionLumensDeleteData = QtGui.QAction(icon, 'Remove', self)
+        self.actionLumensDeleteData = QtGui.QAction(icon, 'Remove data', self)
         icon = QtGui.QIcon(':/ui/icons/iconActionLumensDatabaseStatus.png')
-        self.actionLumensDatabaseStatus = QtGui.QAction(icon, 'Project Status', self)
+        self.actionLumensDatabaseStatus = QtGui.QAction(icon, 'Project status', self)
         
         self.databaseMenu.addAction(self.actionDialogLumensCreateDatabase)
         self.databaseMenu.addAction(self.actionLumensOpenDatabase)
@@ -2502,7 +2503,7 @@ class MainWindow(QtGui.QMainWindow):
         outputs = general.runalg('r:dbstatus', self.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/'), None)
         
         if outputs:
-            self.webContentDatabaseStatus.load(QtCore.QUrl.fromLocalFile(os.path.join(self.appSettings['DialogLumensOpenDatabase']['projectFolder'], "status_LUMENS_database.html")))
+            self.webContentDatabaseStatus.load(QtCore.QUrl.fromLocalFile(os.path.join(self.appSettings['DialogLumensOpenDatabase']['projectFolder'], "project_status.html")))
             #dialog = DialogLumensViewer(self, 'Database Status', 'csv', outputs['database_status'])
             #dialog = DialogLumensViewer(self, 'Database Status', 'html', os.path.join(self.appSettings['DialogLumensOpenDatabase']['projectFolder'], "status_LUMENS_database.html"))
             #dialog.exec_()
