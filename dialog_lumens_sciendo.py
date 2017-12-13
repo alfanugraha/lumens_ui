@@ -334,7 +334,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         super(DialogLumensSCIENDO, self).__init__(parent)
         
         self.main = parent
-        self.dialogTitle = 'LUMENS SCIENDO'
+        self.dialogTitle = 'SCIENDO'
         self.checkBoxQUESCDatabaseCount = 0
         self.tableAddFactorRowCount = 0
         self.listOfQUESCDatabase = []
@@ -410,12 +410,13 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.setStyleSheet('QDialog { background-color: rgb(225, 229, 237); } QMessageBox QLabel{ color: #fff; }')
         self.dialogLayout = QtGui.QVBoxLayout()
 
-        self.groupBoxSCIENDODialog = QtGui.QGroupBox('Scenario Simulation Development')
+        self.groupBoxSCIENDODialog = QtGui.QGroupBox('Scenario simulation and development')
         self.layoutGroupBoxSCIENDODialog = QtGui.QVBoxLayout()
         self.layoutGroupBoxSCIENDODialog.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxSCIENDODialog.setLayout(self.layoutGroupBoxSCIENDODialog)
         self.labelSCIENDODialogInfo = QtGui.QLabel()
-        self.labelSCIENDODialogInfo.setText('Lorem ipsum dolor sit amet...')
+        self.labelSCIENDODialogInfo.setText('\n')
+        self.labelSCIENDODialogInfo.setWordWrap(True)
         self.layoutGroupBoxSCIENDODialog.addWidget(self.labelSCIENDODialogInfo)
 
         self.tabWidget = QtGui.QTabWidget()
@@ -445,8 +446,8 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.tabLandUseChangeModeling = QtGui.QWidget()
         self.tabLog = QtGui.QWidget()
         
-        self.tabWidget.addTab(self.tabLowEmissionDevelopmentAnalysis, 'LED Analysis')
-        self.tabWidget.addTab(self.tabLandUseChangeModeling, 'Land Use Change Modeling')
+        self.tabWidget.addTab(self.tabLowEmissionDevelopmentAnalysis, 'Historical baseline analysis')
+        self.tabWidget.addTab(self.tabLandUseChangeModeling, 'Land use simulation')
         self.tabWidget.addTab(self.tabLog, 'Log')
         
         ###self.layoutTabLowEmissionDevelopmentAnalysis = QtGui.QVBoxLayout()
@@ -466,7 +467,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         # Setup 'Low Emission Development Analysis' tab
         #***********************************************************
         # 'Historical baseline projection' GroupBox
-        self.groupBoxHistoricalBaselineProjection = QtGui.QGroupBox('Historical baseline projection')
+        self.groupBoxHistoricalBaselineProjection = QtGui.QGroupBox('Periodic projection parameter')
         self.layoutGroupBoxHistoricalBaselineProjection = QtGui.QHBoxLayout()
         self.groupBoxHistoricalBaselineProjection.setLayout(self.layoutGroupBoxHistoricalBaselineProjection)
         self.layoutOptionsHistoricalBaselineProjection = QtGui.QVBoxLayout()
@@ -487,7 +488,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.layoutOptionsHistoricalBaselineProjection.addLayout(self.layoutHistoricalBaselineProjection)
         
         self.labelHistoricalBaselineProjectionInfo = QtGui.QLabel()
-        self.labelHistoricalBaselineProjectionInfo.setText('Lorem ipsum dolor sit amet...\n')
+        self.labelHistoricalBaselineProjectionInfo.setText('Conduct periodic projection\n')
         self.layoutHistoricalBaselineProjectionInfo.addWidget(self.labelHistoricalBaselineProjectionInfo)
         
         self.labelHistoricalBaselineProjectionQUESCDatabase = QtGui.QLabel()
@@ -511,7 +512,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.labelHistoricalBaselineProjectionIteration.setBuddy(self.spinBoxHistoricalBaselineProjectionIteration) 
         
         # 'Historical baseline annual projection' GroupBox
-        self.groupBoxHistoricalBaselineAnnualProjection = QtGui.QGroupBox('Historical baseline annual projection')
+        self.groupBoxHistoricalBaselineAnnualProjection = QtGui.QGroupBox('Annual projection parameter')
         self.layoutGroupBoxHistoricalBaselineAnnualProjection = QtGui.QHBoxLayout()
         self.groupBoxHistoricalBaselineAnnualProjection.setLayout(self.layoutGroupBoxHistoricalBaselineAnnualProjection)
         self.layoutOptionsHistoricalBaselineAnnualProjection = QtGui.QVBoxLayout()
@@ -532,7 +533,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.layoutOptionsHistoricalBaselineAnnualProjection.addLayout(self.layoutHistoricalBaselineAnnualProjection)
         
         self.labelHistoricalBaselineAnnualProjectionInfo = QtGui.QLabel()
-        self.labelHistoricalBaselineAnnualProjectionInfo.setText('Lorem ipsum dolor sit amet...\n')
+        self.labelHistoricalBaselineAnnualProjectionInfo.setText('Conduct annual projection\n')
         self.layoutHistoricalBaselineAnnualProjectionInfo.addWidget(self.labelHistoricalBaselineAnnualProjectionInfo)
         
         self.labelHistoricalBaselineAnnualProjectionIteration = QtGui.QLabel()
@@ -548,7 +549,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.populateQUESCDatabase()
 
         # 'Drivers analysis' GroupBox
-        self.groupBoxDriversAnalysis = QtGui.QGroupBox('Drivers analysis')
+        self.groupBoxDriversAnalysis = QtGui.QGroupBox('Drivers analysis parameter')
         self.layoutGroupBoxDriversAnalysis = QtGui.QHBoxLayout()
         self.groupBoxDriversAnalysis.setLayout(self.layoutGroupBoxDriversAnalysis)
         self.layoutOptionsDriversAnalysis = QtGui.QVBoxLayout()
@@ -568,11 +569,11 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.layoutOptionsDriversAnalysis.addLayout(self.layoutDriversAnalysis)
         
         self.labelDriversAnalysisInfo = QtGui.QLabel()
-        self.labelDriversAnalysisInfo.setText('Lorem ipsum dolor sit amet...\n')
+        self.labelDriversAnalysisInfo.setText('Conduct drivers analysis\n')
         self.layoutDriversAnalysisInfo.addWidget(self.labelDriversAnalysisInfo)
         
         self.labelDriversAnalysisLandUseCoverChangeDrivers = QtGui.QLabel()
-        self.labelDriversAnalysisLandUseCoverChangeDrivers.setText('Drivers of land use/cover change:')
+        self.labelDriversAnalysisLandUseCoverChangeDrivers.setText('Drivers of land use change:')
         self.layoutDriversAnalysis.addWidget(self.labelDriversAnalysisLandUseCoverChangeDrivers, 0, 0)
         
         self.lineEditDriversAnalysisLandUseCoverChangeDrivers = QtGui.QLineEdit()
@@ -584,16 +585,16 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.layoutDriversAnalysis.addWidget(self.buttonSelectDriversAnalysisLandUseCoverChangeDrivers, 0, 2)
         
         self.labelDriversAnalysislandUseCoverChangeType = QtGui.QLabel()
-        self.labelDriversAnalysislandUseCoverChangeType.setText('Land use/cover change type:')
+        self.labelDriversAnalysislandUseCoverChangeType.setText('Land use trajectory:')
         self.layoutDriversAnalysis.addWidget(self.labelDriversAnalysislandUseCoverChangeType, 1, 0)
         
         self.lineEditDriversAnalysisLandUseCoverChangeType = QtGui.QLineEdit()
-        self.lineEditDriversAnalysisLandUseCoverChangeType.setText('Land use change')
+        self.lineEditDriversAnalysisLandUseCoverChangeType.setText('Provide trajectory name')
         self.layoutDriversAnalysis.addWidget(self.lineEditDriversAnalysisLandUseCoverChangeType, 1, 1)
         self.labelDriversAnalysislandUseCoverChangeType.setBuddy(self.lineEditDriversAnalysisLandUseCoverChangeType)
         
         # 'Build scenario' GroupBox
-        self.groupBoxBuildScenario = QtGui.QGroupBox('Build scenario')
+        self.groupBoxBuildScenario = QtGui.QGroupBox('Scenario builder')
         self.layoutGroupBoxBuildScenario = QtGui.QHBoxLayout()
         self.groupBoxBuildScenario.setLayout(self.layoutGroupBoxBuildScenario)
         self.layoutOptionsBuildScenario = QtGui.QVBoxLayout()
@@ -613,11 +614,11 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.layoutOptionsBuildScenario.addLayout(self.layoutBuildScenario)
         
         self.labelBuildScenarioInfo = QtGui.QLabel()
-        self.labelBuildScenarioInfo.setText('Lorem ipsum dolor sit amet...\n')
+        self.labelBuildScenarioInfo.setText('Build scenario\n')
         self.layoutBuildScenarioInfo.addWidget(self.labelBuildScenarioInfo)
         
         self.labelBuildScenarioHistoricalBaselineCar = QtGui.QLabel()
-        self.labelBuildScenarioHistoricalBaselineCar.setText('Historical baseline car:')
+        self.labelBuildScenarioHistoricalBaselineCar.setText('Historical baseline data:')
         self.layoutBuildScenario.addWidget(self.labelBuildScenarioHistoricalBaselineCar, 0, 0)
         
         self.lineEditBuildScenarioHistoricalBaselineCar = QtGui.QLineEdit()
@@ -641,7 +642,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.layoutButtonLowEmissionDevelopmentAnalysis.addWidget(self.buttonHelpSCIENDOLowEmissionDevelopmentAnalysis)
         
         # Template GroupBox
-        self.groupBoxLowEmissionDevelopmentAnalysisTemplate = QtGui.QGroupBox('Template')
+        self.groupBoxLowEmissionDevelopmentAnalysisTemplate = QtGui.QGroupBox('Cponfiguration')
         self.layoutGroupBoxLowEmissionDevelopmentAnalysisTemplate = QtGui.QVBoxLayout()
         self.layoutGroupBoxLowEmissionDevelopmentAnalysisTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxLowEmissionDevelopmentAnalysisTemplate.setLayout(self.layoutGroupBoxLowEmissionDevelopmentAnalysisTemplate)
@@ -651,7 +652,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxLowEmissionDevelopmentAnalysisTemplate.addLayout(self.layoutLowEmissionDevelopmentAnalysisTemplate)
         
         self.labelLoadedLowEmissionDevelopmentAnalysisTemplate = QtGui.QLabel()
-        self.labelLoadedLowEmissionDevelopmentAnalysisTemplate.setText('Loaded template:')
+        self.labelLoadedLowEmissionDevelopmentAnalysisTemplate.setText('Loaded configuration:')
         self.layoutLowEmissionDevelopmentAnalysisTemplate.addWidget(self.labelLoadedLowEmissionDevelopmentAnalysisTemplate, 0, 0)
         
         self.loadedLowEmissionDevelopmentAnalysisTemplate = QtGui.QLabel()
@@ -659,13 +660,13 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.layoutLowEmissionDevelopmentAnalysisTemplate.addWidget(self.loadedLowEmissionDevelopmentAnalysisTemplate, 0, 1)
         
         self.labelLowEmissionDevelopmentAnalysisTemplate = QtGui.QLabel()
-        self.labelLowEmissionDevelopmentAnalysisTemplate.setText('Template name:')
+        self.labelLowEmissionDevelopmentAnalysisTemplate.setText('Name:')
         self.layoutLowEmissionDevelopmentAnalysisTemplate.addWidget(self.labelLowEmissionDevelopmentAnalysisTemplate, 1, 0)
         
         self.comboBoxLowEmissionDevelopmentAnalysisTemplate = QtGui.QComboBox()
         self.comboBoxLowEmissionDevelopmentAnalysisTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
         self.comboBoxLowEmissionDevelopmentAnalysisTemplate.setDisabled(True)
-        self.comboBoxLowEmissionDevelopmentAnalysisTemplate.addItem('No template found')
+        self.comboBoxLowEmissionDevelopmentAnalysisTemplate.addItem('No configuration found')
         self.layoutLowEmissionDevelopmentAnalysisTemplate.addWidget(self.comboBoxLowEmissionDevelopmentAnalysisTemplate, 1, 1)
         
         self.layoutButtonLowEmissionDevelopmentAnalysisTemplate = QtGui.QHBoxLayout()
