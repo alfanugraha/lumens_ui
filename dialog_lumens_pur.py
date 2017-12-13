@@ -210,7 +210,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         super(DialogLumensPUR, self).__init__(parent)
         
         self.main = parent
-        self.dialogTitle = 'Planning Unit Reconciliation'
+        self.dialogTitle = 'PUR'
         self.settingsPath = os.path.join(self.main.appSettings['DialogLumensOpenDatabase']['projectFolder'], self.main.appSettings['folderPUR'])
         self.currentPURTemplate = None
         
@@ -281,7 +281,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         self.setStyleSheet('QDialog { background-color: rgb(225, 229, 237); }')
         self.dialogLayout = QtGui.QVBoxLayout()
 
-        self.groupBoxPURDialog = QtGui.QGroupBox('Conduct reconciliation')
+        self.groupBoxPURDialog = QtGui.QGroupBox('Planning Unit Reconciliation')
         self.layoutGroupBoxPURDialog = QtGui.QVBoxLayout()
         self.layoutGroupBoxPURDialog.setAlignment(QtCore.Qt.AlignTop)
         self.groupBoxPURDialog.setLayout(self.layoutGroupBoxPURDialog)
@@ -1173,7 +1173,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
             algName = 'r:pursetup'
             
             # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
-            # self.main.setWindowState(QtCore.Qt.WindowMinimized)
+            self.main.setWindowState(QtCore.Qt.WindowMinimized)
             
             # Pass referenceClasses, referenceMapping, planningUnits as temp csv files
             activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
@@ -1218,7 +1218,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
                 dialog.exec_()
             
             # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
-            # self.main.setWindowState(QtCore.Qt.WindowActive)
+            self.main.setWindowState(QtCore.Qt.WindowActive)
             
             algSuccess = self.outputsMessageBox(algName, self.outputsPURSetup, 'PUR setup completed successfully!', 'Something happened.')
 

@@ -271,7 +271,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             templateSettings['DialogLumensQUESBAnalysis']['planningUnit'] = planningUnit = settings.value('planningUnit')
             templateSettings['DialogLumensQUESBAnalysis']['nodata'] = nodata = settings.value('nodata')
             templateSettings['DialogLumensQUESBAnalysis']['edgeContrast'] = edgeContrast = settings.value('edgeContrast')
-            templateSettings['DialogLumensQUESBAnalysis']['habitatLookup'] = habitatLookup = settings.value('habitatLookup')
+            # templateSettings['DialogLumensQUESBAnalysis']['habitatLookup'] = habitatLookup = settings.value('habitatLookup')
             templateSettings['DialogLumensQUESBAnalysis']['windowShape'] = windowShape = settings.value('windowShape')
             templateSettings['DialogLumensQUESBAnalysis']['samplingWindowSize'] = samplingWindowSize = settings.value('samplingWindowSize')
             templateSettings['DialogLumensQUESBAnalysis']['samplingGridRes'] = samplingGridRes = settings.value('samplingGridRes')
@@ -284,7 +284,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                 if landUse2:
                     indexLandCoverLandUse2 = self.comboBoxQUESBLandCoverLandUse2.findText(landUse2)
                     if indexLandCoverLandUse2 != -1:
-                        self.comboBoxQUESBLandCoverLandUse1.setCurrentIndex(indexLandCoverLandUse2)
+                        self.comboBoxQUESBLandCoverLandUse2.setCurrentIndex(indexLandCoverLandUse2)
                 if landUse3:
                     indexLandCoverLandUse3 = self.comboBoxQUESBLandCoverLandUse3.findText(landUse3)
                     if indexLandCoverLandUse3 != -1:
@@ -301,8 +301,8 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                     indexEdgeContrast = self.comboBoxQUESBEdgeContrast.findText(edgeContrast)
                     if indexEdgeContrast != -1:
                         self.comboBoxQUESBEdgeContrast.setCurrentIndex(indexEdgeContrast)                    
-                if habitatLookup:  
-                    pass  #find solution 
+                # if habitatLookup:  
+                #    pass
                 if windowShape:
                     self.comboBoxQUESBWindowShapeOptions.setCurrentIndex(int(windowShape))                    
                 if samplingWindowSize:
@@ -312,7 +312,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                 if samplingGridRes:
                     self.spinBoxQUESBSamplingGridRes.setValue(int(samplingGridRes))
                 else:
-                    self.spinBoxQUESBSamplingGridRes.setValue(1000)                    
+                    self.spinBoxQUESBSamplingGridRes.setValue(10000)                    
 
                 
                 self.currentQUESBTemplate = templateFile
@@ -703,7 +703,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         super(DialogLumensQUES, self).__init__(parent)
         
         self.main = parent
-        self.dialogTitle = 'LUMENS Quantification Environmental Services'
+        self.dialogTitle = 'QUES'
         self.checkBoxQUESCDatabaseCount = 0
         self.listOfQUESCDatabase = []
         self.settingsPath = os.path.join(self.main.appSettings['DialogLumensOpenDatabase']['projectFolder'], self.main.appSettings['folderQUES'])
@@ -826,7 +826,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxQUESDialog.setAlignment(QtCore.Qt.AlignTop)
         self.groupBoxQUESDialog.setLayout(self.layoutGroupBoxQUESDialog)
         self.labelQUESDialogInfo = QtGui.QLabel()
-        self.labelQUESDialogInfo.setText('Lorem ipsum dolor sit amet...')
+        self.labelQUESDialogInfo.setText('\n')
         self.labelQUESDialogInfo.setWordWrap(True)
         self.layoutGroupBoxQUESDialog.addWidget(self.labelQUESDialogInfo)
 
@@ -891,14 +891,14 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         # Setup 'Pre-QUES' tab
         #***********************************************************
         # 'Land cover' GroupBox
-        self.groupBoxLandCover = QtGui.QGroupBox('Land cover')
+        self.groupBoxLandCover = QtGui.QGroupBox('Parameterization')
         self.layoutGroupBoxLandCover = QtGui.QVBoxLayout()
         self.layoutGroupBoxLandCover.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxLandCover.setLayout(self.layoutGroupBoxLandCover)
         
         self.layoutLandCoverInfo = QtGui.QVBoxLayout()
         self.labelLandCoverInfo = QtGui.QLabel()
-        self.labelLandCoverInfo.setText('Lorem ipsum dolor sit amet...\n')
+        self.labelLandCoverInfo.setText('\n')
         self.labelLandCoverInfo.setWordWrap(True)
         self.layoutLandCoverInfo.addWidget(self.labelLandCoverInfo)
         
@@ -951,9 +951,9 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         
         analysisOptions = [
             'All analysis',
-            'Perubahan dominan di tiap zona',
-            'Dinamika perubahan di tiap zona (Alpha-Beta)',
-            'Analisis alur perubahan (Trajectory)',
+            'Dominant land use change',
+            'Land use change dynamics',
+            'Land use change trajectory',
         ]
         self.comboBoxLandCoverAnalysisOption = QtGui.QComboBox()
         self.comboBoxLandCoverAnalysisOption.addItems(analysisOptions)
@@ -1240,7 +1240,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         # Setup 'QUES-B' tab
         #***********************************************************
         # 'Parameters' GroupBox
-        self.groupBoxQUESBParameters = QtGui.QGroupBox('Parameters')
+        self.groupBoxQUESBParameters = QtGui.QGroupBox('Paramerization')
         self.layoutGroupBoxQUESBParameters = QtGui.QVBoxLayout()
         self.layoutGroupBoxQUESBParameters.setAlignment(QtCore.Qt.AlignTop)
         self.groupBoxQUESBParameters.setLayout(self.layoutGroupBoxQUESBParameters)
@@ -1250,12 +1250,12 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxQUESBParameters.addLayout(self.layoutQUESBParameters)
         
         self.labelQUESBParametersInfo = QtGui.QLabel()
-        self.labelQUESBParametersInfo.setText('Lorem ipsum dolor sit amet...\n')
+        self.labelQUESBParametersInfo.setText('\n')
         self.labelQUESBParametersInfo.setWordWrap(True)
         self.layoutQUESBParametersInfo.addWidget(self.labelQUESBParametersInfo)
 
         self.labelQUESBLandCoverLandUse1 = QtGui.QLabel()
-        self.labelQUESBLandCoverLandUse1.setText('Tutupan lahan t1:')
+        self.labelQUESBLandCoverLandUse1.setText('Earlier land use/cover:')
         self.layoutQUESBParameters.addWidget(self.labelQUESBLandCoverLandUse1, 0, 0)
 
         self.comboBoxQUESBLandCoverLandUse1 = QtGui.QComboBox()
@@ -1265,7 +1265,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxQUESBLandCoverLandUse1)
 
         self.labelQUESBLandCoverLandUse2 = QtGui.QLabel()
-        self.labelQUESBLandCoverLandUse2.setText('Tutupan lahan t2:')
+        self.labelQUESBLandCoverLandUse2.setText('Later land use/cover:')
         self.layoutQUESBParameters.addWidget(self.labelQUESBLandCoverLandUse2, 1, 0)
 
         self.comboBoxQUESBLandCoverLandUse2 = QtGui.QComboBox()
@@ -1275,7 +1275,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxQUESBLandCoverLandUse2)
 
         self.labelQUESBLandCoverLandUse3 = QtGui.QLabel()
-        self.labelQUESBLandCoverLandUse3.setText('Tutupan lahan utuh:')
+        self.labelQUESBLandCoverLandUse3.setText('Intact focal area:')
         self.layoutQUESBParameters.addWidget(self.labelQUESBLandCoverLandUse3, 2, 0)
 
         self.comboBoxQUESBLandCoverLandUse3 = QtGui.QComboBox()
@@ -1285,7 +1285,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxQUESBLandCoverLandUse3)
 
         self.labelQUESBPlanningUnit = QtGui.QLabel()
-        self.labelQUESBPlanningUnit.setText('Unit perencanaan:')
+        self.labelQUESBPlanningUnit.setText('Planning unit:')
         self.layoutQUESBParameters.addWidget(self.labelQUESBPlanningUnit, 3, 0)
         
         self.comboBoxQUESBPlanningUnit = QtGui.QComboBox()
@@ -1304,7 +1304,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.layoutQUESBParameters.addWidget(self.spinBoxQUESBNodata, 4, 1)
         
         self.labelQUESBEdgeContrast = QtGui.QLabel()
-        self.labelQUESBEdgeContrast.setText('Bobot kontras tepi:')
+        self.labelQUESBEdgeContrast.setText('Edge contrast weight:')
         self.layoutQUESBParameters.addWidget(self.labelQUESBEdgeContrast, 5, 0)        
         
         self.comboBoxQUESBEdgeContrast = QtGui.QComboBox()
@@ -1314,7 +1314,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxQUESBEdgeContrast)
         
         self.labelQUESBHabitat = QtGui.QLabel()
-        self.labelQUESBHabitat.setText('Kelas tutupan area fokal:')
+        self.labelQUESBHabitat.setText('Focal area class(es):')
         self.layoutQUESBParameters.addWidget(self.labelQUESBHabitat, 6, 0)
       
         self.comboBoxTableHabitat = QtGui.QComboBox()
@@ -1324,7 +1324,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxTableHabitat)
         
         self.buttonLoadLookupTableHabitat = QtGui.QPushButton()
-        self.buttonLoadLookupTableHabitat.setText('Load Table')
+        self.buttonLoadLookupTableHabitat.setText('Load')
         self.layoutQUESBParameters.addWidget(self.buttonLoadLookupTableHabitat, 6, 2)
       
         self.tableHabitat = QtGui.QTableWidget()
@@ -1332,25 +1332,25 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.tableHabitat.verticalHeader().setVisible(False)
         self.layoutQUESBParameters.addWidget(self.tableHabitat, 7, 0, 1, 3)
         
-        self.groupBoxQUESBMovingWindow = QtGui.QGroupBox('Jendela berpindah')
+        self.groupBoxQUESBMovingWindow = QtGui.QGroupBox('Moving window')
         self.layoutGroupBoxMovingWindow = QtGui.QGridLayout()
         self.layoutGroupBoxMovingWindow.setAlignment(QtCore.Qt.AlignTop)
         self.groupBoxQUESBMovingWindow.setLayout(self.layoutGroupBoxMovingWindow)
         
         self.labelQUESBWindowShape = QtGui.QLabel()
-        self.labelQUESBWindowShape.setText('Bentuk:')
+        self.labelQUESBWindowShape.setText('Shape:')
         self.layoutGroupBoxMovingWindow.addWidget(self.labelQUESBWindowShape, 0, 0)
         
         WindowShapeOptions = [
-            'Bujur sangkar',
-            'Lingkaran',
+            'Square',
+            'Circle',
         ]
         self.comboBoxQUESBWindowShapeOptions = QtGui.QComboBox()
         self.comboBoxQUESBWindowShapeOptions.addItems(WindowShapeOptions)
         self.layoutGroupBoxMovingWindow.addWidget(self.comboBoxQUESBWindowShapeOptions, 0, 1)
         
         self.labelQUESBSamplingWindowSize = QtGui.QLabel()
-        self.labelQUESBSamplingWindowSize.setText('Dimensi (meter):')
+        self.labelQUESBSamplingWindowSize.setText('Size:')
         self.layoutGroupBoxMovingWindow.addWidget(self.labelQUESBSamplingWindowSize, 1, 0)
         
         self.spinBoxQUESBSamplingWindowSize = QtGui.QSpinBox()
@@ -1361,12 +1361,12 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.layoutQUESBParameters.addWidget(self.groupBoxQUESBMovingWindow, 8, 0, 1, 2)
         
         self.labelQUESBSamplingGridRes = QtGui.QLabel()
-        self.labelQUESBSamplingGridRes.setText('Sampling grid resolution:')
+        self.labelQUESBSamplingGridRes.setText('Sampling grid size:')
         self.layoutQUESBParameters.addWidget(self.labelQUESBSamplingGridRes, 9, 0)
         
         self.spinBoxQUESBSamplingGridRes = QtGui.QSpinBox()
-        self.spinBoxQUESBSamplingGridRes.setRange(1, 10000)
-        self.spinBoxQUESBSamplingGridRes.setValue(1000)
+        self.spinBoxQUESBSamplingGridRes.setRange(1, 999999)
+        self.spinBoxQUESBSamplingGridRes.setValue(10000)
         self.layoutQUESBParameters.addWidget(self.spinBoxQUESBSamplingGridRes, 9, 1)
         
         # Process tab button
@@ -2510,7 +2510,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                     reader = csv.reader(f)
                     next(reader)
                     
-                    fields = ['ID', 'Focal area', 'Enabled']
+                    fields = ['ID', 'Focal area', 'Selection']
                         
                     self.tableHabitat.setColumnCount(len(fields))
                     self.tableHabitat.setHorizontalHeaderLabels(fields)
@@ -2535,7 +2535,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                             tableColumn += 1
                             
                         # Additional columns ('Enabled')
-                        fieldEnabled = QtGui.QTableWidgetItem('Enable')
+                        fieldEnabled = QtGui.QTableWidgetItem('Select')
                         fieldEnabled.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
                         fieldEnabled.setCheckState(QtCore.Qt.Unchecked)
                         columnEnabled = tableColumn
@@ -2935,9 +2935,9 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         analysisOption = unicode(self.comboBoxLandCoverAnalysisOption.currentText())
         if analysisOption == 'All analysis':
             analysisOption = 0
-        elif analysisOption == 'Perubahan dominan di tiap zona':
+        elif analysisOption == 'Dominant land use change':
             analysisOption = 1
-        elif analysisOption == 'Dinamika perubahan di tiap zona (Alpha-Beta)':
+        elif analysisOption == 'Land use change dynamics':
             analysisOption = 2
         else:
             analysisOption = 3
@@ -2985,11 +2985,13 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             = unicode(self.comboBoxQUESBEdgeContrast.currentText())
         # self.main.appSettings['DialogLumensQUESBAnalysis']['habitatLookup'] \
         #     = unicode(self.comboBoxQUESBHabitat.currentText())            
-        WindowShapeOptions = unicode(self.comboBoxLandCoverAnalysisOption.currentText())
-        if WindowShapeOptions == 'Bujur sangkar':
+        WindowShapeOptions = unicode(self.comboBoxQUESBWindowShapeOptions.currentText())
+        if WindowShapeOptions == 'Square':
             WindowShapeOptions = 0
         else:
-            WindowShapeOptions = 1            
+            WindowShapeOptions = 1    
+        self.main.appSettings['DialogLumensQUESBAnalysis']['windowShape'] \
+            = WindowShapeOptions
         self.main.appSettings['DialogLumensQUESBAnalysis']['samplingWindowSize'] \
             = self.spinBoxQUESBSamplingWindowSize.value()            
         self.main.appSettings['DialogLumensQUESBAnalysis']['samplingGridRes'] \

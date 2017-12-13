@@ -225,7 +225,7 @@ class MainWindow(QtGui.QMainWindow):
                 'planningUnit': '',
                 'nodata': '',
                 'edgeContrast': '',
-                'habitatLookup': '',
+                # 'habitatLookup': '',
                 'windowShape': '',
                 'samplingWindowSize': '',
                 'samplingGridRes': '',
@@ -524,7 +524,7 @@ class MainWindow(QtGui.QMainWindow):
         self.actionRefresh.triggered.connect(self.handlerRefresh)
         self.mapCanvas.zoomLastStatusChanged.connect(self.handlerZoomLastStatus)
         self.mapCanvas.zoomNextStatusChanged.connect(self.handlerZoomNextStatus)
-        # self.mapCanvas.xyCoordinates.connect(self.handlerUpdateCoordinates)
+        self.mapCanvas.xyCoordinates.connect(self.handlerUpdateCoordinates)
         self.actionZoomLast.triggered.connect(self.handlerZoomLast)
         self.actionZoomNext.triggered.connect(self.handlerZoomNext)
         self.actionLayerAttributeTable.triggered.connect(self.handlerLayerAttributeTable)
@@ -671,8 +671,9 @@ class MainWindow(QtGui.QMainWindow):
         self.labelMapCanvasCoordinate = QtGui.QLabel(self)
         self.labelMapCanvasCoordinate.setStyleSheet('QLabel { margin-right: 10px; color: rgb(173, 185, 202); }')
         self.labelMapCanvasCoordinate.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignVCenter)
+        self.labelMapCanvasCoordinate.setVisible(False)
         
-        # self.statusBar.addPermanentWidget(self.labelMapCanvasCoordinate)
+        self.statusBar.addPermanentWidget(self.labelMapCanvasCoordinate)
         self.setStatusBar(self.statusBar)
         
         # Create the actions and assigned them to the menus
