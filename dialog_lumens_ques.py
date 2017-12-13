@@ -1061,7 +1061,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.layoutOptionsCarbonAccounting.addLayout(self.layoutCarbonAccounting)
         
         self.labelCarbonAccountingInfo = QtGui.QLabel()
-        self.labelCarbonAccountingInfo.setText('Lorem ipsum dolor sit amet...\n')
+        self.labelCarbonAccountingInfo.setText('Emission from land use change\n')
         self.labelCarbonAccountingInfo.setWordWrap(True)
         self.layoutCarbonAccountingInfo.addWidget(self.labelCarbonAccountingInfo)
 
@@ -1096,7 +1096,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataPlanningUnit, self.comboBoxCALandCoverPlanningUnit)        
         
         self.labelCACarbonTable = QtGui.QLabel()
-        self.labelCACarbonTable.setText('Carbon lookup table:')
+        self.labelCACarbonTable.setText('Carbon stock lookup table:')
         self.layoutCarbonAccounting.addWidget(self.labelCACarbonTable, 3, 0)
         
         self.comboBoxCACarbonTable = QtGui.QComboBox()
@@ -1121,7 +1121,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.layoutCarbonAccounting.addWidget(self.labelSpace, 5, 0)
         
         self.labelcheckBoxPeatlandCarbonAccounting = QtGui.QLabel()
-        self.labelcheckBoxPeatlandCarbonAccounting.setText('Include peat:')
+        self.labelcheckBoxPeatlandCarbonAccounting.setText('Include peat emission:')
         self.layoutCarbonAccounting.addWidget(self.labelcheckBoxPeatlandCarbonAccounting, 6, 0)
         
         self.checkBoxPeatlandCarbonAccounting = QtGui.QCheckBox()
@@ -1137,7 +1137,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.layoutCarbonAccounting.addWidget(self.comboBoxPeatlandMap, 7, 1)
         
         self.labelPCACsvfile = QtGui.QLabel()
-        self.labelPCACsvfile.setText('Peat lookup table:')
+        self.labelPCACsvfile.setText('Peat emission lookup table:')
         self.layoutCarbonAccounting.addWidget(self.labelPCACsvfile, 8, 0)
         
         self.comboBoxPCACsvfile = QtGui.QComboBox()
@@ -1166,7 +1166,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.layoutOptionsSummarizeMultiplePeriod.addLayout(self.layoutSummarizeMultiplePeriod)
         
         self.labelSummarizeMultiplePeriodInfo = QtGui.QLabel()
-        self.labelSummarizeMultiplePeriodInfo.setText('Lorem ipsum dolor sit amet...\n')
+        self.labelSummarizeMultiplePeriodInfo.setText('Calculate emission from multiple QUES-C database\n')
         self.labelSummarizeMultiplePeriodInfo.setWordWrap(True)
         self.layoutSummarizeMultiplePeriodInfo.addWidget(self.labelSummarizeMultiplePeriodInfo)
         
@@ -1240,7 +1240,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         # Setup 'QUES-B' tab
         #***********************************************************
         # 'Parameters' GroupBox
-        self.groupBoxQUESBParameters = QtGui.QGroupBox('Paramerization')
+        self.groupBoxQUESBParameters = QtGui.QGroupBox('Parameterization')
         self.layoutGroupBoxQUESBParameters = QtGui.QVBoxLayout()
         self.layoutGroupBoxQUESBParameters.setAlignment(QtCore.Qt.AlignTop)
         self.groupBoxQUESBParameters.setLayout(self.layoutGroupBoxQUESBParameters)
@@ -3160,6 +3160,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                     self.main.appSettings[formName]['carbonTable'],
                     self.main.appSettings[formName]['nodata'],
                     None,
+                    None,
                 )
                 
                 # Display ROut file in debug mode
@@ -3176,6 +3177,15 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
 
                 if algSuccess:
                     self.main.loadAddedDataInfo()
+                    outputKey = 'resultoutput'
+                    if outputs and outputKey in outputs:
+                        if os.path.exists(outputs[outputKey]):
+                            with open(outputs[outputKey], 'rb') as f:
+                                reader = csv.reader(f)
+                                next(reader)
+                                for path in reader:
+                                    print path[0]
+                                    self.main.addLayer(path[0])
 
                 self.buttonProcessQUESC.setEnabled(True)
                 logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
@@ -3272,6 +3282,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                     self.main.appSettings[formName]['samplingWindowSize'],
                     self.main.appSettings[formName]['samplingGridRes'],
                     None,
+                    None,
                 )
                 
                 # Display ROut file in debug mode
@@ -3288,6 +3299,15 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
     
                 if algSuccess:
                     self.main.loadAddedDataInfo()
+                    outputKey = 'resultoutput'
+                    if outputs and outputKey in outputs:
+                        if os.path.exists(outputs[outputKey]):
+                            with open(outputs[outputKey], 'rb') as f:
+                                reader = csv.reader(f)
+                                next(reader)
+                                for path in reader:
+                                    print path[0]
+                                    self.main.addLayer(path[0])
                 
                 self.buttonProcessQUESB.setEnabled(True)
                 logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
@@ -3296,7 +3316,6 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             QtGui.QMessageBox.information(self, self.dialogTitle, 'Please select focal area.')
             return
           
-    
     
     def handlerProcessQUESHHRUDefinition(self):
         """Slot method to pass the form values and execute the "QUES-H HRU Definition" R algorithms.
