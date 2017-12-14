@@ -17,7 +17,7 @@ class DialogTableEditor(QtGui.QDialog, DialogLumensBase):
         super(DialogTableEditor, self).__init__(parent)
         
         self.main = parent
-        self.dialogTitle = 'LUMENS Table Viewer'
+        self.dialogTitle = 'Table Editor'
         
         if self.main.appSettings['debug']:
             print 'DEBUG: DialogTableEditor init'
@@ -33,7 +33,8 @@ class DialogTableEditor(QtGui.QDialog, DialogLumensBase):
         
         self.setupUi(self)
         
-        self.buttonProcessTableEditor.clicked.connect(self.handlerProcessTableEditor)
+        self.buttonLoadLookupTable.clicked.connect(self.handlerLoadLookupTable)
+        self.buttonProcessTableEditor.clicked.connect(self.handlerSaveTableEditor)
         
     
     def setupUi(self, parent):
@@ -46,37 +47,37 @@ class DialogTableEditor(QtGui.QDialog, DialogLumensBase):
 
         self.groupBoxTableEditor = QtGui.QGroupBox('Table Editor')
         self.layoutGroupBoxTableEditor = QtGui.QVBoxLayout()
-        self.layoutGroupBoxTableEditor.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        # self.layoutGroupBoxTableEditor.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxTableEditor.setLayout(self.layoutGroupBoxTableEditor)
         self.layoutTableEditorInfo = QtGui.QVBoxLayout()
-        self.layoutTableEditor = QtGui.QVBoxLayout()
+        self.layoutTableEditor = QtGui.QGridLayout()
         self.layoutGroupBoxTableEditor.addLayout(self.layoutTableEditorInfo)
         self.layoutGroupBoxTableEditor.addLayout(self.layoutTableEditor)
 
         self.labelTableEditorInfo = QtGui.QLabel()
-        self.labelTableEditorInfo.setText('Lorem ipsum dolor sit amet...\n')
+        self.labelTableEditorInfo.setText('\n')
         self.labelTableEditorInfo.setWordWrap(True)
         self.layoutTableEditorInfo.addWidget(self.labelTableEditorInfo)
 
         self.labelLookupTable = QtGui.QLabel()
         self.labelLookupTable.setText('Lookup Table:')
-        self.layoutTableEditor.addWidget(self.labelLookupTable)
+        self.layoutTableEditor.addWidget(self.labelLookupTable, 0, 0)
         self.comboBoxDataTable = QtGui.QComboBox()
         self.comboBoxDataTable.setDisabled(True)
-        self.layoutTableEditor.addWidget(self.comboBoxDataTable)
+        self.layoutTableEditor.addWidget(self.comboBoxDataTable, 0, 1)
         self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxDataTable)
         self.buttonLoadLookupTable = QtGui.QPushButton()
-        self.buttonLoadLookupTable.setText('Load Table')
-        self.layoutTableEditor.addWidget(self.buttonLoadLookupTable)
+        self.buttonLoadLookupTable.setText('Load')
+        self.layoutTableEditor.addWidget(self.buttonLoadLookupTable, 0, 2)
         
         self.dataLookupTable = QtGui.QTableWidget()
         self.dataLookupTable.setDisabled(True)
         self.dataLookupTable.verticalHeader().setVisible(False)
-        self.layoutTableEditor.addWidget(self.dataLookupTable)
+        self.layoutTableEditor.addWidget(self.dataLookupTable, 1, 0, 1, 3)
 
         self.layoutButtonProcessTableEditor = QtGui.QHBoxLayout()
         self.buttonProcessTableEditor = QtGui.QPushButton()
-        self.buttonProcessTableEditor.setText('&Process')
+        self.buttonProcessTableEditor.setText('Save')
         self.layoutButtonProcessTableEditor.setAlignment(QtCore.Qt.AlignRight)
         self.layoutButtonProcessTableEditor.addWidget(self.buttonProcessTableEditor)
 
@@ -89,49 +90,75 @@ class DialogTableEditor(QtGui.QDialog, DialogLumensBase):
         self.resize(parent.sizeHint())
     
     
-    def loadDataFromLookupTable(self):
+    def handlerLoadLookupTable(self):
         """Load all data in one big table viewer.
         """
-        self.dataLookupTable.setRowCount(0)
-        self.dataLookupTable.setColumnCount(0)
+        activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
+        selectedLookupTable = self.comboBoxDataTable.currentText()
+        customTable = 1
         
-        fields = ['Data', 'Description', 'Action']
-        self.checkBoxDeleteDataCount = 0
-        self.dataLookupTable.setColumnCount(len(fields))
-        self.dataLookupTable.setHorizontalHeaderLabels(fields)
+        outputs = general.runalg(
+            'r:toolsgetlut',
+            activeProject,
+            customTable,
+            selectedLookupTable,
+            None,
+        )        
+        
+        outputKey = 'main_data'
+        if outputs and outputKey in outputs:
+            if os.path.exists(outputs[outputKey]):
+                with open(outputs[outputKey], 'rb') as f:
+                    reader = csv.reader(f)
+                    columns = next(reader)
+                    
+                    self.dataLookupTable.setColumnCount(len(columns))
+                    self.dataLookupTable.setHorizontalHeaderLabels(columns)
+                    
+                    lookupTable = []
 
-        tableRow = 0
+                    for row in reader:
+                        dataRow = [QtGui.QTableWidgetItem(field) for field in row]
+                        lookupTable.append(dataRow)
+                        
+                    self.dataLookupTable.setRowCount(len(lookupTable))
 
-        if(len(self.main.dataTable)):
-            dataLookupTable = self.main.dataTable
-            for value in dataLookupTable.values():
-                self.dataLookupTable.insertRow(tableRow)
+                    tableRow = 0
+                    for dataRow in lookupTable:
+                        tableColumn = 0
+                        for fieldTableItem in dataRow:
+                            # fieldTableItem.setFlags(fieldTableItem.flags() & ~QtCore.Qt.ItemIsEnabled)
+                            self.dataLookupTable.setItem(tableRow, tableColumn, fieldTableItem)
+                            self.dataLookupTable.horizontalHeader().setResizeMode(tableColumn, QtGui.QHeaderView.ResizeToContents)
+                            tableColumn += 1
+                            
+                        tableRow += 1
 
-                data = QtGui.QTableWidgetItem(value['TBL_DATA'])
-                data.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
-                self.dataLookupTable.setItem(tableRow, 0, data)
-                self.dataLookupTable.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
-
-                description = QtGui.QTableWidgetItem(value['TBL_NAME'])
-                description.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
-                self.dataLookupTable.setItem(tableRow, 1, description)
-                self.dataLookupTable.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.ResizeToContents)
-
-                # Additional checkbox column for marking the deleted data
-                fieldDelete = QtGui.QTableWidgetItem('Delete')
-                fieldDelete.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
-                fieldDelete.setCheckState(QtCore.Qt.Unchecked)
-                self.dataLookupTable.setItem(tableRow, 2, fieldDelete)
-                self.dataLookupTable.horizontalHeader().setResizeMode(2, QtGui.QHeaderView.ResizeToContents)
-
-                tableRow += 1
-
-        self.dataLookupTable.setEnabled(True)
+                    self.dataLookupTable.setEnabled(True)
         
     
-    def handlerProcessTableEditor(self):
+    def handlerSaveTableEditor(self):
         """Slot method for process table viewer.
         """
-        algName = 'r:toolstableeditor'
+        algName = 'r:dbaddlut'
+        activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
+        tableDescription = self.comboBoxDataTable.currentText() + '_new'
+        csvLookupTable = DialogLumensBase.writeTableCsv(self.dataLookupTable, True)
+        
+        outputs = general.runalg(
+            algName,
+            activeProject,
+            tableDescription,
+            csvLookupTable,
+            None,
+        )
+        
+        algSuccess = self.outputsMessageBox(algName, outputs, 'Data successfully added to LUMENS database!', 'Failed to add data to LUMENS database.')
+        
+        if algSuccess:
+            self.main.loadAddedDataInfo()
+            self.dataLookupTable.setRowCount(0)
+            self.dataLookupTable.setColumnCount(0)
+            self.close()
     
     

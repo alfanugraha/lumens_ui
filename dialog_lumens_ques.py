@@ -2495,10 +2495,12 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         """      
         activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
         selectedTableHabitat = self.comboBoxTableHabitat.currentText()
+        costumTable = 0
         
         outputs = general.runalg(
             'r:toolsgetlut',
             activeProject,
+            customTable,
             selectedTableHabitat,
             None,
         )        

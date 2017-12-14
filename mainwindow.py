@@ -960,7 +960,7 @@ class MainWindow(QtGui.QMainWindow):
         
         self.layoutTabLayers = QtGui.QVBoxLayout()
         self.layoutTabDatabase = QtGui.QVBoxLayout()
-        self.layoutTabDatabase.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        # self.layoutTabDatabase.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         # self.layoutTabDashboard = QtGui.QVBoxLayout()
         #self.layoutTabProject = QtGui.QVBoxLayout()
         self.layoutTabHelp = QtGui.QVBoxLayout()
@@ -1798,7 +1798,7 @@ class MainWindow(QtGui.QMainWindow):
         
         self.webContentDatabaseStatus = QtWebKit.QWebView(self)
         
-        self.groupBoxDatabaseStatus = QtGui.QGroupBox('Database status')
+        self.groupBoxDatabaseStatus = QtGui.QGroupBox('Project status')
         self.layoutGroupBoxDatabaseStatus = QtGui.QVBoxLayout()
         self.groupBoxDatabaseStatus.setLayout(self.layoutGroupBoxDatabaseStatus)
         self.layoutTabDatabase.addWidget(self.groupBoxDatabaseStatus)
