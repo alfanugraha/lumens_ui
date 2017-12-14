@@ -55,6 +55,7 @@ from dialog_lumens_deletedata import DialogLumensDeleteData
 
 from dialog_lumens_pur import DialogLumensPUR
 from dialog_lumens_ques import DialogLumensQUES
+from dialog_lumens_ta import DialogLumensTA
 from dialog_lumens_ta_opportunitycost import DialogLumensTAOpportunityCost
 from dialog_lumens_ta_regionaleconomy import DialogLumensTARegionalEconomy
 from dialog_lumens_sciendo import DialogLumensSCIENDO
@@ -568,6 +569,7 @@ class MainWindow(QtGui.QMainWindow):
         self.actionDialogLumensQUES.triggered.connect(self.handlerDialogLumensQUES)
         
         # TA menu
+        self.actionDialogLumensTA.triggered.connect(self.handlerDialogLumensTA)
         self.actionDialogLumensTAOpportunityCost.triggered.connect(self.handlerDialogLumensTAOpportunityCost)
         self.actionDialogLumensTARegionalEconomy.triggered.connect(self.handlerDialogLumensTARegionalEconomy)
         
@@ -851,6 +853,9 @@ class MainWindow(QtGui.QMainWindow):
         self.actionDialogLumensTARegionalEconomy = QtGui.QAction(icon, 'Trade-off Analysis [Regional Economy]', self)
         self.actionDialogLumensTAOpportunityCost.setIconText('TA')
         
+        self.actionDialogLumensTA = QtGui.QAction(icon, 'Trade-off Analysis', self)
+        self.actionDialogLumensTA.setIconText('TA')
+        
         self.taMenu.addAction(self.actionDialogLumensTAOpportunityCost)
         self.taMenu.addAction(self.actionDialogLumensTARegionalEconomy)
         self.taMenu.menuAction().setVisible(False)
@@ -881,7 +886,7 @@ class MainWindow(QtGui.QMainWindow):
         # Dialog toolbar
         self.dialogToolBar.addAction(self.actionDialogLumensPUR)
         self.dialogToolBar.addAction(self.actionDialogLumensQUES)
-        self.dialogToolBar.addAction(self.actionDialogLumensTAOpportunityCost)
+        self.dialogToolBar.addAction(self.actionDialogLumensTA)
         self.dialogToolBar.addAction(self.actionDialogLumensSCIENDO)
         ##self.dialogToolBar.addSeparator()
         
@@ -2089,6 +2094,7 @@ class MainWindow(QtGui.QMainWindow):
         self.buttonConfigureQUESH.setEnabled(True)
         
         # TA menu
+        self.actionDialogLumensTA.setEnabled(True)
         self.actionDialogLumensTAOpportunityCost.setEnabled(True)
         self.actionDialogLumensTARegionalEconomy.setEnabled(True)
         self.buttonConfigureTAOpportunityCost.setEnabled(True)
@@ -2121,6 +2127,7 @@ class MainWindow(QtGui.QMainWindow):
         self.buttonConfigureQUESH.setDisabled(True)
         
         # TA menu
+        self.actionDialogLumensTA.setDisabled(True)
         self.actionDialogLumensTAOpportunityCost.setDisabled(True)
         self.actionDialogLumensTARegionalEconomy.setDisabled(True)
         self.buttonConfigureTAOpportunityCost.setDisabled(True)
@@ -3279,6 +3286,12 @@ class MainWindow(QtGui.QMainWindow):
         elif self.radioTAOpportunityCostMap.isChecked():
             tabName = 'Opportunity Cost Map'
         self.openDialog(DialogLumensTAOpportunityCost, tabName=tabName)
+
+
+    def handlerDialogLumensTA(self):
+        """Slot method for opening a dialog window.
+        """
+        self.openDialog(DialogLumensTA)
     
     
     def handlerDialogLumensTARegionalEconomy(self):

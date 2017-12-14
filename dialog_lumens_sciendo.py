@@ -1660,7 +1660,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         Depending on the checked groupbox, the "SCIENDO Low Emission Development Analysis" process calls the following algorithms:
         1. r:sciendoperiodprojection
         2. r:sciendoannualprojection
-        3. modeler:drivers_analysis
+        3. r:sciendodriversanalysis
         4. r:abacususingabsolutearea
         """
         self.setAppSettings()
@@ -1752,7 +1752,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         
         if self.checkBoxDriversAnalysis.isChecked():
             formName = 'DialogLumensSCIENDODriversAnalysis'
-            algName = 'modeler:drivers_analysis'
+            algName = 'r:sciendodriversanalysis'
             
             if self.validForm(formName):
                 logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
@@ -1790,7 +1790,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         
         if self.checkBoxBuildScenario.isChecked():
             formName = 'DialogLumensSCIENDOBuildScenario'
-            algName = 'r:abacususingabsolutearea'
+            algName = 'r:sciendobuildscenario'
             
             if self.validForm(formName):
                 logging.getLogger(type(self).__name__).info('alg start: %s' % formName)

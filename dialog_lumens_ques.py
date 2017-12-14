@@ -3193,7 +3193,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         
         
         if self.checkBoxSummarizeMultiplePeriod.isChecked():
-            if len(self.listOfQUESCDatabase) > 2:
+            if len(self.listOfQUESCDatabase) > 1:
                 formName = 'DialogLumensQUESCSummarizeMultiplePeriod'
                 algName = 'r:quessummarizeperiods'
 
@@ -3233,7 +3233,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                 logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
                 logging.getLogger(self.historyLog).info('alg end: %s' % formName)
             else:
-                QtGui.QMessageBox.information(self, 'Summarize Multiple Period', 'Choose at least three QUES-C Database.')
+                QtGui.QMessageBox.information(self, 'Summarize Multiple Period', 'Choose at least two QUES-C Database.')
                 return
     
     
