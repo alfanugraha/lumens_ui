@@ -121,6 +121,7 @@ class MainWindow(QtGui.QMainWindow):
             'selectHTMLfileExt': '.html',
             'selectTextfileExt': '.txt',
             'selectCarfileExt': '.car',
+            'selectLdbasefileExt': '.ldbase',
             'defaultExtent': QgsRectangle(95, -11, 140, 11), # Southeast Asia extent
             'defaultCRS': 4326, # EPSG 4326 - WGS 84
             'dataMappingFile': '',
