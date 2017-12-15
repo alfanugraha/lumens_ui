@@ -260,7 +260,190 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
             
             settings.endGroup()
             # /tab
+        elif tabName == 'Descriptive analysis':
+            dialogsToLoad = (
+                'DialogLumensTARegionalEconomySingleIODescriptiveAnalysis',
+            )
+            
+            # start tab
+            settings.beginGroup(tabName)
+            
+            # 'Descriptive analysis' tab widgets
+            # start dialog
+            settings.beginGroup('DialogLumensTARegionalEconomySingleIODescriptiveAnalysis')
+            
+            templateSettings['DialogLumensTARegionalEconomySingleIODescriptiveAnalysis'] = {}
+            templateSettings['DialogLumensTARegionalEconomySingleIODescriptiveAnalysis']['intermediateConsumptionMatrix'] = intermediateConsumptionMatrix = settings.value('intermediateConsumptionMatrix')
+            templateSettings['DialogLumensTARegionalEconomySingleIODescriptiveAnalysis']['valueAddedMatrix'] = valueAddedMatrix = settings.value('valueAddedMatrix')
+            templateSettings['DialogLumensTARegionalEconomySingleIODescriptiveAnalysis']['finalConsumptionMatrix'] = finalConsumptionMatrix = settings.value('finalConsumptionMatrix')
+            templateSettings['DialogLumensTARegionalEconomySingleIODescriptiveAnalysis']['valueAddedComponent'] = valueAddedComponent = settings.value('valueAddedComponent')
+            templateSettings['DialogLumensTARegionalEconomySingleIODescriptiveAnalysis']['finalConsumptionComponent'] = finalConsumptionComponent = settings.value('finalConsumptionComponent')
+            templateSettings['DialogLumensTARegionalEconomySingleIODescriptiveAnalysis']['listOfEconomicSector'] = listOfEconomicSector = settings.value('listOfEconomicSector')
+            templateSettings['DialogLumensTARegionalEconomySingleIODescriptiveAnalysis']['labourRequirement'] = labourRequirement = settings.value('labourRequirement')
+            templateSettings['DialogLumensTARegionalEconomySingleIODescriptiveAnalysis']['financialUnit'] = financialUnit = settings.value('financialUnit')
+            templateSettings['DialogLumensTARegionalEconomySingleIODescriptiveAnalysis']['areaName'] = areaName = settings.value('areaName')
+            templateSettings['DialogLumensTARegionalEconomySingleIODescriptiveAnalysis']['year'] = year = settings.value('year')
+            if not returnTemplateSettings:
+                if year:
+                    self.spinBoxSinglePeriod.setValue(int(year))
+                else:
+                    self.spinBoxSinglePeriod.setValue(td.year)
+                if intermediateConsumptionMatrix:
+                    indexIntermediateConsumptionMatrix = self.comboBoxSingleIntermediateConsumptionMatrix.findText(intermediateConsumptionMatrix)
+                    if indexIntermediateConsumptionMatrix != -1:
+                        self.comboBoxSingleIntermediateConsumptionMatrix.setCurrentIndex(indexIntermediateConsumptionMatrix)
+                if valueAddedMatrix:
+                    indexValueAddedMatrix = self.comboBoxRegionalEconomicScenarioImpactFinalDemandChangeScenario.findText(valueAddedMatrix)
+                    if indexValueAddedMatrix != -1:
+                        self.comboBoxRegionalEconomicScenarioImpactFinalDemandChangeScenario.setCurrentIndex(indexValueAddedMatrix)
+                if finalConsumptionMatrix:
+                    indexFinalConsumptionMatrix = self.comboBoxRegionalEconomicScenarioImpactFinalDemandChangeScenario.findText(finalConsumptionMatrix)
+                    if indexFinalConsumptionMatrix != -1:
+                        self.comboBoxRegionalEconomicScenarioImpactFinalDemandChangeScenario.setCurrentIndex(indexFinalConsumptionMatrix)
+                if valueAddedComponent:
+                    indexValueAddedComponent = self.comboBoxRegionalEconomicScenarioImpactFinalDemandChangeScenario.findText(valueAddedComponent)
+                    if indexValueAddedComponent != -1:
+                        self.comboBoxRegionalEconomicScenarioImpactFinalDemandChangeScenario.setCurrentIndex(indexValueAddedComponent)
+                if finalConsumptionComponent:
+                    indexFinalConsumptionComponent = self.comboBoxRegionalEconomicScenarioImpactFinalDemandChangeScenario.findText(finalConsumptionComponent)
+                    if indexFinalConsumptionComponent != -1:
+                        self.comboBoxRegionalEconomicScenarioImpactFinalDemandChangeScenario.setCurrentIndex(indexFinalConsumptionComponent)
+                if listOfEconomicSector:
+                    indexListOfEconomicSector = self.comboBoxRegionalEconomicScenarioImpactFinalDemandChangeScenario.findText(listOfEconomicSector)
+                    if indexListOfEconomicSector != -1:
+                        self.comboBoxRegionalEconomicScenarioImpactFinalDemandChangeScenario.setCurrentIndex(indexListOfEconomicSector)
+                if labourRequirement:
+                    indexLabourRequirement = self.comboBoxRegionalEconomicScenarioImpactFinalDemandChangeScenario.findText(labourRequirement)
+                    if indexLabourRequirement != -1:
+                        self.comboBoxRegionalEconomicScenarioImpactFinalDemandChangeScenario.setCurrentIndex(indexLabourRequirement)
+                if financialUnit:
+                    self.lineEditOtherFinancialUnit.setText(financialUnit)
+                else:
+                    self.lineEditOtherFinancialUnit.setText('')
+                if areaName:
+                    self.lineEditOtherAreaName.setText(areaName)
+                else:
+                    self.lineEditOtherAreaName.setText('')
+                
+                self.currentDescriptiveAnalysisTemplate = templateFile
+                self.loadedDescriptiveAnalysisTemplate.setText(templateFile)
+                self.comboBoxDescriptiveAnalysisTemplate.setCurrentIndex(self.comboBoxDescriptiveAnalysisTemplate.findText(templateFile))
+                self.buttonSaveDescriptiveAnalysisTemplate.setEnabled(True)
+            
+            settings.endGroup()
+            # /dialog
+            
+            settings.endGroup()
+            # /tab            
+        elif tabName == 'Land requirement analysis':
+            dialogsToLoad = (
+                'DialogLumensTARegionalEconomyLandDistributionRequirementAnalysis',
+            )
+            
+            # start tab
+            settings.beginGroup(tabName)
+            
+            # 'Land requirement analysis' tab widgets
+            # start dialog
+            settings.beginGroup('DialogLumensTARegionalEconomyLandDistributionRequirementAnalysis')
+            
+            templateSettings['DialogLumensTARegionalEconomyLandDistributionRequirementAnalysis'] = {}
+            templateSettings['DialogLumensTARegionalEconomyLandDistributionRequirementAnalysis']['descriptiveAnalysisOutput'] = descriptiveAnalysisOutput = settings.value('descriptiveAnalysisOutput')
+            
+            if not returnTemplateSettings:
+                if descriptiveAnalysisOutput and os.path.exists(descriptiveAnalysisOutput):
+                    self.lineEditLandRequirementAnalysisDescriptiveOutput.setText(csvProfitability)
+                else:
+                    self.lineEditLandRequirementAnalysisDescriptiveOutput.setText('')
+                
+                self.currentLandRequirementAnalysisTemplate = templateFile
+                self.loadedLandRequirementAnalysisTemplate.setText(templateFile)
+                self.comboBoxLandRequirementAnalysisTemplate.setCurrentIndex(self.comboBoxLandRequirementAnalysisTemplate.findText(templateFile))
+                self.buttonSaveLandRequirementAnalysisTemplate.setEnabled(True)
+            
+            settings.endGroup()
+            # /dialog
+            
+            settings.endGroup()
+            # /tab            
+        elif tabName == 'Regional economy scenario':
+            dialogsToLoad = (
+                'DialogLumensTARegionalEconomyScenario',
+            )
+            
+            # start tab
+            settings.beginGroup(tabName)
+            
+            # 'Regional economy scenario' tab widgets
+            # start dialog
+            settings.beginGroup('DialogLumensTARegionalEconomyScenario')
+            
+            templateSettings['DialogLumensTARegionalEconomyScenario'] = {}
+            templateSettings['DialogLumensTARegionalEconomyScenario']['landRequirement'] = landRequirement = settings.value('landRequirement')
+            templateSettings['DialogLumensTARegionalEconomyScenario']['finalDemandChangeScenario'] = finalDemandChangeScenario = settings.value('finalDemandChangeScenario')
+            templateSettings['DialogLumensTARegionalEconomyScenario']['gdpChangeScenario'] = gdpChangeScenario = settings.value('gdpChangeScenario')
+            
+            if not returnTemplateSettings:
+                if landRequirement and os.path.exists(landRequirement):
+                    self.lineEditRegionalEconomicScenarioLandRequirement.setText(landRequirement)
+                else:
+                    self.lineEditRegionalEconomicScenarioLandRequirement.setText('')
+                if finalDemandChangeScenario:
+                    indexFinalDemandChangeScenario = self.comboBoxRegionalEconomicScenarioImpactFinalDemandChangeScenario.findText(finalDemandChangeScenario)
+                    if indexFinalDemandChangeScenario != -1:
+                        self.comboBoxRegionalEconomicScenarioImpactFinalDemandChangeScenario.setCurrentIndex(indexFinalDemandChangeScenario)
+                if gdpChangeScenario:
+                    indexGdpChangeScenario = self.comboBoxRegionalEconomicScenarioImpactGDPChangeScenario.findText(gdpChangeScenario)
+                    if indexLandUseCover != -1:
+                        self.comboBoxRegionalEconomicScenarioImpactGDPChangeScenario.setCurrentIndex(indexGdpChangeScenario)         
+                    
+                self.currentRegionalEconomicScenarioImpactTemplate = templateFile
+                self.loadedRegionalEconomicScenarioImpactTemplate.setText(templateFile)
+                self.comboBoxRegionalEconomicScenarioImpactTemplate.setCurrentIndex(self.comboBoxRegionalEconomicScenarioImpactTemplate.findText(templateFile))
+                self.buttonSaveRegionalEconomicScenarioImpactTemplate.setEnabled(True)
+            
+            settings.endGroup()
+            # /dialog
+            
+            settings.endGroup()
+            # /tab            
+        elif tabName == 'Land use scenario':
+            dialogsToLoad = (
+                'DialogLumensTAImpactofLandUsetoRegionalEconomyIndicatorAnalysis',
+            ) 
         
+            # start tab
+            settings.beginGroup(tabName)
+            
+            # 'Land use scenario' tab widgets
+            # start dialog
+            settings.beginGroup('DialogLumensTAImpactofLandUsetoRegionalEconomyIndicatorAnalysis')
+            
+            templateSettings['DialogLumensTAImpactofLandUsetoRegionalEconomyIndicatorAnalysis'] = {}
+            templateSettings['DialogLumensTAImpactofLandUsetoRegionalEconomyIndicatorAnalysis']['landRequirement'] = landRequirement = settings.value('landRequirement')
+            templateSettings['DialogLumensTAImpactofLandUsetoRegionalEconomyIndicatorAnalysis']['landUseCover'] = landUseCover = settings.value('landUseCover')
+            
+            if not returnTemplateSettings:
+                if landRequirement and os.path.exists(landRequirement):
+                    self.lineEditLandUseChangeLandRequirement.setText(landRequirement)
+                else:
+                    self.lineEditLandUseChangeLandRequirement.setText('')
+                if landUseCover:
+                    indexLandUseCover = self.comboBoxSelectLandUseChangeMap.findText(landUseCover)
+                    if indexLandUseCover != -1:
+                        self.comboBoxSelectLandUseChangeMap.setCurrentIndex(indexLandUseCover)    
+                
+                self.currentLandUseChangeImpactTemplate = templateFile
+                self.loadedLandUseChangeImpactTemplate.setText(templateFile)
+                self.comboBoxLandUseChangeImpactTemplate.setCurrentIndex(self.comboBoxLandUseChangeImpactTemplate.findText(templateFile))
+                self.buttonSaveLandUseChangeImpactTemplate.setEnabled(True)
+            
+            settings.endGroup()
+            # /dialog
+            
+            settings.endGroup()
+            # /tab
+            
         if returnTemplateSettings:
             return templateSettings
         else:
@@ -291,6 +474,22 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
             dialogsToLoad = (
                 'DialogLumensTAOpportunityCostMap',
             )
+        elif tabName == 'Descriptive analysis':
+            dialogsToSave = (
+                'DialogLumensTARegionalEconomyTimeSeriesIODescriptiveAnalysis',
+            )
+        elif tabName == 'Land requirement analysis':
+            dialogsToSave = (
+                'DialogLumensTARegionalEconomyLandDistributionRequirementAnalysis',
+            )
+        elif tabName == 'Regional economy scenario':
+            dialogsToSave = (
+                'DialogLumensTARegionalEconomyScenario',
+            )
+        elif tabName == 'Land use scenario':
+            dialogsToSave = (
+                'DialogLumensTAImpactofLandUsetoRegionalEconomyIndicatorAnalysis',
+            ) 
         
         for templateFile in templateFiles:
             if templateFile == templateToSkip:
@@ -317,8 +516,8 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         if duplicateTemplate:
             reply = QtGui.QMessageBox.question(
                 self,
-                'Load Existing Template',
-                'The template you are about to save matches an existing template.\nDo you want to load \'{0}\' instead?'.format(duplicateTemplate),
+                'Load Existing Configuration',
+                'The configuration you are about to save matches an existing template.\nDo you want to load \'{0}\' instead?'.format(duplicateTemplate),
                 QtGui.QMessageBox.Yes|QtGui.QMessageBox.No,
                 QtGui.QMessageBox.No
             )
@@ -330,6 +529,14 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
                     self.handlerLoadOpportunityCostCurveTemplate(duplicateTemplate)
                 elif tabName == 'Opportunity Cost Map':
                     self.handlerLoadOpportunityCostMapTemplate(duplicateTemplate)
+                elif tabName == 'Descriptive analysis':
+                    self.handlerLoadDescriptiveAnalysisTemplate(duplicateTemplate)
+                elif tabName == 'Land requirement analysis':
+                    self.handlerLoadLandRequirementAnalysisTemplate(duplicateTemplate)
+                elif tabName == 'Regional economy scenario':
+                    self.handlerLoadRegionalEconomicScenarioImpactTemplate(duplicateTemplate)
+                elif tabName == 'Land use scenario':
+                    self.handlerLoadLandUseChangeImpactTemplate(duplicateTemplate)
                     
                 return True
         
@@ -365,6 +572,22 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
                 dialogsToSave = (
                     'DialogLumensTAOpportunityCostMap',
                 )
+            elif tabName == 'Descriptive analysis':
+                dialogsToSave = (
+                    'DialogLumensTARegionalEconomyTimeSeriesIODescriptiveAnalysis',
+                )
+            elif tabName == 'Land requirement analysis':
+                dialogsToSave = (
+                    'DialogLumensTARegionalEconomyLandDistributionRequirementAnalysis',
+                )
+            elif tabName == 'Regional economy scenario':
+                dialogsToSave = (
+                    'DialogLumensTARegionalEconomyScenario',
+                )
+            elif tabName == 'Land use scenario':
+                dialogsToSave = (
+                    'DialogLumensTAImpactofLandUsetoRegionalEconomyIndicatorAnalysis',
+                )                
             
             settings.beginGroup(tabName)
             for dialog in dialogsToSave:
@@ -912,7 +1135,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         # self.tabWidgetRegionalEconomy.addTab(self.tabInputOutputTable, 'Input-Output Table')
         self.tabWidgetRegionalEconomy.addTab(self.tabDescriptiveAnalysis, 'Descriptive analysis')
         self.tabWidgetRegionalEconomy.addTab(self.tabLandRequirementAnalysis, 'Land requirement analysis')
-        self.tabWidgetRegionalEconomy.addTab(self.tabRegionalEconomicScenarioImpact, 'Regional economic scenario')
+        self.tabWidgetRegionalEconomy.addTab(self.tabRegionalEconomicScenarioImpact, 'Regional economy scenario')
         self.tabWidgetRegionalEconomy.addTab(self.tabLandUseChangeImpact, 'Land use scenario')
         
         self.layoutTabRegionalEconomy.addWidget(self.tabWidgetRegionalEconomy)
@@ -1493,7 +1716,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         
         self.setLayout(self.dialogLayout)
         self.setWindowTitle(self.dialogTitle)
-        self.setMinimumSize(700,800)
+        self.setMinimumSize(1024,700)
         self.resize(parent.sizeHint())
     
     
@@ -1882,7 +2105,47 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         
         # 'Opportunity Cost Map' tab fields
         self.main.appSettings['DialogLumensTAOpportunityCostMap']['csvProfitability'] = unicode(self.lineEditOCMCsvProfitability.text())
-    
+        
+        # 'Descriptive Analysis' tab fields
+        self.main.appSettings['DialogLumensTARegionalEconomySingleIODescriptiveAnalysis']['year'] \
+            = self.spinBoxSinglePeriod.value()
+        self.main.appSettings['DialogLumensTARegionalEconomySingleIODescriptiveAnalysis']['intermediateConsumptionMatrix'] \
+            = unicode(self.comboBoxSingleIntermediateConsumptionMatrix.currentText())
+        self.main.appSettings['DialogLumensTARegionalEconomySingleIODescriptiveAnalysis']['valueAddedMatrix'] \
+            = unicode(self.comboBoxSingleValueAddedMatrix.currentText())
+        self.main.appSettings['DialogLumensTARegionalEconomySingleIODescriptiveAnalysis']['finalConsumptionMatrix'] \
+            = unicode(self.comboBoxSingleFinalConsumptionMatrix.currentText())
+        self.main.appSettings['DialogLumensTARegionalEconomySingleIODescriptiveAnalysis']['labourRequirement'] \
+            = unicode(self.comboBoxSingleLabourRequirement.text())
+        self.main.appSettings['DialogLumensTARegionalEconomySingleIODescriptiveAnalysis']['valueAddedComponent'] \
+            = unicode(self.comboBoxOtherValueAddedComponent.currentText())
+        self.main.appSettings['DialogLumensTARegionalEconomySingleIODescriptiveAnalysis']['finalConsumptionComponent'] \
+            = unicode(self.comboBoxOtherFinalConsumptionComponent.currentText())
+        self.main.appSettings['DialogLumensTARegionalEconomySingleIODescriptiveAnalysis']['listOfEconomicSector'] \
+            = unicode(self.comboBoxOtherListOfEconomicSector.currentText())
+        self.main.appSettings['DialogLumensTARegionalEconomySingleIODescriptiveAnalysis']['financialUnit'] \
+            = unicode(self.lineEditOtherFinancialUnit.text())
+        self.main.appSettings['DialogLumensTARegionalEconomySingleIODescriptiveAnalysis']['areaName'] \
+            = unicode(self.lineEditOtherAreaName.text())
+        
+        # 'Land Requirement' tab fields
+        self.main.appSettings['DialogLumensTARegionalEconomyLandDistributionRequirementAnalysis']['descriptiveAnalysisOutput'] \
+            = unicode(self.lineEditLandRequirementAnalysisDescriptiveOutput.text())
+        
+        # 'Regional Economy Scenario' tab fields
+        self.main.appSettings['DialogLumensTARegionalEconomyLandDistributionRequirementAnalysis']['landRequirement'] \
+            = unicode(self.lineEditRegionalEconomicScenarioLandRequirement.text())        
+        self.main.appSettings['DialogLumensTARegionalEconomyScenario']['finalDemandChangeScenario'] \
+            = unicode(self.comboBoxRegionalEconomicScenarioImpactFinalDemandChangeScenario.currentText())
+        self.main.appSettings['DialogLumensTARegionalEconomyScenario']['gdpChangeScenario'] \
+            = unicode(self.comboBoxRegionalEconomicScenarioImpactGDPChangeScenario.currentText())        
+        
+        # 'Land Use Scenario' tab fields
+        self.main.appSettings['DialogLumensTAImpactofLandUsetoRegionalEconomyIndicatorAnalysis']['landRequirement'] \
+            = unicode(self.lineEditRegionalEconomicScenarioLandRequirement.text())
+        self.main.appSettings['DialogLumensTARegionalEconomyScenario']['gdpChangeScenario'] \
+            = unicode(self.comboBoxRegionalEconomicScenarioImpactGDPChangeScenario.currentText())        
+        
     
     def handlerProcessAbacusOpportunityCost(self):
         """Slot method to pass the form values and execute the "TA Abacus Opportunity Cost" R algorithm.
@@ -2018,3 +2281,221 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
             logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
             logging.getLogger(self.historyLog).info('alg end: %s' % formName)
     
+
+    def handlerProcessDescriptiveAnalysis(self):
+        """Slot method to pass the form values and execute the "TA Descriptive Analysis of Regional Economy" R algorithms.
+        
+        "TA Descriptive Analysis of Regional Economy" process calls the following algorithms:
+        1. r:ta_re_multiio_descriptive
+        """
+        self.setAppSettings()
+        
+        formName = 'DialogLumensTARegionalEconomySingleIODescriptiveAnalysis'
+        algName = 'r:ta_re_multiio_descriptive'
+        
+        if self.validForm(formName):
+            logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
+            logging.getLogger(self.historyLog).info('alg start: %s' % formName)
+            self.buttonProcessDescriptiveAnalysis.setDisabled(True)
+            
+            # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
+            self.main.setWindowState(QtCore.Qt.WindowMinimized)
+            
+            outputs = general.runalg(
+                algName,
+                self.main.appSettings[formName]['intermediateConsumptionMatrix'],
+                self.main.appSettings[formName]['valueAddedMatrix'],
+                self.main.appSettings[formName]['finalConsumptionMatrix'],
+                self.main.appSettings[formName]['valueAddedComponent'],
+                self.main.appSettings[formName]['finalConsumptionComponent'],
+                self.main.appSettings[formName]['listOfEconomicSector'],
+                self.main.appSettings[formName]['labourRequirement'],
+                self.main.appSettings[formName]['financialUnit'],
+                self.main.appSettings[formName]['areaName'],
+                self.main.appSettings[formName]['year'],
+                None,
+            )
+            
+            # Display ROut file in debug mode
+            if self.main.appSettings['debug']:
+                dialog = DialogLumensViewer(self, 'DEBUG "{0}" ({1})'.format(algName, 'processing_script.r.Rout'), 'text', self.main.appSettings['ROutFile'])
+                dialog.exec_()
+            
+            ##print outputs
+            
+            # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
+            self.main.setWindowState(QtCore.Qt.WindowActive)
+            
+            self.outputsMessageBox(algName, outputs, '', '')
+            
+            self.buttonProcessDescriptiveAnalysis.setEnabled(True)
+            logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
+            logging.getLogger(self.historyLog).info('alg end: %s' % formName)
+        
+      
+    def handlerProcessLandRequirementAnalysis(self):
+        """Slot method to pass the form values and execute the "TA Land Requirement Analysis" R algorithm.
+        
+        The "TA Land Requirement Analysis" process calls the following algorithm:
+        1. r:ta_re_ld_lr
+        """
+        self.setAppSettings()
+        
+        formName = 'DialogLumensTARegionalEconomyLandDistributionRequirementAnalysis'
+        algName = 'r:ta_re_ld_lr'
+        
+        if self.validForm(formName):
+            logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
+            logging.getLogger(self.historyLog).info('alg start: %s' % formName)
+            self.buttonProcessDescriptiveAnalysis.setDisabled(True)
+            
+            # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
+            self.main.setWindowState(QtCore.Qt.WindowMinimized)
+            
+            outputs = general.runalg(
+                algName,
+                self.main.appSettings[formName]['descriptiveAnalysisOutput'],
+                None,
+            )
+            
+            # Display ROut file in debug mode
+            if self.main.appSettings['debug']:
+                dialog = DialogLumensViewer(self, 'DEBUG "{0}" ({1})'.format(algName, 'processing_script.r.Rout'), 'text', self.main.appSettings['ROutFile'])
+                dialog.exec_()
+            
+            ##print outputs
+            
+            # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
+            self.main.setWindowState(QtCore.Qt.WindowActive)
+            
+            self.outputsMessageBox(algName, outputs, '', '')
+            
+            self.buttonProcessDescriptiveAnalysis.setEnabled(True)
+            logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
+            logging.getLogger(self.historyLog).info('alg end: %s' % formName)
+      
+    def handlerProcessRegionalEconomicScenarioImpact(self):
+        """Slot method to pass the form values and execute the "TA Regional Economic Scenario Impact" R algorithms.
+        
+        Depending on the checked groupbox, the "TA Regional Economic Scenario Impact" process calls the following algorithms:
+        1. r:ta_re_finaldemand
+        2. r:ta_re_gdp
+        """
+        self.setAppSettings()
+        
+        if self.checkBoxRegionalEconomicScenarioImpactFinalDemand.isChecked():
+            formName = 'DialogLumensTARegionalEconomyFinalDemandChangeMultiplierAnalysis'
+            algName = 'modeler:ta_reg_luc_5a_lcc_fd'
+            
+            if self.validForm(formName):
+                logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
+                logging.getLogger(self.historyLog).info('alg start: %s' % formName)
+                self.buttonProcessRegionalEconomicScenarioImpact.setDisabled(True)
+                
+                # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
+                self.main.setWindowState(QtCore.Qt.WindowMinimized)
+                
+                outputs = general.runalg(
+                    algName,
+                    self.main.appSettings[formName]['landRequirement'],
+                    self.main.appSettings[formName]['finalDemandChangeScenario'],
+                    self.main.appSettings[formName]['gdpChangeScenario'],
+                    None,
+                )
+                
+                # Display ROut file in debug mode
+                if self.main.appSettings['debug']:
+                    dialog = DialogLumensViewer(self, 'DEBUG "{0}" ({1})'.format(algName, 'processing_script.r.Rout'), 'text', self.main.appSettings['ROutFile'])
+                    dialog.exec_()
+                
+                ##print outputs
+                
+                # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
+                self.main.setWindowState(QtCore.Qt.WindowActive)
+                
+                self.outputsMessageBox(algName, outputs, '', '')
+                
+                self.buttonProcessRegionalEconomicScenarioImpact.setEnabled(True)
+                logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
+                logging.getLogger(self.historyLog).info('alg end: %s' % formName)
+        
+        if self.checkBoxRegionalEconomicScenarioImpactGDP.isChecked():
+            formName = 'DialogLumensTARegionalEconomyGDPChangeMultiplierAnalysis'
+            algName = 'modeler:ta_reg_luc_5a_lcc_gdp'
+            
+            if self.validForm(formName):
+                logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
+                logging.getLogger(self.historyLog).info('alg start: %s' % formName)
+                self.buttonProcessRegionalEconomicScenarioImpact.setDisabled(True)
+                
+                # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
+                self.main.setWindowState(QtCore.Qt.WindowMinimized)
+                
+                outputs = general.runalg(
+                    algName,
+                    self.main.appSettings[formName]['areaName'],
+                    self.main.appSettings[formName]['finalDemandChangeScenario'],
+                    self.main.appSettings[formName]['gdpChangeScenario'],
+                    None,
+                )
+                
+                # Display ROut file in debug mode
+                if self.main.appSettings['debug']:
+                    dialog = DialogLumensViewer(self, 'DEBUG "{0}" ({1})'.format(algName, 'processing_script.r.Rout'), 'text', self.main.appSettings['ROutFile'])
+                    dialog.exec_()
+                
+                ##print outputs
+                
+                # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
+                self.main.setWindowState(QtCore.Qt.WindowActive)
+                
+                self.outputsMessageBox(algName, outputs, '', '')
+                
+                self.buttonProcessRegionalEconomicScenarioImpact.setEnabled(True)
+                logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
+                logging.getLogger(self.historyLog).info('alg end: %s' % formName)
+    
+      
+    def handlerProcessLandUseChangeImpact(self):
+        """Slot method to pass the form values and execute the "TA Land Use Change Impact" R algorithm.
+        
+        The "TA Land Use Change Impact" process calls the following algorithm:
+        1. r:ta_reg_luc_gdp_lcc
+        """
+        self.setAppSettings()
+        
+        formName = 'DialogLumensTAImpactofLandUsetoRegionalEconomyIndicatorAnalysis'
+        algName = 'r:ta_re_luc_impact'
+        
+        if self.validForm(formName):
+            logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
+            logging.getLogger(self.historyLog).info('alg start: %s' % formName)
+            self.buttonProcessDescriptiveAnalysis.setDisabled(True)
+            
+            # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
+            self.main.setWindowState(QtCore.Qt.WindowMinimized)
+            
+            outputs = general.runalg(
+                algName,
+                self.main.appSettings[formName]['landRequirement'],
+                self.main.appSettings[formName]['landUseCover'],
+                None,
+            )
+            
+            # Display ROut file in debug mode
+            if self.main.appSettings['debug']:
+                dialog = DialogLumensViewer(self, 'DEBUG "{0}" ({1})'.format(algName, 'processing_script.r.Rout'), 'text', self.main.appSettings['ROutFile'])
+                dialog.exec_()
+            
+            ##print outputs
+            
+            # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
+            self.main.setWindowState(QtCore.Qt.WindowActive)
+            
+            self.outputsMessageBox(algName, outputs, '', '')
+            
+            self.buttonProcessDescriptiveAnalysis.setEnabled(True)
+            logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
+            logging.getLogger(self.historyLog).info('alg end: %s' % formName)
+    
+        
