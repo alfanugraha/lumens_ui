@@ -942,11 +942,13 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         """      
         activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
         selectedReferenceData = self.comboBoxReferenceData.currentText()
+        customTable = 0
         attributeValues = []
         
         outputs = general.runalg(
             'r:toolsgetlut',
             activeProject,
+            customTable,
             selectedReferenceData,
             None,
         )        

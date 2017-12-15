@@ -348,9 +348,14 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
             settings.beginGroup('DialogLumensTARegionalEconomyLandDistributionRequirementAnalysis')
             
             templateSettings['DialogLumensTARegionalEconomyLandDistributionRequirementAnalysis'] = {}
+            templateSettings['DialogLumensTARegionalEconomyLandDistributionRequirementAnalysis']['landRequirementTable'] = landRequirementTable = settings.value('landRequirementTable')
             templateSettings['DialogLumensTARegionalEconomyLandDistributionRequirementAnalysis']['descriptiveAnalysisOutput'] = descriptiveAnalysisOutput = settings.value('descriptiveAnalysisOutput')
             
             if not returnTemplateSettings:
+                if landRequirementTable:
+                    indexLandRequirementTable = self.comboBoxLandRequirementAnalysisLookupTable.findText(landRequirementTable)
+                    if indexLandRequirementTable != -1:
+                        self.comboBoxLandRequirementAnalysisLookupTable.setCurrentIndex(indexLandRequirementTable)
                 if descriptiveAnalysisOutput and os.path.exists(descriptiveAnalysisOutput):
                     self.lineEditLandRequirementAnalysisDescriptiveOutput.setText(csvProfitability)
                 else:
@@ -1370,17 +1375,27 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.labelLandRequirementAnalysisParametersInfo.setText('\n')
         self.layoutLandRequirementAnalysisParametersInfo.addWidget(self.labelLandRequirementAnalysisParametersInfo)
         
+        self.labelLandRequirementAnalysisLookupTable = QtGui.QLabel()
+        self.labelLandRequirementAnalysisLookupTable.setText('Land requirement lookup table:')
+        self.layoutLandRequirementAnalysisParameters.addWidget(self.labelLandRequirementAnalysisLookupTable, 0, 0)
+        
+        self.comboBoxLandRequirementAnalysisLookupTable = QtGui.QComboBox()
+        self.comboBoxLandRequirementAnalysisLookupTable.setDisabled(True)
+        self.layoutLandRequirementAnalysisParameters.addWidget(self.comboBoxLandRequirementAnalysisLookupTable, 0, 1)
+        
+        self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxLandRequirementAnalysisLookupTable)
+        
         self.labelLandRequirementAnalysisDescriptiveOutput = QtGui.QLabel()
         self.labelLandRequirementAnalysisDescriptiveOutput.setText('Descriptive analysis output:')
-        self.layoutLandRequirementAnalysisParameters.addWidget(self.labelLandRequirementAnalysisDescriptiveOutput, 0, 0)
+        self.layoutLandRequirementAnalysisParameters.addWidget(self.labelLandRequirementAnalysisDescriptiveOutput, 1, 0)
         
         self.lineEditLandRequirementAnalysisDescriptiveOutput = QtGui.QLineEdit()
         self.lineEditLandRequirementAnalysisDescriptiveOutput.setReadOnly(True)
-        self.layoutLandRequirementAnalysisParameters.addWidget(self.lineEditLandRequirementAnalysisDescriptiveOutput, 0, 1)
+        self.layoutLandRequirementAnalysisParameters.addWidget(self.lineEditLandRequirementAnalysisDescriptiveOutput, 1, 1)
         
         self.buttonSelectLandRequirementAnalysisDescriptiveOutput = QtGui.QPushButton()
         self.buttonSelectLandRequirementAnalysisDescriptiveOutput.setText('&Browse')
-        self.layoutLandRequirementAnalysisParameters.addWidget(self.buttonSelectLandRequirementAnalysisDescriptiveOutput, 0, 2)
+        self.layoutLandRequirementAnalysisParameters.addWidget(self.buttonSelectLandRequirementAnalysisDescriptiveOutput, 1, 2)
         
         # Process tab button
         self.layoutButtonLandRequirementAnalysis = QtGui.QHBoxLayout()
@@ -2116,7 +2131,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.main.appSettings['DialogLumensTARegionalEconomySingleIODescriptiveAnalysis']['finalConsumptionMatrix'] \
             = unicode(self.comboBoxSingleFinalConsumptionMatrix.currentText())
         self.main.appSettings['DialogLumensTARegionalEconomySingleIODescriptiveAnalysis']['labourRequirement'] \
-            = unicode(self.comboBoxSingleLabourRequirement.text())
+            = unicode(self.comboBoxSingleLabourRequirement.currentText())
         self.main.appSettings['DialogLumensTARegionalEconomySingleIODescriptiveAnalysis']['valueAddedComponent'] \
             = unicode(self.comboBoxOtherValueAddedComponent.currentText())
         self.main.appSettings['DialogLumensTARegionalEconomySingleIODescriptiveAnalysis']['finalConsumptionComponent'] \
@@ -2129,11 +2144,13 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
             = unicode(self.lineEditOtherAreaName.text())
         
         # 'Land Requirement' tab fields
+        self.main.appSettings['DialogLumensTARegionalEconomyLandDistributionRequirementAnalysis']['landRequirementTable'] \
+            = unicode(self.comboBoxLandRequirementAnalysisLookupTable.currentText())
         self.main.appSettings['DialogLumensTARegionalEconomyLandDistributionRequirementAnalysis']['descriptiveAnalysisOutput'] \
             = unicode(self.lineEditLandRequirementAnalysisDescriptiveOutput.text())
         
         # 'Regional Economy Scenario' tab fields
-        self.main.appSettings['DialogLumensTARegionalEconomyLandDistributionRequirementAnalysis']['landRequirement'] \
+        self.main.appSettings['DialogLumensTARegionalEconomyScenario']['landRequirement'] \
             = unicode(self.lineEditRegionalEconomicScenarioLandRequirement.text())        
         self.main.appSettings['DialogLumensTARegionalEconomyScenario']['finalDemandChangeScenario'] \
             = unicode(self.comboBoxRegionalEconomicScenarioImpactFinalDemandChangeScenario.currentText())
@@ -2142,9 +2159,9 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         
         # 'Land Use Scenario' tab fields
         self.main.appSettings['DialogLumensTAImpactofLandUsetoRegionalEconomyIndicatorAnalysis']['landRequirement'] \
-            = unicode(self.lineEditRegionalEconomicScenarioLandRequirement.text())
-        self.main.appSettings['DialogLumensTARegionalEconomyScenario']['gdpChangeScenario'] \
-            = unicode(self.comboBoxRegionalEconomicScenarioImpactGDPChangeScenario.currentText())        
+            = unicode(self.lineEditLandUseChangeLandRequirement.text())
+        self.main.appSettings['DialogLumensTAImpactofLandUsetoRegionalEconomyIndicatorAnalysis']['landUseCover'] \
+            = unicode(self.comboBoxSelectLandUseChangeMap.currentText())        
         
     
     def handlerProcessAbacusOpportunityCost(self):
@@ -2286,12 +2303,13 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         """Slot method to pass the form values and execute the "TA Descriptive Analysis of Regional Economy" R algorithms.
         
         "TA Descriptive Analysis of Regional Economy" process calls the following algorithms:
-        1. r:ta_re_multiio_descriptive
+        1. r:ta_re_singleio_descriptive
         """
         self.setAppSettings()
         
         formName = 'DialogLumensTARegionalEconomySingleIODescriptiveAnalysis'
-        algName = 'r:ta_re_multiio_descriptive'
+        algName = 'r:taresingleiodescriptive'
+        activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
         
         if self.validForm(formName):
             logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
@@ -2303,6 +2321,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
             
             outputs = general.runalg(
                 algName,
+                activeProject,
                 self.main.appSettings[formName]['intermediateConsumptionMatrix'],
                 self.main.appSettings[formName]['valueAddedMatrix'],
                 self.main.appSettings[formName]['finalConsumptionMatrix'],
@@ -2347,7 +2366,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         if self.validForm(formName):
             logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
             logging.getLogger(self.historyLog).info('alg start: %s' % formName)
-            self.buttonProcessDescriptiveAnalysis.setDisabled(True)
+            self.buttonProcessLandRequirementAnalysis.setDisabled(True)
             
             # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
             self.main.setWindowState(QtCore.Qt.WindowMinimized)
@@ -2370,7 +2389,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
             
             self.outputsMessageBox(algName, outputs, '', '')
             
-            self.buttonProcessDescriptiveAnalysis.setEnabled(True)
+            self.buttonProcessLandRequirementAnalysis.setEnabled(True)
             logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
             logging.getLogger(self.historyLog).info('alg end: %s' % formName)
       
@@ -2470,7 +2489,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         if self.validForm(formName):
             logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
             logging.getLogger(self.historyLog).info('alg start: %s' % formName)
-            self.buttonProcessDescriptiveAnalysis.setDisabled(True)
+            self.buttonProcessLandUseChangeImpact.setDisabled(True)
             
             # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
             self.main.setWindowState(QtCore.Qt.WindowMinimized)
@@ -2494,7 +2513,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
             
             self.outputsMessageBox(algName, outputs, '', '')
             
-            self.buttonProcessDescriptiveAnalysis.setEnabled(True)
+            self.buttonProcessLandUseChangeImpact.setEnabled(True)
             logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
             logging.getLogger(self.historyLog).info('alg end: %s' % formName)
     
