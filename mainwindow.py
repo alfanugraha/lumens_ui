@@ -329,6 +329,7 @@ class MainWindow(QtGui.QMainWindow):
                 'period2': '',
             },
             'DialogLumensTARegionalEconomyLandDistributionRequirementAnalysis': {
+                'landUseCover': '',
                 'landRequirementTable': '',
                 'descriptiveAnalysisOutput': '',
             },

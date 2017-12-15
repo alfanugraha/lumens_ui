@@ -202,10 +202,10 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
             templateSettings['DialogLumensTAOpportunityCostCurve']['outputOpportunityCostReport'] = outputOpportunityCostReport = settings.value('outputOpportunityCostReport')
             
             if not returnTemplateSettings:
-                if csvNPVTable and os.path.exists(csvNPVTable):
-                    self.lineEditOCCCsvNPVTable.setText(csvNPVTable)
-                else:
-                    self.lineEditOCCCsvNPVTable.setText('')
+                if csvNPVTable:
+                    indexCsvNPVTable = self.comboBoxOCCCsvNPVTable.findText(csvNPVTable)
+                    if indexCsvNPVTable != -1:
+                        self.comboBoxOCCCsvNPVTable.setCurrentIndex(indexCsvNPVTable)              
                 if costThreshold:
                     self.spinBoxOCCCostThreshold.setValue(int(costThreshold))
                 else:
@@ -245,10 +245,10 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
             templateSettings['DialogLumensTAOpportunityCostMap']['csvProfitability'] = csvProfitability = settings.value('csvProfitability')
             
             if not returnTemplateSettings:
-                if csvProfitability and os.path.exists(csvProfitability):
-                    self.lineEditOCMCsvProfitability.setText(csvProfitability)
-                else:
-                    self.lineEditOCMCsvProfitability.setText('')
+                if csvProfitability:
+                    indexCsvProfitability = self.comboBoxOCMCsvProfitability.findText(csvProfitability)
+                    if indexCsvProfitability != -1:
+                        self.comboBoxOCMCsvProfitability.setCurrentIndex(indexCsvProfitability)                    
                 
                 self.currentOpportunityCostMapTemplate = templateFile
                 self.loadedOpportunityCostMapTemplate.setText(templateFile)
@@ -348,10 +348,16 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
             settings.beginGroup('DialogLumensTARegionalEconomyLandDistributionRequirementAnalysis')
             
             templateSettings['DialogLumensTARegionalEconomyLandDistributionRequirementAnalysis'] = {}
+            templateSettings['DialogLumensTARegionalEconomyLandDistributionRequirementAnalysis']['landUseCover'] = landUseCover = settings.value('landUseCover')
             templateSettings['DialogLumensTARegionalEconomyLandDistributionRequirementAnalysis']['landRequirementTable'] = landRequirementTable = settings.value('landRequirementTable')
             templateSettings['DialogLumensTARegionalEconomyLandDistributionRequirementAnalysis']['descriptiveAnalysisOutput'] = descriptiveAnalysisOutput = settings.value('descriptiveAnalysisOutput')
             
             if not returnTemplateSettings:
+                comboBoxLandRequirementAnalysisLandUseCover
+                if landUseCover:
+                    indexLandUseCover = self.comboBoxLandRequirementAnalysisLandUseCover.findText(landRequirementTable)
+                    if indexLandUseCover != -1:
+                        self.comboBoxLandRequirementAnalysisLandUseCover.setCurrentIndex(indexLandUseCover)
                 if landRequirementTable:
                     indexLandRequirementTable = self.comboBoxLandRequirementAnalysisLookupTable.findText(landRequirementTable)
                     if indexLandRequirementTable != -1:
@@ -658,7 +664,6 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.buttonSaveAsAbacusOpportunityCostTemplate.clicked.connect(self.handlerSaveAsAbacusOpportunityCostTemplate)
         
         # 'Opportunity Cost Curve' tab buttons
-        self.buttonSelectOCCCsvNPVTable.clicked.connect(self.handlerSelectOCCCsvNPVTable)
         self.buttonSelectOCCOutputOpportunityCostDatabase.clicked.connect(self.handlerSelectOCCOutputOpportunityCostDatabase)
         self.buttonSelectOCCOutputOpportunityCostReport.clicked.connect(self.handlerSelectOCCOutputOpportunityCostReport)
         self.buttonProcessOpportunityCostCurve.clicked.connect(self.handlerProcessOpportunityCostCurve)
@@ -668,7 +673,6 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.buttonSaveAsOpportunityCostCurveTemplate.clicked.connect(self.handlerSaveAsOpportunityCostCurveTemplate)
         
         # 'Opportunity Cost Map' tab buttons
-        self.buttonSelectOCMCsvProfitability.clicked.connect(self.handlerSelectOCMCsvProfitability)
         self.buttonProcessOpportunityCostMap.clicked.connect(self.handlerProcessOpportunityCostMap)
         self.buttonHelpTAOpportunityCostMap.clicked.connect(lambda:self.handlerDialogHelp('TA'))
         self.buttonLoadOpportunityCostMapTemplate.clicked.connect(self.handlerLoadOpportunityCostMapTemplate)
@@ -757,8 +761,11 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         #***********************************************************
         self.tabWidgetOpportunityCost = QtGui.QTabWidget()
         OpportunityCostTabWidgetStylesheet = """
+        QTabWidget::tab-bar{
+            alignment: right;
+        }
         QTabWidget QWidget {
-            background-color: rgb(217, 229, 252);
+            background-color: rgb(249, 237, 243);
             color: rgb(95, 98, 102);
         }
         QTabBar::tab {
@@ -767,17 +774,17 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
             width: 200px;
         }
         QTabBar::tab:selected, QTabBar::tab:hover {
-            background-color: rgb(217, 229, 252);
+            background-color: rgb(249, 237, 243);
             font: bold;
         }
-        """
+        """        
         self.tabWidgetOpportunityCost.setStyleSheet(OpportunityCostTabWidgetStylesheet)
         
         self.tabAbacusOpportunityCost = QtGui.QWidget()
         self.tabOpportunityCostCurve = QtGui.QWidget()
         self.tabOpportunityCostMap = QtGui.QWidget()
         
-        self.tabWidgetOpportunityCost.addTab(self.tabAbacusOpportunityCost, 'Abacus Opportunity Cost')
+        # self.tabWidgetOpportunityCost.addTab(self.tabAbacusOpportunityCost, 'Abacus Opportunity Cost')
         self.tabWidgetOpportunityCost.addTab(self.tabOpportunityCostCurve, 'Opportunity Cost Curve')
         self.tabWidgetOpportunityCost.addTab(self.tabOpportunityCostMap, 'Opportunity Cost Map')
         
@@ -888,7 +895,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         # Setup 'Opportunity cost curve' sub tab
         #***********************************************************
         # 'Parameters' GroupBox
-        self.groupBoxOCCParameters = QtGui.QGroupBox('Parameters')
+        self.groupBoxOCCParameters = QtGui.QGroupBox('Parameterization')
         self.layoutGroupBoxOCCParameters = QtGui.QVBoxLayout()
         self.layoutGroupBoxOCCParameters.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxOCCParameters.setLayout(self.layoutGroupBoxOCCParameters)
@@ -898,29 +905,26 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxOCCParameters.addLayout(self.layoutOCCParameters)
         
         self.labelOCCParametersInfo = QtGui.QLabel()
-        self.labelOCCParametersInfo.setText('Lorem ipsum dolor sit amet...\n')
+        self.labelOCCParametersInfo.setText('\n')
         self.layoutOCCParametersInfo.addWidget(self.labelOCCParametersInfo)
         
         self.labelOCCCsvNPVTable = QtGui.QLabel(parent)
-        self.labelOCCCsvNPVTable.setText('Net Present Value (NPV) table:')
+        self.labelOCCCsvNPVTable.setText('Profitability lookup table:')
         self.layoutOCCParameters.addWidget(self.labelOCCCsvNPVTable, 0, 0)
         
-        self.lineEditOCCCsvNPVTable = QtGui.QLineEdit(parent)
-        self.lineEditOCCCsvNPVTable.setReadOnly(True)
-        self.layoutOCCParameters.addWidget(self.lineEditOCCCsvNPVTable, 0, 1)
+        self.comboBoxOCCCsvNPVTable = QtGui.QComboBox()
+        self.comboBoxOCCCsvNPVTable.setDisabled(True)
+        self.layoutOCCParameters.addWidget(self.comboBoxOCCCsvNPVTable, 0, 1)
         
-        self.buttonSelectOCCCsvNPVTable = QtGui.QPushButton()
-        self.buttonSelectOCCCsvNPVTable.setText('&Browse')
-        self.layoutOCCParameters.addWidget(self.buttonSelectOCCCsvNPVTable, 0, 2)
+        self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxOCCCsvNPVTable)
         
         self.labelOCCCostThreshold = QtGui.QLabel()
-        self.labelOCCCostThreshold.setText('Cost &Threshold:')
+        self.labelOCCCostThreshold.setText('Cost threshold:')
         self.layoutOCCParameters.addWidget(self.labelOCCCostThreshold, 1, 0)
         
         self.spinBoxOCCCostThreshold = QtGui.QSpinBox()
         self.spinBoxOCCCostThreshold.setValue(5)
         self.layoutOCCParameters.addWidget(self.spinBoxOCCCostThreshold, 1, 1)
-        self.labelOCCCostThreshold.setBuddy(self.spinBoxOCCCostThreshold)
         
         self.labelOCCOutputOpportunityCostDatabase = QtGui.QLabel()
         self.labelOCCOutputOpportunityCostDatabase.setText('[Output] Opportunity cost database:')
@@ -957,7 +961,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutButtonOpportunityCostCurve.addWidget(self.buttonHelpTAOpportunityCostCurve)
         
         # Template GroupBox
-        self.groupBoxOpportunityCostCurveTemplate = QtGui.QGroupBox('Template')
+        self.groupBoxOpportunityCostCurveTemplate = QtGui.QGroupBox('Configuration')
         self.layoutGroupBoxOpportunityCostCurveTemplate = QtGui.QVBoxLayout()
         self.layoutGroupBoxOpportunityCostCurveTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxOpportunityCostCurveTemplate.setLayout(self.layoutGroupBoxOpportunityCostCurveTemplate)
@@ -967,7 +971,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxOpportunityCostCurveTemplate.addLayout(self.layoutOpportunityCostCurveTemplate)
         
         self.labelLoadedOpportunityCostCurveTemplate = QtGui.QLabel()
-        self.labelLoadedOpportunityCostCurveTemplate.setText('Loaded template:')
+        self.labelLoadedOpportunityCostCurveTemplate.setText('Loaded configuration:')
         self.layoutOpportunityCostCurveTemplate.addWidget(self.labelLoadedOpportunityCostCurveTemplate, 0, 0)
         
         self.loadedOpportunityCostCurveTemplate = QtGui.QLabel()
@@ -975,13 +979,13 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutOpportunityCostCurveTemplate.addWidget(self.loadedOpportunityCostCurveTemplate, 0, 1)
         
         self.labelOpportunityCostCurveTemplate = QtGui.QLabel()
-        self.labelOpportunityCostCurveTemplate.setText('Template name:')
+        self.labelOpportunityCostCurveTemplate.setText('Name:')
         self.layoutOpportunityCostCurveTemplate.addWidget(self.labelOpportunityCostCurveTemplate, 1, 0)
         
         self.comboBoxOpportunityCostCurveTemplate = QtGui.QComboBox()
         self.comboBoxOpportunityCostCurveTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
         self.comboBoxOpportunityCostCurveTemplate.setDisabled(True)
-        self.comboBoxOpportunityCostCurveTemplate.addItem('No template found')
+        self.comboBoxOpportunityCostCurveTemplate.addItem('No configuration found')
         self.layoutOpportunityCostCurveTemplate.addWidget(self.comboBoxOpportunityCostCurveTemplate, 1, 1)
         
         self.layoutButtonOpportunityCostCurveTemplate = QtGui.QHBoxLayout()
@@ -1018,7 +1022,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         # Setup 'Opportunity cost map' sub tab
         #***********************************************************
         # 'Parameters' GroupBox
-        self.groupBoxOCMParameters = QtGui.QGroupBox('Parameters')
+        self.groupBoxOCMParameters = QtGui.QGroupBox('Parameterization')
         self.layoutGroupBoxOCMParameters = QtGui.QVBoxLayout()
         self.layoutGroupBoxOCMParameters.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxOCMParameters.setLayout(self.layoutGroupBoxOCMParameters)
@@ -1028,20 +1032,18 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxOCMParameters.addLayout(self.layoutOCMParameters)
         
         self.labelOCMParametersInfo = QtGui.QLabel()
-        self.labelOCMParametersInfo.setText('Lorem ipsum dolor sit amet...\n')
+        self.labelOCMParametersInfo.setText('\n')
         self.layoutOCMParametersInfo.addWidget(self.labelOCMParametersInfo)
         
         self.labelOCMCsvProfitability = QtGui.QLabel(parent)
         self.labelOCMCsvProfitability.setText('Profitability lookup table:')
         self.layoutOCMParameters.addWidget(self.labelOCMCsvProfitability, 0, 0)
         
-        self.lineEditOCMCsvProfitability = QtGui.QLineEdit(parent)
-        self.lineEditOCMCsvProfitability.setReadOnly(True)
-        self.layoutOCMParameters.addWidget(self.lineEditOCMCsvProfitability, 0, 1)
+        self.comboBoxOCMCsvProfitability = QtGui.QComboBox()
+        self.comboBoxOCMCsvProfitability.setDisabled(True)
+        self.layoutOCMParameters.addWidget(self.comboBoxOCMCsvProfitability, 0, 1)
         
-        self.buttonSelectOCMCsvProfitability = QtGui.QPushButton()
-        self.buttonSelectOCMCsvProfitability.setText('&Browse')
-        self.layoutOCMParameters.addWidget(self.buttonSelectOCMCsvProfitability, 0, 2)
+        self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxOCMCsvProfitability)
         
         # Process tab button
         self.layoutButtonOpportunityCostMap = QtGui.QHBoxLayout()
@@ -1054,7 +1056,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutButtonOpportunityCostMap.addWidget(self.buttonHelpTAOpportunityCostMap)
         
         # Template GroupBox
-        self.groupBoxOpportunityCostMapTemplate = QtGui.QGroupBox('Template')
+        self.groupBoxOpportunityCostMapTemplate = QtGui.QGroupBox('Configuration')
         self.layoutGroupBoxOpportunityCostMapTemplate = QtGui.QVBoxLayout()
         self.layoutGroupBoxOpportunityCostMapTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxOpportunityCostMapTemplate.setLayout(self.layoutGroupBoxOpportunityCostMapTemplate)
@@ -1064,7 +1066,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxOpportunityCostMapTemplate.addLayout(self.layoutOpportunityCostMapTemplate)
         
         self.labelLoadedOpportunityCostMapTemplate = QtGui.QLabel()
-        self.labelLoadedOpportunityCostMapTemplate.setText('Loaded template:')
+        self.labelLoadedOpportunityCostMapTemplate.setText('Loaded configuration:')
         self.layoutOpportunityCostMapTemplate.addWidget(self.labelLoadedOpportunityCostMapTemplate, 0, 0)
         
         self.loadedOpportunityCostMapTemplate = QtGui.QLabel()
@@ -1072,13 +1074,13 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutOpportunityCostMapTemplate.addWidget(self.loadedOpportunityCostMapTemplate, 0, 1)
         
         self.labelOpportunityCostMapTemplate = QtGui.QLabel()
-        self.labelOpportunityCostMapTemplate.setText('Template name:')
+        self.labelOpportunityCostMapTemplate.setText('Name:')
         self.layoutOpportunityCostMapTemplate.addWidget(self.labelOpportunityCostMapTemplate, 1, 0)
         
         self.comboBoxOpportunityCostMapTemplate = QtGui.QComboBox()
         self.comboBoxOpportunityCostMapTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
         self.comboBoxOpportunityCostMapTemplate.setDisabled(True)
-        self.comboBoxOpportunityCostMapTemplate.addItem('No template found')
+        self.comboBoxOpportunityCostMapTemplate.addItem('No configuration found')
         self.layoutOpportunityCostMapTemplate.addWidget(self.comboBoxOpportunityCostMapTemplate, 1, 1)
         
         self.layoutButtonOpportunityCostMapTemplate = QtGui.QHBoxLayout()
@@ -1375,27 +1377,37 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.labelLandRequirementAnalysisParametersInfo.setText('\n')
         self.layoutLandRequirementAnalysisParametersInfo.addWidget(self.labelLandRequirementAnalysisParametersInfo)
         
+        self.labelLandRequirementAnalysisLandUseCover = QtGui.QLabel()
+        self.labelLandRequirementAnalysisLandUseCover.setText('Current land cover map:')
+        self.layoutLandRequirementAnalysisParameters.addWidget(self.labelLandRequirementAnalysisLandUseCover, 0, 0)
+        
+        self.comboBoxLandRequirementAnalysisLandUseCover = QtGui.QComboBox()
+        self.comboBoxLandRequirementAnalysisLandUseCover.setDisabled(True)
+        self.layoutLandRequirementAnalysisParameters.addWidget(self.comboBoxLandRequirementAnalysisLandUseCover, 0, 1)
+        
+        self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxLandRequirementAnalysisLandUseCover)
+        
         self.labelLandRequirementAnalysisLookupTable = QtGui.QLabel()
         self.labelLandRequirementAnalysisLookupTable.setText('Land requirement lookup table:')
-        self.layoutLandRequirementAnalysisParameters.addWidget(self.labelLandRequirementAnalysisLookupTable, 0, 0)
+        self.layoutLandRequirementAnalysisParameters.addWidget(self.labelLandRequirementAnalysisLookupTable, 1, 0)
         
         self.comboBoxLandRequirementAnalysisLookupTable = QtGui.QComboBox()
         self.comboBoxLandRequirementAnalysisLookupTable.setDisabled(True)
-        self.layoutLandRequirementAnalysisParameters.addWidget(self.comboBoxLandRequirementAnalysisLookupTable, 0, 1)
+        self.layoutLandRequirementAnalysisParameters.addWidget(self.comboBoxLandRequirementAnalysisLookupTable, 1, 1)
         
         self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxLandRequirementAnalysisLookupTable)
         
         self.labelLandRequirementAnalysisDescriptiveOutput = QtGui.QLabel()
         self.labelLandRequirementAnalysisDescriptiveOutput.setText('Descriptive analysis output:')
-        self.layoutLandRequirementAnalysisParameters.addWidget(self.labelLandRequirementAnalysisDescriptiveOutput, 1, 0)
+        self.layoutLandRequirementAnalysisParameters.addWidget(self.labelLandRequirementAnalysisDescriptiveOutput, 2, 0)
         
         self.lineEditLandRequirementAnalysisDescriptiveOutput = QtGui.QLineEdit()
         self.lineEditLandRequirementAnalysisDescriptiveOutput.setReadOnly(True)
-        self.layoutLandRequirementAnalysisParameters.addWidget(self.lineEditLandRequirementAnalysisDescriptiveOutput, 1, 1)
+        self.layoutLandRequirementAnalysisParameters.addWidget(self.lineEditLandRequirementAnalysisDescriptiveOutput, 2, 1)
         
         self.buttonSelectLandRequirementAnalysisDescriptiveOutput = QtGui.QPushButton()
         self.buttonSelectLandRequirementAnalysisDescriptiveOutput.setText('&Browse')
-        self.layoutLandRequirementAnalysisParameters.addWidget(self.buttonSelectLandRequirementAnalysisDescriptiveOutput, 1, 2)
+        self.layoutLandRequirementAnalysisParameters.addWidget(self.buttonSelectLandRequirementAnalysisDescriptiveOutput, 2, 2)
         
         # Process tab button
         self.layoutButtonLandRequirementAnalysis = QtGui.QHBoxLayout()
@@ -1633,7 +1645,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutLandUseChangeImpactParameters.addWidget(self.buttonSelectLandUseChangeLandRequirement, 0, 2)
         
         self.labelSelectLandUseChangeMap = QtGui.QLabel()
-        self.labelSelectLandUseChangeMap.setText('Land use/cover:')
+        self.labelSelectLandUseChangeMap.setText('Projected land cover map:')
         self.layoutLandUseChangeImpactParameters.addWidget(self.labelSelectLandUseChangeMap, 1, 0)
         
         self.comboBoxSelectLandUseChangeMap = QtGui.QComboBox()
@@ -1934,17 +1946,6 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
                 self.handlerLoadOpportunityCostCurveTemplate(fileName)
     
     
-    def handlerSelectOCCCsvNPVTable(self):
-        """Slot method for a file select dialog.
-        """
-        file = unicode(QtGui.QFileDialog.getOpenFileName(
-            self, 'Select NPV Table', QtCore.QDir.homePath(), 'NPV Table (*{0})'.format(self.main.appSettings['selectCsvfileExt'])))
-        
-        if file:
-            self.lineEditOCCCsvNPVTable.setText(file)
-            logging.getLogger(type(self).__name__).info('select file: %s', file)
-    
-    
     def handlerSelectOCCOutputOpportunityCostDatabase(self):
         """Slot method for a file select dialog.
         """
@@ -2043,17 +2044,6 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
                 self.handlerLoadOpportunityCostMapTemplate(fileName)
     
     
-    def handlerSelectOCMCsvProfitability(self):
-        """Slot method for a file select dialog.
-        """
-        file = unicode(QtGui.QFileDialog.getOpenFileName(
-            self, 'Select Profitability Lookup Table', QtCore.QDir.homePath(), 'Profitability Lookup Table (*{0})'.format(self.main.appSettings['selectCsvfileExt'])))
-        
-        if file:
-            self.lineEditOCMCsvProfitability.setText(file)
-            logging.getLogger(type(self).__name__).info('select file: %s', file)
-    
-    
     #***********************************************************
     # 'Descriptive Analysis of Regional Economy' tab QPushButton handlers
     #***********************************************************    
@@ -2106,7 +2096,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.main.appSettings['DialogLumensTAAbacusOpportunityCostCurve']['projectFile'] = unicode(self.lineEditAOCProjectFile.text())
         
         # 'Opportunity Cost Curve' tab fields
-        self.main.appSettings['DialogLumensTAOpportunityCostCurve']['csvNPVTable'] = unicode(self.lineEditOCCCsvNPVTable.text())
+        self.main.appSettings['DialogLumensTAOpportunityCostCurve']['csvNPVTable'] = unicode(self.comboBoxOCCCsvNPVTable.currentText())
         self.main.appSettings['DialogLumensTAOpportunityCostCurve']['costThreshold'] = self.spinBoxOCCCostThreshold.value()
         
         outputOpportunityCostDatabase = unicode(self.lineEditOCCOutputOpportunityCostDatabase.text())
@@ -2119,7 +2109,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
             self.main.appSettings['DialogLumensTAOpportunityCostCurve']['outputOpportunityCostReport'] = '__UNSET__'
         
         # 'Opportunity Cost Map' tab fields
-        self.main.appSettings['DialogLumensTAOpportunityCostMap']['csvProfitability'] = unicode(self.lineEditOCMCsvProfitability.text())
+        self.main.appSettings['DialogLumensTAOpportunityCostMap']['csvProfitability'] = unicode(self.comboBoxOCMCsvProfitability.currentText())
         
         # 'Descriptive Analysis' tab fields
         self.main.appSettings['DialogLumensTARegionalEconomySingleIODescriptiveAnalysis']['year'] \
@@ -2144,6 +2134,8 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
             = unicode(self.lineEditOtherAreaName.text())
         
         # 'Land Requirement' tab fields
+        self.main.appSettings['DialogLumensTARegionalEconomyLandDistributionRequirementAnalysis']['landUseCover'] \
+            = unicode(self.comboBoxLandRequirementAnalysisLandUseCover.currentText()) 
         self.main.appSettings['DialogLumensTARegionalEconomyLandDistributionRequirementAnalysis']['landRequirementTable'] \
             = unicode(self.comboBoxLandRequirementAnalysisLookupTable.currentText())
         self.main.appSettings['DialogLumensTARegionalEconomyLandDistributionRequirementAnalysis']['descriptiveAnalysisOutput'] \
@@ -2168,12 +2160,12 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         """Slot method to pass the form values and execute the "TA Abacus Opportunity Cost" R algorithm.
         
         The "TA Abacus Opportunity Cost" process calls the following algorithm:
-        1. modeler:abacus_opportunity_cost
+        1. r:sciendo_opcost_abacus
         """
         self.setAppSettings()
         
         formName = 'DialogLumensTAAbacusOpportunityCostCurve'
-        algName = 'modeler:abacus_opportunity_cost'
+        algName = 'r:sciendoopcostabacus'
         
         if self.validForm(formName):
             logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
@@ -2209,12 +2201,12 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         """Slot method to pass the form values and execute the "TA Opportunity Cost Curve" R algorithm.
         
         The "TA Opportunity Cost Curve" process calls the following algorithm:
-        1. modeler:opportunity_cost
+        1. r:sciendo_opcost_curve
         """
         self.setAppSettings()
         
         formName = 'DialogLumensTAOpportunityCostCurve'
-        algName = 'modeler:opportunity_cost'
+        algName = 'r:sciendoopcostcurve'
         
         if self.validForm(formName):
             logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
@@ -2262,12 +2254,12 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         """Slot method to pass the form values and execute the "TA Opportunity Cost Map" R algorithm.
         
         The "TA Opportunity Cost Map" process calls the following algorithm:
-        1. modeler:opcost_map
+        1. r:sciendo_opcost_map
         """
         self.setAppSettings()
         
         formName = 'DialogLumensTAOpportunityCostMap'
-        algName = 'modeler:opcost_map'
+        algName = 'r:sciendoopcostmap'
         
         if self.validForm(formName):
             logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
@@ -2361,7 +2353,8 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.setAppSettings()
         
         formName = 'DialogLumensTARegionalEconomyLandDistributionRequirementAnalysis'
-        algName = 'r:ta_re_ld_lr'
+        algName = 'r:tareldlr'
+        activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
         
         if self.validForm(formName):
             logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
@@ -2373,6 +2366,9 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
             
             outputs = general.runalg(
                 algName,
+                activeProject,
+                self.main.appSettings[formName]['landUseCover'],
+                self.main.appSettings[formName]['landRequirementTable'],
                 self.main.appSettings[formName]['descriptiveAnalysisOutput'],
                 None,
             )
@@ -2404,7 +2400,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         
         if self.checkBoxRegionalEconomicScenarioImpactFinalDemand.isChecked():
             formName = 'DialogLumensTARegionalEconomyFinalDemandChangeMultiplierAnalysis'
-            algName = 'modeler:ta_reg_luc_5a_lcc_fd'
+            algName = 'r:tarefinaldemand'
             
             if self.validForm(formName):
                 logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
@@ -2418,7 +2414,6 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
                     algName,
                     self.main.appSettings[formName]['landRequirement'],
                     self.main.appSettings[formName]['finalDemandChangeScenario'],
-                    self.main.appSettings[formName]['gdpChangeScenario'],
                     None,
                 )
                 
@@ -2440,7 +2435,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         
         if self.checkBoxRegionalEconomicScenarioImpactGDP.isChecked():
             formName = 'DialogLumensTARegionalEconomyGDPChangeMultiplierAnalysis'
-            algName = 'modeler:ta_reg_luc_5a_lcc_gdp'
+            algName = 'r:taregdp'
             
             if self.validForm(formName):
                 logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
@@ -2453,7 +2448,6 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
                 outputs = general.runalg(
                     algName,
                     self.main.appSettings[formName]['areaName'],
-                    self.main.appSettings[formName]['finalDemandChangeScenario'],
                     self.main.appSettings[formName]['gdpChangeScenario'],
                     None,
                 )
@@ -2479,12 +2473,12 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         """Slot method to pass the form values and execute the "TA Land Use Change Impact" R algorithm.
         
         The "TA Land Use Change Impact" process calls the following algorithm:
-        1. r:ta_reg_luc_gdp_lcc
+        1. r:ta_re_luc_impact
         """
         self.setAppSettings()
         
         formName = 'DialogLumensTAImpactofLandUsetoRegionalEconomyIndicatorAnalysis'
-        algName = 'r:ta_re_luc_impact'
+        algName = 'r:tarelucimpact'
         
         if self.validForm(formName):
             logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
