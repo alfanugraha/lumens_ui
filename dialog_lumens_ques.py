@@ -760,6 +760,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.checkBoxSummarizeMultiplePeriod.toggled.connect(self.toggleSummarizeMultiplePeriod)
         
         # 'QUES-C' tab buttons
+        self.buttonLoadLookupTablePeat.clicked.connect(self.handlerLoadPeatLookupTable)
         self.buttonProcessQUESC.clicked.connect(self.handlerProcessQUESC)
         self.buttonHelpQUESC.clicked.connect(lambda:self.handlerDialogHelp('QUES'))
         self.buttonLoadQUESCTemplate.clicked.connect(self.handlerLoadQUESCTemplate)
@@ -1128,21 +1129,35 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.checkBoxPeatlandCarbonAccounting.setChecked(False)
         self.layoutCarbonAccounting.addWidget(self.checkBoxPeatlandCarbonAccounting, 6, 1)
         
-        self.labelPeatlandMap = QtGui.QLabel()
-        self.labelPeatlandMap.setText('Peat map:')
-        self.layoutCarbonAccounting.addWidget(self.labelPeatlandMap, 7, 0)
-        
-        self.comboBoxPeatlandMap = QtGui.QComboBox()
-        self.comboBoxPeatlandMap.setDisabled(True)
-        self.layoutCarbonAccounting.addWidget(self.comboBoxPeatlandMap, 7, 1)
-        
         self.labelPCACsvfile = QtGui.QLabel()
         self.labelPCACsvfile.setText('Peat emission lookup table:')
-        self.layoutCarbonAccounting.addWidget(self.labelPCACsvfile, 8, 0)
+        self.layoutCarbonAccounting.addWidget(self.labelPCACsvfile, 7, 0)
         
         self.comboBoxPCACsvfile = QtGui.QComboBox()
         self.comboBoxPCACsvfile.setDisabled(True)
-        self.layoutCarbonAccounting.addWidget(self.comboBoxPCACsvfile, 8, 1)
+        self.layoutCarbonAccounting.addWidget(self.comboBoxPCACsvfile, 7, 1)        
+        
+        self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxPCACsvfile)
+        
+        self.labelPeatlandMap = QtGui.QLabel()
+        self.labelPeatlandMap.setText('Peat map:')
+        self.layoutCarbonAccounting.addWidget(self.labelPeatlandMap, 8, 0)
+        
+        self.comboBoxPeatlandMap = QtGui.QComboBox()
+        self.comboBoxPeatlandMap.setDisabled(True)
+        self.layoutCarbonAccounting.addWidget(self.comboBoxPeatlandMap, 8, 1)
+        
+        self.handlerPopulateNameFromLookupData(self.main.dataPlanningUnit, self.comboBoxPeatlandMap)
+        
+        self.buttonLoadLookupTablePeat = QtGui.QPushButton()
+        self.buttonLoadLookupTablePeat.setText('Load')
+        self.layoutCarbonAccounting.addWidget(self.buttonLoadLookupTablePeat, 8, 2)        
+        
+        self.tablePeat = QtGui.QTableWidget()
+        self.tablePeat.setDisabled(True)
+        self.tablePeat.verticalHeader().setVisible(False)
+        self.layoutCarbonAccounting.addWidget(self.tablePeat, 9, 0, 1, 3)        
+        
         
         # 'Summarize multiple period' GroupBox
         self.groupBoxSummarizeMultiplePeriod = QtGui.QGroupBox('Summarize multiple period')
@@ -2487,7 +2502,64 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             # Load the newly saved template file
             if fileSaved:
                 self.handlerLoadQUESBTemplate(fileName)
-                
+
+
+    def handlerLoadPeatLookupTable(self):
+        """Slot method for calling spesific planning unit lookup table and
+           populating the reference mapping table from the selected reference data.
+        """      
+        activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
+        selectedTablePeat = self.comboBoxPeatlandMap.currentText()
+        costumTable = 1
+        
+        outputs = general.runalg(
+            'r:toolsgetlut',
+            activeProject,
+            costumTable,
+            selectedTablePeat,
+            None,
+        )        
+
+        outputKey = 'main_data'
+        if outputs and outputKey in outputs:
+            if os.path.exists(outputs[outputKey]):
+                with open(outputs[outputKey], 'rb') as f:
+                    reader = csv.reader(f)
+                    columns = next(reader)
+                    columns.append('Peat')
+                    
+                    self.tablePeat.setColumnCount(len(columns))
+                    self.tablePeat.setHorizontalHeaderLabels(columns)
+                    
+                    lookupTable = []
+
+                    for row in reader:
+                        dataRow = [QtGui.QTableWidgetItem(field) for field in row]
+                        lookupTable.append(dataRow)
+                        
+                    self.tablePeat.setRowCount(len(lookupTable))
+
+                    tableRow = 0
+                    for dataRow in lookupTable:
+                        tableColumn = 0
+                        for fieldTableItem in dataRow:
+                            fieldTableItem.setFlags(fieldTableItem.flags() & ~QtCore.Qt.ItemIsEnabled)
+                            self.tablePeat.setItem(tableRow, tableColumn, fieldTableItem)
+                            self.tablePeat.horizontalHeader().setResizeMode(tableColumn, QtGui.QHeaderView.ResizeToContents)
+                            tableColumn += 1
+                            
+                        # Additional columns ('Enabled')
+                        fieldEnabled = QtGui.QTableWidgetItem('Select')
+                        fieldEnabled.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
+                        fieldEnabled.setCheckState(QtCore.Qt.Unchecked)
+                        columnEnabled = tableColumn
+                        self.tablePeat.setItem(tableRow, tableColumn, fieldEnabled)
+                        self.tablePeat.horizontalHeader().setResizeMode(columnEnabled, QtGui.QHeaderView.ResizeToContents)                            
+                            
+                        tableRow += 1
+
+                    self.tablePeat.setEnabled(True)
+        
                 
     def handlerLoadHabitatLookupTable(self):
         """Slot method for calling spesific planning unit lookup table and
@@ -2960,11 +3032,13 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.main.appSettings['DialogLumensQUESCCarbonAccounting']['nodata'] \
             = self.spinBoxCANoDataValue.value()
         # self.main.appSettings['DialogLumensQUESCCarbonAccounting']['includePeat'] \
-        #     = self.checkBoxPeatlandCarbonAccounting.value()            
-        # self.main.appSettings['DialogLumensQUESCCarbonAccounting']['peat'] \
-        #     = self.comboBoxPeatlandMap.currentText()
-        # self.main.appSettings['DialogLumensQUESCCarbonAccounting']['peatTable'] \
-        #     = self.comboBoxPCACsvfile.currentText()            
+        #     = self.checkBoxPeatlandCarbonAccounting.value()
+        self.main.appSettings['DialogLumensQUESCCarbonAccounting']['peat'] \
+            = self.comboBoxPeatlandMap.currentText()
+        # self.main.appSettings['DialogLumensQUESCCarbonAccounting']['peatCell'] \
+        #     = self.comboBoxPeatlandMap.currentText()            
+        self.main.appSettings['DialogLumensQUESCCarbonAccounting']['peatTable'] \
+            = self.comboBoxPCACsvfile.currentText()
         
         # 'QUES-C' Peatland Carbon Accounting groupbox fields
         # self.main.appSettings['DialogLumensQUESCPeatlandCarbonAccounting']['csvfile'] = unicode(self.lineEditPCACsvfile.text())
@@ -3195,7 +3269,61 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
 
 
         if self.checkBoxPeatlandCarbonAccounting.isChecked():
-            pass
+            formName = 'DialogLumensQUESCCarbonAccounting'
+            algName = 'r:quescarbonpeat'
+            checkedPeat = []
+        
+            numOfRow = self.tablePeat.rowCount()
+            numOfCol = self.tablePeat.columnCount()
+            for i in range(numOfRow):
+                if self.tablePeat.item(i, numOfCol - 1).checkState() == QtCore.Qt.Checked:
+                    checkedPeat.append(self.tablePeat.item(i, 0).text())
+            
+            if len(checkedPeat) > 0:
+                
+                checkedPeat.sort()
+                checkedPeatCsv = self.writeListCsv(checkedPeat, True)
+                
+                logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
+                logging.getLogger(self.historyLog).info('alg start: %s' % formName)
+                self.buttonProcessQUESC.setDisabled(True)
+                
+                # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
+                # self.main.setWindowState(QtCore.Qt.WindowMinimized)
+                
+                outputs = general.runalg(
+                    algName,
+                    activeProject,
+                    self.main.appSettings[formName]['landUse1'],
+                    self.main.appSettings[formName]['landUse2'],
+                    self.main.appSettings[formName]['planningUnit'],
+                    self.main.appSettings[formName]['carbonTable'],
+                    self.main.appSettings[formName]['nodata'],
+                    self.main.appSettings[formName]['peat'],
+                    checkedPeatCsv,
+                    self.main.appSettings[formName]['peatTable'],
+                    None,
+                    None,
+                )
+                
+                # Display ROut file in debug mode
+                if self.main.appSettings['debug']:
+                    dialog = DialogLumensViewer(self, 'DEBUG "{0}" ({1})'.format(algName, 'processing_script.r.Rout'), 'text', self.main.appSettings['ROutFile'])
+                    dialog.exec_()
+                
+                ##print outputs
+                
+                # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
+                # self.main.setWindowState(QtCore.Qt.WindowActive)
+                
+                algSuccess = self.outputsMessageBox(algName, outputs, '', '')
+
+                if algSuccess:
+                    self.main.loadAddedDataInfo()
+
+                self.buttonProcessQUESC.setEnabled(True)
+                logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
+                logging.getLogger(self.historyLog).info('alg end: %s' % formName)
           
         
         if self.checkBoxSummarizeMultiplePeriod.isChecked():
