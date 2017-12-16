@@ -3297,7 +3297,6 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                     self.main.appSettings[formName]['landUse1'],
                     self.main.appSettings[formName]['landUse2'],
                     self.main.appSettings[formName]['planningUnit'],
-                    self.main.appSettings[formName]['carbonTable'],
                     self.main.appSettings[formName]['nodata'],
                     self.main.appSettings[formName]['peat'],
                     checkedPeatCsv,
