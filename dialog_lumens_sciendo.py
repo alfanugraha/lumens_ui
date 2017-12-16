@@ -338,7 +338,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.checkBoxQUESCDatabaseCount = 0
         self.tableAddFactorRowCount = 0
         self.listOfQUESCDatabase = []
-        self.simulationIndex = {}
+        # self.simulationIndex = []
         self.settingsPath = os.path.join(self.main.appSettings['DialogLumensOpenDatabase']['projectFolder'], self.main.appSettings['folderSCIENDO'])
         self.currentLowEmissionDevelopmentAnalysisTemplate = None
         self.currentLandUseChangeModelingTemplate = None
@@ -375,8 +375,6 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.loadTemplateFiles()
         
         self.tabWidget.currentChanged.connect(self.handlerTabWidgetChanged)
-        
-        self.loadAddedSimulationIndex()
         
         # 'Low Emission Development Analysis' tab checkboxes
         self.checkBoxHistoricalBaselineProjection.toggled.connect(self.toggleHistoricalBaselineProjection)
@@ -743,7 +741,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.tabWidgetLandUseChangeModeling.addTab(self.tabCalculateTransitionMatrix, 'Calculate transition matrix')
         self.tabWidgetLandUseChangeModeling.addTab(self.tabCreateRasterCubeOfFactors, 'Create factor raster cube')
         self.tabWidgetLandUseChangeModeling.addTab(self.tabCalculateWeightOfEvidence, 'Calculate weight of evidence')
-        self.tabWidgetLandUseChangeModeling.addTab(self.tabSimulateLandUseChangeModeling, 'Simulate LUC Modeling')
+        self.tabWidgetLandUseChangeModeling.addTab(self.tabSimulateLandUseChangeModeling, 'Simulate land use')
         
         self.layoutTabLandUseChangeModeling.addWidget(self.tabWidgetLandUseChangeModeling)
         
@@ -894,11 +892,11 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.labelCreateRasterCubeOfFactorsIndex.setText('Simulation directory index:')
         self.layoutCreateRasterCubeOfFactorsParameters.addWidget(self.labelCreateRasterCubeOfFactorsIndex, 0, 0)
         
-        self.comboBoxCreateRasterCubeOfFactorsFolder = QtGui.QComboBox()
-        self.comboBoxCreateRasterCubeOfFactorsFolder.setDisabled(True)
-        self.layoutCreateRasterCubeOfFactorsParameters.addWidget(self.comboBoxCreateRasterCubeOfFactorsFolder, 0, 1)
+        self.comboBoxCreateRasterCubeOfFactorsIndex = QtGui.QComboBox()
+        self.comboBoxCreateRasterCubeOfFactorsIndex.setDisabled(True)
+        self.layoutCreateRasterCubeOfFactorsParameters.addWidget(self.comboBoxCreateRasterCubeOfFactorsIndex, 0, 1)
         
-        self.handlerPopulateNameFromLookupData(self.simulationIndex, self.comboBoxCreateRasterCubeOfFactorsFolder)
+        self.loadAddedSimulationIndex(self.comboBoxCreateRasterCubeOfFactorsIndex)
         
         self.labelCreateRasterCubeOfFactorsDirectory = QtGui.QLabel()
         self.labelCreateRasterCubeOfFactorsDirectory.setText('Factor directory:')
@@ -1025,7 +1023,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.comboBoxCalculateWeightOfEvidenceIndex.setDisabled(True)
         self.layoutCalculateWeightOfEvidenceParameters.addWidget(self.comboBoxCalculateWeightOfEvidenceIndex, 0, 1)
         
-        self.handlerPopulateNameFromLookupData(self.simulationIndex, self.comboBoxCalculateWeightOfEvidenceIndex)
+        self.loadAddedSimulationIndex(self.comboBoxCalculateWeightOfEvidenceIndex)
         
         self.labelCalculateWeightOfEvidenceTable = QtGui.QLabel()
         self.labelCalculateWeightOfEvidenceTable.setText('Land cover lookup table:')
@@ -1130,7 +1128,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.comboBoxLandUseChangeSimulationIndex.setDisabled(True)
         self.layoutLandUseChangeSimulationParameters.addWidget(self.comboBoxLandUseChangeSimulationIndex, 0, 1)
         
-        self.handlerPopulateNameFromLookupData(self.simulationIndex, self.comboBoxLandUseChangeSimulationIndex)      
+        self.loadAddedSimulationIndex(self.comboBoxLandUseChangeSimulationIndex)      
         
         self.labelLandUseChangeSimulationIteration = QtGui.QLabel()
         self.labelLandUseChangeSimulationIteration.setText('Iteration:')
@@ -1361,7 +1359,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.layoutOptionsHistoricalBaselineAnnualProjection.addLayout(layoutCheckBoxQUESCDatabase)
 
 
-    def loadAddedSimulationIndex(self):
+    def loadAddedSimulationIndex(self, comboBox):
         """Method for loading the list of added data.
     
         Looks in the Project SCIENDO dir of the currently open project.
@@ -1371,20 +1369,14 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         if os.path.exists(csvSimulationIndex):
             with open(csvSimulationIndex, 'rb') as f:
                 reader = csv.reader(f)
+                next(reader)
                 
-                # Skip header row
-                headerRow = reader.next()
-                headerColumns = [str(column) for column in headerRow]
-                
-                simulationIndex = {}
-                
+                comboBox.clear()
                 for row in reader:
-                    simulationIndex[row[0]] = {
-                        'IDX_LUSIM': row[0],
-                    }
+                    comboBox.addItem(row[0])
+                
+                comboBox.setEnabled(True)
                     
-                self.simulationIndex = simulationIndex
-        
     
     #***********************************************************
     # 'Low Emission Development Analysis' tab QGroupBox toggle handlers
@@ -1730,7 +1722,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         
         # 'Create factor raster cube' groupbox fields
         self.main.appSettings['DialogLumensSCIENDOCreateRasterCube']['simulationIndex'] \
-            = unicode(self.comboBoxCreateRasterCubeOfFactorsFolder.currentText())
+            = unicode(self.comboBoxCreateRasterCubeOfFactorsIndex.currentText())
         self.main.appSettings['DialogLumensSCIENDOCreateRasterCube']['factorsDir'] \
             = unicode(self.lineEditCreateRasterCubeOfFactorsDirectory.text()).replace(os.path.sep, '/')
         
@@ -1949,12 +1941,15 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
                 dialog = DialogLumensViewer(self, 'DEBUG "{0}" ({1})'.format(algName, 'processing_script.r.Rout'), 'text', self.main.appSettings['ROutFile'])
                 dialog.exec_()
             
-            ##print outputs
-            
             # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
             self.main.setWindowState(QtCore.Qt.WindowActive)
             
-            self.outputsMessageBox(algName, outputs, '', '')
+            algSuccess = self.outputsMessageBox(algName, outputs, '', '')
+            
+            if algSuccess:
+                self.loadAddedSimulationIndex(self.comboBoxCreateRasterCubeOfFactorsIndex)
+                self.loadAddedSimulationIndex(self.comboBoxCalculateWeightOfEvidenceIndex)
+                self.loadAddedSimulationIndex(self.comboBoxLandUseChangeSimulationIndex)
             
             self.buttonProcessTransitionMatrix.setEnabled(True)
             logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
@@ -2095,200 +2090,4 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
             logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
             logging.getLogger(self.historyLog).info('alg end: %s' % formName) 
             
-    
-    def handlerProcessLandUseChangeModeling(self):
-        """Slot method to pass the form values and execute the "SCIENDO Land Use Change Modeling" R algorithms.
-        
-        Depending on the checked groupbox, the "SCIENDO Land Use Change Modeling" process calls the following algorithms:
-        1. modeler:sciendo1_calculate_transition_matrix
-        2. modeler:sciendo1_create_raster_cube
-        3. modeler:sciendo3_calculate_weight_of_evidence
-        4. modeler:sciendo4_simulate_land_use_change
-        5. modeler:sciendo5_simulate_with_scenario
-        """
-        if self.checkBoxCalculateTransitionMatrix.isChecked():
-            formName = 'DialogLumensSCIENDOCalculateTransitionMatrix'
-            algName = 'modeler:sciendo1_calculate_transition_matrix'
-            
-            if self.validForm(formName):
-                logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
-                logging.getLogger(self.historyLog).info('alg start: %s' % formName)
-                self.buttonProcessLandUseChangeModeling.setDisabled(True)
-                
-                # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
-                self.main.setWindowState(QtCore.Qt.WindowMinimized)
-                
-                outputs = general.runalg(
-                    algName,
-                    self.main.appSettings[formName]['factorsDir'],
-                    self.main.appSettings[formName]['landUseLookup'],
-                    self.main.appSettings[formName]['baseYear'],
-                    self.main.appSettings[formName]['location'],
-                )
-                
-                # Display ROut file in debug mode
-                if self.main.appSettings['debug']:
-                    dialog = DialogLumensViewer(self, 'DEBUG "{0}" ({1})'.format(algName, 'processing_script.r.Rout'), 'text', self.main.appSettings['ROutFile'])
-                    dialog.exec_()
-                
-                ##print outputs
-                
-                # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
-                self.main.setWindowState(QtCore.Qt.WindowActive)
-                
-                self.outputsMessageBox(algName, outputs, '', '')
-                
-                self.buttonProcessLandUseChangeModeling.setEnabled(True)
-                logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
-                logging.getLogger(self.historyLog).info('alg end: %s' % formName)
-        
-        if self.checkBoxCreateRasterCubeOfFactors.isChecked():
-            formName = 'DialogLumensSCIENDOCreateRasterCube'
-            algName = 'modeler:sciendo1_create_raster_cube'
-            
-            if self.validForm(formName):
-                logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
-                logging.getLogger(self.historyLog).info('alg start: %s' % formName)
-                self.buttonProcessLandUseChangeModeling.setDisabled(True)
-                
-                # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
-                self.main.setWindowState(QtCore.Qt.WindowMinimized)
-                
-                outputs = general.runalg(
-                    algName,
-                    self.main.appSettings[formName]['factorsDir'],
-                    self.main.appSettings[formName]['landUseLookup'],
-                    self.main.appSettings[formName]['baseYear'],
-                    self.main.appSettings[formName]['location'],
-                )
-                
-                # Display ROut file in debug mode
-                if self.main.appSettings['debug']:
-                    dialog = DialogLumensViewer(self, 'DEBUG "{0}" ({1})'.format(algName, 'processing_script.r.Rout'), 'text', self.main.appSettings['ROutFile'])
-                    dialog.exec_()
-                
-                ##print outputs
-                
-                # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
-                self.main.setWindowState(QtCore.Qt.WindowActive)
-                
-                self.outputsMessageBox(algName, outputs, '', '')
-                
-                self.buttonProcessLandUseChangeModeling.setEnabled(True)
-                logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
-                logging.getLogger(self.historyLog).info('alg end: %s' % formName)
-        
-        if self.checkBoxCalculateWeightOfEvidence.isChecked():
-            formName = 'DialogLumensSCIENDOCalculateWeightofEvidence'
-            algName = 'modeler:sciendo3_calculate_weight_of_evidence'
-            
-            if self.validForm(formName):
-                logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
-                logging.getLogger(self.historyLog).info('alg start: %s' % formName)
-                self.buttonProcessLandUseChangeModeling.setDisabled(True)
-                
-                # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
-                self.main.setWindowState(QtCore.Qt.WindowMinimized)
-                
-                outputs = general.runalg(
-                    algName,
-                    self.main.appSettings[formName]['factorsDir'],
-                    self.main.appSettings[formName]['landUseLookup'],
-                    self.main.appSettings[formName]['baseYear'],
-                    self.main.appSettings[formName]['location'],
-                )
-                
-                # Display ROut file in debug mode
-                if self.main.appSettings['debug']:
-                    dialog = DialogLumensViewer(self, 'DEBUG "{0}" ({1})'.format(algName, 'processing_script.r.Rout'), 'text', self.main.appSettings['ROutFile'])
-                    dialog.exec_()
-                
-                ##print outputs
-                
-                # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
-                self.main.setWindowState(QtCore.Qt.WindowActive)
-                
-                self.outputsMessageBox(algName, outputs, '', '')
-                
-                self.buttonProcessLandUseChangeModeling.setEnabled(True)
-                logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
-                logging.getLogger(self.historyLog).info('alg end: %s' % formName)
-        
-        if self.checkBoxSimulateLandUseChange.isChecked():
-            formName = 'DialogLumensSCIENDOSimulateLandUseChange'
-            algName = 'modeler:sciendo4_simulate_land_use_change'
-            
-            if self.validForm(formName):
-                logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
-                logging.getLogger(self.historyLog).info('alg start: %s' % formName)
-                self.buttonProcessLandUseChangeModeling.setDisabled(True)
-                
-                # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
-                self.main.setWindowState(QtCore.Qt.WindowMinimized)
-                
-                outputs = general.runalg(
-                    algName,
-                    self.main.appSettings[formName]['factorsDir'],
-                    self.main.appSettings[formName]['landUseLookup'],
-                    self.main.appSettings[formName]['baseYear'],
-                    self.main.appSettings[formName]['location'],
-                )
-                
-                # Display ROut file in debug mode
-                if self.main.appSettings['debug']:
-                    dialog = DialogLumensViewer(self, 'DEBUG "{0}" ({1})'.format(algName, 'processing_script.r.Rout'), 'text', self.main.appSettings['ROutFile'])
-                    dialog.exec_()
-                
-                ##print outputs
-                
-                # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
-                self.main.setWindowState(QtCore.Qt.WindowActive)
-                
-                algSuccess = self.outputsMessageBox(algName, outputs, '', '')
-                
-                if algSuccess:
-                    self.main.loadAddedDataInfo()                
-                
-                self.buttonProcessLandUseChangeModeling.setEnabled(True)
-                logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
-                logging.getLogger(self.historyLog).info('alg end: %s' % formName)
-        
-        if self.checkBoxSimulateWithScenario.isChecked():
-            formName = 'DialogLumensSCIENDOSimulateWithScenario'
-            algName = 'modeler:sciendo5_simulate_with_scenario'
-            
-            if self.validForm(formName):
-                logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
-                logging.getLogger(self.historyLog).info('alg start: %s' % formName)
-                self.buttonProcessLandUseChangeModeling.setDisabled(True)
-                
-                # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
-                self.main.setWindowState(QtCore.Qt.WindowMinimized)
-                
-                outputs = general.runalg(
-                    algName,
-                    self.main.appSettings[formName]['factorsDir'],
-                    self.main.appSettings[formName]['landUseLookup'],
-                    self.main.appSettings[formName]['baseYear'],
-                    self.main.appSettings[formName]['location'],
-                )
-                
-                # Display ROut file in debug mode
-                if self.main.appSettings['debug']:
-                    dialog = DialogLumensViewer(self, 'DEBUG "{0}" ({1})'.format(algName, 'processing_script.r.Rout'), 'text', self.main.appSettings['ROutFile'])
-                    dialog.exec_()
-                
-                ##print outputs
-                
-                # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
-                self.main.setWindowState(QtCore.Qt.WindowActive)
-                
-                algSuccess = self.outputsMessageBox(algName, outputs, '', '')
-                
-                if algSuccess:
-                    self.main.loadAddedDataInfo()                
-                
-                self.buttonProcessLandUseChangeModeling.setEnabled(True)
-                logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
-                logging.getLogger(self.historyLog).info('alg end: %s' % formName)
     
