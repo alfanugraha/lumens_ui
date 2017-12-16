@@ -338,6 +338,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.checkBoxQUESCDatabaseCount = 0
         self.tableAddFactorRowCount = 0
         self.listOfQUESCDatabase = []
+        self.simulationIndex = {}
         self.settingsPath = os.path.join(self.main.appSettings['DialogLumensOpenDatabase']['projectFolder'], self.main.appSettings['folderSCIENDO'])
         self.currentLowEmissionDevelopmentAnalysisTemplate = None
         self.currentLandUseChangeModelingTemplate = None
@@ -375,6 +376,8 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         
         self.tabWidget.currentChanged.connect(self.handlerTabWidgetChanged)
         
+        self.loadAddedSimulationIndex()
+        
         # 'Low Emission Development Analysis' tab checkboxes
         self.checkBoxHistoricalBaselineProjection.toggled.connect(self.toggleHistoricalBaselineProjection)
         self.checkBoxHistoricalBaselineAnnualProjection.toggled.connect(self.toggleHistoricalBaselineAnnualProjection)
@@ -394,15 +397,22 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.buttonProcessTransitionMatrix.clicked.connect(self.handlerProcessTransitionMatrix)
         
         # 'Create factor raster cube' tab buttons
-        self.buttonAddFactorRow.clicked.connect(self.handlerButtonAddFactorRow)
+        self.buttonSelectCreateRasterCubeOfFactorsDirectory.clicked.connect(self.handlerSelectLandUseChangeModelingFactorsDir)
+        self.buttonProcessCreateRasterCube.clicked.connect(self.handlerProcessCreateRasterCube)
+        # self.buttonAddFactorRow.clicked.connect(self.handlerButtonAddFactorRow)
         # self.buttonHelpSCIENDOCreateRasterCube.clicked.connect(lambda:self.handlerDialogHelp('SCIENDO'))
-        # self.buttonSelectLandUseChangeModelingFactorsDir.clicked.connect(self.handlerSelectLandUseChangeModelingFactorsDir)
         # self.buttonSelectLandUseChangeModelingLandUseLookup.clicked.connect(self.handlerSelectLandUseChangeModelingLandUseLookup)
         # self.buttonProcessCreateRasterCube.clicked.connect(self.handlerProcessLandUseChangeModeling)
         #self.buttonLoadLandUseChangeModelingTemplate.clicked.connect(self.handlerLoadLandUseChangeModelingTemplate)
         #self.buttonSaveLandUseChangeModelingTemplate.clicked.connect(self.handlerSaveLandUseChangeModelingTemplate)
         #self.buttonSaveAsLandUseChangeModelingTemplate.clicked.connect(self.handlerSaveAsLandUseChangeModelingTemplate)
     
+        # 'Calculate weight of evidence' tab buttons
+        self.buttonProcessCalculateWeightOfEvidence.clicked.connect(self.handlerProcessCalculateWeightOfEvidence)
+        
+        # 'Simulate land use' tab buttons
+        self.buttonProcessLandUseChangeSimulation.clicked.connect(self.handlerProcessSimulateLandUse)
+        
     
     def setupUi(self, parent):
         """Method for building the dialog UI.
@@ -716,7 +726,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         QTabBar::tab {
             background-color: rgb(244, 248, 252);
             height: 35px;
-            width: 200px;
+            width: 210px;
         }
         QTabBar::tab:selected, QTabBar::tab:hover {
             background-color: rgb(249, 237, 243);
@@ -866,44 +876,67 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         # 'Create Raster Cube Of Factors' sub tab
         #***********************************************************
         # 'Raster Cube' GroupBox
-        self.groupBoxCreateRasterCubeOfFactors = QtGui.QGroupBox('Add factors')
+        self.groupBoxCreateRasterCubeOfFactors = QtGui.QGroupBox('List factors')
         self.layoutGroupBoxCreateRasterCubeOfFactors = QtGui.QVBoxLayout()
-        self.layoutGroupBoxCreateRasterCubeOfFactors.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.layoutGroupBoxCreateRasterCubeOfFactors.setAlignment(QtCore.Qt.AlignTop)
         self.groupBoxCreateRasterCubeOfFactors.setLayout(self.layoutGroupBoxCreateRasterCubeOfFactors)
-        self.layoutCreateRasterCubeOfFactorsInfo = QtGui.QVBoxLayout()
-        self.layoutCreateRasterCubeOfFactors = QtGui.QVBoxLayout()
-        self.layoutGroupBoxCreateRasterCubeOfFactors.addLayout(self.layoutCreateRasterCubeOfFactorsInfo)
-        self.layoutGroupBoxCreateRasterCubeOfFactors.addLayout(self.layoutCreateRasterCubeOfFactors)
         
+        self.layoutCreateRasterCubeOfFactorsInfo = QtGui.QVBoxLayout()
         self.labelCreateRasterCubeOfFactorsInfo = QtGui.QLabel()
         self.labelCreateRasterCubeOfFactorsInfo.setText('\n')
+        self.labelCreateRasterCubeOfFactorsInfo.setWordWrap(True)
         self.layoutCreateRasterCubeOfFactorsInfo.addWidget(self.labelCreateRasterCubeOfFactorsInfo)
         
-        self.layoutButtonCreateRasterCubeOfFactors = QtGui.QHBoxLayout()
-        self.layoutButtonCreateRasterCubeOfFactors.setContentsMargins(0, 0, 0, 0)
-        self.layoutButtonCreateRasterCubeOfFactors.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
-        self.buttonAddFactorRow = QtGui.QPushButton()
-        self.buttonAddFactorRow.setText('Add Factor')
-        self.buttonAddFactorRow.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.layoutButtonCreateRasterCubeOfFactors.addWidget(self.buttonAddFactorRow)
+        self.layoutCreateRasterCubeOfFactorsParameters = QtGui.QGridLayout()
+        self.layoutCreateRasterCubeOfFactorsParameters.setContentsMargins(0, 0, 0, 0)
         
-        self.layoutContentCreateRasterCubeOfFactors = QtGui.QVBoxLayout()
-        self.layoutContentCreateRasterCubeOfFactors.setContentsMargins(2, 2, 2, 2)
-        self.contentCreateRasterCubeOfFactors = QtGui.QWidget()
-        self.contentCreateRasterCubeOfFactors.setLayout(self.layoutContentCreateRasterCubeOfFactors)
-        self.scrollCreateRasterCubeOfFactors = QtGui.QScrollArea()
-        self.scrollCreateRasterCubeOfFactors.setWidgetResizable(True)
-        self.scrollCreateRasterCubeOfFactors.setWidget(self.contentCreateRasterCubeOfFactors)
+        self.labelCreateRasterCubeOfFactorsIndex = QtGui.QLabel()
+        self.labelCreateRasterCubeOfFactorsIndex.setText('Simulation directory index:')
+        self.layoutCreateRasterCubeOfFactorsParameters.addWidget(self.labelCreateRasterCubeOfFactorsIndex, 0, 0)
         
-        self.layoutTableAddFactor = QtGui.QVBoxLayout()
-        self.layoutTableAddFactor.setAlignment(QtCore.Qt.AlignTop)
-        self.layoutContentCreateRasterCubeOfFactors.addLayout(self.layoutTableAddFactor)
+        self.comboBoxCreateRasterCubeOfFactorsFolder = QtGui.QComboBox()
+        self.comboBoxCreateRasterCubeOfFactorsFolder.setDisabled(True)
+        self.layoutCreateRasterCubeOfFactorsParameters.addWidget(self.comboBoxCreateRasterCubeOfFactorsFolder, 0, 1)
         
-        self.layoutCreateRasterCubeOfFactors.addLayout(self.layoutButtonCreateRasterCubeOfFactors)
-        self.layoutCreateRasterCubeOfFactors.addWidget(self.scrollCreateRasterCubeOfFactors)
+        self.handlerPopulateNameFromLookupData(self.simulationIndex, self.comboBoxCreateRasterCubeOfFactorsFolder)
+        
+        self.labelCreateRasterCubeOfFactorsDirectory = QtGui.QLabel()
+        self.labelCreateRasterCubeOfFactorsDirectory.setText('Factor directory:')
+        self.layoutCreateRasterCubeOfFactorsParameters.addWidget(self.labelCreateRasterCubeOfFactorsDirectory, 1, 0)
+        
+        self.lineEditCreateRasterCubeOfFactorsDirectory = QtGui.QLineEdit()
+        self.lineEditCreateRasterCubeOfFactorsDirectory.setReadOnly(True)
+        self.layoutCreateRasterCubeOfFactorsParameters.addWidget(self.lineEditCreateRasterCubeOfFactorsDirectory, 1, 1)
+        
+        self.buttonSelectCreateRasterCubeOfFactorsDirectory = QtGui.QPushButton()
+        self.buttonSelectCreateRasterCubeOfFactorsDirectory.setText('&Browse')
+        self.layoutCreateRasterCubeOfFactorsParameters.addWidget(self.buttonSelectCreateRasterCubeOfFactorsDirectory, 1, 2)
+        
+        # self.layoutButtonCreateRasterCubeOfFactors = QtGui.QHBoxLayout()
+        # self.layoutButtonCreateRasterCubeOfFactors.setContentsMargins(0, 0, 0, 0)
+        # self.layoutButtonCreateRasterCubeOfFactors.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        # self.buttonAddFactorRow = QtGui.QPushButton()
+        # self.buttonAddFactorRow.setText('Add Factor')
+        # self.buttonAddFactorRow.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        # self.layoutButtonCreateRasterCubeOfFactors.addWidget(self.buttonAddFactorRow)
+        # 
+        # self.layoutContentCreateRasterCubeOfFactors = QtGui.QVBoxLayout()
+        # self.layoutContentCreateRasterCubeOfFactors.setContentsMargins(2, 2, 2, 2)
+        # self.contentCreateRasterCubeOfFactors = QtGui.QWidget()
+        # self.contentCreateRasterCubeOfFactors.setLayout(self.layoutContentCreateRasterCubeOfFactors)
+        # self.scrollCreateRasterCubeOfFactors = QtGui.QScrollArea()
+        # self.scrollCreateRasterCubeOfFactors.setWidgetResizable(True)
+        # self.scrollCreateRasterCubeOfFactors.setWidget(self.contentCreateRasterCubeOfFactors)
+        # 
+        # self.layoutTableAddFactor = QtGui.QVBoxLayout()
+        # self.layoutTableAddFactor.setAlignment(QtCore.Qt.AlignTop)
+        # self.layoutContentCreateRasterCubeOfFactors.addLayout(self.layoutTableAddFactor)
+        
+        self.layoutGroupBoxCreateRasterCubeOfFactors.addLayout(self.layoutCreateRasterCubeOfFactorsInfo)
+        self.layoutGroupBoxCreateRasterCubeOfFactors.addLayout(self.layoutCreateRasterCubeOfFactorsParameters)
 
         # Template GroupBox
-        self.groupBoxCreateRasterCubeTemplate = QtGui.QGroupBox('Template')
+        self.groupBoxCreateRasterCubeTemplate = QtGui.QGroupBox('Configuration')
         self.layoutGroupBoxCreateRasterCubeTemplate = QtGui.QVBoxLayout()
         self.layoutGroupBoxCreateRasterCubeTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxCreateRasterCubeTemplate.setLayout(self.layoutGroupBoxCreateRasterCubeTemplate)
@@ -913,7 +946,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxCreateRasterCubeTemplate.addLayout(self.layoutCreateRasterCubeTemplate)
         
         self.labelLoadedCreateRasterCubeTemplate = QtGui.QLabel()
-        self.labelLoadedCreateRasterCubeTemplate.setText('Loaded template:')
+        self.labelLoadedCreateRasterCubeTemplate.setText('Loaded configuration:')
         self.layoutCreateRasterCubeTemplate.addWidget(self.labelLoadedCreateRasterCubeTemplate, 0, 0)
         
         self.loadedCreateRasterCubeTemplate = QtGui.QLabel()
@@ -921,13 +954,13 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.layoutCreateRasterCubeTemplate.addWidget(self.loadedCreateRasterCubeTemplate, 0, 1)
         
         self.labelCreateRasterCubeTemplate = QtGui.QLabel()
-        self.labelCreateRasterCubeTemplate.setText('Template name:')
+        self.labelCreateRasterCubeTemplate.setText('Name:')
         self.layoutCreateRasterCubeTemplate.addWidget(self.labelCreateRasterCubeTemplate, 1, 0)
         
         self.comboBoxCreateRasterCubeTemplate = QtGui.QComboBox()
         self.comboBoxCreateRasterCubeTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
         self.comboBoxCreateRasterCubeTemplate.setDisabled(True)
-        self.comboBoxCreateRasterCubeTemplate.addItem('No template found')
+        self.comboBoxCreateRasterCubeTemplate.addItem('No configuration found')
         self.layoutCreateRasterCubeTemplate.addWidget(self.comboBoxCreateRasterCubeTemplate, 1, 1)
         
         self.layoutButtonCreateRasterCubeTemplate = QtGui.QHBoxLayout()
@@ -964,37 +997,162 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.layoutTabCreateRasterCubeOfFactors.addWidget(self.groupBoxCreateRasterCubeTemplate, 0, 1, 1, 1)
         self.layoutTabCreateRasterCubeOfFactors.setColumnStretch(0, 3)
         self.layoutTabCreateRasterCubeOfFactors.setColumnStretch(1, 1) 
-                
+
+
+        #***********************************************************
+        # 'Calculate Weight of Evidence' sub tab
+        #***********************************************************
+        # 'WoE' GroupBox
+        self.groupBoxCalculateWeightOfEvidence = QtGui.QGroupBox('Parameterization')
+        self.layoutGroupBoxCalculateWeightOfEvidence = QtGui.QVBoxLayout()
+        self.layoutGroupBoxCalculateWeightOfEvidence.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.groupBoxCalculateWeightOfEvidence.setLayout(self.layoutGroupBoxCalculateWeightOfEvidence)
+        
+        self.layoutCalculateWeightOfEvidenceInfo = QtGui.QVBoxLayout()
+        self.labelCalculateWeightOfEvidenceInfo = QtGui.QLabel()
+        self.labelCalculateWeightOfEvidenceInfo.setText('\n')
+        self.labelCalculateWeightOfEvidenceInfo.setWordWrap(True)
+        self.layoutCalculateWeightOfEvidenceInfo.addWidget(self.labelCalculateWeightOfEvidenceInfo)
+        
+        self.layoutCalculateWeightOfEvidenceParameters = QtGui.QGridLayout()
+        self.layoutCalculateWeightOfEvidenceParameters.setContentsMargins(0, 0, 0, 0)
+        
+        self.labelCalculateWeightOfEvidenceIndex = QtGui.QLabel()
+        self.labelCalculateWeightOfEvidenceIndex.setText('Simulation directory index:')
+        self.layoutCalculateWeightOfEvidenceParameters.addWidget(self.labelCalculateWeightOfEvidenceIndex, 0, 0)
+        
+        self.comboBoxCalculateWeightOfEvidenceIndex = QtGui.QComboBox()
+        self.comboBoxCalculateWeightOfEvidenceIndex.setDisabled(True)
+        self.layoutCalculateWeightOfEvidenceParameters.addWidget(self.comboBoxCalculateWeightOfEvidenceIndex, 0, 1)
+        
+        self.handlerPopulateNameFromLookupData(self.simulationIndex, self.comboBoxCalculateWeightOfEvidenceIndex)
+        
+        self.labelCalculateWeightOfEvidenceTable = QtGui.QLabel()
+        self.labelCalculateWeightOfEvidenceTable.setText('Land cover lookup table:')
+        self.layoutCalculateWeightOfEvidenceParameters.addWidget(self.labelCalculateWeightOfEvidenceTable, 1, 0)
+        
+        self.comboBoxCalculateWeightOfEvidenceTable = QtGui.QComboBox()
+        self.comboBoxCalculateWeightOfEvidenceTable.setDisabled(True)
+        self.layoutCalculateWeightOfEvidenceParameters.addWidget(self.comboBoxCalculateWeightOfEvidenceTable, 1, 1)
+        
+        self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxCalculateWeightOfEvidenceTable)      
+        
+        self.layoutGroupBoxCalculateWeightOfEvidence.addLayout(self.layoutCalculateWeightOfEvidenceInfo)
+        self.layoutGroupBoxCalculateWeightOfEvidence.addLayout(self.layoutCalculateWeightOfEvidenceParameters)        
+
+        # Template GroupBox
+        self.groupBoxCalculateWeightOfEvidenceTemplate = QtGui.QGroupBox('Configuration')
+        self.layoutGroupBoxCalculateWeightOfEvidenceTemplate = QtGui.QVBoxLayout()
+        self.layoutGroupBoxCalculateWeightOfEvidenceTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.groupBoxCalculateWeightOfEvidenceTemplate.setLayout(self.layoutGroupBoxCalculateWeightOfEvidenceTemplate)
+        self.layoutCalculateWeightOfEvidenceTemplateInfo = QtGui.QVBoxLayout()
+        self.layoutCalculateWeightOfEvidenceTemplate = QtGui.QGridLayout()
+        self.layoutGroupBoxCalculateWeightOfEvidenceTemplate.addLayout(self.layoutCalculateWeightOfEvidenceTemplateInfo)
+        self.layoutGroupBoxCalculateWeightOfEvidenceTemplate.addLayout(self.layoutCalculateWeightOfEvidenceTemplate)
+        
+        self.labelLoadedCalculateWeightOfEvidenceTemplate = QtGui.QLabel()
+        self.labelLoadedCalculateWeightOfEvidenceTemplate.setText('Loaded configuration:')
+        self.layoutCalculateWeightOfEvidenceTemplate.addWidget(self.labelLoadedCalculateWeightOfEvidenceTemplate, 0, 0)
+        
+        self.loadedCalculateWeightOfEvidenceTemplate = QtGui.QLabel()
+        self.loadedCalculateWeightOfEvidenceTemplate.setText('<None>')
+        self.layoutCalculateWeightOfEvidenceTemplate.addWidget(self.loadedCalculateWeightOfEvidenceTemplate, 0, 1)
+        
+        self.labeCalculateWeightOfEvidenceTemplate = QtGui.QLabel()
+        self.labeCalculateWeightOfEvidenceTemplate.setText('Name:')
+        self.layoutCalculateWeightOfEvidenceTemplate.addWidget(self.labeCalculateWeightOfEvidenceTemplate, 1, 0)
+        
+        self.comboBoxCalculateWeightOfEvidenceTemplate = QtGui.QComboBox()
+        self.comboBoxCalculateWeightOfEvidenceTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
+        self.comboBoxCalculateWeightOfEvidenceTemplate.setDisabled(True)
+        self.comboBoxCalculateWeightOfEvidenceTemplate.addItem('No configuration found')
+        self.layoutCalculateWeightOfEvidenceTemplate.addWidget(self.comboBoxCalculateWeightOfEvidenceTemplate, 1, 1)
+        
+        self.layoutButtonCalculateWeightOfEvidenceTemplate = QtGui.QHBoxLayout()
+        self.layoutButtonCalculateWeightOfEvidenceTemplate.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTop)
+        self.buttonLoadCalculateWeightOfEvidenceTemplate = QtGui.QPushButton()
+        self.buttonLoadCalculateWeightOfEvidenceTemplate.setDisabled(True)
+        self.buttonLoadCalculateWeightOfEvidenceTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonLoadCalculateWeightOfEvidenceTemplate.setText('Load')
+        self.buttonSaveCalculateWeightOfEvidenceTemplate = QtGui.QPushButton()
+        self.buttonSaveCalculateWeightOfEvidenceTemplate.setDisabled(True)
+        self.buttonSaveCalculateWeightOfEvidenceTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonSaveCalculateWeightOfEvidenceTemplate.setText('Save')
+        self.buttonSaveAsCalculateWeightOfEvidenceTemplate = QtGui.QPushButton()
+        self.buttonSaveAsCalculateWeightOfEvidenceTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonSaveAsCalculateWeightOfEvidenceTemplate.setText('Save As')
+        self.layoutButtonCalculateWeightOfEvidenceTemplate.addWidget(self.buttonLoadCalculateWeightOfEvidenceTemplate)
+        self.layoutButtonCalculateWeightOfEvidenceTemplate.addWidget(self.buttonSaveCalculateWeightOfEvidenceTemplate)
+        self.layoutButtonCalculateWeightOfEvidenceTemplate.addWidget(self.buttonSaveAsCalculateWeightOfEvidenceTemplate)
+        self.layoutGroupBoxCalculateWeightOfEvidenceTemplate.addLayout(self.layoutButtonCalculateWeightOfEvidenceTemplate)
+        
+        # Process tab button
+        self.layoutButtonCalculateWeightOfEvidence = QtGui.QHBoxLayout()
+        self.buttonProcessCalculateWeightOfEvidence = QtGui.QPushButton()
+        self.buttonProcessCalculateWeightOfEvidence.setText('&Process')
+        self.buttonHelpSCIENDOWeightOfEvidence = QtGui.QPushButton()
+        self.buttonHelpSCIENDOWeightOfEvidence.setIcon(icon)
+        self.layoutButtonCalculateWeightOfEvidence.setAlignment(QtCore.Qt.AlignRight)
+        self.layoutButtonCalculateWeightOfEvidence.addWidget(self.buttonProcessCalculateWeightOfEvidence)
+        self.layoutButtonCalculateWeightOfEvidence.addWidget(self.buttonHelpSCIENDOWeightOfEvidence)
+        
+        # Place the GroupBoxes
+        self.layoutTabCalculateWeightOfEvidence.addWidget(self.groupBoxCalculateWeightOfEvidence, 0, 0)
+        self.layoutTabCalculateWeightOfEvidence.addLayout(self.layoutButtonCalculateWeightOfEvidence, 1, 0, 1, 2, QtCore.Qt.AlignRight)
+        self.layoutTabCalculateWeightOfEvidence.addWidget(self.groupBoxCalculateWeightOfEvidenceTemplate, 0, 1, 1, 1)
+        self.layoutTabCalculateWeightOfEvidence.setColumnStretch(0, 3)
+        self.layoutTabCalculateWeightOfEvidence.setColumnStretch(1, 1) 
+        
         
         #***********************************************************
         # Setup 'Simulate Land Use Change Modeling' sub tab
         #***********************************************************
         # 'Simulate Land Use Change Modeling' GroupBox
-        self.groupBoxLandUseChangeSimulation = QtGui.QGroupBox('Transitions')
+        self.groupBoxLandUseChangeSimulation = QtGui.QGroupBox('Parameterization')
         self.layoutGroupBoxLandUseChangeSimulation = QtGui.QVBoxLayout()
         self.layoutGroupBoxLandUseChangeSimulation.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxLandUseChangeSimulation.setLayout(self.layoutGroupBoxLandUseChangeSimulation)
         
-        self.layouLandUseChangeSimulationInfo = QtGui.QVBoxLayout()
+        self.layoutLandUseChangeSimulationInfo = QtGui.QVBoxLayout()
         self.labelLandUseChangeSimulationInfo = QtGui.QLabel()
-        self.labelLandUseChangeSimulationInfo.setText('Lorem ipsum dolor sit amet...\n')
-        self.layouLandUseChangeSimulationInfo.addWidget(self.labelLandUseChangeSimulationInfo)        
+        self.labelLandUseChangeSimulationInfo.setText('\n')
+        self.labelLandUseChangeSimulationInfo.setWordWrap(True)
+        self.layoutLandUseChangeSimulationInfo.addWidget(self.labelLandUseChangeSimulationInfo)        
         
-        self.tableListOfTransitions = QtGui.QTableWidget()
-        self.tableListOfTransitions.setEnabled(True)
-        self.tableListOfTransitions.setRowCount(25)
-        self.tableListOfTransitions.setColumnCount(4)
-        self.tableListOfTransitions.verticalHeader().setVisible(False)
-        self.tableListOfTransitions.setHorizontalHeaderLabels(['From', 'To', 'Percent', 'Patch Size (Ha)'])
+        self.layoutLandUseChangeSimulationParameters = QtGui.QGridLayout()
+        self.layoutLandUseChangeSimulationParameters.setContentsMargins(0, 0, 0, 0)
         
-        #tableRow = 0
-        #for 
+        self.labelLandUseChangeSimulationIndex = QtGui.QLabel()
+        self.labelLandUseChangeSimulationIndex.setText('Simulation directory index:')
+        self.layoutLandUseChangeSimulationParameters.addWidget(self.labelLandUseChangeSimulationIndex, 0, 0)
         
-        self.layoutGroupBoxLandUseChangeSimulation.addLayout(self.layouLandUseChangeSimulationInfo)
-        self.layoutGroupBoxLandUseChangeSimulation.addWidget(self.tableListOfTransitions)
+        self.comboBoxLandUseChangeSimulationIndex = QtGui.QComboBox()
+        self.comboBoxLandUseChangeSimulationIndex.setDisabled(True)
+        self.layoutLandUseChangeSimulationParameters.addWidget(self.comboBoxLandUseChangeSimulationIndex, 0, 1)
+        
+        self.handlerPopulateNameFromLookupData(self.simulationIndex, self.comboBoxLandUseChangeSimulationIndex)      
+        
+        self.labelLandUseChangeSimulationIteration = QtGui.QLabel()
+        self.labelLandUseChangeSimulationIteration.setText('Iteration:')
+        self.layoutLandUseChangeSimulationParameters.addWidget(self.labelLandUseChangeSimulationIteration, 1, 0)
+        
+        self.spinBoxLandUseChangeSimulationIteration = QtGui.QSpinBox()
+        self.spinBoxLandUseChangeSimulationIteration.setRange(1, 99)
+        self.spinBoxLandUseChangeSimulationIteration.setValue(5)
+        self.layoutLandUseChangeSimulationParameters.addWidget(self.spinBoxLandUseChangeSimulationIteration, 1, 1)
+        
+        # self.tableListOfTransitions = QtGui.QTableWidget()
+        # self.tableListOfTransitions.setEnabled(True)
+        # self.tableListOfTransitions.setRowCount(25)
+        # self.tableListOfTransitions.setColumnCount(4)
+        # self.tableListOfTransitions.verticalHeader().setVisible(False)
+        # self.tableListOfTransitions.setHorizontalHeaderLabels(['From', 'To', 'Percent', 'Patch Size (Ha)'])
+        
+        self.layoutGroupBoxLandUseChangeSimulation.addLayout(self.layoutLandUseChangeSimulationInfo)
+        self.layoutGroupBoxLandUseChangeSimulation.addLayout(self.layoutLandUseChangeSimulationParameters)
         
         # Template GroupBox
-        self.groupBoxLandUseChangeSimulationTemplate = QtGui.QGroupBox('Template')
+        self.groupBoxLandUseChangeSimulationTemplate = QtGui.QGroupBox('Configuration')
         self.layoutGroupBoxLandUseChangeSimulationTemplate = QtGui.QVBoxLayout()
         self.layoutGroupBoxLandUseChangeSimulationTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxLandUseChangeSimulationTemplate.setLayout(self.layoutGroupBoxLandUseChangeSimulationTemplate)
@@ -1004,7 +1162,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxLandUseChangeSimulationTemplate.addLayout(self.layoutLandUseChangeSimulationTemplate)
         
         self.labelLoadedLandUseChangeSimulationTemplate = QtGui.QLabel()
-        self.labelLoadedLandUseChangeSimulationTemplate.setText('Loaded template:')
+        self.labelLoadedLandUseChangeSimulationTemplate.setText('Loaded configuration:')
         self.layoutLandUseChangeSimulationTemplate.addWidget(self.labelLoadedLandUseChangeSimulationTemplate, 0, 0)
         
         self.loadedLandUseChangeSimulationTemplate = QtGui.QLabel()
@@ -1012,13 +1170,13 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.layoutLandUseChangeSimulationTemplate.addWidget(self.loadedLandUseChangeSimulationTemplate, 0, 1)
         
         self.labelLandUseChangeSimulationTemplate = QtGui.QLabel()
-        self.labelLandUseChangeSimulationTemplate.setText('Template name:')
+        self.labelLandUseChangeSimulationTemplate.setText('Name:')
         self.layoutLandUseChangeSimulationTemplate.addWidget(self.labelLandUseChangeSimulationTemplate, 1, 0)
         
         self.comboBoxLandUseChangeSimulationTemplate = QtGui.QComboBox()
         self.comboBoxLandUseChangeSimulationTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
         self.comboBoxLandUseChangeSimulationTemplate.setDisabled(True)
-        self.comboBoxLandUseChangeSimulationTemplate.addItem('No template found')
+        self.comboBoxLandUseChangeSimulationTemplate.addItem('No configuration found')
         self.layoutLandUseChangeSimulationTemplate.addWidget(self.comboBoxLandUseChangeSimulationTemplate, 1, 1)
         
         self.layoutButtonLandUseChangeSimulationTemplate = QtGui.QHBoxLayout()
@@ -1082,7 +1240,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         
         self.setLayout(self.dialogLayout)
         self.setWindowTitle(self.dialogTitle)
-        self.setMinimumSize(1024, 640)
+        self.setMinimumSize(900, 640)
         self.resize(parent.sizeHint())
     
     
@@ -1201,7 +1359,32 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
             layoutCheckBoxQUESCDatabase.addWidget(labelQUESCDatabaseHistoricalBaselineAnnualProjection)
             
         self.layoutOptionsHistoricalBaselineAnnualProjection.addLayout(layoutCheckBoxQUESCDatabase)
-                        
+
+
+    def loadAddedSimulationIndex(self):
+        """Method for loading the list of added data.
+    
+        Looks in the Project SCIENDO dir of the currently open project.
+        """
+        csvSimulationIndex = os.path.join(self.main.appSettings['DialogLumensOpenDatabase']['projectFolder'], self.main.appSettings['folderSCIENDO'], 'list_of_idx_lusim.csv')
+        
+        if os.path.exists(csvSimulationIndex):
+            with open(csvSimulationIndex, 'rb') as f:
+                reader = csv.reader(f)
+                
+                # Skip header row
+                headerRow = reader.next()
+                headerColumns = [str(column) for column in headerRow]
+                
+                simulationIndex = {}
+                
+                for row in reader:
+                    simulationIndex[row[0]] = {
+                        'IDX_LUSIM': row[0],
+                    }
+                    
+                self.simulationIndex = simulationIndex
+        
     
     #***********************************************************
     # 'Low Emission Development Analysis' tab QGroupBox toggle handlers
@@ -1445,7 +1628,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
             # Load the newly saved template file
             if fileSaved:
                 self.handlerLoadLandUseChangeModelingTemplate(fileName)
-    
+        
 
     def handlerButtonAddFactorRow(self):
         """Slot method for adding a factor row
@@ -1496,7 +1679,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         dir = unicode(QtGui.QFileDialog.getExistingDirectory(self, 'Select Factors Directory'))
         
         if dir:
-            self.lineEditLandUseChangeModelingFactorsDir.setText(dir)
+            self.lineEditCreateRasterCubeOfFactorsDirectory.setText(dir)
             logging.getLogger(type(self).__name__).info('select directory: %s', dir)
     
     
@@ -1545,31 +1728,23 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.main.appSettings['DialogLumensSCIENDOCalculateTransitionMatrix']['planningUnit'] \
             = unicode(self.comboBoxTransitionMatrixRegions.currentText())
         
-        # 'Land Use Change Modeling' tab fields
-        self.main.appSettings['DialogLumensSCIENDOCalculateTransitionMatrix']['factorsDir'] \
-            = self.main.appSettings['DialogLumensSCIENDOCreateRasterCube']['factorsDir'] \
-            = self.main.appSettings['DialogLumensSCIENDOCalculateWeightofEvidence']['factorsDir'] \
-            = self.main.appSettings['DialogLumensSCIENDOSimulateLandUseChange']['factorsDir'] \
-            = self.main.appSettings['DialogLumensSCIENDOSimulateWithScenario']['factorsDir'] \
-            = unicode(self.lineEditLandUseChangeModelingFactorsDir.text()).replace(os.path.sep, '/')
-        self.main.appSettings['DialogLumensSCIENDOCalculateTransitionMatrix']['landUseLookup'] \
-            = self.main.appSettings['DialogLumensSCIENDOCreateRasterCube']['landUseLookup'] \
-            = self.main.appSettings['DialogLumensSCIENDOCalculateWeightofEvidence']['landUseLookup'] \
-            = self.main.appSettings['DialogLumensSCIENDOSimulateLandUseChange']['landUseLookup'] \
-            = self.main.appSettings['DialogLumensSCIENDOSimulateWithScenario']['landUseLookup'] \
-            = unicode(self.lineEditLandUseChangeModelingLandUseLookup.text())
-        self.main.appSettings['DialogLumensSCIENDOCalculateTransitionMatrix']['baseYear'] \
-            = self.main.appSettings['DialogLumensSCIENDOCreateRasterCube']['baseYear'] \
-            = self.main.appSettings['DialogLumensSCIENDOCalculateWeightofEvidence']['baseYear'] \
-            = self.main.appSettings['DialogLumensSCIENDOSimulateLandUseChange']['baseYear'] \
-            = self.main.appSettings['DialogLumensSCIENDOSimulateWithScenario']['baseYear'] \
-            = self.spinBoxLandUseChangeModelingBaseYear.value()
-        self.main.appSettings['DialogLumensSCIENDOCalculateTransitionMatrix']['location'] \
-            = self.main.appSettings['DialogLumensSCIENDOCreateRasterCube']['location'] \
-            = self.main.appSettings['DialogLumensSCIENDOCalculateWeightofEvidence']['location'] \
-            = self.main.appSettings['DialogLumensSCIENDOSimulateLandUseChange']['location'] \
-            = self.main.appSettings['DialogLumensSCIENDOSimulateWithScenario']['location'] \
-            = unicode(self.lineEditLandUseChangeModelingLocation.text())
+        # 'Create factor raster cube' groupbox fields
+        self.main.appSettings['DialogLumensSCIENDOCreateRasterCube']['simulationIndex'] \
+            = unicode(self.comboBoxCreateRasterCubeOfFactorsFolder.currentText())
+        self.main.appSettings['DialogLumensSCIENDOCreateRasterCube']['factorsDir'] \
+            = unicode(self.lineEditCreateRasterCubeOfFactorsDirectory.text()).replace(os.path.sep, '/')
+        
+        # 'Create factor raster cube' groupbox fields
+        self.main.appSettings['DialogLumensSCIENDOCalculateWeightofEvidence']['simulationIndex'] \
+            = unicode(self.comboBoxCalculateWeightOfEvidenceIndex.currentText())
+        self.main.appSettings['DialogLumensSCIENDOCalculateWeightofEvidence']['landUseLookup'] \
+            = unicode(self.comboBoxCalculateWeightOfEvidenceTable.currentText())
+        
+        # 'Simulate land use' tab fields
+        self.main.appSettings['DialogLumensSCIENDOSimulateLandUseChange']['simulationIndex'] \
+            = unicode(self.comboBoxLandUseChangeSimulationIndex.currentText())
+        self.main.appSettings['DialogLumensSCIENDOSimulateLandUseChange']['iteration'] \
+            = self.spinBoxLandUseChangeSimulationIteration.value()        
     
     
     def handlerProcessLowEmissionDevelopmentAnalysis(self):
@@ -1784,6 +1959,141 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
             self.buttonProcessTransitionMatrix.setEnabled(True)
             logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
             logging.getLogger(self.historyLog).info('alg end: %s' % formName)
+            
+    
+    def handlerProcessCreateRasterCube(self):
+        """Slot method to pass the form values and execute the "SCIENDO Land Use Simulation" R algorithms.
+        
+        "Create Factor Raster Cube" process calls the following algorithms:
+        1. r:sciendo_lusim_raster_cube
+        """
+        self.setAppSettings()
+        
+        algName = 'r:sciendolusimrastercube'
+        formName = 'DialogLumensSCIENDOCreateRasterCube'
+        activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
+        
+        if self.validForm(formName):
+            logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
+            logging.getLogger(self.historyLog).info('alg start: %s' % formName)
+            self.buttonProcessCreateRasterCube.setDisabled(True)
+            
+            # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
+            self.main.setWindowState(QtCore.Qt.WindowMinimized)
+            
+            outputs = general.runalg(
+                algName,
+                activeProject,
+                self.main.appSettings[formName]['simulationIndex'],
+                self.main.appSettings[formName]['factorsDir'],
+                None,
+            )
+            
+            # Display ROut file in debug mode
+            if self.main.appSettings['debug']:
+                dialog = DialogLumensViewer(self, 'DEBUG "{0}" ({1})'.format(algName, 'processing_script.r.Rout'), 'text', self.main.appSettings['ROutFile'])
+                dialog.exec_()
+            
+            ##print outputs
+            
+            # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
+            self.main.setWindowState(QtCore.Qt.WindowActive)
+            
+            self.outputsMessageBox(algName, outputs, '', '')
+            
+            self.buttonProcessCreateRasterCube.setEnabled(True)
+            logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
+            logging.getLogger(self.historyLog).info('alg end: %s' % formName)        
+
+
+    def handlerProcessCalculateWeightOfEvidence(self):
+        """Slot method to pass the form values and execute the "SCIENDO Land Use Simulation" R algorithms.
+        
+        "Calculate Weight Of Evidence" process calls the following algorithms:
+        1. r:sciendo_lusim_woe
+        """
+        self.setAppSettings()
+        
+        algName = 'r:sciendolusimwoe'
+        formName = 'DialogLumensSCIENDOCalculateWeightofEvidence'
+        activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
+        
+        if self.validForm(formName):
+            logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
+            logging.getLogger(self.historyLog).info('alg start: %s' % formName)
+            self.buttonProcessCalculateWeightOfEvidence.setDisabled(True)
+            
+            # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
+            self.main.setWindowState(QtCore.Qt.WindowMinimized)
+            
+            outputs = general.runalg(
+                algName,
+                activeProject,
+                self.main.appSettings[formName]['simulationIndex'],
+                self.main.appSettings[formName]['landUseLookup'],
+                None,
+            )
+            
+            # Display ROut file in debug mode
+            if self.main.appSettings['debug']:
+                dialog = DialogLumensViewer(self, 'DEBUG "{0}" ({1})'.format(algName, 'processing_script.r.Rout'), 'text', self.main.appSettings['ROutFile'])
+                dialog.exec_()
+            
+            ##print outputs
+            
+            # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
+            self.main.setWindowState(QtCore.Qt.WindowActive)
+            
+            self.outputsMessageBox(algName, outputs, '', '')
+            
+            self.buttonProcessCalculateWeightOfEvidence.setEnabled(True)
+            logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
+            logging.getLogger(self.historyLog).info('alg end: %s' % formName) 
+
+
+    def handlerProcessSimulateLandUse(self):
+        """Slot method to pass the form values and execute the "SCIENDO Land Use Simulation" R algorithms.
+        
+        "Calculate Weight Of Evidence" process calls the following algorithms:
+        1. r:sciendo_lusim_simulate
+        """
+        self.setAppSettings()
+        
+        algName = 'r:sciendolusimsimulate'
+        formName = 'DialogLumensSCIENDOSimulateLandUseChange'
+        activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
+        
+        if self.validForm(formName):
+            logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
+            logging.getLogger(self.historyLog).info('alg start: %s' % formName)
+            self.buttonProcessLandUseChangeSimulation.setDisabled(True)
+            
+            # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
+            self.main.setWindowState(QtCore.Qt.WindowMinimized)
+            
+            outputs = general.runalg(
+                algName,
+                activeProject,
+                self.main.appSettings[formName]['simulationIndex'],
+                self.main.appSettings[formName]['iteration'],
+                None,
+            )
+            
+            # Display ROut file in debug mode
+            if self.main.appSettings['debug']:
+                dialog = DialogLumensViewer(self, 'DEBUG "{0}" ({1})'.format(algName, 'processing_script.r.Rout'), 'text', self.main.appSettings['ROutFile'])
+                dialog.exec_()
+            
+            ##print outputs
+            
+            # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
+            self.main.setWindowState(QtCore.Qt.WindowActive)
+            
+            self.outputsMessageBox(algName, outputs, '', '')
+            
+            self.buttonProcessLandUseChangeSimulation.setEnabled(True)
+            logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
+            logging.getLogger(self.historyLog).info('alg end: %s' % formName) 
             
     
     def handlerProcessLandUseChangeModeling(self):

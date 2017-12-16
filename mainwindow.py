@@ -362,22 +362,16 @@ class MainWindow(QtGui.QMainWindow):
                 'planningUnit': '',
             },
             'DialogLumensSCIENDOCreateRasterCube': {
+                'simulationIndex': '',
                 'factorsDir': '',
-                'landUseLookup': '',
-                'baseYear': '',
-                'location': '',
             },
             'DialogLumensSCIENDOCalculateWeightofEvidence': {
-                'factorsDir': '',
+                'simulationIndex': '',
                 'landUseLookup': '',
-                'baseYear': '',
-                'location': '',
             },
             'DialogLumensSCIENDOSimulateLandUseChange': {
-                'factorsDir': '',
-                'landUseLookup': '',
-                'baseYear': '',
-                'location': '',
+                'simulationIndex': '',
+                'iteration': '',
             },
             'DialogLumensSCIENDOSimulateWithScenario': {
                 'factorsDir': '',
