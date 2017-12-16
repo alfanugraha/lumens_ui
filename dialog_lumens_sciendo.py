@@ -390,12 +390,15 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.buttonSaveLowEmissionDevelopmentAnalysisTemplate.clicked.connect(self.handlerSaveLowEmissionDevelopmentAnalysisTemplate)
         self.buttonSaveAsLowEmissionDevelopmentAnalysisTemplate.clicked.connect(self.handlerSaveAsLowEmissionDevelopmentAnalysisTemplate)
         
-        # 'Land Use Change Modeling' tab buttons
+        # 'Calculate transistion matrix' tab buttons
+        self.buttonProcessTransitionMatrix.clicked.connect(self.handlerProcessTransitionMatrix)
+        
+        # 'Create factor raster cube' tab buttons
         self.buttonAddFactorRow.clicked.connect(self.handlerButtonAddFactorRow)
-        self.buttonSelectLandUseChangeModelingFactorsDir.clicked.connect(self.handlerSelectLandUseChangeModelingFactorsDir)
-        self.buttonSelectLandUseChangeModelingLandUseLookup.clicked.connect(self.handlerSelectLandUseChangeModelingLandUseLookup)
-        self.buttonProcessCreateRasterCube.clicked.connect(self.handlerProcessLandUseChangeModeling)
-        self.buttonHelpSCIENDOCreateRasterCube.clicked.connect(lambda:self.handlerDialogHelp('SCIENDO'))
+        # self.buttonHelpSCIENDOCreateRasterCube.clicked.connect(lambda:self.handlerDialogHelp('SCIENDO'))
+        # self.buttonSelectLandUseChangeModelingFactorsDir.clicked.connect(self.handlerSelectLandUseChangeModelingFactorsDir)
+        # self.buttonSelectLandUseChangeModelingLandUseLookup.clicked.connect(self.handlerSelectLandUseChangeModelingLandUseLookup)
+        # self.buttonProcessCreateRasterCube.clicked.connect(self.handlerProcessLandUseChangeModeling)
         #self.buttonLoadLandUseChangeModelingTemplate.clicked.connect(self.handlerLoadLandUseChangeModelingTemplate)
         #self.buttonSaveLandUseChangeModelingTemplate.clicked.connect(self.handlerSaveLandUseChangeModelingTemplate)
         #self.buttonSaveAsLandUseChangeModelingTemplate.clicked.connect(self.handlerSaveAsLandUseChangeModelingTemplate)
@@ -450,10 +453,10 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.tabWidget.addTab(self.tabLandUseChangeModeling, 'Land use simulation')
         self.tabWidget.addTab(self.tabLog, 'Log')
         
-        ###self.layoutTabLowEmissionDevelopmentAnalysis = QtGui.QVBoxLayout()
+        # self.layoutTabLowEmissionDevelopmentAnalysis = QtGui.QVBoxLayout()
         self.layoutTabLowEmissionDevelopmentAnalysis = QtGui.QGridLayout()
         self.layoutTabLandUseChangeModeling = QtGui.QVBoxLayout()
-        ##self.layoutTabLandUseChangeModeling = QtGui.QGridLayout()
+        # self.layoutTabLandUseChangeModeling = QtGui.QGridLayout()
         self.layoutTabLog = QtGui.QVBoxLayout()
         
         self.tabLowEmissionDevelopmentAnalysis.setLayout(self.layoutTabLowEmissionDevelopmentAnalysis)
@@ -697,48 +700,167 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.layoutTabLowEmissionDevelopmentAnalysis.setColumnStretch(0, 3)
         self.layoutTabLowEmissionDevelopmentAnalysis.setColumnStretch(1, 1) # Smaller template column
         
+        
         #***********************************************************
         # Setup 'Land Use Change Modeling' tab
         #***********************************************************
         self.tabWidgetLandUseChangeModeling = QtGui.QTabWidget()
         LandUseChangeModelingTabWidgetStylesheet = """
+        QTabWidget::tab-bar{
+            alignment: right;
+        }
         QTabWidget QWidget {
-            background-color: rgb(217, 229, 252);
+            background-color: rgb(249, 237, 243);
             color: rgb(95, 98, 102);
         }
         QTabBar::tab {
             background-color: rgb(244, 248, 252);
             height: 35px;
-            width: 240px;
+            width: 200px;
         }
         QTabBar::tab:selected, QTabBar::tab:hover {
-            background-color: rgb(217, 229, 252);
+            background-color: rgb(249, 237, 243);
             font: bold;
         }
         """
         self.tabWidgetLandUseChangeModeling.setStyleSheet(LandUseChangeModelingTabWidgetStylesheet)
         
-        self.tabCreateRasterCubeOfFactors = QtGui.QWidget()
         self.tabCalculateTransitionMatrix = QtGui.QWidget()
-        # self.tabCalculateWeightOfEvidence = QtGui.QWidget()
+        self.tabCreateRasterCubeOfFactors = QtGui.QWidget()
+        self.tabCalculateWeightOfEvidence = QtGui.QWidget()
         self.tabSimulateLandUseChangeModeling = QtGui.QWidget()
         
-        self.tabWidgetLandUseChangeModeling.addTab(self.tabCreateRasterCubeOfFactors, 'Create Raster Cube Of Factors')
-        self.tabWidgetLandUseChangeModeling.addTab(self.tabCalculateTransitionMatrix, 'Calculate Transition Matrix')
-        # self.tabWidgetLandUseChangeModeling.addTab(self.tabCalculateWeightOfEvidence, 'Calculate Weight Of Evidence')
+        self.tabWidgetLandUseChangeModeling.addTab(self.tabCalculateTransitionMatrix, 'Calculate transition matrix')
+        self.tabWidgetLandUseChangeModeling.addTab(self.tabCreateRasterCubeOfFactors, 'Create factor raster cube')
+        self.tabWidgetLandUseChangeModeling.addTab(self.tabCalculateWeightOfEvidence, 'Calculate weight of evidence')
         self.tabWidgetLandUseChangeModeling.addTab(self.tabSimulateLandUseChangeModeling, 'Simulate LUC Modeling')
         
         self.layoutTabLandUseChangeModeling.addWidget(self.tabWidgetLandUseChangeModeling)
         
-        self.layoutTabCreateRasterCubeOfFactors = QtGui.QGridLayout()
         self.layoutTabCalculateTransitionMatrix = QtGui.QGridLayout()
-        # self.layoutTabCalculateWeightOfEvidence = QtGui.QGridLayout()
+        self.layoutTabCreateRasterCubeOfFactors = QtGui.QGridLayout()
+        self.layoutTabCalculateWeightOfEvidence = QtGui.QGridLayout()
         self.layoutTabSimulateLandUseChangeModeling = QtGui.QGridLayout()
         
-        self.tabCreateRasterCubeOfFactors.setLayout(self.layoutTabCreateRasterCubeOfFactors)
         self.tabCalculateTransitionMatrix.setLayout(self.layoutTabCalculateTransitionMatrix)
-        # self.tabCalculateWeightOfEvidence.setLayout(self.layoutTabCalculateWeightOfEvidence)
+        self.tabCreateRasterCubeOfFactors.setLayout(self.layoutTabCreateRasterCubeOfFactors)
+        self.tabCalculateWeightOfEvidence.setLayout(self.layoutTabCalculateWeightOfEvidence)
         self.tabSimulateLandUseChangeModeling.setLayout(self.layoutTabSimulateLandUseChangeModeling)
+
+
+        #***********************************************************
+        # Setup 'Calculate Transition Matrix' sub tab
+        #***********************************************************
+        # 'Setup initial and final map' GroupBox
+        self.groupBoxSetupInitialAndFinalMap = QtGui.QGroupBox('Setup initial and final map')
+        self.layoutSetupInitialAndFinalMap = QtGui.QVBoxLayout()
+        self.layoutSetupInitialAndFinalMap.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.groupBoxSetupInitialAndFinalMap.setLayout(self.layoutSetupInitialAndFinalMap)
+        
+        self.layoutSetupInitialAndFinalMapInfo = QtGui.QVBoxLayout()
+        self.labelSetupInitialAndFinalMapInfo = QtGui.QLabel()
+        self.labelSetupInitialAndFinalMapInfo.setText('\n')
+        self.layoutSetupInitialAndFinalMapInfo.addWidget(self.labelSetupInitialAndFinalMapInfo)
+                 
+        self.layoutTransitionMatrixPerRegions = QtGui.QGridLayout()
+        self.layoutTransitionMatrixPerRegions.setContentsMargins(0, 0, 0, 0)
+        
+        self.labelTransitionMatrixInitialMap = QtGui.QLabel()
+        self.labelTransitionMatrixInitialMap.setText('Earlier land use/cover:')
+        self.layoutTransitionMatrixPerRegions.addWidget(self.labelTransitionMatrixInitialMap, 0, 0)
+        
+        self.comboBoxTransitionMatrixInitialMap = QtGui.QComboBox()
+        self.comboBoxTransitionMatrixInitialMap.setDisabled(True)
+        self.layoutTransitionMatrixPerRegions.addWidget(self.comboBoxTransitionMatrixInitialMap, 0, 1)
+        
+        self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxTransitionMatrixInitialMap)        
+
+        self.labelTransitionMatrixFinalMap = QtGui.QLabel()
+        self.labelTransitionMatrixFinalMap.setText('Later land use/cover:')
+        self.layoutTransitionMatrixPerRegions.addWidget(self.labelTransitionMatrixFinalMap, 1, 0)
+        
+        self.comboBoxTransitionMatrixFinalMap = QtGui.QComboBox()
+        self.comboBoxTransitionMatrixFinalMap.setDisabled(True)
+        self.layoutTransitionMatrixPerRegions.addWidget(self.comboBoxTransitionMatrixFinalMap, 1, 1)
+        
+        self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxTransitionMatrixFinalMap)
+        
+        self.labelTransitionMatrixRegions = QtGui.QLabel()
+        self.labelTransitionMatrixRegions.setText('Planning unit:')
+        self.layoutTransitionMatrixPerRegions.addWidget(self.labelTransitionMatrixRegions, 2, 0)
+        
+        self.comboBoxTransitionMatrixRegions = QtGui.QComboBox()
+        self.comboBoxTransitionMatrixRegions.setDisabled(True)
+        self.layoutTransitionMatrixPerRegions.addWidget(self.comboBoxTransitionMatrixRegions, 2, 1)
+        
+        self.handlerPopulateNameFromLookupData(self.main.dataPlanningUnit, self.comboBoxTransitionMatrixRegions) 
+
+        self.layoutSetupInitialAndFinalMap.addLayout(self.layoutSetupInitialAndFinalMapInfo)
+        self.layoutSetupInitialAndFinalMap.addLayout(self.layoutTransitionMatrixPerRegions)
+
+        # Template GroupBox
+        self.groupBoxTransitionMatrixTemplate = QtGui.QGroupBox('Configuration')
+        self.layoutGroupBoxTransitionMatrixTemplate = QtGui.QVBoxLayout()
+        self.layoutGroupBoxTransitionMatrixTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.groupBoxTransitionMatrixTemplate.setLayout(self.layoutGroupBoxTransitionMatrixTemplate)
+        self.layoutTransitionMatrixTemplateInfo = QtGui.QVBoxLayout()
+        self.layoutTransitionMatrixTemplate = QtGui.QGridLayout()
+        self.layoutGroupBoxTransitionMatrixTemplate.addLayout(self.layoutTransitionMatrixTemplateInfo)
+        self.layoutGroupBoxTransitionMatrixTemplate.addLayout(self.layoutTransitionMatrixTemplate)
+        
+        self.labelLoadedTransitionMatrixTemplate = QtGui.QLabel()
+        self.labelLoadedTransitionMatrixTemplate.setText('Loaded configuration:')
+        self.layoutTransitionMatrixTemplate.addWidget(self.labelLoadedTransitionMatrixTemplate, 0, 0)
+        
+        self.loadedTransitionMatrixTemplate = QtGui.QLabel()
+        self.loadedTransitionMatrixTemplate.setText('<None>')
+        self.layoutTransitionMatrixTemplate.addWidget(self.loadedTransitionMatrixTemplate, 0, 1)
+        
+        self.labelTransitionMatrixTemplate = QtGui.QLabel()
+        self.labelTransitionMatrixTemplate.setText('Name:')
+        self.layoutTransitionMatrixTemplate.addWidget(self.labelTransitionMatrixTemplate, 1, 0)
+        
+        self.comboBoxTransitionMatrixTemplate = QtGui.QComboBox()
+        self.comboBoxTransitionMatrixTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
+        self.comboBoxTransitionMatrixTemplate.setDisabled(True)
+        self.comboBoxTransitionMatrixTemplate.addItem('No configuration found')
+        self.layoutTransitionMatrixTemplate.addWidget(self.comboBoxTransitionMatrixTemplate, 1, 1)
+        
+        self.layoutButtonTransitionMatrixTemplate = QtGui.QHBoxLayout()
+        self.layoutButtonTransitionMatrixTemplate.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTop)
+        self.buttonLoadTransitionMatrixTemplate = QtGui.QPushButton()
+        self.buttonLoadTransitionMatrixTemplate.setDisabled(True)
+        self.buttonLoadTransitionMatrixTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonLoadTransitionMatrixTemplate.setText('Load')
+        self.buttonSaveTransitionMatrixTemplate = QtGui.QPushButton()
+        self.buttonSaveTransitionMatrixTemplate.setDisabled(True)
+        self.buttonSaveTransitionMatrixTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonSaveTransitionMatrixTemplate.setText('Save')
+        self.buttonSaveAsTransitionMatrixTemplate = QtGui.QPushButton()
+        self.buttonSaveAsTransitionMatrixTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonSaveAsTransitionMatrixTemplate.setText('Save As')
+        self.layoutButtonTransitionMatrixTemplate.addWidget(self.buttonLoadTransitionMatrixTemplate)
+        self.layoutButtonTransitionMatrixTemplate.addWidget(self.buttonSaveTransitionMatrixTemplate)
+        self.layoutButtonTransitionMatrixTemplate.addWidget(self.buttonSaveAsTransitionMatrixTemplate)
+        self.layoutGroupBoxTransitionMatrixTemplate.addLayout(self.layoutButtonTransitionMatrixTemplate)
+
+        # Process tab button
+        self.layoutButtonTransitionMatrix = QtGui.QHBoxLayout()
+        self.buttonProcessTransitionMatrix = QtGui.QPushButton()
+        self.buttonProcessTransitionMatrix.setText('&Process')
+        self.buttonHelpSCIENDOTransitionMatrix = QtGui.QPushButton()
+        self.buttonHelpSCIENDOTransitionMatrix.setIcon(icon)
+        self.layoutButtonTransitionMatrix.setAlignment(QtCore.Qt.AlignRight)
+        self.layoutButtonTransitionMatrix.addWidget(self.buttonProcessTransitionMatrix)
+        self.layoutButtonTransitionMatrix.addWidget(self.buttonHelpSCIENDOTransitionMatrix)
+        
+        # Place the GroupBoxes
+        self.layoutTabCalculateTransitionMatrix.addWidget(self.groupBoxSetupInitialAndFinalMap, 0, 0)
+        self.layoutTabCalculateTransitionMatrix.addLayout(self.layoutButtonTransitionMatrix, 1, 0, 1, 2, QtCore.Qt.AlignRight)
+        self.layoutTabCalculateTransitionMatrix.addWidget(self.groupBoxTransitionMatrixTemplate, 0, 1, 1, 1)
+        self.layoutTabCalculateTransitionMatrix.setColumnStretch(0, 3)
+        self.layoutTabCalculateTransitionMatrix.setColumnStretch(1, 1) 
+        
         
         #***********************************************************
         # 'Create Raster Cube Of Factors' sub tab
@@ -754,7 +876,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxCreateRasterCubeOfFactors.addLayout(self.layoutCreateRasterCubeOfFactors)
         
         self.labelCreateRasterCubeOfFactorsInfo = QtGui.QLabel()
-        self.labelCreateRasterCubeOfFactorsInfo.setText('Lorem ipsum dolor sit amet...\n')
+        self.labelCreateRasterCubeOfFactorsInfo.setText('\n')
         self.layoutCreateRasterCubeOfFactorsInfo.addWidget(self.labelCreateRasterCubeOfFactorsInfo)
         
         self.layoutButtonCreateRasterCubeOfFactors = QtGui.QHBoxLayout()
@@ -826,96 +948,6 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.layoutButtonCreateRasterCubeTemplate.addWidget(self.buttonSaveAsCreateRasterCubeTemplate)
         self.layoutGroupBoxCreateRasterCubeTemplate.addLayout(self.layoutButtonCreateRasterCubeTemplate)
         
-        
-        # don't forget to remove a few of unnecessary lines below
-        
-        # 'Functions' GroupBox
-        self.groupBoxLandUseChangeModelingFunctions = QtGui.QGroupBox('Functions')
-        self.layoutGroupBoxLandUseChangeModelingFunctions = QtGui.QVBoxLayout()
-        self.layoutGroupBoxLandUseChangeModelingFunctions.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
-        self.groupBoxLandUseChangeModelingFunctions.setLayout(self.layoutGroupBoxLandUseChangeModelingFunctions)
-        self.layoutLandUseChangeModelingFunctionsInfo = QtGui.QVBoxLayout()
-        self.layoutLandUseChangeModelingFunctions = QtGui.QGridLayout()
-        self.layoutGroupBoxLandUseChangeModelingFunctions.addLayout(self.layoutLandUseChangeModelingFunctionsInfo)
-        self.layoutGroupBoxLandUseChangeModelingFunctions.addLayout(self.layoutLandUseChangeModelingFunctions)
-        
-        self.labelLandUseChangeModelingFunctionsInfo = QtGui.QLabel()
-        self.labelLandUseChangeModelingFunctionsInfo.setText('Lorem ipsum dolor sit amet...\n')
-        self.layoutLandUseChangeModelingFunctionsInfo.addWidget(self.labelLandUseChangeModelingFunctionsInfo)
-        
-        self.checkBoxCalculateTransitionMatrix = QtGui.QCheckBox('Calculate transition matrix')
-        self.checkBoxCreateRasterCubeOfFactors = QtGui.QCheckBox('Create raster cube of factors')
-        self.checkBoxCalculateWeightOfEvidence = QtGui.QCheckBox('Calculate weight of evidence')
-        self.checkBoxSimulateLandUseChange = QtGui.QCheckBox('Simulate land use change')
-        self.checkBoxSimulateWithScenario = QtGui.QCheckBox('Simulate with scenario')
-        
-        self.layoutLandUseChangeModelingFunctions.addWidget(self.checkBoxCalculateTransitionMatrix)
-        self.layoutLandUseChangeModelingFunctions.addWidget(self.checkBoxCreateRasterCubeOfFactors)
-        self.layoutLandUseChangeModelingFunctions.addWidget(self.checkBoxCalculateWeightOfEvidence)
-        self.layoutLandUseChangeModelingFunctions.addWidget(self.checkBoxSimulateLandUseChange)
-        self.layoutLandUseChangeModelingFunctions.addWidget(self.checkBoxSimulateWithScenario)
-        
-        
-        # 'Parameters' GroupBox
-        self.groupBoxLandUseChangeModelingParameters = QtGui.QGroupBox('Parameters')
-        self.layoutGroupBoxLandUseChangeModelingParameters = QtGui.QVBoxLayout()
-        self.layoutGroupBoxLandUseChangeModelingParameters.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
-        self.groupBoxLandUseChangeModelingParameters.setLayout(self.layoutGroupBoxLandUseChangeModelingParameters)
-        self.layoutLandUseChangeModelingParametersInfo = QtGui.QVBoxLayout()
-        self.layoutLandUseChangeModelingParameters = QtGui.QGridLayout()
-        self.layoutGroupBoxLandUseChangeModelingParameters.addLayout(self.layoutLandUseChangeModelingParametersInfo)
-        self.layoutGroupBoxLandUseChangeModelingParameters.addLayout(self.layoutLandUseChangeModelingParameters)
-        
-        self.labelLandUseChangeModelingParametersInfo = QtGui.QLabel()
-        self.labelLandUseChangeModelingParametersInfo.setText('Lorem ipsum dolor sit amet...\n')
-        self.layoutLandUseChangeModelingParametersInfo.addWidget(self.labelLandUseChangeModelingParametersInfo)
-        
-        self.labelLandUseChangeModelingFactorsDir = QtGui.QLabel()
-        self.labelLandUseChangeModelingFactorsDir.setText('Factors directory:')
-        self.layoutLandUseChangeModelingParameters.addWidget(self.labelLandUseChangeModelingFactorsDir, 0, 0)
-        
-        self.lineEditLandUseChangeModelingFactorsDir = QtGui.QLineEdit()
-        self.lineEditLandUseChangeModelingFactorsDir.setReadOnly(True)
-        self.layoutLandUseChangeModelingParameters.addWidget(self.lineEditLandUseChangeModelingFactorsDir, 0, 1)
-        
-        self.buttonSelectLandUseChangeModelingFactorsDir = QtGui.QPushButton()
-        self.buttonSelectLandUseChangeModelingFactorsDir.setText('&Browse')
-        self.layoutLandUseChangeModelingParameters.addWidget(self.buttonSelectLandUseChangeModelingFactorsDir, 0, 2)
-        
-        self.labelLandUseChangeModelingLandUseLookup = QtGui.QLabel()
-        self.labelLandUseChangeModelingLandUseLookup.setText('Land use lookup table:')
-        self.layoutLandUseChangeModelingParameters.addWidget(self.labelLandUseChangeModelingLandUseLookup, 1, 0)
-        
-        self.lineEditLandUseChangeModelingLandUseLookup = QtGui.QLineEdit()
-        self.lineEditLandUseChangeModelingLandUseLookup.setReadOnly(True)
-        self.layoutLandUseChangeModelingParameters.addWidget(self.lineEditLandUseChangeModelingLandUseLookup, 1, 1)
-        
-        self.buttonSelectLandUseChangeModelingLandUseLookup = QtGui.QPushButton()
-        self.buttonSelectLandUseChangeModelingLandUseLookup.setText('&Browse')
-        self.layoutLandUseChangeModelingParameters.addWidget(self.buttonSelectLandUseChangeModelingLandUseLookup, 1, 2)
-        
-        self.labelLandUseChangeModelingBaseYear = QtGui.QLabel()
-        self.labelLandUseChangeModelingBaseYear.setText('Base &year:')
-        self.layoutLandUseChangeModelingParameters.addWidget(self.labelLandUseChangeModelingBaseYear, 2, 0)
-        
-        self.spinBoxLandUseChangeModelingBaseYear = QtGui.QSpinBox()
-        self.spinBoxLandUseChangeModelingBaseYear.setRange(1, 9999)
-        td = datetime.date.today()
-        self.spinBoxLandUseChangeModelingBaseYear.setValue(td.year)
-        self.layoutLandUseChangeModelingParameters.addWidget(self.spinBoxLandUseChangeModelingBaseYear, 2, 1)
-        self.labelLandUseChangeModelingBaseYear.setBuddy(self.spinBoxLandUseChangeModelingBaseYear)
-        
-        self.labelLandUseChangeModelingLocation = QtGui.QLabel()
-        self.labelLandUseChangeModelingLocation.setText('Location:')
-        self.layoutLandUseChangeModelingParameters.addWidget(self.labelLandUseChangeModelingLocation, 3, 0)
-        
-        self.lineEditLandUseChangeModelingLocation = QtGui.QLineEdit()
-        self.lineEditLandUseChangeModelingLocation.setText('location')
-        self.layoutLandUseChangeModelingParameters.addWidget(self.lineEditLandUseChangeModelingLocation, 3, 1)
-        self.labelLandUseChangeModelingLocation.setBuddy(self.lineEditLandUseChangeModelingLocation)
-        
-         # end: dont forget to remove
-        
         # Process tab button
         self.layoutButtonCreateRasterCube = QtGui.QHBoxLayout()
         self.buttonProcessCreateRasterCube = QtGui.QPushButton()
@@ -925,136 +957,14 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.layoutButtonCreateRasterCube.setAlignment(QtCore.Qt.AlignRight)
         self.layoutButtonCreateRasterCube.addWidget(self.buttonProcessCreateRasterCube)
         self.layoutButtonCreateRasterCube.addWidget(self.buttonHelpSCIENDOCreateRasterCube)
-
+        
         # Place the GroupBoxes
         self.layoutTabCreateRasterCubeOfFactors.addWidget(self.groupBoxCreateRasterCubeOfFactors, 0, 0)
         self.layoutTabCreateRasterCubeOfFactors.addLayout(self.layoutButtonCreateRasterCube, 1, 0, 1, 2, QtCore.Qt.AlignRight)
         self.layoutTabCreateRasterCubeOfFactors.addWidget(self.groupBoxCreateRasterCubeTemplate, 0, 1, 1, 1)
         self.layoutTabCreateRasterCubeOfFactors.setColumnStretch(0, 3)
-        self.layoutTabCreateRasterCubeOfFactors.setColumnStretch(1, 1) # Smaller template column
-        
-        #***********************************************************
-        # Setup 'Calculate Transition Matrix' sub tab
-        #***********************************************************
-        # 'Setup initial and final map' GroupBox
-        self.groupBoxSetupInitialAndFinalMap = QtGui.QGroupBox('Setup initial and final map')
-        self.layoutSetupInitialAndFinalMap = QtGui.QVBoxLayout()
-        self.layoutSetupInitialAndFinalMap.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
-        self.groupBoxSetupInitialAndFinalMap.setLayout(self.layoutSetupInitialAndFinalMap)
-        
-        self.layoutSetupInitialAndFinalMapInfo = QtGui.QVBoxLayout()
-        self.labelSetupInitialAndFinalMapInfo = QtGui.QLabel()
-        self.labelSetupInitialAndFinalMapInfo.setText('Lorem ipsum dolor sit amet...\n')
-        self.layoutSetupInitialAndFinalMapInfo.addWidget(self.labelSetupInitialAndFinalMapInfo)
-        
-        self.layoutTransitionMatrixPerRegions = QtGui.QGridLayout()
-        self.layoutTransitionMatrixPerRegions.setContentsMargins(0, 0, 0, 0)
-
-        self.labelTransitionMatrixInitialMap = QtGui.QLabel()
-        self.labelTransitionMatrixInitialMap.setText('Earlier land use/cover:')
-        self.layoutTransitionMatrixPerRegions.addWidget(self.labelTransitionMatrixInitialMap, 0, 0)
-        
-        self.comboBoxTransitionMatrixInitialMap = QtGui.QComboBox()
-        self.comboBoxTransitionMatrixInitialMap.setDisabled(True)
-        self.layoutTransitionMatrixPerRegions.addWidget(self.comboBoxTransitionMatrixInitialMap, 0, 1)
-        
-        self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxTransitionMatrixInitialMap)
-        
-        self.labelTransitionMatrixFinalMap = QtGui.QLabel()
-        self.labelTransitionMatrixFinalMap.setText('Later land use/cover:')
-        self.layoutTransitionMatrixPerRegions.addWidget(self.labelTransitionMatrixFinalMap, 1, 0)
-        
-        self.comboBoxTransitionMatrixFinalMap = QtGui.QComboBox()
-        self.comboBoxTransitionMatrixFinalMap.setDisabled(True)
-        self.layoutTransitionMatrixPerRegions.addWidget(self.comboBoxTransitionMatrixFinalMap, 1, 1)
-        
-        self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxTransitionMatrixFinalMap)
-        
-        self.labelTransitionMatrixRegions = QtGui.QLabel()
-        self.labelTransitionMatrixRegions.setText('Planning unit:')
-        self.layoutTransitionMatrixPerRegions.addWidget(self.labelTransitionMatrixRegions, 2, 0)
-        
-        self.comboBoxTransitionMatrixRegions = QtGui.QComboBox()
-        self.comboBoxTransitionMatrixRegions.setDisabled(True)
-        self.layoutTransitionMatrixPerRegions.addWidget(self.comboBoxTransitionMatrixRegions, 2, 1)
-        
-        self.handlerPopulateNameFromLookupData(self.main.dataPlanningUnit, self.comboBoxTransitionMatrixRegions)           
-
-        self.labelTransitionMatrixIteration = QtGui.QLabel()
-        self.labelTransitionMatrixIteration.setText('Iteration:')
-        self.layoutTransitionMatrixPerRegions.addWidget(self.labelTransitionMatrixIteration, 3, 0)
-        
-        self.spinBoxTransitionMatrixIteration = QtGui.QSpinBox()
-        self.spinBoxTransitionMatrixIteration.setRange(1, 99)
-        self.spinBoxTransitionMatrixIteration.setValue(5)
-        self.layoutTransitionMatrixPerRegions.addWidget(self.spinBoxTransitionMatrixIteration, 3, 1)
-        self.labelLandUseChangeModelingBaseYear.setBuddy(self.spinBoxTransitionMatrixIteration)
-        
-        self.layoutSetupInitialAndFinalMap.addLayout(self.layoutSetupInitialAndFinalMapInfo)
-        self.layoutSetupInitialAndFinalMap.addLayout(self.layoutTransitionMatrixPerRegions)
-
-        # Template GroupBox
-        self.groupBoxTransitionMatrixTemplate = QtGui.QGroupBox('Template')
-        self.layoutGroupBoxTransitionMatrixTemplate = QtGui.QVBoxLayout()
-        self.layoutGroupBoxTransitionMatrixTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
-        self.groupBoxTransitionMatrixTemplate.setLayout(self.layoutGroupBoxTransitionMatrixTemplate)
-        self.layoutTransitionMatrixTemplateInfo = QtGui.QVBoxLayout()
-        self.layoutTransitionMatrixTemplate = QtGui.QGridLayout()
-        self.layoutGroupBoxTransitionMatrixTemplate.addLayout(self.layoutTransitionMatrixTemplateInfo)
-        self.layoutGroupBoxTransitionMatrixTemplate.addLayout(self.layoutTransitionMatrixTemplate)
-        
-        self.labelLoadedTransitionMatrixTemplate = QtGui.QLabel()
-        self.labelLoadedTransitionMatrixTemplate.setText('Loaded template:')
-        self.layoutTransitionMatrixTemplate.addWidget(self.labelLoadedTransitionMatrixTemplate, 0, 0)
-        
-        self.loadedTransitionMatrixTemplate = QtGui.QLabel()
-        self.loadedTransitionMatrixTemplate.setText('<None>')
-        self.layoutTransitionMatrixTemplate.addWidget(self.loadedTransitionMatrixTemplate, 0, 1)
-        
-        self.labelTransitionMatrixTemplate = QtGui.QLabel()
-        self.labelTransitionMatrixTemplate.setText('Template name:')
-        self.layoutTransitionMatrixTemplate.addWidget(self.labelTransitionMatrixTemplate, 1, 0)
-        
-        self.comboBoxTransitionMatrixTemplate = QtGui.QComboBox()
-        self.comboBoxTransitionMatrixTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
-        self.comboBoxTransitionMatrixTemplate.setDisabled(True)
-        self.comboBoxTransitionMatrixTemplate.addItem('No template found')
-        self.layoutTransitionMatrixTemplate.addWidget(self.comboBoxTransitionMatrixTemplate, 1, 1)
-        
-        self.layoutButtonTransitionMatrixTemplate = QtGui.QHBoxLayout()
-        self.layoutButtonTransitionMatrixTemplate.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTop)
-        self.buttonLoadTransitionMatrixTemplate = QtGui.QPushButton()
-        self.buttonLoadTransitionMatrixTemplate.setDisabled(True)
-        self.buttonLoadTransitionMatrixTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonLoadTransitionMatrixTemplate.setText('Load')
-        self.buttonSaveTransitionMatrixTemplate = QtGui.QPushButton()
-        self.buttonSaveTransitionMatrixTemplate.setDisabled(True)
-        self.buttonSaveTransitionMatrixTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveTransitionMatrixTemplate.setText('Save')
-        self.buttonSaveAsTransitionMatrixTemplate = QtGui.QPushButton()
-        self.buttonSaveAsTransitionMatrixTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveAsTransitionMatrixTemplate.setText('Save As')
-        self.layoutButtonTransitionMatrixTemplate.addWidget(self.buttonLoadTransitionMatrixTemplate)
-        self.layoutButtonTransitionMatrixTemplate.addWidget(self.buttonSaveTransitionMatrixTemplate)
-        self.layoutButtonTransitionMatrixTemplate.addWidget(self.buttonSaveAsTransitionMatrixTemplate)
-        self.layoutGroupBoxTransitionMatrixTemplate.addLayout(self.layoutButtonTransitionMatrixTemplate)
-
-        # Process tab button
-        self.layoutButtonTransitionMatrix = QtGui.QHBoxLayout()
-        self.buttonProcessTransitionMatrix = QtGui.QPushButton()
-        self.buttonProcessTransitionMatrix.setText('&Process')
-        self.buttonHelpSCIENDOTransitionMatrix = QtGui.QPushButton()
-        self.buttonHelpSCIENDOTransitionMatrix.setIcon(icon)
-        self.layoutButtonTransitionMatrix.setAlignment(QtCore.Qt.AlignRight)
-        self.layoutButtonTransitionMatrix.addWidget(self.buttonProcessTransitionMatrix)
-        self.layoutButtonTransitionMatrix.addWidget(self.buttonHelpSCIENDOTransitionMatrix)
-        
-        # Place the GroupBoxes
-        self.layoutTabCalculateTransitionMatrix.addWidget(self.groupBoxSetupInitialAndFinalMap, 0, 0)
-        self.layoutTabCalculateTransitionMatrix.addLayout(self.layoutButtonTransitionMatrix, 1, 0, 1, 2, QtCore.Qt.AlignRight)
-        self.layoutTabCalculateTransitionMatrix.addWidget(self.groupBoxTransitionMatrixTemplate, 0, 1, 1, 1)
-        self.layoutTabCalculateTransitionMatrix.setColumnStretch(0, 3)
-        self.layoutTabCalculateTransitionMatrix.setColumnStretch(1, 1) 
+        self.layoutTabCreateRasterCubeOfFactors.setColumnStretch(1, 1) 
+                
         
         #***********************************************************
         # Setup 'Simulate Land Use Change Modeling' sub tab
@@ -1161,7 +1071,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxHistoryLog.addLayout(self.layoutHistoryLog)
         
         self.labelHistoryLogInfo = QtGui.QLabel()
-        self.labelHistoryLogInfo.setText('Lorem ipsum dolor sit amet...\n')
+        self.labelHistoryLogInfo.setText('\n')
         self.layoutHistoryLogInfo.addWidget(self.labelHistoryLogInfo)
         
         self.log_box = QPlainTextEditLogger(self)
@@ -1172,7 +1082,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         
         self.setLayout(self.dialogLayout)
         self.setWindowTitle(self.dialogTitle)
-        self.setMinimumSize(800, 640)
+        self.setMinimumSize(1024, 640)
         self.resize(parent.sizeHint())
     
     
@@ -1627,6 +1537,14 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.main.appSettings['DialogLumensSCIENDOBuildScenario']['historicalBaselineCar'] \
             = unicode(self.lineEditBuildScenarioHistoricalBaselineCar.text())
         
+        # 'Calculate transition matrix' groupbox fields
+        self.main.appSettings['DialogLumensSCIENDOCalculateTransitionMatrix']['landUse1'] \
+            = unicode(self.comboBoxTransitionMatrixInitialMap.currentText())
+        self.main.appSettings['DialogLumensSCIENDOCalculateTransitionMatrix']['landUse2'] \
+            = unicode(self.comboBoxTransitionMatrixFinalMap.currentText())
+        self.main.appSettings['DialogLumensSCIENDOCalculateTransitionMatrix']['planningUnit'] \
+            = unicode(self.comboBoxTransitionMatrixRegions.currentText())
+        
         # 'Land Use Change Modeling' tab fields
         self.main.appSettings['DialogLumensSCIENDOCalculateTransitionMatrix']['factorsDir'] \
             = self.main.appSettings['DialogLumensSCIENDOCreateRasterCube']['factorsDir'] \
@@ -1821,6 +1739,52 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
                 logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
                 logging.getLogger(self.historyLog).info('alg end: %s' % formName)
     
+
+    def handlerProcessTransitionMatrix(self):
+        """Slot method to pass the form values and execute the "SCIENDO Land Use Simulation" R algorithms.
+        
+        "Calculate Transition Matrix" process calls the following algorithms:
+        1. r:sciendo_lusim_calculate_transition
+        """
+        self.setAppSettings()
+        
+        algName = 'r:sciendolusimcalculatetransition'
+        formName = 'DialogLumensSCIENDOCalculateTransitionMatrix'
+        activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
+        
+        if self.validForm(formName):
+            logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
+            logging.getLogger(self.historyLog).info('alg start: %s' % formName)
+            self.buttonProcessTransitionMatrix.setDisabled(True)
+            
+            # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
+            self.main.setWindowState(QtCore.Qt.WindowMinimized)
+            
+            outputs = general.runalg(
+                algName,
+                activeProject,
+                self.main.appSettings[formName]['landUse1'],
+                self.main.appSettings[formName]['landUse2'],
+                self.main.appSettings[formName]['planningUnit'],
+                None,
+            )
+            
+            # Display ROut file in debug mode
+            if self.main.appSettings['debug']:
+                dialog = DialogLumensViewer(self, 'DEBUG "{0}" ({1})'.format(algName, 'processing_script.r.Rout'), 'text', self.main.appSettings['ROutFile'])
+                dialog.exec_()
+            
+            ##print outputs
+            
+            # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
+            self.main.setWindowState(QtCore.Qt.WindowActive)
+            
+            self.outputsMessageBox(algName, outputs, '', '')
+            
+            self.buttonProcessTransitionMatrix.setEnabled(True)
+            logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
+            logging.getLogger(self.historyLog).info('alg end: %s' % formName)
+            
     
     def handlerProcessLandUseChangeModeling(self):
         """Slot method to pass the form values and execute the "SCIENDO Land Use Change Modeling" R algorithms.

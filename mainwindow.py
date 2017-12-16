@@ -357,10 +357,9 @@ class MainWindow(QtGui.QMainWindow):
                 'historicalBaselineCar': '',
             },
             'DialogLumensSCIENDOCalculateTransitionMatrix': {
-                'factorsDir': '',
-                'landUseLookup': '',
-                'baseYear': '',
-                'location': '',
+                'landUse1': '',
+                'landUse2': '',
+                'planningUnit': '',
             },
             'DialogLumensSCIENDOCreateRasterCube': {
                 'factorsDir': '',

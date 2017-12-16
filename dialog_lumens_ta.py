@@ -2160,12 +2160,12 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         """Slot method to pass the form values and execute the "TA Abacus Opportunity Cost" R algorithm.
         
         The "TA Abacus Opportunity Cost" process calls the following algorithm:
-        1. r:sciendo_opcost_abacus
+        1. r:ta_opcost_abacus
         """
         self.setAppSettings()
         
         formName = 'DialogLumensTAAbacusOpportunityCostCurve'
-        algName = 'r:sciendoopcostabacus'
+        algName = 'r:taopcostabacus'
         
         if self.validForm(formName):
             logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
@@ -2201,12 +2201,12 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         """Slot method to pass the form values and execute the "TA Opportunity Cost Curve" R algorithm.
         
         The "TA Opportunity Cost Curve" process calls the following algorithm:
-        1. r:sciendo_opcost_curve
+        1. r:ta_opcost_curve
         """
         self.setAppSettings()
         
         formName = 'DialogLumensTAOpportunityCostCurve'
-        algName = 'r:sciendoopcostcurve'
+        algName = 'r:taopcostcurve'
         
         if self.validForm(formName):
             logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
@@ -2254,12 +2254,12 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         """Slot method to pass the form values and execute the "TA Opportunity Cost Map" R algorithm.
         
         The "TA Opportunity Cost Map" process calls the following algorithm:
-        1. r:sciendo_opcost_map
+        1. r:ta_opcost_map
         """
         self.setAppSettings()
         
         formName = 'DialogLumensTAOpportunityCostMap'
-        algName = 'r:sciendoopcostmap'
+        algName = 'r:taopcostmap'
         
         if self.validForm(formName):
             logging.getLogger(type(self).__name__).info('alg start: %s' % formName)

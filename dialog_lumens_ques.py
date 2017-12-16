@@ -2500,7 +2500,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         outputs = general.runalg(
             'r:toolsgetlut',
             activeProject,
-            customTable,
+            costumTable,
             selectedTableHabitat,
             None,
         )        
@@ -3192,7 +3192,11 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                 self.buttonProcessQUESC.setEnabled(True)
                 logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
                 logging.getLogger(self.historyLog).info('alg end: %s' % formName)
-        
+
+
+        if self.checkBoxPeatlandCarbonAccounting.isChecked():
+            pass
+          
         
         if self.checkBoxSummarizeMultiplePeriod.isChecked():
             if len(self.listOfQUESCDatabase) > 1:
