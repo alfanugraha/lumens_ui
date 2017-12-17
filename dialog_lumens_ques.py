@@ -1452,8 +1452,11 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         #***********************************************************
         self.tabWidgetQUESH = QtGui.QTabWidget()
         QUESHTabWidgetStylesheet = """
+        QTabWidget::tab-bar{
+            alignment: right;
+        }
         QTabWidget QWidget {
-            background-color: rgb(217, 229, 252);
+            background-color: rgb(249, 237, 243);
             color: rgb(95, 98, 102);
         }
         QTabBar::tab {
@@ -1462,7 +1465,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             width: 200px;
         }
         QTabBar::tab:selected, QTabBar::tab:hover {
-            background-color: rgb(217, 229, 252);
+            background-color: rgb(249, 237, 243);
             font: bold;
         }
         """
@@ -3021,27 +3024,30 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             = self.spinBoxPreQUESNodata.value()
         
         # 'QUES-C' Carbon Accounting groupbox fields
+        # 'QUES-C' Peatland Carbon Accounting groupbox fields
         self.main.appSettings['DialogLumensQUESCCarbonAccounting']['landUse1'] \
+            = self.main.appSettings['DialogLumensQUESCPeatlandCarbonAccounting']['landUse1'] \
             = unicode(self.comboBoxCALandCoverLandUse1.currentText())
         self.main.appSettings['DialogLumensQUESCCarbonAccounting']['landUse2'] \
+            = self.main.appSettings['DialogLumensQUESCPeatlandCarbonAccounting']['landUse2'] \
             = unicode(self.comboBoxCALandCoverLandUse2.currentText())
         self.main.appSettings['DialogLumensQUESCCarbonAccounting']['carbonTable'] \
+            = self.main.appSettings['DialogLumensQUESCPeatlandCarbonAccounting']['carbonTable'] \
             = unicode(self.comboBoxCACarbonTable.currentText())
         self.main.appSettings['DialogLumensQUESCCarbonAccounting']['planningUnit'] \
+            = self.main.appSettings['DialogLumensQUESCPeatlandCarbonAccounting']['planningUnit'] \
             = unicode(self.comboBoxCALandCoverPlanningUnit.currentText())
         self.main.appSettings['DialogLumensQUESCCarbonAccounting']['nodata'] \
+            = self.main.appSettings['DialogLumensQUESCPeatlandCarbonAccounting']['nodata'] \
             = self.spinBoxCANoDataValue.value()
         # self.main.appSettings['DialogLumensQUESCCarbonAccounting']['includePeat'] \
         #     = self.checkBoxPeatlandCarbonAccounting.value()
-        self.main.appSettings['DialogLumensQUESCCarbonAccounting']['peat'] \
+        self.main.appSettings['DialogLumensQUESCPeatlandCarbonAccounting']['peat'] \
             = self.comboBoxPeatlandMap.currentText()
         # self.main.appSettings['DialogLumensQUESCCarbonAccounting']['peatCell'] \
         #     = self.comboBoxPeatlandMap.currentText()            
-        self.main.appSettings['DialogLumensQUESCCarbonAccounting']['peatTable'] \
+        self.main.appSettings['DialogLumensQUESCPeatlandCarbonAccounting']['peatTable'] \
             = self.comboBoxPCACsvfile.currentText()
-        
-        # 'QUES-C' Peatland Carbon Accounting groupbox fields
-        # self.main.appSettings['DialogLumensQUESCPeatlandCarbonAccounting']['csvfile'] = unicode(self.lineEditPCACsvfile.text())
         
         # 'QUES-C' Summarize Multiple Period groupbox fields
         # self.main.appSettings['DialogLumensQUESCSummarizeMultiplePeriod'][''] \ = None
@@ -3269,7 +3275,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
 
 
         if self.checkBoxPeatlandCarbonAccounting.isChecked():
-            formName = 'DialogLumensQUESCCarbonAccounting'
+            formName = 'DialogLumensQUESCPeatlandCarbonAccounting'
             algName = 'r:quescarbonpeat'
             checkedPeat = []
         

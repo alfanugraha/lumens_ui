@@ -917,38 +917,24 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutOCCParameters.addWidget(self.comboBoxOCCCsvNPVTable, 0, 1)
         
         self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxOCCCsvNPVTable)
+
+        self.labelOCCQUESCDatabase = QtGui.QLabel(parent)
+        self.labelOCCQUESCDatabase.setText('QUES-C Database:')
+        self.layoutOCCParameters.addWidget(self.labelOCCQUESCDatabase, 1, 0)
+        
+        self.comboBoxOCCQUESCDatabase = QtGui.QComboBox()
+        self.comboBoxOCCQUESCDatabase.setDisabled(True)
+        self.layoutOCCParameters.addWidget(self.comboBoxOCCQUESCDatabase, 1, 1)
+        
+        self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxOCCQUESCDatabase)
         
         self.labelOCCCostThreshold = QtGui.QLabel()
         self.labelOCCCostThreshold.setText('Cost threshold:')
-        self.layoutOCCParameters.addWidget(self.labelOCCCostThreshold, 1, 0)
+        self.layoutOCCParameters.addWidget(self.labelOCCCostThreshold, 2, 0)
         
         self.spinBoxOCCCostThreshold = QtGui.QSpinBox()
         self.spinBoxOCCCostThreshold.setValue(5)
-        self.layoutOCCParameters.addWidget(self.spinBoxOCCCostThreshold, 1, 1)
-        
-        self.labelOCCOutputOpportunityCostDatabase = QtGui.QLabel()
-        self.labelOCCOutputOpportunityCostDatabase.setText('[Output] Opportunity cost database:')
-        self.layoutOCCParameters.addWidget(self.labelOCCOutputOpportunityCostDatabase, 2, 0)
-        
-        self.lineEditOCCOutputOpportunityCostDatabase = QtGui.QLineEdit()
-        self.lineEditOCCOutputOpportunityCostDatabase.setReadOnly(True)
-        self.layoutOCCParameters.addWidget(self.lineEditOCCOutputOpportunityCostDatabase, 2, 1)
-        
-        self.buttonSelectOCCOutputOpportunityCostDatabase = QtGui.QPushButton(parent)
-        self.buttonSelectOCCOutputOpportunityCostDatabase.setText('&Browse')
-        self.layoutOCCParameters.addWidget(self.buttonSelectOCCOutputOpportunityCostDatabase, 2, 2)
-        
-        self.labelOCCOutputOpportunityCostReport = QtGui.QLabel()
-        self.labelOCCOutputOpportunityCostReport.setText('[Output] Opportunity cost report:')
-        self.layoutOCCParameters.addWidget(self.labelOCCOutputOpportunityCostReport, 3, 0)
-        
-        self.lineEditOCCOutputOpportunityCostReport = QtGui.QLineEdit()
-        self.lineEditOCCOutputOpportunityCostReport.setReadOnly(True)
-        self.layoutOCCParameters.addWidget(self.lineEditOCCOutputOpportunityCostReport, 3, 1)
-        
-        self.buttonSelectOCCOutputOpportunityCostReport = QtGui.QPushButton(parent)
-        self.buttonSelectOCCOutputOpportunityCostReport.setText('&Browse')
-        self.layoutOCCParameters.addWidget(self.buttonSelectOCCOutputOpportunityCostReport, 3, 2)
+        self.layoutOCCParameters.addWidget(self.spinBoxOCCCostThreshold, 2, 1)
         
         # Process tab button
         self.layoutButtonOpportunityCostCurve = QtGui.QHBoxLayout()
@@ -1034,17 +1020,68 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.labelOCMParametersInfo = QtGui.QLabel()
         self.labelOCMParametersInfo.setText('\n')
         self.layoutOCMParametersInfo.addWidget(self.labelOCMParametersInfo)
+
+        self.labelOCMLandCoverLandUse1 = QtGui.QLabel()
+        self.labelOCMLandCoverLandUse1.setText('Earlier land use/cover:')
+        self.layoutOCMParameters.addWidget(self.labelOCMLandCoverLandUse1, 0, 0)
+        
+        self.comboBoxOCMLandCoverLandUse1 = QtGui.QComboBox()
+        self.comboBoxOCMLandCoverLandUse1.setDisabled(True)
+        self.layoutOCMParameters.addWidget(self.comboBoxOCMLandCoverLandUse1, 0, 1)
+        
+        self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxOCMLandCoverLandUse1)
+        
+        self.labelOCMLandCoverLandUse2 = QtGui.QLabel()
+        self.labelOCMLandCoverLandUse2.setText('Later land use/cover:')
+        self.layoutOCMParameters.addWidget(self.labelOCMLandCoverLandUse2, 1, 0)
+        
+        self.comboBoxOCMLandCoverLandUse2 = QtGui.QComboBox()
+        self.comboBoxOCMLandCoverLandUse2.setDisabled(True)
+        self.layoutOCMParameters.addWidget(self.comboBoxOCMLandCoverLandUse2, 1, 1)
+        
+        self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxOCMLandCoverLandUse2)
+        
+        self.labelOCMLandCoverPlanningUnit = QtGui.QLabel()
+        self.labelOCMLandCoverPlanningUnit.setText('Planning unit:')
+        self.layoutOCMParameters.addWidget(self.labelOCMLandCoverPlanningUnit, 2, 0)
+        
+        self.comboBoxOCMLandCoverPlanningUnit = QtGui.QComboBox()
+        self.comboBoxOCMLandCoverPlanningUnit.setDisabled(True)
+        self.layoutOCMParameters.addWidget(self.comboBoxOCMLandCoverPlanningUnit, 2, 1)
+        
+        self.handlerPopulateNameFromLookupData(self.main.dataPlanningUnit, self.comboBoxOCMLandCoverPlanningUnit)        
+        
+        self.labelOCMCarbonTable = QtGui.QLabel()
+        self.labelOCMCarbonTable.setText('Carbon stock lookup table:')
+        self.layoutOCMParameters.addWidget(self.labelOCMCarbonTable, 3, 0)
+        
+        self.comboBoxOCMCarbonTable = QtGui.QComboBox()
+        self.comboBoxOCMCarbonTable.setDisabled(True)
+        self.layoutOCMParameters.addWidget(self.comboBoxOCMCarbonTable, 3, 1)
+        
+        self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxOCMCarbonTable) 
         
         self.labelOCMCsvProfitability = QtGui.QLabel(parent)
         self.labelOCMCsvProfitability.setText('Profitability lookup table:')
-        self.layoutOCMParameters.addWidget(self.labelOCMCsvProfitability, 0, 0)
+        self.layoutOCMParameters.addWidget(self.labelOCMCsvProfitability, 4, 0)
         
         self.comboBoxOCMCsvProfitability = QtGui.QComboBox()
         self.comboBoxOCMCsvProfitability.setDisabled(True)
-        self.layoutOCMParameters.addWidget(self.comboBoxOCMCsvProfitability, 0, 1)
+        self.layoutOCMParameters.addWidget(self.comboBoxOCMCsvProfitability, 4, 1)
         
-        self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxOCMCsvProfitability)
+        self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxOCMCsvProfitability)        
         
+        self.labelOCMNoDataValue = QtGui.QLabel()
+        self.labelOCMNoDataValue.setText('&No data value:')
+        self.layoutOCMParameters.addWidget(self.labelOCMNoDataValue, 5, 0)
+        
+        self.spinBoxOCMNoDataValue = QtGui.QSpinBox()
+        self.spinBoxOCMNoDataValue.setRange(-9999, 9999)
+        self.spinBoxOCMNoDataValue.setValue(0)
+        self.layoutOCMParameters.addWidget(self.spinBoxOCMNoDataValue, 5, 1)
+        self.labelCANoDataValue.setBuddy(self.spinBoxOCMNoDataValue)
+        
+
         # Process tab button
         self.layoutButtonOpportunityCostMap = QtGui.QHBoxLayout()
         self.buttonProcessOpportunityCostMap = QtGui.QPushButton()
@@ -2097,19 +2134,25 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         
         # 'Opportunity Cost Curve' tab fields
         self.main.appSettings['DialogLumensTAOpportunityCostCurve']['csvNPVTable'] = unicode(self.comboBoxOCCCsvNPVTable.currentText())
+        self.main.appSettings['DialogLumensTAOpportunityCostCurve']['QUESCDatabase'] = self.comboBoxOCCQUESCDatabase.currentText()
         self.main.appSettings['DialogLumensTAOpportunityCostCurve']['costThreshold'] = self.spinBoxOCCCostThreshold.value()
         
-        outputOpportunityCostDatabase = unicode(self.lineEditOCCOutputOpportunityCostDatabase.text())
-        outputOpportunityCostReport = unicode(self.lineEditOCCOutputOpportunityCostReport.text())
-        
-        if not outputOpportunityCostDatabase:
-            self.main.appSettings['DialogLumensTAOpportunityCostCurve']['outputOpportunityCostDatabase'] = '__UNSET__'
-        
-        if not outputOpportunityCostReport:
-            self.main.appSettings['DialogLumensTAOpportunityCostCurve']['outputOpportunityCostReport'] = '__UNSET__'
+        # outputOpportunityCostDatabase = unicode(self.lineEditOCCOutputOpportunityCostDatabase.text())
+        # outputOpportunityCostReport = unicode(self.lineEditOCCOutputOpportunityCostReport.text())
+ 
+        # if not outputOpportunityCostDatabase:
+        #     self.main.appSettings['DialogLumensTAOpportunityCostCurve']['outputOpportunityCostDatabase'] = '__UNSET__'
+        # 
+        # if not outputOpportunityCostReport:
+        #     self.main.appSettings['DialogLumensTAOpportunityCostCurve']['outputOpportunityCostReport'] = '__UNSET__'
         
         # 'Opportunity Cost Map' tab fields
+        self.main.appSettings['DialogLumensTAOpportunityCostMap']['landUse1'] = unicode(self.comboBoxOCMLandCoverLandUse1.currentText())
+        self.main.appSettings['DialogLumensTAOpportunityCostMap']['landUse1'] = unicode(self.comboBoxOCMLandCoverLandUse2.currentText())
+        self.main.appSettings['DialogLumensTAOpportunityCostMap']['plannigUnit'] = unicode(self.comboBoxOCMLandCoverPlanningUnit.currentText())
+        self.main.appSettings['DialogLumensTAOpportunityCostMap']['carbon'] = unicode(self.comboBoxOCMCarbonTable.currentText())
         self.main.appSettings['DialogLumensTAOpportunityCostMap']['csvProfitability'] = unicode(self.comboBoxOCMCsvProfitability.currentText())
+        self.main.appSettings['DialogLumensTAOpportunityCostMap']['nodata'] = self.spinBoxOCMNoDataValue.value()
         
         # 'Descriptive Analysis' tab fields
         self.main.appSettings['DialogLumensTARegionalEconomySingleIODescriptiveAnalysis']['year'] \
@@ -2207,30 +2250,23 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         
         formName = 'DialogLumensTAOpportunityCostCurve'
         algName = 'r:taopcostcurve'
+        activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
         
         if self.validForm(formName):
             logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
             logging.getLogger(self.historyLog).info('alg start: %s' % formName)
             self.buttonProcessOpportunityCostCurve.setDisabled(True)
             
-            outputOpportunityCostDatabase = self.main.appSettings[formName]['outputOpportunityCostDatabase']
-            outputOpportunityCostReport = self.main.appSettings[formName]['outputOpportunityCostReport']
-            
-            if outputOpportunityCostDatabase == '__UNSET__':
-                outputOpportunityCostDatabase = None
-            
-            if outputOpportunityCostReport == '__UNSET__':
-                outputOpportunityCostReport = None
-            
             # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
             self.main.setWindowState(QtCore.Qt.WindowMinimized)
             
             outputs = general.runalg(
                 algName,
+                activeProject,
                 self.main.appSettings[formName]['csvNPVTable'],
+                self.main.appSettings[formName]['QUESCDatabase'],
                 self.main.appSettings[formName]['costThreshold'],
-                outputOpportunityCostDatabase,
-                outputOpportunityCostReport,
+                None,
             )
             
             # Display ROut file in debug mode
@@ -2260,6 +2296,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         
         formName = 'DialogLumensTAOpportunityCostMap'
         algName = 'r:taopcostmap'
+        activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
         
         if self.validForm(formName):
             logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
@@ -2271,7 +2308,14 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
             
             outputs = general.runalg(
                 algName,
+                activeProject,
+                self.main.appSettings[formName]['landUse1'],
+                self.main.appSettings[formName]['landUse2'],
+                self.main.appSettings[formName]['plannigUnit'],
+                self.main.appSettings[formName]['carbon'],
                 self.main.appSettings[formName]['csvProfitability'],
+                self.main.appSettings[formName]['nodata'],
+                None,
             )
             
             # Display ROut file in debug mode
