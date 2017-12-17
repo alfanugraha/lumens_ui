@@ -664,8 +664,6 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.buttonSaveAsAbacusOpportunityCostTemplate.clicked.connect(self.handlerSaveAsAbacusOpportunityCostTemplate)
         
         # 'Opportunity Cost Curve' tab buttons
-        self.buttonSelectOCCOutputOpportunityCostDatabase.clicked.connect(self.handlerSelectOCCOutputOpportunityCostDatabase)
-        self.buttonSelectOCCOutputOpportunityCostReport.clicked.connect(self.handlerSelectOCCOutputOpportunityCostReport)
         self.buttonProcessOpportunityCostCurve.clicked.connect(self.handlerProcessOpportunityCostCurve)
         self.buttonHelpTAOpportunityCostCurve.clicked.connect(lambda:self.handlerDialogHelp('TA'))
         self.buttonLoadOpportunityCostCurveTemplate.clicked.connect(self.handlerLoadOpportunityCostCurveTemplate)
@@ -1981,28 +1979,6 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
             # Load the newly saved template file
             if fileSaved:
                 self.handlerLoadOpportunityCostCurveTemplate(fileName)
-    
-    
-    def handlerSelectOCCOutputOpportunityCostDatabase(self):
-        """Slot method for a file select dialog.
-        """
-        outputfile = unicode(QtGui.QFileDialog.getSaveFileName(
-            self, 'Create/Select Opportunity Cost Database Output', QtCore.QDir.homePath(), 'Opportunity Cost Database (*{0})'.format(self.main.appSettings['selectDatabasefileExt'])))
-        
-        if outputfile:
-            self.lineEditOCCOutputOpportunityCostDatabase.setText(outputfile)
-            logging.getLogger(type(self).__name__).info('select output file: %s', outputfile)
-    
-    
-    def handlerSelectOCCOutputOpportunityCostReport(self):
-        """Slot method for a file select dialog.
-        """
-        outputfile = unicode(QtGui.QFileDialog.getSaveFileName(
-            self, 'Create/Select Opportunity Cost Report Output', QtCore.QDir.homePath(), 'Opportunity Cost Report (*{0})'.format(self.main.appSettings['selectHTMLfileExt'])))
-        
-        if outputfile:
-            self.lineEditOCCOutputOpportunityCostReport.setText(outputfile)
-            logging.getLogger(type(self).__name__).info('select output file: %s', outputfile)
     
     
     #***********************************************************
