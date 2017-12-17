@@ -1079,7 +1079,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.spinBoxOCMNoDataValue.setRange(-9999, 9999)
         self.spinBoxOCMNoDataValue.setValue(0)
         self.layoutOCMParameters.addWidget(self.spinBoxOCMNoDataValue, 5, 1)
-        self.labelCANoDataValue.setBuddy(self.spinBoxOCMNoDataValue)
+        self.labelOCMNoDataValue.setBuddy(self.spinBoxOCMNoDataValue)
         
 
         # Process tab button

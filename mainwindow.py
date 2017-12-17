@@ -800,7 +800,7 @@ class MainWindow(QtGui.QMainWindow):
         
         # QUES menu
         icon = QtGui.QIcon(':/ui/icons/iconActionDialogLumensQUES.png')
-        self.actionDialogLumensQUES = QtGui.QAction(icon, 'Quantification Environmental Services', self)
+        self.actionDialogLumensQUES = QtGui.QAction(icon, 'Quantification of Environmental Services', self)
         self.actionDialogLumensQUES.setIconText('QUES')
         
         self.quesMenu.addAction(self.actionDialogLumensQUES)
@@ -821,7 +821,7 @@ class MainWindow(QtGui.QMainWindow):
         
         # SCIENDO menu
         icon = QtGui.QIcon(':/ui/icons/iconActionDialogLumensSCIENDO.png')
-        self.actionDialogLumensSCIENDO = QtGui.QAction(icon, 'SCIENDO', self)
+        self.actionDialogLumensSCIENDO = QtGui.QAction(icon, 'Scenario Simulation and Development', self)
         self.actionDialogLumensSCIENDO.setIconText('SCIENDO')
         
         self.sciendoMenu.addAction(self.actionDialogLumensSCIENDO)
