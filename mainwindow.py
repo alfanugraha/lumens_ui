@@ -95,13 +95,13 @@ class MainWindow(QtGui.QMainWindow):
             'appSettingsFile': 'settings.ini',
             'ROutFile': os.path.join(system.userFolder(), 'processing_script.r.Rout'),
             'guideFile': 'guide.pdf',
-            'helpLUMENSFile': 'index.html',
-            'helpDialogPURFile': 'index_pur.html',
-            'helpDialogQUESFile': 'index_ques.html',
-            'helpDialogTAFile': 'index_ta.html',
+            'helpLUMENSFile': 'Panduan Penggunaan LUMENS .html',
+            'helpDialogPURFile': '3ModulPUR.html',
+            'helpDialogQUESFile': '4ModulPreQUES.html',
+            'helpDialogTAFile': '7ModulTARegionalEconomyDescripti.html',
             'helpDialogSCIENDOFile': 'index_sciendo.html',
             'helpDialogLayerPropertiesFile': 'index_layer_properties.html',
-            'helpDialogCreateFile': 'index_create.html',
+            'helpDialogCreateFile': '2MembukadanMenyusunDatabaseLUMEN.html',
             'helpDialogLayerPropertiesFile': 'index_pur_reference.html',
             'dataDir': 'data',
             'basemapDir': 'basemap',
@@ -3201,7 +3201,7 @@ class MainWindow(QtGui.QMainWindow):
         """Slot method for triggering the close database operation.
         """
         self.lumensCloseDatabase()
-        self.handlerDeleteLayer()
+        # self.handlerDeleteLayer()
     
     
     def handlerLumensDatabaseStatus(self):
