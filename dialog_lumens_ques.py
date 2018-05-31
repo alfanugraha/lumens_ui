@@ -274,6 +274,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             # templateSettings['DialogLumensQUESBAnalysis']['habitatLookup'] = habitatLookup = settings.value('habitatLookup')
             templateSettings['DialogLumensQUESBAnalysis']['windowShape'] = windowShape = settings.value('windowShape')
             templateSettings['DialogLumensQUESBAnalysis']['samplingWindowSize'] = samplingWindowSize = settings.value('samplingWindowSize')
+            templateSettings['DialogLumensQUESBAnalysis']['adjacentOnly'] = adjacentOnly = settings.value('adjacentOnly')
             templateSettings['DialogLumensQUESBAnalysis']['samplingGridRes'] = samplingGridRes = settings.value('samplingGridRes')
             
             if not returnTemplateSettings:
@@ -309,6 +310,8 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                     self.spinBoxQUESBSamplingWindowSize.setValue(int(samplingWindowSize))
                 else:
                     self.spinBoxQUESBSamplingWindowSize.setValue(1000)
+                if adjacentOnly:
+                    self.comboBoxQUESBAdjacentOnly.setCurrentIndex(int(adjacentOnly))                      
                 if samplingGridRes:
                     self.spinBoxQUESBSamplingGridRes.setValue(int(samplingGridRes))
                 else:
@@ -1375,14 +1378,26 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         
         self.layoutQUESBParameters.addWidget(self.groupBoxQUESBMovingWindow, 8, 0, 1, 2)
         
+        self.labelQUESBAdjacentOnly = QtGui.QLabel()
+        self.labelQUESBAdjacentOnly.setText('Adjacent Only:')
+        self.layoutQUESBParameters.addWidget(self.labelQUESBAdjacentOnly, 9, 0)    
+        
+        adjacentOnlyOptions = [
+            'False',
+            'True',
+        ]
+        self.comboBoxQUESBAdjacentOnly = QtGui.QComboBox()
+        self.comboBoxQUESBAdjacentOnly.addItems(adjacentOnlyOptions)
+        self.layoutQUESBParameters.addWidget(self.comboBoxQUESBAdjacentOnly, 9, 1)        
+        
         self.labelQUESBSamplingGridRes = QtGui.QLabel()
         self.labelQUESBSamplingGridRes.setText('Sampling grid size:')
-        self.layoutQUESBParameters.addWidget(self.labelQUESBSamplingGridRes, 9, 0)
+        self.layoutQUESBParameters.addWidget(self.labelQUESBSamplingGridRes, 10, 0)
         
         self.spinBoxQUESBSamplingGridRes = QtGui.QSpinBox()
         self.spinBoxQUESBSamplingGridRes.setRange(1, 999999)
         self.spinBoxQUESBSamplingGridRes.setValue(10000)
-        self.layoutQUESBParameters.addWidget(self.spinBoxQUESBSamplingGridRes, 9, 1)
+        self.layoutQUESBParameters.addWidget(self.spinBoxQUESBSamplingGridRes, 10, 1)
         
         # Process tab button
         self.layoutButtonQUESB = QtGui.QHBoxLayout()
@@ -3075,7 +3090,14 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.main.appSettings['DialogLumensQUESBAnalysis']['windowShape'] \
             = WindowShapeOptions
         self.main.appSettings['DialogLumensQUESBAnalysis']['samplingWindowSize'] \
-            = self.spinBoxQUESBSamplingWindowSize.value()            
+            = self.spinBoxQUESBSamplingWindowSize.value()     
+        adjacentOnlyOptions = unicode(self.comboBoxQUESBAdjacentOnly.currentText())
+        if adjacentOnlyOptions == 'False':
+            adjacentOnlyOptions = 0
+        else:
+            adjacentOnlyOptions = 1    
+        self.main.appSettings['DialogLumensQUESBAnalysis']['adjacentOnly'] \
+            = adjacentOnlyOptions
         self.main.appSettings['DialogLumensQUESBAnalysis']['samplingGridRes'] \
             = self.spinBoxQUESBSamplingGridRes.value()
         
@@ -3418,6 +3440,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                     checkedEnabledCsv,
                     self.main.appSettings[formName]['edgeContrast'],
                     self.main.appSettings[formName]['windowShape'],
+                    self.main.appSettings[formName]['adjacentOnly'],
                     self.main.appSettings[formName]['samplingWindowSize'],
                     self.main.appSettings[formName]['samplingGridRes'],
                     None,

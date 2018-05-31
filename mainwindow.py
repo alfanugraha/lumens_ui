@@ -238,6 +238,7 @@ class MainWindow(QtGui.QMainWindow):
                 # 'habitatLookup': '',
                 'windowShape': '',
                 'samplingWindowSize': '',
+                'adjacentOnly': '',
                 'samplingGridRes': '',
             },
             'DialogLumensQUESHWatershedModelEvaluation': {
