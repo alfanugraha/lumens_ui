@@ -1395,7 +1395,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.layoutQUESBParameters.addWidget(self.labelQUESBSamplingGridRes, 10, 0)
         
         self.spinBoxQUESBSamplingGridRes = QtGui.QSpinBox()
-        self.spinBoxQUESBSamplingGridRes.setRange(1, 999999)
+        self.spinBoxQUESBSamplingGridRes.setRange(1, 9999999)
         self.spinBoxQUESBSamplingGridRes.setValue(10000)
         self.layoutQUESBParameters.addWidget(self.spinBoxQUESBSamplingGridRes, 10, 1)
         

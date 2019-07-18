@@ -138,7 +138,7 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
         self.labelDataSpinBoxPeriod.setText('&Year:')
         self.spinBoxDataPeriod = QtGui.QSpinBox()
         self.spinBoxDataPeriod.setRange(1, 9999)
-        self.spinBoxDataPeriod.setValue(td.year)
+        # self.spinBoxDataPeriod.setValue(td.year)
         self.labelDataSpinBoxPeriod.setBuddy(self.spinBoxDataPeriod)
         
         if self.dataType == 'Land use/cover':
