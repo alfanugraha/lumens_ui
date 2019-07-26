@@ -2,6 +2,7 @@
 #-*- coding:utf-8 -*-
 
 import os.path
+import io
 
 class MenuFactory:
     
@@ -11,6 +12,7 @@ class MenuFactory:
     APP_ZOOM_OUT = "Application.zoom_out"
     APP_ZOOM_FULL = "Application.zoom_full"
     APP_ZOOM_TO_SELECTED = "Application.zoom_to_selected"
+    APP_ZOOM_TO_LAYER = "Application.zoom_to_layer"
     APP_ZOOM_LAST = "Application.zoom_last"
     APP_ZOOM_NEXT = "Application.zoom_next"
     APP_PAN = "Application.pan"
@@ -43,10 +45,12 @@ class MenuFactory:
     APP_PROJ_COUNTRY = "Application.project_country"
     APP_PROJ_SPATIAL_RESOLUTION = "Application.project_spatial_resolution"
     APP_PROJ_DISSOLVED = "Application.project_dissolved"
+    APP_PROJ_NEW = "Application.project_new"
     APP_PROJ_OPEN = "Application.project_open"
     APP_PROJ_CLOSE = "Application.project_close"
     APP_PROJ_EXPORT = "Application.project_export"
     APP_PROJ_ADD_DATA = "Application.project_add_data"
+    APP_PROJ_REMOVE_DATA = "Application.project_remove_data"
     APP_ADD_DATA_DEFINE_PROPERTIES = "Application.add_data_define_properties"
     APP_ADD_DATA_ADD_ITEM = "Application.add_data_add_item"
     APP_ADD_DATA_LAND_USE_COVER = "Application.add_data_land_use_cover"
@@ -54,7 +58,7 @@ class MenuFactory:
     APP_ADD_DATA_FACTOR = "Application.add_data_factor"
     APP_ADD_DATA_TABLE = "Application.add_data_table"
     APP_ADD_DATA_SELECT_FILE = "Application.add_data_select_file"
-    APP_ADD_DATA_PROPERTIES = "Application.add_data_properties"
+    APP_PROPERTIES = "Application.properties"
     APP_ADD_DATA_PROPERTIES = "Application.add_data_properties"
     APP_ADD_DATA_RASTER = "Application.add_data_raster"
     APP_PROP_DESCRIPTION = "Application.properties_description"
@@ -84,6 +88,16 @@ class MenuFactory:
     APP_DELETE_DATA_DELETE_ACTION = "Application.delete_data_delete_action"
     APP_PROJ_STATUS = "Application.project_status"
     APP_BROWSE = "Application.browse"
+    APP_SELECT_LUMENS_DATABASE = "Application.select_lumens_database"
+    APP_LUMENS_PROJ_FILE = "Application.lumens_project_file"
+    APP_LUMENS_PROJ_ARCHIVE = "Application.lumens_project_archive"
+    APP_SELECT_WORKING_DIRECTORY = "Application.select_working_directory"
+    APP_LUMENS_HELP = "Application.lumens_help"
+    APP_PRESS_F11 = "Application.press_f11"
+    APP_VECTOR_RASTER_FILE = "Application.vector_raster_file"
+    APP_DBF_FILE = "Application.dbf_file"
+    APP_CSV_FILE = "Application.csv_file"
+    APP_FEATURE_INFO = "Application.feature_info"
     
     FILE_EXIT = "FileMenu.exit"
     VIEW_MENU_BAR = "ViewMenu.menu_bar"
@@ -121,6 +135,7 @@ class MenuFactory:
     PURRECONCILE_UNRESOLVED_CASES = "PURReconcile.unresolved_cases"
     PURLOG_LOG = "PURLog.log"
     PURLOG_HISTORY_LOG = "PURLog.history_log"
+    PUR_PROCESS = "PUR.process"
     
     QUES_TITLE = "QUES.title"
     QUES_LOG = "QUES.log"
@@ -139,6 +154,7 @@ class MenuFactory:
     PREQUES_NO_DATA_VALUE = "PreQUES.no_data_value"
     PREQUES_PROCESS = "PreQUES.process"
     QUESC_TITLE = "QUESC.title"
+    QUESC_FEATURES = "QUESC.features"
     QUESC_CARBON_ACCOUNTING = "QUESC.carbon_accounting"
     QUESC_EMISSION_FROM_LAND_USE_CHANGE = "QUESC.emission_from_land_use_change"
     QUESC_EARLIER_LAND_USE_COVER = "QUESC.earlier_land_use_cover"
@@ -172,13 +188,17 @@ class MenuFactory:
     QUESB_FALSE = "QUESB.false"
     QUESB_SAMPLING_GRID_SIZE = "QUESB.sampling_grid_size"
     
+    # QUESH to be coded soon
+    
     TA_TITLE = "TA.title"
     TA_LOG = "TA.log"
     TA_HISTORY_LOG = "TA.history_log"
     TAOPCOST_TITLE = "TAOpcost.title"
+    TAOPCOST_FEATURES = "TAOpcost.features"
+    TAOPCOST_ABACUS_OPPORTUNITY_COST = "TAOpcost.abacus_opportunity_cost"
     TAOPCOST_OPPORTUNITY_COST_CURVE = "TAOpcost.opportunity_cost_curve"
     TAOPCOST_PARAMETERIZATION = "TAOpcost.parameterization"
-    TAOPCOST_PROFITABILITY_LOOKUP_TABL = "TAOpcost.profitability_lookup_tabl"
+    TAOPCOST_PROFITABILITY_LOOKUP_TABLE = "TAOpcost.profitability_lookup_table"
     TAOPCOST_QUESC_DATABASE = "TAOpcost.quesc_database"
     TAOPCOST_COST_THRESHOLD = "TAOpcost.cost_threshold"
     TAOPCOST_OPPORTUNITY_COST_MAP = "TAOpcost.opportunity_cost_map"
@@ -188,6 +208,10 @@ class MenuFactory:
     TAOPCOST_CARBON_STOCK_LOOKUP_TABLE = "TAOpcost.carbon_stock_lookup_table"
     TAOPCOST_NO_DATA_VALUE = "TAOpcost.no_data_value"
     TAREGECO_TITLE = "TARegeco.title"
+    TAREGECO_FEATURES = "TARegeco.features"
+    TAREGECO_DESCRIPTIVE_ANALYSIS_OF_RE = "TARegeco.descriptive_analysis_of_re"
+    TAREGECO_RE_SCENARIO_IMPACT = "Regional Economic Scenario Impact"
+    TAREGECO_LUC_IMPACT = "Land Use Change Impact"
     TAREGECO_DESCRIPTIVE_ANALYSIS = "TARegeco.descriptive_analysis"
     TAREGECO_INITIALIZE = "TARegeco.initialize"
     TAREGECO_PARAMETERIZATION = "TARegeco.parameterization"
@@ -204,6 +228,8 @@ class MenuFactory:
     TAREGECO_LAND_REQUIREMENT_LOOKUP_TABLE = "TARegeco.land_requirement_lookup_table"
     TAREGECO_DESCRIPTIVE_ANALYSIS_OUTPUT = "TARegeco.descriptive_analysis_output"
     TAREGECO_REGIONAL_ECONOMY_SCENARIO = "TARegeco.regional_economy_scenario"
+    TAREGECO_PERIOD = "TARegeco.period"
+    TAREGECO_MULTI_PERIOD = "TARegeco.multiple_period"
     TAREGECO_SCENARIO_TYPE = "TARegeco.scenario_type"
     TAREGECO_LAND_REQUIREMENT = "TARegeco.land_requirement"
     TAREGECO_FINAL_DEMAND_SCENARIO = "TARegeco.final_demand_scenario"
@@ -214,8 +240,13 @@ class MenuFactory:
     TAREGECO_PROJECTED_LAND_COVER_MAP = "TARegeco.projected_land_cover_map"
     
     SCIENDO_TITLE = "SCIENDO.title"
+    SCIENDO_FEATURES = "TAOpcost.features"
     SCIENDO_LOG = "SCIENDO.log"
     SCIENDO_HISTORY_LOG = "SCIENDO.history_log"
+    SCIENDO_LED = "SCIENDO.led"
+    SCIENDO_HISTORICAL_BASELINE_PROJECTION = "SCIENDO.historical_baseline_projection"
+    SCIENDO_HISTORICAL_BASELINE_ANNUAL_PROJECTION = "SCIENDO.historical_baseline_annual_projection"
+    SCIENDO_DRIVERS_ANALYSIS = "SCIENDO.drivers_analysis"
     SCIENDO_HISTORICAL_BASELINE_ANALYSIS = "SCIENDO.historical_baseline_analysis"
     SCIENDO_PERIODIC_PROJECTION_PARAMETER = "SCIENDO.periodic_projection_parameter"
     SCIENDO_CONDUCT_PERIODIC_PROJECTION = "SCIENDO.conduct_periodic_projection"
@@ -229,6 +260,7 @@ class MenuFactory:
     SCIENDO_SCENARIO_BUILDER = "SCIENDO.scenario_builder"
     SCIENDO_BUILD_SCENARIO = "SCIENDO.build_scenario"
     SCIENDO_HISTORICAL_BASELINE_DATA = "SCIENDO.historical_baseline_data"
+    SCIENDO_LUCM = "SCIENDO.lucm"
     SCIENDO_LAND_USE_SIMULATION = "SCIENDO.land_use_simulation"
     SCIENDO_CALCULATE_TRANSITION_MATRIX = "SCIENDO.calculate_transition_matrix"
     SCIENDO_SETUP_INITIAL_AND_FINAL_MAP = "SCIENDO.setup_initial_and_final_map"
@@ -242,10 +274,11 @@ class MenuFactory:
     SCIENDO_CALCULATE_WEIGHT_OF_EVIDENCE = "SCIENDO.calculate_weight_of_evidence"
     SCIENDO_LAND_COVER_LOOKUP_TABLE = "SCIENDO.land_cover_lookup_table"
     SCIENDO_SIMULATE_LAND_USE = "SCIENDO.simulate_land_use"
+    SCIENDO_SIMULATE_WITH_SCENARIO = "SCIENDO.simulate_with_scenario"
     SCIENDO_PARAMETERIZATION = "SCIENDO.parameterization"
     
     CONF_TITLE = "Configuration.title"
-    CONFLOADED_CONFIGURATION = "Configuraton.loaded_configuration"
+    CONF_LOADED_CONFIGURATION = "Configuraton.loaded_configuration"
     CONF_NONE = "Configuration.none"
     CONF_NAME = "Configuration.name"
     CONF_NO_FOUND = "Configuration.no_found"
@@ -253,18 +286,29 @@ class MenuFactory:
     CONF_SAVE = "Configuration.save"
     CONF_SAVE_AS = "Configuration.save_as"
     CONF_LOAD_EXISTING_CONFIGURATION = "Configuration.load_existing_configuration"
+    CONF_TEMPLATE = "Configuration.template"
+    CONF_TEMPLATE_NAME = "Configuration.template_name"
+    CONF_NO_TEMPLATE_FOUND = "Configuration.no_template_found"
     CONF_LOAD_TEMPLATE = "Configuration.load_template"
     CONF_SAVE_TEMPLATE = "Configuration.save_template"
     CONF_SAVE_AS_TEMPATE = "Configuration.save_as_tempate"
+    CONF_PROCESS = "Configuration.process"
+    CONF_CONFIGURE = "Configuration.configure"
     
     MSG_ERROR = "Message.error"
+    MSG_PROCESS_TEMPLATE = "Message.process_template"
     MSG_APP_SAVE_LAYER = "Message.app_save_layer"
     MSG_APP_DELETE_FEATURE = "Message.app_delete_feature"
+    MSG_APP_INVALID_WORKING_DIRECTORY = "Message.app_invalid_working_directory"
+    MSG_APP_INVALID_LUMENS_PROJECT = "Message.app_invalid_lumens_project"
+    MSG_APP_HELP_NOT_FOUND = "Message.app_help_not_found"
+    MSG_APP_GUIDE_NOT_FOUND = "Message.app_guide_not_found"
     MSG_DB_SELECT_OUTPUT_FOLDER = "Message.db_select_output_folder"
     MSG_DB_SELECT_SHAPEFILE = "Message.db_select_shapefile"
     MSG_DB_INVALID_DISSOLVED_TABLE = "Message.db_invalid_dissolved_table"
     MSG_DB_SUCCESS_CREATED = "Message.db_success_created"
     MSG_DB_FAILED_CREATED = "Message.db_failed_created"
+    MSG_DB_FAILED_OPENED = "Message.db_failed_opened"
     MSG_DB_HTML_REPORT = "Message.db_html_report"
     MSG_DB_CHOOSE_DATA_TO_BE_DELETE = "Message.db_choose_data_to_be_delete"
     MSG_DB_SUCCESS_ADDED = "Message.db_success_added"
@@ -284,10 +328,15 @@ class MenuFactory:
     menuProperties = {}
     
     @staticmethod
-    def setMenuProperties(filename):
+    def setMenuProperties(filename, lang):
         if not os.path.isfile(filename):
             return
-        lines = open(filename)
+        
+        if lang == 'vn':
+            lines = io.open(filename, encoding='utf-16-le', errors='ignore')
+        else:
+            lines = open(filename)
+        
         line = lines.readline().strip('\n')
         while line != '':
             tokens = line.split('=')
@@ -308,7 +357,7 @@ class MenuFactory:
     @staticmethod    
     def getDescription(description):
         description = description + '_description'
-        if name in MenuFactory.menuProperties.keys():
+        if description in MenuFactory.menuProperties.keys():
             return MenuFactory.menuProperties[description]
         else:
             return None
