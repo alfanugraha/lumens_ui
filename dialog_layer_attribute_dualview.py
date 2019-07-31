@@ -6,6 +6,7 @@ from qgis.core import *
 from qgis.gui import *
 from PyQt4 import QtCore, QtGui
 
+from menu_factory import MenuFactory
 
 class DialogLayerAttributeDualView(QtGui.QDialog):
     """Dialog class for showing the attribute table of a vector layer.
@@ -22,7 +23,7 @@ class DialogLayerAttributeDualView(QtGui.QDialog):
         
         self.vectorLayer = vectorLayer
         self.main = parent
-        self.dialogTitle = 'Attribute Editor - ' + self.vectorLayer.name()
+        self.dialogTitle = MenuFactory.getLabel(MenuFactory.APP_ATTRIBUTE_EDITOR) + ' - ' + self.vectorLayer.name()
         
         self.setupUi(self)
         
@@ -44,7 +45,7 @@ class DialogLayerAttributeDualView(QtGui.QDialog):
         self.dialogLayout.addWidget(self.toolBar)
         
         icon = QtGui.QIcon(':/ui/icons/iconActionToggleEdit.png')
-        self.actionToggleEditLayer = QtGui.QAction(icon, 'Toggle Edit Layer', self)
+        self.actionToggleEditLayer = QtGui.QAction(icon, MenuFactory.getLabel(MenuFactory.APP_TOGGLE_EDIT_LAYER), self)
         self.actionToggleEditLayer.setCheckable(True)
         self.toolBar.addAction(self.actionToggleEditLayer)
         
@@ -88,8 +89,8 @@ class DialogLayerAttributeDualView(QtGui.QDialog):
         if self.vectorLayer.isModified():
             reply = QtGui.QMessageBox.question(
                 self,
-                'Save Layer Changes',
-                'Do you want to save the changes made to layer {0}?'.format(self.vectorLayer.name()),
+                MenuFactory.getLabel(MenuFactory.MSG_APP_SAVE_LAYER),
+                MenuFactory.getDescription(MenuFactory.MSG_APP_SAVE_LAYER) + ' {0}?'.format(self.vectorLayer.name()),
                 QtGui.QMessageBox.Save|QtGui.QMessageBox.No|QtGui.QMessageBox.Cancel,
                 QtGui.QMessageBox.Cancel
             )

@@ -10,6 +10,7 @@ from PyQt4 import QtCore, QtGui
 from utils import is_number
 from dialog_lumens_viewer import DialogLumensViewer
 
+from menu_factory import MenuFactory
 
 class DialogLayerProperties(QtGui.QDialog):
     """LUMENS dialog class for editing layer properties. 
@@ -25,7 +26,7 @@ class DialogLayerProperties(QtGui.QDialog):
         super(DialogLayerProperties, self).__init__(parent)
         self.layer = layer
         self.main = parent
-        self.dialogTitle = 'LUMENS Layer Properties - ' + self.layer.name()
+        self.dialogTitle = 'LUMENS ' + MenuFactory.getLabel(MenuFactory.APP_LAYER_PROPERTIES) ' - ' + self.layer.name()
         self.layerSymbolFillColor = self.styleCategorizedColor = self.styleGraduatedColor = self.styleRuleBasedColor = self.labelColor = QtGui.QColor(109, 54, 141) # purple
         
         if self.main.appSettings['debug']:

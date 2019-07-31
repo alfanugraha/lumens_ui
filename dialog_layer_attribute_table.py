@@ -6,6 +6,7 @@ from qgis.core import *
 from qgis.gui import *
 from PyQt4 import QtCore, QtGui
 
+from menu_factory import MenuFactory
 
 class DialogLayerAttributeTable(QtGui.QDialog):
     """Dialog class for showing the attribute table of a vector layer.
@@ -22,7 +23,7 @@ class DialogLayerAttributeTable(QtGui.QDialog):
         
         self.vectorLayer = vectorLayer
         self.main = parent
-        self.dialogTitle = 'Attribute Table - ' + self.vectorLayer.name() + ' - Total Features: ' + str(self.vectorLayer.featureCount())
+        self.dialogTitle = MenuFactory.getLabel(MenuFactory.APP_ATTRIBUTE_TABLE) + ' - ' + self.vectorLayer.name() + ' - ' + MenuFactory.getLabel(MenuFactory.APP_ATTRIBUTE_TABLE) + ': ' + str(self.vectorLayer.featureCount())
         self.featureDeleted = False
         
         self.setupUi(self)
@@ -51,17 +52,17 @@ class DialogLayerAttributeTable(QtGui.QDialog):
         self.dialogLayout.addWidget(self.toolBar)
         
         icon = QtGui.QIcon(':/ui/icons/iconActionToggleEdit.png')
-        self.actionToggleEditLayer = QtGui.QAction(icon, 'Toggle Edit Layer', self)
+        self.actionToggleEditLayer = QtGui.QAction(icon, MenuFactory.getLabel(MenuFactory.APP_TOGGLE_EDIT_LAYER), self)
         self.actionToggleEditLayer.setCheckable(True)
         self.toolBar.addAction(self.actionToggleEditLayer)
         
         icon = QtGui.QIcon(':/ui/icons/iconActionDelete.png')
-        self.actionDeleteSelectedFeature = QtGui.QAction(icon, 'Delete Selected Feature', self)
+        self.actionDeleteSelectedFeature = QtGui.QAction(icon, MenuFactory.getLabel(MenuFactory.APP_DELETE_SELECTED_FEATURE), self)
         self.actionDeleteSelectedFeature.setDisabled(True)
         self.toolBar.addAction(self.actionDeleteSelectedFeature)
         
         icon = QtGui.QIcon(':/ui/icons/iconActionFeatureSelectExpression.png')
-        self.actionExpressionBuilderDialog = QtGui.QAction(icon, 'Select Features By Expression', self)
+        self.actionExpressionBuilderDialog = QtGui.QAction(icon, MenuFactory.getLabel(MenuFactory.APP_SELECT_FEATURES_BY_EXPRESSION), self)
         self.toolBar.addAction(self.actionExpressionBuilderDialog)
         
         self.attributeTableView = QgsAttributeTableView()
@@ -107,8 +108,8 @@ class DialogLayerAttributeTable(QtGui.QDialog):
         if self.vectorLayer.isModified() or self.featureDeleted:
             reply = QtGui.QMessageBox.question(
                 self,
-                'Save Layer Changes',
-                'Do you want to save the changes made to layer {0}?'.format(self.vectorLayer.name()),
+                MenuFactory.getLabel(MenuFactory.MSG_APP_SAVE_LAYER),
+                MenuFactory.getDescription(MenuFactory.MSG_APP_SAVE_LAYER) + ' {0}?'.format(self.vectorLayer.name()),
                 QtGui.QMessageBox.Save|QtGui.QMessageBox.No|QtGui.QMessageBox.Cancel,
                 QtGui.QMessageBox.Cancel
             )
@@ -145,8 +146,8 @@ class DialogLayerAttributeTable(QtGui.QDialog):
         #self.attributeTableModel.removeRow(self.attributeTableView.currentIndex().row())
         reply = QtGui.QMessageBox.question(
             self,
-            'Delete Feature',
-            'Do you want to delete feature {0}?'.format(deletedRow.row()),
+            MenuFactory.getLabel(MenuFactory.MSG_APP_DELETE_FEATURE),
+            MenuFactory.getDescription(MenuFactory.MSG_APP_DELETE_FEATURE) + ' {0}?'.format(deletedRow.row()),
             QtGui.QMessageBox.Yes|QtGui.QMessageBox.No,
             QtGui.QMessageBox.No
         )
