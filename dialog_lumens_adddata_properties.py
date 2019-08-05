@@ -9,6 +9,7 @@ from processing.tools import *
 from dialog_lumens_base import DialogLumensBase
 from dialog_lumens_viewer import DialogLumensViewer
 
+from menu_factory import MenuFactory
 
 class DialogLumensAddDataProperties(QtGui.QDialog):
     """LUMENS dialog class for the "Add Data" data properties.
@@ -33,7 +34,7 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
         """
         super(DialogLumensAddDataProperties, self).__init__(parent)
         self.parent = parent
-        self.dialogTitle = 'Data Properties'
+        self.dialogTitle = MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_PROPERTIES)
         
         self.dataType = dataType
         self.dataFile = dataFile
@@ -46,14 +47,14 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
         
         # The classification of the data to be added
         self.classifiedOptions = {
-            1: 'Undisturbed forest', # Hutan primer
-            2: 'Logged-over forest', # Hutan sekunder
-            3: 'Monoculture tree-based plantation', # Tanaman pohon monokulture
-            4: 'Mixed tree-based plantation', # Tanaman pohon campuran
-            5: 'Agriculture/annual crop', # Tanaman pertanian semusim 
-            6: 'Shrub, grass, and cleared land', # Semak, rumput, dan lahan terbuka
-            7: 'Settlement and built-up area', # Pemukiman
-            8: 'Others',
+            1: MenuFactory.getLabel(MenuFactory.APP_PROP_FIRST_CLASS), #'Undisturbed forest', # Hutan primer
+            2: MenuFactory.getLabel(MenuFactory.APP_PROP_SECOND_CLASS), #'Logged-over forest', # Hutan sekunder
+            3: MenuFactory.getLabel(MenuFactory.APP_PROP_THIRD_CLASS), #'Monoculture tree-based plantation', # Tanaman pohon monokulture
+            4: MenuFactory.getLabel(MenuFactory.APP_PROP_FOURTH_CLASS), #'Mixed tree-based plantation', # Tanaman pohon campuran
+            5: MenuFactory.getLabel(MenuFactory.APP_PROP_FIFTH_CLASS), #'Agriculture/annual crop', # Tanaman pertanian semusim 
+            6: MenuFactory.getLabel(MenuFactory.APP_PROP_SIXTH_CLASS), #'Shrub, grass, and cleared land', # Semak, rumput, dan lahan terbuka
+            7: MenuFactory.getLabel(MenuFactory.APP_PROP_SEVENTH_CLASS), #'Settlement and built-up area', # Pemukiman
+            8: MenuFactory.getLabel(MenuFactory.APP_PROP_EIGHTH_CLASS), #'Others',
         }
         self.isRasterFile = False
         self.isVectorFile = False
@@ -81,7 +82,7 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
         self.setupUi(self)
         
         # Raster data table is loaded only for 'Land use/cover' and 'Planning unit'
-        if self.isRasterFile and self.dataType in ('Land use/cover', 'Planning unit'):
+        if self.isRasterFile and self.dataType in (MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_LAND_USE_COVER), MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_PLANNING_UNIT)):
             self.loadRasterDataTable()
         elif self.isVectorFile:
             self.loadDataFieldAttributes()
@@ -106,11 +107,11 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
         addFileType = None
         
         if self.isRasterFile:
-            addFileType = 'Add raster data'
+            addFileType = MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_RASTER)
         elif self.isVectorFile:
-            addFileType = 'Add vector data'
+            addFileType = MenuFactory.getLabel(MenuFactory.APP_ADD_VECTOR_DATA)
         elif self.isCsvFile:
-            addFileType = 'Add tabular data'
+            addFileType = MenuFactory.getLabel(MenuFactory.APP_ADD_TABULAR_DATA)
         
         self.groupBoxDataProperties = QtGui.QGroupBox('{0}: {1}'.format(self.dataType, addFileType))
         self.layoutGroupBoxDataProperties = QtGui.QVBoxLayout()
@@ -128,20 +129,20 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
         rowCount = 0
         
         self.labelDataDescription = QtGui.QLabel()
-        self.labelDataDescription.setText('&Description:')
+        self.labelDataDescription.setText('&' + MenuFactory.getLabel(MenuFactory.APP_PROP_DESCRIPTION) + ':')
         self.lineEditDataDescription = QtGui.QLineEdit()
         self.lineEditDataDescription.setText(self.dataDescription)
         self.labelDataDescription.setBuddy(self.lineEditDataDescription)
         
         td = datetime.date.today()
         self.labelDataSpinBoxPeriod = QtGui.QLabel()
-        self.labelDataSpinBoxPeriod.setText('&Year:')
+        self.labelDataSpinBoxPeriod.setText('&' + MenuFactory.getLabel(MenuFactory.APP_PROP_YEAR) + ':')
         self.spinBoxDataPeriod = QtGui.QSpinBox()
         self.spinBoxDataPeriod.setRange(1, 9999)
         # self.spinBoxDataPeriod.setValue(td.year)
         self.labelDataSpinBoxPeriod.setBuddy(self.spinBoxDataPeriod)
         
-        if self.dataType == 'Land use/cover':
+        if self.dataType == MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_LAND_USE_COVER):
             # Description + Period
             self.layoutDataProperties.addWidget(self.labelDataDescription, rowCount, 0)
             self.layoutDataProperties.addWidget(self.lineEditDataDescription, rowCount, 1)
@@ -154,7 +155,7 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
             self.layoutDataProperties.addWidget(self.lineEditDataDescription, rowCount, 1)
         
         self.labeldataFieldAttribute = QtGui.QLabel()
-        self.labeldataFieldAttribute.setText('Field attribute:')
+        self.labeldataFieldAttribute.setText(MenuFactory.getLabel(MenuFactory.APP_PROP_FIELD_ATTRIBUTE) + ':')
         self.comboBoxDataFieldAttribute = QtGui.QComboBox()
         self.comboBoxDataFieldAttribute.setDisabled(True)
         
@@ -169,16 +170,16 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
         self.dataTable.verticalHeader().setVisible(False)
         
         self.labelDataMapping = QtGui.QLabel()
-        self.labelDataMapping.setText('Class definition file (optional):')
+        self.labelDataMapping.setText(MenuFactory.getLabel(MenuFactory.APP_PROP_CLASS_DEFINITION_FILE) + ':')
         self.lineEditDataMapping = QtGui.QLineEdit()
         self.lineEditDataMapping.setReadOnly(True)
         self.buttonSelectDataMapping = QtGui.QPushButton()
-        self.buttonSelectDataMapping.setText('&Browse')
+        self.buttonSelectDataMapping.setText('&' + MenuFactory.getLabel(MenuFactory.APP_BROWSE) + ':')
         self.buttonSelectDataMapping.setDisabled(True)
         
         rowCount += 1
         
-        if self.dataType == 'Land use/cover' or self.dataType == 'Planning unit':
+        if self.dataType == MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_LAND_USE_COVER) or self.dataType == MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_PLANNING_UNIT):
             dataTableColumnSpan = 2
             if self.isVectorFile or self.isRasterFile:
                 self.layoutDataProperties.addWidget(self.labelDataMapping, rowCount, 0)
@@ -194,10 +195,10 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
         
         self.layoutButtonProcess = QtGui.QHBoxLayout()
         self.buttonProcessDissolve = QtGui.QPushButton()
-        self.buttonProcessDissolve.setText('&Dissolve')
+        self.buttonProcessDissolve.setText('&' + MenuFactory.getLabel(MenuFactory.APP_PROP_DISSOLVE))
         self.buttonProcessDissolve.setVisible(False)
         self.buttonProcessSave = QtGui.QPushButton()
-        self.buttonProcessSave.setText('&Save')
+        self.buttonProcessSave.setText('&' + MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_PROPERTIES_SAVE))
         self.layoutButtonProcess.setAlignment(QtCore.Qt.AlignRight)
         self.layoutButtonProcess.addWidget(self.buttonProcessDissolve)
         self.layoutButtonProcess.addWidget(self.buttonProcessSave)
@@ -273,7 +274,7 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
                     
                     fields.append('Legend') # Additional columns ('Classified' only for Land Use/Cover types)
                     
-                    if self.dataType == 'Land use/cover':
+                    if self.dataType == MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_LAND_USE_COVER):
                         fields.append('Classified')
                     
                     self.dataTable.setColumnCount(len(fields))
@@ -305,7 +306,7 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
                     self.dataTable.setItem(tableRow, tableColumn, fieldLegend)
                     self.dataTable.horizontalHeader().setResizeMode(columnLegend, QtGui.QHeaderView.ResizeToContents)
                     
-                    if self.dataType == 'Land use/cover':
+                    if self.dataType == MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_LAND_USE_COVER):
                         tableColumn += 1
                         columnClassified = tableColumn
                         comboBoxClassified = QtGui.QComboBox()
@@ -346,12 +347,12 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
         """
         valid = False
         
-        if self.dataType == 'Land use/cover' and self.isVectorFile and self.dataDescription and self.dataPeriod and self.dataFieldAttribute:
+        if self.dataType == MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_LAND_USE_COVER) and self.isVectorFile and self.dataDescription and self.dataPeriod and self.dataFieldAttribute:
             valid = True
-        elif self.dataType == 'Planning unit' and self.isVectorFile and self.dataDescription and self.dataFieldAttribute:
+        elif self.dataType == MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_PLANNING_UNIT) and self.isVectorFile and self.dataDescription and self.dataFieldAttribute:
             valid = True
         else:
-            QtGui.QMessageBox.critical(self, 'Error', 'Missing some input. Please complete the fields.')
+            QtGui.QMessageBox.critical(self, MenuFactory.getLabel(MenuFactory.MSG_ERROR), MenuFactory.getDescription(MenuFactory.MSG_ERROR))
         
         return valid
     
@@ -361,20 +362,20 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
         """
         valid = False
         
-        if self.dataType == 'Land use/cover' and self.isRasterFile and self.dataDescription and self.dataPeriod and self.dataTableCsv:
+        if self.dataType == MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_LAND_USE_COVER) and self.isRasterFile and self.dataDescription and self.dataPeriod and self.dataTableCsv:
             valid = True
-        elif self.dataType == 'Land use/cover' and self.isVectorFile and self.dataDescription and self.dataPeriod and self.dataFieldAttribute and self.dataTableCsv:
+        elif self.dataType == MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_LAND_USE_COVER) and self.isVectorFile and self.dataDescription and self.dataPeriod and self.dataFieldAttribute and self.dataTableCsv:
             valid = True
-        elif self.dataType == 'Planning unit' and self.isRasterFile and self.dataDescription and self.dataTableCsv:
+        elif self.dataType == MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_PLANNING_UNIT) and self.isRasterFile and self.dataDescription and self.dataTableCsv:
             valid = True
-        elif self.dataType == 'Planning unit' and self.isVectorFile and self.dataDescription and self.dataFieldAttribute and self.dataTableCsv:
+        elif self.dataType == MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_PLANNING_UNIT) and self.isVectorFile and self.dataDescription and self.dataFieldAttribute and self.dataTableCsv:
             valid = True
-        elif self.dataType == 'Factor' and self.isRasterFile and self.dataDescription:
+        elif self.dataType == MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_FACTOR) and self.isRasterFile and self.dataDescription:
             valid = True
-        elif self.dataType == 'Table' and self.isCsvFile and self.dataDescription:
+        elif self.dataType == MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_TABLE) and self.isCsvFile and self.dataDescription:
             valid = True
         else:
-            QtGui.QMessageBox.critical(self, 'Error', 'Missing some input. Please complete the fields.')
+            QtGui.QMessageBox.critical(self, MenuFactory.getLabel(MenuFactory.MSG_ERROR), MenuFactory.getDescription(MenuFactory.MSG_ERROR))
         
         return valid
     
@@ -431,7 +432,7 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
                     attributes.append(field.name())
                 
                 # Additional columns ('Legend', 'Classified' only for Land Use/Cover types)
-                if self.dataType == 'Land use/cover':
+                if self.dataType == MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_LAND_USE_COVER):
                     attributes.append('Legend')
                     attributes.append('Classified')
                 
@@ -453,7 +454,7 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
                                 continue
                             attributeValue = str(feature.attribute(attribute))
                             attributeValueTableItem = QtGui.QTableWidgetItem(attributeValue)
-                            if tableColumn == 1 and self.dataType == 'Planning unit': # Editable second column for Vector Planning Units
+                            if tableColumn == 1 and self.dataType == MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_PLANNING_UNIT): # Editable second column for Vector Planning Units
                                 pass
                             else:
                                 attributeValueTableItem.setFlags(attributeValueTableItem.flags() & ~QtCore.Qt.ItemIsEnabled)
@@ -462,7 +463,7 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
                             tableColumn += 1
                         
                         # Additional columns ('Legend', 'Classified' only for Land Use/Cover types)
-                        if self.dataType == 'Land use/cover':
+                        if self.dataType == MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_LAND_USE_COVER):
                             fieldLegend = QtGui.QTableWidgetItem('Unidentified Landuse {0}'.format(tableRow + 1))
                             columnLegend = tableColumn
                             self.dataTable.setItem(tableRow, tableColumn, fieldLegend)
@@ -499,7 +500,7 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
         """Slot method for selecting a data mapping file in CSV format.
         """
         dataMappingFile = unicode(QtGui.QFileDialog.getOpenFileName(
-            self, 'Select Data Mapping File', QtCore.QDir.homePath(), 'Data Mapping File (*{0})'.format(self.parent.main.appSettings['selectCsvfileExt'])))
+            self, MenuFactory.getLabel(MenuFactory.MGS_APP_SELECT_DATA_MAPPING_FILE), QtCore.QDir.homePath(), MenuFactory.getDescription(MenuFactory.MGS_APP_SELECT_DATA_MAPPING_FILE) + ' (*{0})'.format(self.parent.main.appSettings['selectCsvfileExt'])))
         
         if dataMappingFile:
             logging.getLogger(type(self).__name__).info('select data mapping file: %s', dataMappingFile)
@@ -530,7 +531,7 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
             if hasHeader: # Skip the header
                 next(reader)
             
-            if self.dataType == 'Planning unit':
+            if self.dataType == MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_PLANNING_UNIT):
                 for row in reader:
                     dataMappingZone[str(row[0]).lower()] = str(row[1])
                 
@@ -559,7 +560,7 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
                         newFieldLegend = QtGui.QTableWidgetItem(legend)
                         self.dataTable.setItem(tableRow, zoneColumn, newFieldLegend)                  
             
-            if self.dataType == 'Land use/cover':
+            if self.dataType == MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_LAND_USE_COVER):
                 for row in reader:
                     dataMappingLegend[str(row[0]).lower()] = str(row[1])
                     dataMappingClassified[str(row[0]).lower()] = str(row[2]).lower()

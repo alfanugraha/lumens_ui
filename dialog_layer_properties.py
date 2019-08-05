@@ -26,7 +26,7 @@ class DialogLayerProperties(QtGui.QDialog):
         super(DialogLayerProperties, self).__init__(parent)
         self.layer = layer
         self.main = parent
-        self.dialogTitle = 'LUMENS ' + MenuFactory.getLabel(MenuFactory.APP_LAYER_PROPERTIES) ' - ' + self.layer.name()
+        self.dialogTitle = 'LUMENS ' + MenuFactory.getLabel(MenuFactory.APP_LAYER_PROPERTIES) + ' - ' + self.layer.name()
         self.layerSymbolFillColor = self.styleCategorizedColor = self.styleGraduatedColor = self.styleRuleBasedColor = self.labelColor = QtGui.QColor(109, 54, 141) # purple
         
         if self.main.appSettings['debug']:
@@ -76,7 +76,7 @@ class DialogLayerProperties(QtGui.QDialog):
         """
         self.dialogLayout = QtGui.QVBoxLayout()
         
-        self.groupBoxLayerStyle = QtGui.QGroupBox('Style')
+        self.groupBoxLayerStyle = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_STYLE))
         self.layoutGroupBoxLayerStyle = QtGui.QVBoxLayout()
         self.layoutGroupBoxLayerStyle.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxLayerStyle.setLayout(self.layoutGroupBoxLayerStyle)
@@ -88,7 +88,7 @@ class DialogLayerProperties(QtGui.QDialog):
         # styleTypes = ['Single', 'Categorized', 'Graduated', 'Rule-based']
         self.layoutGroupBoxLayerStyle.addLayout(self.layoutLayerStyle)
         
-        self.groupBoxLayerTransparency = QtGui.QGroupBox('Transparency')
+        self.groupBoxLayerTransparency = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_TRANSPARENCY))
         self.layoutGroupBoxLayerTransparency = QtGui.QGridLayout()
         self.groupBoxLayerTransparency.setLayout(self.layoutGroupBoxLayerTransparency)
         
@@ -116,9 +116,9 @@ class DialogLayerProperties(QtGui.QDialog):
         self.layoutGroupBoxStyleRuleBased.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.tabStyleRuleBased.setLayout(self.layoutGroupBoxStyleRuleBased)
         
-        self.styleTabWidget.addTab(self.tabStyleSingle, 'Single')
-        self.styleTabWidget.addTab(self.tabStyleCategorized, 'Categorized')
-        self.styleTabWidget.addTab(self.tabStyleGraduated, 'Graduated')
+        self.styleTabWidget.addTab(self.tabStyleSingle, MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_SINGLE))
+        self.styleTabWidget.addTab(self.tabStyleCategorized, MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_CATEGORIZED))
+        self.styleTabWidget.addTab(self.tabStyleGraduated, MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_GRADUATED))
         # self.styleTabWidget.addTab(self.tabStyleRuleBased, 'Rule-based')
         
         self.layoutLayerStyle.addWidget(self.groupBoxLayerTransparency)
@@ -131,7 +131,7 @@ class DialogLayerProperties(QtGui.QDialog):
         
         # Transparency groupbox widgets
         self.labelLayerTransparency = QtGui.QLabel()
-        self.labelLayerTransparency.setText('Layer Transparency:')
+        self.labelLayerTransparency.setText(MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_LAYER_TRANSPARENCY) + ':')
         self.layoutGroupBoxLayerTransparency.addWidget(self.labelLayerTransparency, 0, 0)
         
         self.sliderLayerTransparency = QtGui.QSlider()
@@ -145,7 +145,7 @@ class DialogLayerProperties(QtGui.QDialog):
         
         # Single style groupbox widgets
         self.labelLayerSymbolFillColor = QtGui.QLabel()
-        self.labelLayerSymbolFillColor.setText('Fill color:')
+        self.labelLayerSymbolFillColor.setText(MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_FILL_COLOR) + ':')
         self.layoutGroupBoxStyleSingle.addWidget(self.labelLayerSymbolFillColor, 0, 0)
         
         self.buttonLayerSymbolFillColor = QtGui.QPushButton()
@@ -156,7 +156,7 @@ class DialogLayerProperties(QtGui.QDialog):
         
         # Categorized style groupbox widgets
         self.labelStyleCategorizedAttribute = QtGui.QLabel()
-        self.labelStyleCategorizedAttribute.setText('Attribute:')
+        self.labelStyleCategorizedAttribute.setText(MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_ATTRIBUTE) + ':')
         self.layoutGroupBoxStyleCategorized.addWidget(self.labelStyleCategorizedAttribute, 0, 0)
         
         self.comboBoxStyleCategorizedAttribute = QtGui.QComboBox()
@@ -164,7 +164,7 @@ class DialogLayerProperties(QtGui.QDialog):
         self.layoutGroupBoxStyleCategorized.addWidget(self.comboBoxStyleCategorizedAttribute, 0, 1)
         
         self.labelStyleCategorizedFillColor = QtGui.QLabel()
-        self.labelStyleCategorizedFillColor.setText('Fill color:')
+        self.labelStyleCategorizedFillColor.setText(MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_FILL_COLOR) + ':')
         self.layoutGroupBoxStyleCategorized.addWidget(self.labelStyleCategorizedFillColor, 1, 0)
         
         self.buttonStyleCategorizedFillColor = QtGui.QPushButton()
@@ -174,14 +174,14 @@ class DialogLayerProperties(QtGui.QDialog):
         self.layoutGroupBoxStyleCategorized.addWidget(self.buttonStyleCategorizedFillColor, 1, 1)
         
         self.labelStyleCategorizedValue = QtGui.QLabel()
-        self.labelStyleCategorizedValue.setText('Value:')
+        self.labelStyleCategorizedValue.setText(MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_VALUE) + ':')
         self.layoutGroupBoxStyleCategorized.addWidget(self.labelStyleCategorizedValue, 2, 0)
         
         self.lineEditStyleCategorizedValue = QtGui.QLineEdit()
         self.layoutGroupBoxStyleCategorized.addWidget(self.lineEditStyleCategorizedValue, 2, 1)
         
         self.labelStyleCategorizedLabel = QtGui.QLabel()
-        self.labelStyleCategorizedLabel.setText('Label:')
+        self.labelStyleCategorizedLabel.setText(MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_LABEL) + ':')
         self.layoutGroupBoxStyleCategorized.addWidget(self.labelStyleCategorizedLabel, 3, 0)
         
         self.lineEditStyleCategorizedLabel = QtGui.QLineEdit()
@@ -192,24 +192,24 @@ class DialogLayerProperties(QtGui.QDialog):
         self.layoutButtonStyleCategorized.setSpacing(10)
         
         self.buttonAddStyleCategorized = QtGui.QPushButton()
-        self.buttonAddStyleCategorized.setText('Add')
+        self.buttonAddStyleCategorized.setText(MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_ADD))
         self.buttonAddStyleCategorized.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
         self.layoutButtonStyleCategorized.addWidget(self.buttonAddStyleCategorized)
         
         self.buttonDeleteStyleCategorized = QtGui.QPushButton()
-        self.buttonDeleteStyleCategorized.setText('Delete')
+        self.buttonDeleteStyleCategorized.setText(MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_DELETE))
         self.buttonDeleteStyleCategorized.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
         self.layoutButtonStyleCategorized.addWidget(self.buttonDeleteStyleCategorized)
         
         self.buttonDeleteAllStyleCategorized = QtGui.QPushButton()
-        self.buttonDeleteAllStyleCategorized.setText('Delete All')
+        self.buttonDeleteAllStyleCategorized.setText(MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_DELETE_ALL))
         self.buttonDeleteAllStyleCategorized.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
         self.layoutButtonStyleCategorized.addWidget(self.buttonDeleteAllStyleCategorized)
         
         self.layoutGroupBoxStyleCategorized.addLayout(self.layoutButtonStyleCategorized, 4, 1)
         
         self.tableStyleCategorized = QtGui.QTableWidget()
-        headersTableStyleCategorized = ['Color', 'Value', 'Label']
+        headersTableStyleCategorized = [MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_COLOR), MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_VALUE), MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_LABEL)]
         self.tableStyleCategorized.setColumnCount(len(headersTableStyleCategorized))
         self.tableStyleCategorized.setHorizontalHeaderLabels(headersTableStyleCategorized)
         self.tableStyleCategorized.verticalHeader().setVisible(False)
@@ -217,7 +217,7 @@ class DialogLayerProperties(QtGui.QDialog):
         
         # Graduated style groupbox widgets
         self.labelStyleGraduatedAttribute = QtGui.QLabel()
-        self.labelStyleGraduatedAttribute.setText('Attribute:')
+        self.labelStyleGraduatedAttribute.setText(MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_ATTRIBUTE) + ':')
         self.layoutGroupBoxStyleGraduated.addWidget(self.labelStyleGraduatedAttribute, 0, 0)
         
         self.comboBoxStyleGraduatedAttribute = QtGui.QComboBox()
@@ -225,7 +225,7 @@ class DialogLayerProperties(QtGui.QDialog):
         self.layoutGroupBoxStyleGraduated.addWidget(self.comboBoxStyleGraduatedAttribute, 0, 1)
         
         self.labelStyleGraduatedFillColor = QtGui.QLabel()
-        self.labelStyleGraduatedFillColor.setText('Fill color:')
+        self.labelStyleGraduatedFillColor.setText(MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_FILL_COLOR) + ':')
         self.layoutGroupBoxStyleGraduated.addWidget(self.labelStyleGraduatedFillColor, 1, 0)
         
         self.buttonStyleGraduatedFillColor = QtGui.QPushButton()
@@ -235,21 +235,21 @@ class DialogLayerProperties(QtGui.QDialog):
         self.layoutGroupBoxStyleGraduated.addWidget(self.buttonStyleGraduatedFillColor, 1, 1)
         
         self.labelStyleGraduatedLowerValue = QtGui.QLabel()
-        self.labelStyleGraduatedLowerValue.setText('Lower value:')
+        self.labelStyleGraduatedLowerValue.setText(MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_LOWER_VALUE) + ':')
         self.layoutGroupBoxStyleGraduated.addWidget(self.labelStyleGraduatedLowerValue, 2, 0)
         
         self.lineEditStyleGraduatedLowerValue = QtGui.QLineEdit()
         self.layoutGroupBoxStyleGraduated.addWidget(self.lineEditStyleGraduatedLowerValue, 2, 1)
         
         self.labelStyleGraduatedUpperValue = QtGui.QLabel()
-        self.labelStyleGraduatedUpperValue.setText('Upper value:')
+        self.labelStyleGraduatedUpperValue.setText(MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_UPPER_VALUE) + ':')
         self.layoutGroupBoxStyleGraduated.addWidget(self.labelStyleGraduatedUpperValue, 3, 0)
         
         self.lineEditStyleGraduatedUpperValue = QtGui.QLineEdit()
         self.layoutGroupBoxStyleGraduated.addWidget(self.lineEditStyleGraduatedUpperValue, 3, 1)
         
         self.labelStyleGraduatedLabel = QtGui.QLabel()
-        self.labelStyleGraduatedLabel.setText('Label:')
+        self.labelStyleGraduatedLabel.setText(MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_LABEL) + ':')
         self.layoutGroupBoxStyleGraduated.addWidget(self.labelStyleGraduatedLabel, 4, 0)
         
         self.lineEditStyleGraduatedLabel = QtGui.QLineEdit()
@@ -260,24 +260,24 @@ class DialogLayerProperties(QtGui.QDialog):
         self.layoutButtonStyleGraduated.setSpacing(10)
         
         self.buttonAddStyleGraduated = QtGui.QPushButton()
-        self.buttonAddStyleGraduated.setText('Add')
+        self.buttonAddStyleGraduated.setText(MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_ADD))
         self.buttonAddStyleGraduated.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
         self.layoutButtonStyleGraduated.addWidget(self.buttonAddStyleGraduated)
         
         self.buttonDeleteStyleGraduated = QtGui.QPushButton()
-        self.buttonDeleteStyleGraduated.setText('Delete')
+        self.buttonDeleteStyleGraduated.setText(MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_DELETE))
         self.buttonDeleteStyleGraduated.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
         self.layoutButtonStyleGraduated.addWidget(self.buttonDeleteStyleGraduated)
         
         self.buttonDeleteAllStyleGraduated = QtGui.QPushButton()
-        self.buttonDeleteAllStyleGraduated.setText('Delete All')
+        self.buttonDeleteAllStyleGraduated.setText(MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_DELETE_ALL))
         self.buttonDeleteAllStyleGraduated.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
         self.layoutButtonStyleGraduated.addWidget(self.buttonDeleteAllStyleGraduated)
         
         self.layoutGroupBoxStyleGraduated.addLayout(self.layoutButtonStyleGraduated, 5, 1)
         
         self.tableStyleGraduated = QtGui.QTableWidget()
-        headersTableStyleGraduated = ['Color', 'Value', 'Label']
+        headersTableStyleGraduated = [MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_COLOR), MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_VALUE), MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_LABEL)]
         self.tableStyleGraduated.setColumnCount(len(headersTableStyleGraduated))
         self.tableStyleGraduated.setHorizontalHeaderLabels(headersTableStyleGraduated)
         self.tableStyleGraduated.verticalHeader().setVisible(False)
@@ -285,7 +285,7 @@ class DialogLayerProperties(QtGui.QDialog):
         
         # Rule-based style groupbox widgets
         self.labelStyleRuleBasedFillColor = QtGui.QLabel()
-        self.labelStyleRuleBasedFillColor.setText('Fill color:')
+        self.labelStyleRuleBasedFillColor.setText(MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_FILL_COLOR) + ':')
         self.layoutGroupBoxStyleRuleBased.addWidget(self.labelStyleRuleBasedFillColor, 0, 0)
         
         self.buttonStyleRuleBasedFillColor = QtGui.QPushButton()
@@ -295,14 +295,14 @@ class DialogLayerProperties(QtGui.QDialog):
         self.layoutGroupBoxStyleRuleBased.addWidget(self.buttonStyleRuleBasedFillColor, 0, 1)
         
         self.labelStyleRuleBasedLabel = QtGui.QLabel()
-        self.labelStyleRuleBasedLabel.setText('Label:')
+        self.labelStyleRuleBasedLabel.setText(MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_LABEL) + ':')
         self.layoutGroupBoxStyleRuleBased.addWidget(self.labelStyleRuleBasedLabel, 1, 0)
         
         self.lineEditStyleRuleBasedLabel = QtGui.QLineEdit()
         self.layoutGroupBoxStyleRuleBased.addWidget(self.lineEditStyleRuleBasedLabel, 1, 1)
         
         self.labelStyleRuleBasedRule = QtGui.QLabel()
-        self.labelStyleRuleBasedRule.setText('Rule:')
+        self.labelStyleRuleBasedRule.setText(MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_RULE) + ':')
         self.layoutGroupBoxStyleRuleBased.addWidget(self.labelStyleRuleBasedRule, 2, 0)
         
         self.layoutRuleBasedRule = QtGui.QHBoxLayout()
@@ -318,14 +318,14 @@ class DialogLayerProperties(QtGui.QDialog):
         self.layoutRuleBasedRule.addWidget(self.buttonExpressionBuilderDialog)
         
         self.labelStyleRuleBasedMinScale = QtGui.QLabel()
-        self.labelStyleRuleBasedMinScale.setText('Min scale:')
+        self.labelStyleRuleBasedMinScale.setText(MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_MIN_SCALE) + ':')
         self.layoutGroupBoxStyleRuleBased.addWidget(self.labelStyleRuleBasedMinScale, 3, 0)
         
         self.lineEditStyleRuleBasedMinScale = QtGui.QLineEdit()
         self.layoutGroupBoxStyleRuleBased.addWidget(self.lineEditStyleRuleBasedMinScale, 3, 1)
         
         self.labelStyleRuleBasedMaxScale = QtGui.QLabel()
-        self.labelStyleRuleBasedMaxScale.setText('Max scale:')
+        self.labelStyleRuleBasedMaxScale.setText(MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_MAX_SCALE) + ':')
         self.layoutGroupBoxStyleRuleBased.addWidget(self.labelStyleRuleBasedMaxScale, 4, 0)
         
         self.lineEditStyleRuleBasedMaxScale = QtGui.QLineEdit()
@@ -336,24 +336,24 @@ class DialogLayerProperties(QtGui.QDialog):
         self.layoutButtonStyleRuleBased.setSpacing(10)
         
         self.buttonAddStyleRuleBased = QtGui.QPushButton()
-        self.buttonAddStyleRuleBased.setText('Add')
+        self.buttonAddStyleRuleBased.setText(MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_ADD))
         self.buttonAddStyleRuleBased.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
         self.layoutButtonStyleRuleBased.addWidget(self.buttonAddStyleRuleBased)
         
         self.buttonDeleteStyleRuleBased = QtGui.QPushButton()
-        self.buttonDeleteStyleRuleBased.setText('Delete')
+        self.buttonDeleteStyleRuleBased.setText(MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_DELETE))
         self.buttonDeleteStyleRuleBased.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
         self.layoutButtonStyleRuleBased.addWidget(self.buttonDeleteStyleRuleBased)
         
         self.buttonDeleteAllStyleRuleBased = QtGui.QPushButton()
-        self.buttonDeleteAllStyleRuleBased.setText('Delete All')
+        self.buttonDeleteAllStyleRuleBased.setText(MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_DELETE_ALL))
         self.buttonDeleteAllStyleRuleBased.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
         self.layoutButtonStyleRuleBased.addWidget(self.buttonDeleteAllStyleRuleBased)
         
         self.layoutGroupBoxStyleRuleBased.addLayout(self.layoutButtonStyleRuleBased, 5, 1)
         
         self.tableStyleRuleBased = QtGui.QTableWidget()
-        headersTableStyleRuleBased = ['Color', 'Label', 'Rule', 'Min Scale', 'Max Scale']
+        headersTableStyleRuleBased = [MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_COLOR), MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_LABEL), MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_RULE), MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_MIN_SCALE), MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_MAX_SCALE)]
         self.tableStyleRuleBased.setColumnCount(len(headersTableStyleRuleBased))
         self.tableStyleRuleBased.setHorizontalHeaderLabels(headersTableStyleRuleBased)
         self.tableStyleRuleBased.verticalHeader().setVisible(False)
@@ -361,7 +361,7 @@ class DialogLayerProperties(QtGui.QDialog):
         
         ######################################################################
         
-        self.groupBoxLayerLabel = QtGui.QGroupBox('Label')
+        self.groupBoxLayerLabel = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_LABEL))
         self.layoutGroupBoxLayerLabel = QtGui.QVBoxLayout()
         self.layoutGroupBoxLayerLabel.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxLayerLabel.setLayout(self.layoutGroupBoxLayerLabel)
@@ -375,7 +375,7 @@ class DialogLayerProperties(QtGui.QDialog):
         self.layoutLayerLabelInfo.addWidget(self.labelLayerLabelInfo)
         
         self.labelLayerLabelEnabled = QtGui.QLabel()
-        self.labelLayerLabelEnabled.setText('Enable label:')
+        self.labelLayerLabelEnabled.setText(MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_ENABLE) + ':')
         self.layoutLayerLabel.addWidget(self.labelLayerLabelEnabled, 0, 0)
         
         self.checkBoxLayerLabelEnabled = QtGui.QCheckBox()
@@ -384,7 +384,7 @@ class DialogLayerProperties(QtGui.QDialog):
         self.labelLayerLabelEnabled.setBuddy(self.checkBoxLayerLabelEnabled)
         
         self.labelLayerLabelAttribute = QtGui.QLabel()
-        self.labelLayerLabelAttribute.setText('Label attribute:')
+        self.labelLayerLabelAttribute.setText(MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_LABEL_ATTRIBUTE) + ':')
         self.layoutLayerLabel.addWidget(self.labelLayerLabelAttribute, 1, 0)
         
         self.comboBoxLayerAttribute = QtGui.QComboBox()
@@ -392,7 +392,7 @@ class DialogLayerProperties(QtGui.QDialog):
         self.layoutLayerLabel.addWidget(self.comboBoxLayerAttribute, 1, 1)
         
         self.labelLayerLabelSize = QtGui.QLabel()
-        self.labelLayerLabelSize.setText('Label size (points):')
+        self.labelLayerLabelSize.setText(MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_LABEL_SIZE) + ':')
         self.layoutLayerLabel.addWidget(self.labelLayerLabelSize, 2, 0)
         
         self.spinBoxLabelSize = QtGui.QSpinBox()
@@ -402,7 +402,7 @@ class DialogLayerProperties(QtGui.QDialog):
         self.labelLayerLabelSize.setBuddy(self.spinBoxLabelSize)
         
         self.labelLayerLabelColor = QtGui.QLabel()
-        self.labelLayerLabelColor.setText('Label color:')
+        self.labelLayerLabelColor.setText(MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_LABEL_COLOR) + ':')
         self.layoutLayerLabel.addWidget(self.labelLayerLabelColor, 3, 0)
         
         self.buttonLabelColor = QtGui.QPushButton()
@@ -414,7 +414,7 @@ class DialogLayerProperties(QtGui.QDialog):
         self.layoutButtonBox.setAlignment(QtCore.Qt.AlignRight)
         self.buttonBox = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok|QtGui.QDialogButtonBox.Cancel)
         self.buttonApply = QtGui.QPushButton()
-        self.buttonApply.setText('Apply')
+        self.buttonApply.setText(MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_APPLY))
         icon = QtGui.QIcon(':/ui/icons/iconActionHelp.png')
         self.buttonLayerPropertiesHelp = QtGui.QPushButton()
         self.buttonLayerPropertiesHelp.setIcon(icon)
@@ -768,10 +768,10 @@ class DialogLayerProperties(QtGui.QDialog):
         filePath = os.path.join(self.main.appSettings['appDir'], self.main.appSettings['folderHelp'], self.main.appSettings['helpDialogLayerPropertiesFile'])
         
         if os.path.exists(filePath):
-            dialog = DialogLumensViewer(self, 'LUMENS Help - {0}'.format('Layer Properties'), 'html', filePath)
+            dialog = DialogLumensViewer(self, MenuFactory.getLabel(MenuFactory.APP_LUMENS_HELP) + ' - {0}'.format('Layer Properties'), 'html', filePath)
             dialog.exec_()
         else:
-            QtGui.QMessageBox.critical(self, 'LUMENS Help Not Found', "Unable to open '{0}'.".format(filePath))
+            QtGui.QMessageBox.critical(self, MenuFactory.getLabel(MenuFactory.MSG_APP_HELP_NOT_FOUND), MenuFactory.getDescription(MenuFactory.MSG_APP_HELP_NOT_FOUND) + " '{0}'.".format(filePath))
             
     
     #***********************************************************
@@ -786,13 +786,13 @@ class DialogLayerProperties(QtGui.QDialog):
         index = self.styleTabWidget.currentIndex()
         styleType = self.styleTabWidget.tabText(index)
         
-        if styleType == 'Single':
+        if styleType == MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_SINGLE):
             # Process layer symbol fill color
             symbol = QgsFillSymbolV2.createSimple({})
             symbol.setColor(self.layerSymbolFillColor)
             renderer = QgsSingleSymbolRendererV2(symbol)
             self.layer.setRendererV2(renderer)
-        elif styleType == 'Categorized':
+        elif styleType == MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_CATEGORIZED):
             # Process categorized symbol for layer
             categories = []
             for tableRow in range(0, self.tableStyleCategorized.rowCount()):
@@ -806,7 +806,7 @@ class DialogLayerProperties(QtGui.QDialog):
                 renderer = QgsCategorizedSymbolRendererV2('', categories)
                 renderer.setClassAttribute(self.comboBoxStyleCategorizedAttribute.currentText())
                 self.layer.setRendererV2(renderer)
-        elif styleType == 'Graduated':
+        elif styleType == MenuFactory.getLabel(MenuFactory.APP_LAYER_PROP_GRADUATED):
             # Process graduated symbol for layer
             ranges = []
             for tableRow in range(0, self.tableStyleGraduated.rowCount()):

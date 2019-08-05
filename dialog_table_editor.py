@@ -8,6 +8,7 @@ from processing.tools import *
 
 from dialog_lumens_base import DialogLumensBase
 
+from menu_factory import MenuFactory
 
 class DialogTableEditor(QtGui.QDialog, DialogLumensBase):
     """LUMENS dialog class for edit table viewer.
@@ -17,7 +18,7 @@ class DialogTableEditor(QtGui.QDialog, DialogLumensBase):
         super(DialogTableEditor, self).__init__(parent)
         
         self.main = parent
-        self.dialogTitle = 'Table Editor'
+        self.dialogTitle = MenuFactory.getLabel(MenuFactory.APP_TABLE_EDITOR)
         
         if self.main.appSettings['debug']:
             print 'DEBUG: DialogTableEditor init'
@@ -45,7 +46,7 @@ class DialogTableEditor(QtGui.QDialog, DialogLumensBase):
         """
         self.dialogLayout = QtGui.QVBoxLayout()
 
-        self.groupBoxTableEditor = QtGui.QGroupBox('Table Editor')
+        self.groupBoxTableEditor = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.APP_TABLE_EDITOR))
         self.layoutGroupBoxTableEditor = QtGui.QVBoxLayout()
         # self.layoutGroupBoxTableEditor.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxTableEditor.setLayout(self.layoutGroupBoxTableEditor)
@@ -60,14 +61,14 @@ class DialogTableEditor(QtGui.QDialog, DialogLumensBase):
         self.layoutTableEditorInfo.addWidget(self.labelTableEditorInfo)
 
         self.labelLookupTable = QtGui.QLabel()
-        self.labelLookupTable.setText('Lookup Table:')
+        self.labelLookupTable.setText(MenuFactory.getLabel(MenuFactory.APP_TABLE_EDITOR_LOOKUP_TABLE) + ':')
         self.layoutTableEditor.addWidget(self.labelLookupTable, 0, 0)
         self.comboBoxDataTable = QtGui.QComboBox()
         self.comboBoxDataTable.setDisabled(True)
         self.layoutTableEditor.addWidget(self.comboBoxDataTable, 0, 1)
         self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxDataTable)
         self.buttonLoadLookupTable = QtGui.QPushButton()
-        self.buttonLoadLookupTable.setText('Load')
+        self.buttonLoadLookupTable.setText(MenuFactory.getLabel(MenuFactory.APP_TABLE_EDITOR_LOAD))
         self.layoutTableEditor.addWidget(self.buttonLoadLookupTable, 0, 2)
         
         self.dataLookupTable = QtGui.QTableWidget()
@@ -77,7 +78,7 @@ class DialogTableEditor(QtGui.QDialog, DialogLumensBase):
 
         self.layoutButtonProcessTableEditor = QtGui.QHBoxLayout()
         self.buttonProcessTableEditor = QtGui.QPushButton()
-        self.buttonProcessTableEditor.setText('Save')
+        self.buttonProcessTableEditor.setText(MenuFactory.getLabel(MenuFactory.APP_TABLE_EDITOR_SAVE))
         self.layoutButtonProcessTableEditor.setAlignment(QtCore.Qt.AlignRight)
         self.layoutButtonProcessTableEditor.addWidget(self.buttonProcessTableEditor)
 
@@ -153,7 +154,7 @@ class DialogTableEditor(QtGui.QDialog, DialogLumensBase):
             None,
         )
         
-        algSuccess = self.outputsMessageBox(algName, outputs, 'Data successfully added to LUMENS database!', 'Failed to add data to LUMENS database.')
+        algSuccess = self.outputsMessageBox(algName, outputs, MenuFactory.getLabel(MenuFactory.MSG_DB_SUCCESS_ADDED), MenuFactory.getLabel(MenuFactory.MSG_DB_FAILED_ADDED))
         
         if algSuccess:
             self.main.loadAddedDataInfo()

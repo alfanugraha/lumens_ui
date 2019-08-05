@@ -12,6 +12,7 @@ from dialog_lumens_pur_referenceclasses import DialogLumensPURReferenceClasses
 from dialog_lumens_viewer import DialogLumensViewer
 import resource
 
+from menu_factory import MenuFactory
 
 class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
     """LUMENS "PUR" module dialog class.
@@ -159,8 +160,8 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         if duplicateTemplate:
             reply = QtGui.QMessageBox.question(
                 self,
-                'Load Existing Configuration',
-                'The configuration you are about to save matches an existing configuration.\nDo you want to load \'{0}\' instead?'.format(duplicateTemplate),
+                MenuFactory.getLabel(MenuFactory.CONF_LOAD_EXISTING_CONFIGURATION),
+                MenuFactory.getDescription(MenuFactory.CONF_LOAD_EXISTING_CONFIGURATION) + ' \'{0}\'?'.format(duplicateTemplate),
                 QtGui.QMessageBox.Yes|QtGui.QMessageBox.No,
                 QtGui.QMessageBox.No
             )
@@ -216,9 +217,9 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         
         # default Reference Classes
         self.referenceClasses = {
-            1: 'Conservation',
-            2: 'Production',
-            3: 'Other',
+            1: MenuFactory.getLabel(MenuFactory.PURBUILD_CONSERVATION),
+            2: MenuFactory.getLabel(MenuFactory.PURBUILD_PRODUCTION),
+            3: MenuFactory.getLabel(MenuFactory.PURBUILD_OTHER),
         }
         self.tableReferenceMappingData = {}
         self.tablePlanningUnitRowCount = 0
@@ -281,7 +282,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         self.setStyleSheet('QDialog { background-color: rgb(225, 229, 237); }')
         self.dialogLayout = QtGui.QVBoxLayout()
 
-        self.groupBoxPURDialog = QtGui.QGroupBox('Planning Unit Reconciliation')
+        self.groupBoxPURDialog = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.PUR_TITLE))
         self.layoutGroupBoxPURDialog = QtGui.QVBoxLayout()
         self.layoutGroupBoxPURDialog.setAlignment(QtCore.Qt.AlignTop)
         self.groupBoxPURDialog.setLayout(self.layoutGroupBoxPURDialog)
@@ -317,9 +318,9 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         self.tabReconcile = QtGui.QWidget()
         self.tabLog = QtGui.QWidget()
         
-        self.tabWidget.addTab(self.tabSetup, 'Build')
-        self.tabWidget.addTab(self.tabReconcile, 'Reconcile')
-        self.tabWidget.addTab(self.tabLog, 'Log')
+        self.tabWidget.addTab(self.tabSetup, MenuFactory.getLabel(MenuFactory.PURBUILD_BUILD))
+        self.tabWidget.addTab(self.tabReconcile, MenuFactory.getLabel(MenuFactory.PURRECONCILE_RECONCILE))
+        self.tabWidget.addTab(self.tabLog, MenuFactory.getLabel(MenuFactory.PURLOG_LOG))
         
         ##self.layoutTabSetup = QtGui.QVBoxLayout()
         self.layoutTabSetup = QtGui.QGridLayout()
@@ -336,7 +337,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         #***********************************************************
         
         # 'Setup reference' GroupBox
-        self.groupBoxSetupReference = QtGui.QGroupBox('Setup reference')
+        self.groupBoxSetupReference = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.PURBUILD_SETUP_REFERENCE))
         self.layoutGroupBoxSetupReference = QtGui.QVBoxLayout()
         self.layoutGroupBoxSetupReference.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxSetupReference.setLayout(self.layoutGroupBoxSetupReference)
@@ -351,26 +352,26 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         self.layoutSetupReferenceInfo.addWidget(self.labelSetupReferenceInfo)
         
         self.labelShapefile = QtGui.QLabel()
-        self.labelShapefile.setText('Reference data:')
+        self.labelShapefile.setText(MenuFactory.getLabel(MenuFactory.PURBUILD_REFERENCE_DATA) + ':')
         self.layoutSetupReferenceOptions.addWidget(self.labelShapefile, 0, 0)
         self.comboBoxReferenceData = QtGui.QComboBox()
         self.comboBoxReferenceData.setDisabled(True)
         self.layoutSetupReferenceOptions.addWidget(self.comboBoxReferenceData, 0, 1)
         self.handlerPopulateNameFromLookupData(self.main.dataPlanningUnit, self.comboBoxReferenceData)
         self.buttonLoadLookupTableReferenceData = QtGui.QPushButton()
-        self.buttonLoadLookupTableReferenceData.setText('Load table')
+        self.buttonLoadLookupTableReferenceData.setText(MenuFactory.getLabel(MenuFactory.PURBUILD_LOAD_TABLE))
         self.layoutSetupReferenceOptions.addWidget(self.buttonLoadLookupTableReferenceData, 0, 2)
         self.labelReferenceClasses = QtGui.QLabel()
-        self.labelReferenceClasses.setText('Reference classes:')
+        self.labelReferenceClasses.setText(MenuFactory.getLabel(MenuFactory.PURBUILD_REFERENCE_CLASS) + ':')
         self.layoutSetupReferenceOptions.addWidget(self.labelReferenceClasses, 1, 0)
         self.buttonEditReferenceClasses = QtGui.QPushButton()
-        self.buttonEditReferenceClasses.setText('Edit classes')
+        self.buttonEditReferenceClasses.setText(MenuFactory.getLabel(MenuFactory.PURBUILD_EDIT_CLASS))
         self.buttonEditReferenceClasses.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
         self.layoutSetupReferenceOptions.addWidget(self.buttonEditReferenceClasses, 1, 1)
         
         #######################################################################
         # 'Attribute reference mapping' GroupBox
-        self.groupBoxReferenceMapping = QtGui.QGroupBox('Attribute-reference mapping')
+        self.groupBoxReferenceMapping = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.PURBUILD_ATTRIBUTE_REFERENCE_MAPPING))
         self.layoutGroupBoxReferenceMapping = QtGui.QVBoxLayout()
         self.layoutGroupBoxReferenceMapping.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxReferenceMapping.setLayout(self.layoutGroupBoxReferenceMapping)
@@ -387,7 +388,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         self.tableReferenceMapping.setSelectionMode(QtGui.QAbstractItemView.NoSelection)
         self.tableReferenceMapping.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
         self.tableReferenceMapping.verticalHeader().setVisible(False)
-        self.tableReferenceMapping.setHorizontalHeaderLabels(['Attribute value', 'Reference class'])
+        self.tableReferenceMapping.setHorizontalHeaderLabels([MenuFactory.getLabel(MenuFactory.PURBUILD_ATTRIBUTE_VALUE), MenuFactory.getLabel(MenuFactory.PURBUILD_REFERENCE_CLASS)])
         self.tableReferenceMapping.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
         
         attribute = QtGui.QTableWidgetItem('ATTRIBUTE_VALUE')
@@ -405,7 +406,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         #######################################################################
         
         # 'Setup planning unit' GroupBox
-        self.groupBoxSetupPlanningUnit = QtGui.QGroupBox('Setup planning unit')
+        self.groupBoxSetupPlanningUnit = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.PURBUILD_SETUP_PLANNING_UNIT))
         self.layoutGroupBoxSetupPlanningUnit = QtGui.QVBoxLayout()
         self.layoutGroupBoxSetupPlanningUnit.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxSetupPlanningUnit.setLayout(self.layoutGroupBoxSetupPlanningUnit)
@@ -420,11 +421,11 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         self.layoutButtonSetupPlanningUnit.setContentsMargins(0, 0, 0, 0)
         self.layoutButtonSetupPlanningUnit.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.buttonAddPlanningUnitRow = QtGui.QPushButton()
-        self.buttonAddPlanningUnitRow.setText('Add planning unit')
+        self.buttonAddPlanningUnitRow.setText(MenuFactory.getLabel(MenuFactory.PURBUILD_ADD_PLANNING_UNIT))
         self.buttonAddPlanningUnitRow.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
         self.layoutButtonSetupPlanningUnit.addWidget(self.buttonAddPlanningUnitRow)
         self.buttonClearAllPlanningUnits = QtGui.QPushButton()
-        self.buttonClearAllPlanningUnits.setText('Clear all')
+        self.buttonClearAllPlanningUnits.setText(MenuFactory.getLabel(MenuFactory.PURBUILD_CLEAR_PLANNING_UNIT))
         self.buttonClearAllPlanningUnits.setVisible(False) # BUG, hide it
         self.buttonClearAllPlanningUnits.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
         self.layoutButtonSetupPlanningUnit.addWidget(self.buttonClearAllPlanningUnits)
@@ -454,7 +455,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         # Process tab button
         self.layoutButtonSetup = QtGui.QHBoxLayout()
         self.buttonProcessSetup = QtGui.QPushButton()
-        self.buttonProcessSetup.setText('&Build')
+        self.buttonProcessSetup.setText('&' + MenuFactory.getLabel(MenuFactory.PURBUILD_BUILD))
         icon = QtGui.QIcon(':/ui/icons/iconActionHelp.png')
         self.buttonHelp = QtGui.QPushButton()
         self.buttonHelp.setIcon(icon)
@@ -463,7 +464,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         self.layoutButtonSetup.addWidget(self.buttonHelp)
         
         # Template GroupBox
-        self.groupBoxPURTemplate = QtGui.QGroupBox('Configuration')
+        self.groupBoxPURTemplate = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.CONF_TITLE))
         self.layoutGroupBoxPURTemplate = QtGui.QVBoxLayout()
         self.layoutGroupBoxPURTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxPURTemplate.setLayout(self.layoutGroupBoxPURTemplate)
@@ -473,21 +474,21 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxPURTemplate.addLayout(self.layoutPURTemplate)
         
         self.labelLoadedPURTemplate = QtGui.QLabel()
-        self.labelLoadedPURTemplate.setText('Loaded configuration:')
+        self.labelLoadedPURTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOADED_CONFIGURATION))
         self.layoutPURTemplate.addWidget(self.labelLoadedPURTemplate, 0, 0)
         
         self.loadedPURTemplate = QtGui.QLabel()
-        self.loadedPURTemplate.setText('<None>')
+        self.loadedPURTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NONE))
         self.layoutPURTemplate.addWidget(self.loadedPURTemplate, 0, 1)
         
         self.labelPURTemplate = QtGui.QLabel()
-        self.labelPURTemplate.setText('Name:')
+        self.labelPURTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NAME) + ':')
         self.layoutPURTemplate.addWidget(self.labelPURTemplate, 1, 0)
         
         self.comboBoxPURTemplate = QtGui.QComboBox()
         self.comboBoxPURTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
         self.comboBoxPURTemplate.setDisabled(True)
-        self.comboBoxPURTemplate.addItem('No configuration found')
+        self.comboBoxPURTemplate.addItem(MenuFactory.getLabel(MenuFactory.CONF_NO_FOUND))
         self.layoutPURTemplate.addWidget(self.comboBoxPURTemplate, 1, 1)
         
         self.layoutButtonPURTemplate = QtGui.QHBoxLayout()
@@ -495,14 +496,14 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         self.buttonLoadPURTemplate = QtGui.QPushButton()
         self.buttonLoadPURTemplate.setDisabled(True)
         self.buttonLoadPURTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonLoadPURTemplate.setText('Load')
+        self.buttonLoadPURTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOAD))
         self.buttonSavePURTemplate = QtGui.QPushButton()
         self.buttonSavePURTemplate.setDisabled(True)
         self.buttonSavePURTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSavePURTemplate.setText('Save')
+        self.buttonSavePURTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE))
         self.buttonSaveAsPURTemplate = QtGui.QPushButton()
         self.buttonSaveAsPURTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveAsPURTemplate.setText('Save As')
+        self.buttonSaveAsPURTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS))
         self.layoutButtonPURTemplate.addWidget(self.buttonLoadPURTemplate)
         self.layoutButtonPURTemplate.addWidget(self.buttonSavePURTemplate)
         self.layoutButtonPURTemplate.addWidget(self.buttonSaveAsPURTemplate)
@@ -522,7 +523,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         #***********************************************************
         # Setup 'Reconcile' tab
         #***********************************************************
-        self.groupBoxReconcile = QtGui.QGroupBox('Reconcile unresolved cases')
+        self.groupBoxReconcile = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.PURRECONCILE_UNRESOLVED_CASES))
         self.layoutGroupBoxReconcile = QtGui.QVBoxLayout()
         self.layoutGroupBoxReconcile.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxReconcile.setLayout(self.layoutGroupBoxReconcile)
@@ -539,7 +540,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         
         self.layoutButtonReconcile = QtGui.QHBoxLayout()
         self.buttonProcessReconcile = QtGui.QPushButton()
-        self.buttonProcessReconcile.setText('&Reconcile')
+        self.buttonProcessReconcile.setText('&' + MenuFactory.getLabel(MenuFactory.PURRECONCILE_RECONCILE))
         self.buttonProcessReconcile.setDisabled(True)
         self.layoutButtonReconcile.setAlignment(QtCore.Qt.AlignRight)
         self.layoutButtonReconcile.addWidget(self.buttonProcessReconcile)
@@ -645,7 +646,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         layoutRow.addWidget(comboBoxReferenceClasses)
         
         comboBoxPlanningUnitType = QtGui.QComboBox()
-        comboBoxPlanningUnitType.addItems(['Reconciliation', 'Additional'])
+        comboBoxPlanningUnitType.addItems([MenuFactory.getLabel(MenuFactory.PUBBUILD_RECONCILIATION), MenuFactory.getLabel(MenuFactory.PUBBUILD_ADDITIONAL)])
         comboBoxPlanningUnitType.setObjectName('comboBoxPlanningUnitType_{0}'.format(str(self.tablePlanningUnitRowCount)))
         layoutRow.addWidget(comboBoxPlanningUnitType)
         
@@ -661,9 +662,9 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         
         if planningUnitType != None:
             if planningUnitType == 0:
-                comboBoxPlanningUnitType.setCurrentIndex(comboBoxPlanningUnitType.findText('Reconciliation'))
+                comboBoxPlanningUnitType.setCurrentIndex(comboBoxPlanningUnitType.findText(MenuFactory.getLabel(MenuFactory.PUBBUILD_RECONCILIATION)))
             elif planningUnitType == 1:
-                comboBoxPlanningUnitType.setCurrentIndex(comboBoxPlanningUnitType.findText('Additional'))
+                comboBoxPlanningUnitType.setCurrentIndex(comboBoxPlanningUnitType.findText(MenuFactory.getLabel(MenuFactory.PUBBUILD_ADDITIONAL)))
     
     
     def clearPlanningUnitRows(self):
@@ -824,8 +825,8 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         else:
             reply = QtGui.QMessageBox.question(
                 self,
-                'Load Template',
-                'Do you want to load \'{0}\'?'.format(templateFile),
+                MenuFactory.getLabel(MenuFactory.CONF_LOAD_TEMPLATE),
+                MenuFactory.getDescription(MenuFactory.CONF_LOAD_TEMPLATE) + ' \'{0}\'?'.format(templateFile),
                 QtGui.QMessageBox.Yes|QtGui.QMessageBox.No,
                 QtGui.QMessageBox.No
             )
@@ -847,8 +848,8 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         
         reply = QtGui.QMessageBox.question(
             self,
-            'Save Template',
-            'Do you want save \'{0}\'?\nThis action will overwrite the template file.'.format(templateFile),
+            MenuFactory.getLabel(MenuFactory.CONF_SAVE_TEMPLATE),
+            MenuFactory.getDescription(MenuFactory.CONF_SAVE_TEMPLATE), # 'Do you want save \'{0}\'?\nThis action will overwrite the template file.'.format(templateFile),
             QtGui.QMessageBox.Yes|QtGui.QMessageBox.No,
             QtGui.QMessageBox.No
         )
@@ -863,7 +864,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
     def handlerSaveAsPURTemplate(self):
         """Slot method for saving a module template to a new file.
         """
-        fileName, ok = QtGui.QInputDialog.getText(self, 'Save As', 'Enter a new template name:')
+        fileName, ok = QtGui.QInputDialog.getText(self, MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS_TEMPATE), MenuFactory.getDescription(MenuFactory.CONF_SAVE_AS_TEMPATE) + ':')
         fileSaved = False
         
         if ok:
@@ -1137,7 +1138,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
             planningUnitType = unicode(comboBoxPlanningUnitType.currentText())
             
             if planningUnitData and planningUnitTitle and referenceClassID and planningUnitType:
-                if planningUnitType == 'Reconciliation':
+                if planningUnitType == MenuFactory.getLabel(MenuFactory.PUBBUILD_RECONCILIATION):
                     planningUnitType = 0
                 else:
                     planningUnitType = 1
@@ -1222,7 +1223,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
             # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
             self.main.setWindowState(QtCore.Qt.WindowActive)
             
-            algSuccess = self.outputsMessageBox(algName, self.outputsPURSetup, 'PUR setup completed successfully!', 'Something happened.')
+            algSuccess = self.outputsMessageBox(algName, self.outputsPURSetup, MenuFactory.getLabel(MenuFactory.MSG_PUR_SETUP_RUN_SUCCESS), 'Something happened.')
 
             if algSuccess:
                 self.main.addLayer(self.outputsPURSetup['PUR_rec1_shp'])
@@ -1279,7 +1280,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
             # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
             # self.main.setWindowState(QtCore.Qt.WindowActive)
             
-            algSuccess = self.outputsMessageBox(algName, outputsReconcile, 'PUR reconciliation completed successfully!', 'Something happened.')
+            algSuccess = self.outputsMessageBox(algName, outputsReconcile, MenuFactory.getLabel(MenuFactory.MSG_PUR_RECONCILE_RUN_SUCCESS), 'Something happened.')
 
             if algSuccess:
                 self.main.loadAddedDataInfo()

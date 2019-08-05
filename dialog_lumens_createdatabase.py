@@ -9,6 +9,7 @@ from processing.tools import *
 from dialog_lumens_base import DialogLumensBase
 from dialog_lumens_viewer import DialogLumensViewer
 
+from menu_factory import MenuFactory
 
 class DialogLumensCreateDatabase(QtGui.QDialog, DialogLumensBase):
     """LUMENS "Create Database" dialog class.
@@ -18,7 +19,7 @@ class DialogLumensCreateDatabase(QtGui.QDialog, DialogLumensBase):
         super(DialogLumensCreateDatabase, self).__init__(parent)
         
         self.main = parent
-        self.dialogTitle = 'Create'
+        self.dialogTitle = MenuFactory.getLabel(MenuFactory.APP_PROJ_CREATE)
         
         self.main.appSettings['DialogLumensCreateDatabase']['outputFolder'] = os.path.join(self.main.appSettings['appDir'], 'output')
         self.dissolvedShapefile = None # For holding the temporary dissolved shapefile path
@@ -54,7 +55,7 @@ class DialogLumensCreateDatabase(QtGui.QDialog, DialogLumensBase):
         
         #######################################################################
         # 'Database details' GroupBox
-        self.groupBoxDatabaseDetails = QtGui.QGroupBox('Project details')
+        self.groupBoxDatabaseDetails = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.APP_PROJ_DETAILS))
         self.layoutGroupBoxDatabaseDetails = QtGui.QVBoxLayout()
         self.layoutGroupBoxDatabaseDetails.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxDatabaseDetails.setLayout(self.layoutGroupBoxDatabaseDetails)
@@ -69,17 +70,17 @@ class DialogLumensCreateDatabase(QtGui.QDialog, DialogLumensBase):
         self.layoutDatabaseDetailsInfo.addWidget(self.labelDatabaseDetailsInfo)
         
         self.labelProjectName = QtGui.QLabel()
-        self.labelProjectName.setText('Project &name:')
+        self.labelProjectName.setText(MenuFactory.getLabel(MenuFactory.APP_PROJ_NAME) + ':')
         self.layoutDatabaseDetails.addWidget(self.labelProjectName, 0, 0)
         
         self.lineEditProjectName = QtGui.QLineEdit()
-        self.lineEditProjectName.setText('project_name')
+        self.lineEditProjectName.setText(MenuFactory.getDescription(MenuFactory.APP_PROJ_NAME))
         self.layoutDatabaseDetails.addWidget(self.lineEditProjectName, 0, 1)
         
         self.labelProjectName.setBuddy(self.lineEditProjectName)
         
         self.labelOutputFolder = QtGui.QLabel()
-        self.labelOutputFolder.setText('Output folder:')
+        self.labelOutputFolder.setText(MenuFactory.getLabel(MenuFactory.APP_PROJ_OUTPUT_FOLDER) + ':')
         self.layoutDatabaseDetails.addWidget(self.labelOutputFolder, 1, 0)
         
         self.lineEditOutputFolder = QtGui.QLineEdit()
@@ -88,11 +89,11 @@ class DialogLumensCreateDatabase(QtGui.QDialog, DialogLumensBase):
         self.layoutDatabaseDetails.addWidget(self.lineEditOutputFolder, 1, 1)
         
         self.buttonSelectOutputFolder = QtGui.QPushButton()
-        self.buttonSelectOutputFolder.setText('&Browse')
+        self.buttonSelectOutputFolder.setText('&' + MenuFactory.getLabel(MenuFactory.APP_BROWSE))
         self.layoutDatabaseDetails.addWidget(self.buttonSelectOutputFolder, 1, 2)
         
         self.labelShapefile = QtGui.QLabel()
-        self.labelShapefile.setText('Project boundary:')
+        self.labelShapefile.setText(MenuFactory.getLabel(MenuFactory.APP_PROJ_BOUNDARY) + ':')
         self.layoutDatabaseDetails.addWidget(self.labelShapefile, 2, 0)
         
         self.lineEditShapefile = QtGui.QLineEdit()
@@ -100,11 +101,11 @@ class DialogLumensCreateDatabase(QtGui.QDialog, DialogLumensBase):
         self.layoutDatabaseDetails.addWidget(self.lineEditShapefile, 2, 1)
         
         self.buttonSelectShapefile = QtGui.QPushButton()
-        self.buttonSelectShapefile.setText('&Browse')
+        self.buttonSelectShapefile.setText('&' + MenuFactory.getLabel(MenuFactory.APP_BROWSE))
         self.layoutDatabaseDetails.addWidget(self.buttonSelectShapefile, 2, 2)
         
         self.labelShapefileAttr = QtGui.QLabel()
-        self.labelShapefileAttr.setText('Boundary &attribute:')
+        self.labelShapefileAttr.setText(MenuFactory.getLabel(MenuFactory.APP_PROJ_BOUNDARY_ATTRIBUTE) + ':')
         self.layoutDatabaseDetails.addWidget(self.labelShapefileAttr, 3, 0)
         
         self.comboBoxShapefileAttr = QtGui.QComboBox()
@@ -114,47 +115,47 @@ class DialogLumensCreateDatabase(QtGui.QDialog, DialogLumensBase):
         self.labelShapefileAttr.setBuddy(self.comboBoxShapefileAttr)
         
         self.labelProjectDescription = QtGui.QLabel()
-        self.labelProjectDescription.setText('&Description:')
+        self.labelProjectDescription.setText('&' + MenuFactory.getLabel(MenuFactory.APP_PROJ_DESCRIPTION) + ':')
         self.layoutDatabaseDetails.addWidget(self.labelProjectDescription, 4, 0)
         
         self.lineEditProjectDescription = QtGui.QLineEdit()
-        self.lineEditProjectDescription.setText('description')
+        self.lineEditProjectDescription.setText(MenuFactory.getDescription(MenuFactory.APP_PROJ_DESCRIPTION))
         self.layoutDatabaseDetails.addWidget(self.lineEditProjectDescription, 4, 1)
         
         self.labelProjectDescription.setBuddy(self.lineEditProjectDescription)
         
         self.labelProjectLocation = QtGui.QLabel()
-        self.labelProjectLocation.setText('&Location:')
+        self.labelProjectLocation.setText('&' + MenuFactory.getLabel(MenuFactory.APP_PROJ_LOCATION) + ':')
         self.layoutDatabaseDetails.addWidget(self.labelProjectLocation, 5, 0)
         
         self.lineEditProjectLocation = QtGui.QLineEdit()
-        self.lineEditProjectLocation.setText('location')
+        self.lineEditProjectLocation.setText(MenuFactory.getDescription(MenuFactory.APP_PROJ_LOCATION))
         self.layoutDatabaseDetails.addWidget(self.lineEditProjectLocation, 5, 1)
         
         self.labelProjectLocation.setBuddy(self.lineEditProjectLocation)
         
         self.labelProjectProvince = QtGui.QLabel()
-        self.labelProjectProvince.setText('&Province:')
+        self.labelProjectProvince.setText('&' + MenuFactory.getLabel(MenuFactory.APP_PROJ_PROVINCE) + ':')
         self.layoutDatabaseDetails.addWidget(self.labelProjectProvince, 6, 0)
         
         self.lineEditProjectProvince = QtGui.QLineEdit()
-        self.lineEditProjectProvince.setText('province')
+        self.lineEditProjectProvince.setText(MenuFactory.getDescription(MenuFactory.APP_PROJ_PROVINCE))
         self.layoutDatabaseDetails.addWidget(self.lineEditProjectProvince, 6, 1)
         
         self.labelProjectProvince.setBuddy(self.lineEditProjectProvince)
         
         self.labelProjectCountry = QtGui.QLabel()
-        self.labelProjectCountry.setText('&Country:')
+        self.labelProjectCountry.setText('&' + MenuFactory.getLabel(MenuFactory.APP_PROJ_COUNTRY) + ':')
         self.layoutDatabaseDetails.addWidget(self.labelProjectCountry, 7, 0)
         
         self.lineEditProjectCountry = QtGui.QLineEdit()
-        self.lineEditProjectCountry.setText('country')
+        self.lineEditProjectCountry.setText(MenuFactory.getDescription(MenuFactory.APP_PROJ_COUNTRY))
         self.layoutDatabaseDetails.addWidget(self.lineEditProjectCountry, 7, 1)
         
         self.labelProjectCountry.setBuddy(self.lineEditProjectCountry)
         
         self.labelProjectSpatialRes = QtGui.QLabel()
-        self.labelProjectSpatialRes.setText('Spatial &resolution:')
+        self.labelProjectSpatialRes.setText(MenuFactory.getLabel(MenuFactory.APP_PROJ_SPATIAL_RESOLUTION) + ':')
         self.layoutDatabaseDetails.addWidget(self.labelProjectSpatialRes, 8, 0)
         
         self.spinBoxProjectSpatialRes = QtGui.QSpinBox()
@@ -166,7 +167,7 @@ class DialogLumensCreateDatabase(QtGui.QDialog, DialogLumensBase):
         
         #######################################################################
         # 'Dissolved' GroupBox
-        self.groupBoxDissolved = QtGui.QGroupBox('Dissolved')
+        self.groupBoxDissolved = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.APP_PROJ_DISSOLVED))
         self.layoutGroupBoxDissolved = QtGui.QVBoxLayout()
         self.layoutGroupBoxDissolved.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxDissolved.setLayout(self.layoutGroupBoxDissolved)
@@ -188,10 +189,10 @@ class DialogLumensCreateDatabase(QtGui.QDialog, DialogLumensBase):
         # Dialog buttons
         self.layoutButtonProcess = QtGui.QHBoxLayout()
         self.buttonProcessDissolve = QtGui.QPushButton()
-        self.buttonProcessDissolve.setText('&Dissolve')
+        self.buttonProcessDissolve.setText('&' + MenuFactory.getLabel(MenuFactory.APP_PROP_DISSOLVE))
         self.buttonProcessCreateDatabase = QtGui.QPushButton()
         self.buttonProcessCreateDatabase.setDisabled(True)
-        self.buttonProcessCreateDatabase.setText('&Create')
+        self.buttonProcessCreateDatabase.setText('&' + MenuFactory.getLabel(MenuFactory.APP_PROJ_CREATE))
         icon = QtGui.QIcon(':/ui/icons/iconActionHelp.png')
         self.buttonCreateHelp = QtGui.QPushButton()
         self.buttonCreateHelp.setIcon(icon)
@@ -265,7 +266,7 @@ class DialogLumensCreateDatabase(QtGui.QDialog, DialogLumensBase):
     def handlerSelectOutputFolder(self):
         """Slot method for a folder select dialog to select a folder as output dir.
         """
-        outputFolder = unicode(QtGui.QFileDialog.getExistingDirectory(self, 'Select Output Folder'))
+        outputFolder = unicode(QtGui.QFileDialog.getExistingDirectory(self, MenuFactory.getLabel(MenuFactory.MSG_DB_SELECT_OUTPUT_FOLDER)))
         
         if outputFolder:
             self.lineEditOutputFolder.setText(outputFolder)
@@ -277,7 +278,7 @@ class DialogLumensCreateDatabase(QtGui.QDialog, DialogLumensBase):
         """Slot method for a file select dialog to select a .shp file and load the attributes in the shapefile attribute combobox.
         """
         shapefile = unicode(QtGui.QFileDialog.getOpenFileName(
-            self, 'Select Shapefile', QtCore.QDir.homePath(), 'Shapefile (*{0})'.format(self.main.appSettings['selectShapefileExt'])))
+            self, MenuFactory.getLabel(MenuFactory.MSG_DB_SELECT_SHAPEFILE), QtCore.QDir.homePath(), 'Shapefile (*{0})'.format(self.main.appSettings['selectShapefileExt'])))
         
         if shapefile:
             self.lineEditShapefile.setText(shapefile)
@@ -340,7 +341,7 @@ class DialogLumensCreateDatabase(QtGui.QDialog, DialogLumensBase):
         
         # Check table first
         if not rowCount:
-            QtGui.QMessageBox.critical(self, 'Error', 'Invalid dissolved table!')
+            QtGui.QMessageBox.critical(self, MenuFactory.getLabel(MenuFactory.MSG_ERROR), MenuFactory.getLabel(MenuFactory.MSG_DB_INVALID_DISSOLVED_TABLE))
             return False
         
         # Now write the table csv
@@ -500,7 +501,7 @@ class DialogLumensCreateDatabase(QtGui.QDialog, DialogLumensBase):
             # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
             # self.main.setWindowState(QtCore.Qt.WindowActive)
             
-            algSuccess = self.outputsMessageBox(algName, outputs, 'LUMENS database successfully created!\nClick OK to open the database.', 'Failed to create the LUMENS database.')
+            algSuccess = self.outputsMessageBox(algName, outputs, MenuFactory.getLabel(MenuFactory.MSG_DB_SUCCESS_CREATED), MenuFactory.getLabel(MenuFactory.MSG_DB_FAILED_CREATED))
             
             self.buttonProcessCreateDatabase.setEnabled(True)
             logging.getLogger(type(self).__name__).info('end: %s' % self.dialogTitle)
@@ -518,7 +519,7 @@ class DialogLumensCreateDatabase(QtGui.QDialog, DialogLumensBase):
                 self.close()
                 
                 if os.path.exists(lumensHTMLReport):
-                    dialog = DialogLumensViewer(self, 'LUMENS Create Database Report', 'html', lumensHTMLReport)
+                    dialog = DialogLumensViewer(self, MenuFactory.getLabel(MenuFactory.MSG_DB_HTML_REPORT), 'html', lumensHTMLReport)
                     dialog.exec_()
             else:
                 logging.getLogger(type(self).__name__).error('modeler:lumens_create_database failed...')

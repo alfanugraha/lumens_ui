@@ -5,6 +5,7 @@ import os, logging
 from PyQt4 import QtCore, QtGui
 import resource
 
+from menu_factory import MenuFactory
 
 class DialogLumensPURReferenceClasses(QtGui.QDialog):
     """LUMENS dialog class for PUR reference classes edit window.
@@ -24,7 +25,7 @@ class DialogLumensPURReferenceClasses(QtGui.QDialog):
         print 'DEBUG: DialogLumensPURReferenceClasses init'
         
         self.main = parent
-        self.dialogTitle = 'Edit Reference Classes'
+        self.dialogTitle = MenuFactory.getLabel(MenuFactory.PURBUILD_EDIT_REFERENCE_CLASS)
         self.tableRowCount = 0
         self.referenceClasses = {}
         
@@ -46,7 +47,7 @@ class DialogLumensPURReferenceClasses(QtGui.QDialog):
         self.dialogLayout = QtGui.QVBoxLayout()
         
         # 'Setup planning unit' GroupBox
-        self.groupBoxEditReferenceClasses = QtGui.QGroupBox('Reference classes')
+        self.groupBoxEditReferenceClasses = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.PURBUILD_REFERENCE_CLASS))
         self.layoutGroupBoxEditReferenceClasses = QtGui.QVBoxLayout()
         self.groupBoxEditReferenceClasses.setLayout(self.layoutGroupBoxEditReferenceClasses)
         self.dialogLayout.addWidget(self.groupBoxEditReferenceClasses)
@@ -57,7 +58,7 @@ class DialogLumensPURReferenceClasses(QtGui.QDialog):
         self.contentButtonEditReferenceClasses.setLayout(self.layoutButtonEditReferenceClasses)
         self.layoutButtonEditReferenceClasses.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.buttonAddRow = QtGui.QPushButton()
-        self.buttonAddRow.setText('Add reference class')
+        self.buttonAddRow.setText(MenuFactory.getLabel(MenuFactory.PURBUILD_ADD_REFERENCE_CLASS))
         self.buttonAddRow.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
         self.layoutButtonEditReferenceClasses.addWidget(self.buttonAddRow)
         
@@ -184,10 +185,10 @@ class DialogLumensPURReferenceClasses(QtGui.QDialog):
         filePath = os.path.join(self.main.appSettings['appDir'], self.main.appSettings['folderHelp'], self.main.appSettings['helpDialogPURReferenceClassesFile'])
         
         if os.path.exists(filePath):
-            dialog = DialogLumensViewer(self, 'LUMENS Help - {0}'.format('PUR Reference Classes'), 'html', filePath)
+            dialog = DialogLumensViewer(self, MenuFactory.getLabel(MenuFactory.APP_LUMENS_HELP) + ' - {0}'.format('PUR Reference Classes'), 'html', filePath)
             dialog.exec_()
         else:
-            QtGui.QMessageBox.critical(self, 'LUMENS Help Not Found', "Unable to open '{0}'.".format(filePath))        
+            QtGui.QMessageBox.critical(self, MenuFactory.getLabel(MenuFactory.MSG_APP_HELP_NOT_FOUND), MenuFactory.getDescription(MenuFactory.MSG_APP_HELP_NOT_FOUND) + " '{0}'.".format(filePath))        
 
     
     def handlerButtonAddRow(self):
@@ -227,18 +228,18 @@ class DialogLumensPURReferenceClasses(QtGui.QDialog):
                 
                 if self.referenceClasses.has_key(referenceClassID):
                     print 'DEBUG ERROR found duplicate reference class ID.'
-                    QtGui.QMessageBox.critical(self, 'Duplicate Reference Class ID', 'Please make sure there are no duplicate reference class IDs.')
+                    QtGui.QMessageBox.critical(self, MenuFactory.getLabel(MenuFactory.MSG_PUR_DUPLICATE_REFERENCE), MenuFactory.getDescription(MenuFactory.MSG_PUR_DUPLICATE_REFERENCE))
                     return
                 
                 if not referenceClassTitle:
                     print 'DEBUG ERROR reference class title cannot be empty.'
-                    QtGui.QMessageBox.critical(self, 'Empty Reference Class Title', 'Please make sure there are no empty reference class titles.')
+                    QtGui.QMessageBox.critical(self, MenuFactory.getLabel(MenuFactory.MSG_PUR_EMPTY_REFERENCE), MenuFactory.getDescription(MenuFactory.MSG_PUR_EMPTY_REFERENCE))
                     return
                 
                 self.referenceClasses[referenceClassID] = referenceClassTitle
             except ValueError as verr:
                 print 'DEBUG: ERROR reference class ID must be an integer!'
-                QtGui.QMessageBox.critical(self, 'Non-number Reference Class ID', 'Please make sure that reference class IDs are numbers.')
+                QtGui.QMessageBox.critical(self, MenuFactory.getLabel(MenuFactory.MSG_PUR_NON_NUMBER_REFERENCE), MenuFactory.getDescription(MenuFactory.MSG_PUR_NON_NUMBER_REFERENCE))
                 return
         
         if self.referenceClasses:
@@ -246,7 +247,7 @@ class DialogLumensPURReferenceClasses(QtGui.QDialog):
             self.setResult(QtGui.QDialog.Accepted)
         else:
             print 'DEBUG: ERROR no reference classes have been set.'
-            QtGui.QMessageBox.critical(self, 'No Reference Classes Found', 'Please input the reference classes.')
+            QtGui.QMessageBox.critical(self, MenuFactory.getLabel(MenuFactory.MSG_PUR_NO_REFERENCE_FOUND), MenuFactory.getDescription(MenuFactory.MSG_PUR_NO_REFERENCE_FOUND))
     
     
     def handlerButtonCancel(self):

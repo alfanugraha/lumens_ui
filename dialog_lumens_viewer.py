@@ -4,6 +4,7 @@
 import os, tempfile, csv
 from PyQt4 import QtCore, QtGui, QtWebKit
 
+from menu_factory import MenuFactory
 
 class DialogLumensViewer(QtGui.QDialog):
     """LUMENS dialog class for displaying csv, html, and text content.
@@ -22,7 +23,7 @@ class DialogLumensViewer(QtGui.QDialog):
         """
         super(DialogLumensViewer, self).__init__(parent)
         self.main = parent
-        self.dialogTitle = 'LUMENS Viewer - ' + contentTitle
+        self.dialogTitle = 'LUMENS ' + MenuFactory.getLabel(MenuFactory.APP_LUMENS_VIEWER) + ' - ' + contentTitle
         
         self.contentType = contentType
         self.contentSource = contentSource

@@ -10,6 +10,7 @@ from dialog_lumens_base import DialogLumensBase
 from dialog_lumens_viewer import DialogLumensViewer
 from dialog_lumens_adddata_properties import DialogLumensAddDataProperties
 
+from menu_factory import MenuFactory
 
 class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
     """LUMENS "Add Data" dialog class.
@@ -19,7 +20,7 @@ class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
         super(DialogLumensAddData, self).__init__(parent)
         
         self.main = parent
-        self.dialogTitle = 'Add data'
+        self.dialogTitle = MenuFactory.getLabel(MenuFactory.APP_PROJ_ADD_DATA)
         self.tableAddDataRowCount = 0
         self.tableAddData = []
         
@@ -50,7 +51,7 @@ class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
         #self.setStyleSheet('background-color: rgb(173, 185, 202);')
         self.dialogLayout = QtGui.QVBoxLayout()
         
-        self.groupBoxAddData = QtGui.QGroupBox('Define properties')
+        self.groupBoxAddData = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_DEFINE_PROPERTIES))
         self.layoutGroupBoxAddData = QtGui.QVBoxLayout()
         self.layoutGroupBoxAddData.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxAddData.setLayout(self.layoutGroupBoxAddData)
@@ -68,7 +69,7 @@ class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
         self.layoutButtonAddData.setContentsMargins(0, 0, 0, 0)
         self.layoutButtonAddData.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.buttonAddDataRow = QtGui.QPushButton()
-        self.buttonAddDataRow.setText('Add item')
+        self.buttonAddDataRow.setText(MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_ADD_ITEM))
         self.buttonAddDataRow.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
         self.layoutButtonAddData.addWidget(self.buttonAddDataRow)
         
@@ -88,7 +89,7 @@ class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
         
         self.layoutButtonProcessAddData = QtGui.QHBoxLayout()
         self.buttonProcessAddData = QtGui.QPushButton()
-        self.buttonProcessAddData.setText('&Process')
+        self.buttonProcessAddData.setText('&' + MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_PROSES))
         self.layoutButtonProcessAddData.setAlignment(QtCore.Qt.AlignRight)
         self.layoutButtonProcessAddData.addWidget(self.buttonProcessAddData)
         
@@ -172,7 +173,7 @@ class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
         layoutDataRow.addWidget(buttonDeleteDataRow)
         
         comboBoxDataType = QtGui.QComboBox()
-        comboBoxDataType.addItems(['Land use/cover', 'Planning unit', 'Factor', 'Table'])
+        comboBoxDataType.addItems([MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_LAND_USE_COVER), MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_PLANNING_UNIT), MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_FACTOR), MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_TABLE)])
         comboBoxDataType.setObjectName('comboBoxDataType_{0}'.format(str(self.tableAddDataRowCount)))
         layoutDataRow.addWidget(comboBoxDataType)
         
@@ -182,13 +183,13 @@ class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
         layoutDataRow.addWidget(lineEditDataFile)
         
         buttonSelectDataFile = QtGui.QPushButton()
-        buttonSelectDataFile.setText('Select file')
+        buttonSelectDataFile.setText(MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_SELECT_FILE))
         buttonSelectDataFile.setObjectName('buttonSelectDataFile_{0}'.format(str(self.tableAddDataRowCount)))
         layoutDataRow.addWidget(buttonSelectDataFile)
 
         buttonDataProperties = QtGui.QPushButton()
         buttonDataProperties.setDisabled(True)
-        buttonDataProperties.setText('Properties')
+        buttonDataProperties.setText(MenuFactory.getLabel(MenuFactory.APP_PROPERTIES))
         buttonDataProperties.setObjectName('buttonDataProperties_{0}'.format(str(self.tableAddDataRowCount)))
         layoutDataRow.addWidget(buttonDataProperties)
         
@@ -250,13 +251,13 @@ class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
         # Table data types can be csv only
         fileFilter = '*{0} *{1}'.format(self.main.appSettings['selectRasterfileExt'], self.main.appSettings['selectShapefileExt'])
         
-        if dataType == 'Factor':
+        if dataType == MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_FACTOR):
             fileFilter = '*{0}'.format(self.main.appSettings['selectRasterfileExt'])
-        elif dataType == 'Table':
+        elif dataType == MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_TABLE):
             fileFilter = '*{0}'.format(self.main.appSettings['selectCsvfileExt'])
         
         file = unicode(QtGui.QFileDialog.getOpenFileName(
-            self, 'Select File', QtCore.QDir.homePath(), 'File ({0})'.format(fileFilter)))
+            self, MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_SELECT_FILE), QtCore.QDir.homePath(), MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_SELECT_FILE) + ' ({0})'.format(fileFilter)))
         
         if file:
             # comboBoxDataType.setDisabled(True)
@@ -338,13 +339,13 @@ class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
             dataDissolvedShapefile = unicode(lineEditDataDissolvedShapefile.text())
             dataTableCsv = unicode(lineEditDataTableCsv.text())
             
-            if dataType == 'Land use/cover':
+            if dataType == MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_LAND_USE_COVER):
                 dataType = 0
-            elif dataType == 'Planning unit':
+            elif dataType == MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_PLANNING_UNIT):
                 dataType = 1
-            elif dataType == 'Factor':
+            elif dataType == MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_FACTOR):
                 dataType = 2
-            elif dataType == 'Table':
+            elif dataType == MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_TABLE):
                 dataType = 3
             
             tableRowData = {
@@ -404,7 +405,7 @@ class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
             elif dataType == table and isCsvFile and dataDescription:
                 valid = True
             else:
-                QtGui.QMessageBox.critical(self, 'Error', 'Missing some input. Please complete the fields.')
+                QtGui.QMessageBox.critical(self, MenuFactory.getLabel(MenuFactory.MSG_ERROR), MenuFactory.getDescription(MenuFactory.MSG_ERROR))
         
         return valid
     
