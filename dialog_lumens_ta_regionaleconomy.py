@@ -11,6 +11,7 @@ from dialog_lumens_base import DialogLumensBase
 from dialog_lumens_viewer import DialogLumensViewer
 import resource
 
+from menu_factory import MenuFactory
 
 class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
     """LUMENS "TA Regional Economy" module dialog class.
@@ -102,7 +103,7 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         
         td = datetime.date.today()
         
-        if tabName == 'Descriptive Analysis of Regional Economy':
+        if tabName == MenuFactory.getLabel(MenuFactory.TAREGECO_DESCRIPTIVE_ANALYSIS_OF_RE):
             dialogsToLoad = (
                 'DialogLumensTARegionalEconomySingleIODescriptiveAnalysis',
                 'DialogLumensTARegionalEconomyTimeSeriesIODescriptiveAnalysis',
@@ -216,7 +217,7 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
             
             settings.endGroup()
             # /tab
-        elif tabName == 'Regional Economic Scenario Impact':
+        elif tabName == MenuFactory.getLabel(MenuFactory.TAREGECO_RE_SCENARIO_IMPACT):
             dialogsToLoad = (
                 'DialogLumensTARegionalEconomyFinalDemandChangeMultiplierAnalysis',
                 'DialogLumensTARegionalEconomyGDPChangeMultiplierAnalysis',
@@ -331,7 +332,7 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
             
             settings.endGroup()
             # /tab
-        elif tabName == 'Land Requirement Analysis':
+        elif tabName == MenuFactory.getDescription(MenuFactory.TAREGECO_LAND_REQUIREMENT_ANALYSIS):
             dialogsToLoad = (
                 'DialogLumensTARegionalEconomyLandDistributionRequirementAnalysis',
             )
@@ -417,7 +418,7 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
             
             settings.endGroup()
             # /tab
-        elif tabName == 'Land Use Change Impact':
+        elif tabName == MenuFactory.getLabel(MenuFactory.TAREGECO_LUC_IMPACT):
             dialogsToLoad = (
                 'DialogLumensTAImpactofLandUsetoRegionalEconomyIndicatorAnalysis',
             )
@@ -527,21 +528,21 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         templateFiles = [os.path.basename(name) for name in glob.glob(os.path.join(self.settingsPath, '*.ini')) if os.path.isfile(os.path.join(self.settingsPath, name))]
         dialogsToLoad = None
         
-        if tabName == 'Descriptive Analysis of Regional Economy':
+        if tabName == MenuFactory.getLabel(MenuFactory.TAREGECO_DESCRIPTIVE_ANALYSIS_OF_RE):
             dialogsToLoad = (
                 'DialogLumensTARegionalEconomySingleIODescriptiveAnalysis',
                 'DialogLumensTARegionalEconomyTimeSeriesIODescriptiveAnalysis',
             )
-        elif tabName == 'Regional Economic Scenario Impact':
+        elif tabName == MenuFactory.getLabel(MenuFactory.TAREGECO_RE_SCENARIO_IMPACT):
             dialogsToLoad = (
                 'DialogLumensTARegionalEconomyFinalDemandChangeMultiplierAnalysis',
                 'DialogLumensTARegionalEconomyGDPChangeMultiplierAnalysis',
             )
-        elif tabName == 'Land Requirement Analysis':
+        elif tabName == MenuFactory.getDescription(MenuFactory.TAREGECO_LAND_REQUIREMENT_ANALYSIS):
             dialogsToLoad = (
                 'DialogLumensTARegionalEconomyLandDistributionRequirementAnalysis',
             )
-        elif tabName == 'Land Use Change Impact':
+        elif tabName == MenuFactory.getLabel(MenuFactory.TAREGECO_LUC_IMPACT):
             dialogsToLoad = (
                 'DialogLumensTAImpactofLandUsetoRegionalEconomyIndicatorAnalysis',
             )
@@ -578,13 +579,13 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
             )
             
             if reply == QtGui.QMessageBox.Yes:
-                if tabName == 'Descriptive Analysis of Regional Economy':
+                if tabName == MenuFactory.getLabel(MenuFactory.TAREGECO_DESCRIPTIVE_ANALYSIS_OF_RE):
                     self.handlerLoadDescriptiveAnalysisTemplate(duplicateTemplate)
-                elif tabName == 'Regional Economic Scenario Impact':
+                elif tabName == MenuFactory.getLabel(MenuFactory.TAREGECO_RE_SCENARIO_IMPACT):
                     self.handlerLoadRegionalEconomicScenarioImpactTemplate(duplicateTemplate)
-                elif tabName == 'Land Requirement Analysis':
+                elif tabName == MenuFactory.getDescription(MenuFactory.TAREGECO_LAND_REQUIREMENT_ANALYSIS):
                     self.handlerLoadLandRequirementAnalysisTemplate(duplicateTemplate)
-                elif tabName == 'Land Use Change Impact':
+                elif tabName == MenuFactory.getLabel(MenuFactory.TAREGECO_LUC_IMPACT):
                     self.handlerLoadLandUseChangeImpactTemplate(duplicateTemplate)
                 
                 return True
@@ -609,21 +610,21 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
             
             dialogsToSave = None
             
-            if tabName == 'Descriptive Analysis of Regional Economy':
+            if tabName == MenuFactory.getLabel(MenuFactory.TAREGECO_DESCRIPTIVE_ANALYSIS_OF_RE):
                 dialogsToSave = (
                     'DialogLumensTARegionalEconomySingleIODescriptiveAnalysis',
                     'DialogLumensTARegionalEconomyTimeSeriesIODescriptiveAnalysis',
                 )
-            elif tabName == 'Regional Economic Scenario Impact':
+            elif tabName == MenuFactory.getLabel(MenuFactory.TAREGECO_RE_SCENARIO_IMPACT):
                 dialogsToSave = (
                     'DialogLumensTARegionalEconomyFinalDemandChangeMultiplierAnalysis',
                     'DialogLumensTARegionalEconomyGDPChangeMultiplierAnalysis',
                 )
-            elif tabName == 'Land Requirement Analysis':
+            elif tabName == MenuFactory.getDescription(MenuFactory.TAREGECO_LAND_REQUIREMENT_ANALYSIS):
                 dialogsToSave = (
                     'DialogLumensTARegionalEconomyLandDistributionRequirementAnalysis',
                 )
-            elif tabName == 'Land Use Change Impact':
+            elif tabName == MenuFactory.getLabel(MenuFactory.TAREGECO_LUC_IMPACT):
                 dialogsToSave = (
                     'DialogLumensTAImpactofLandUsetoRegionalEconomyIndicatorAnalysis',
                 )
@@ -644,7 +645,7 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         super(DialogLumensTARegionalEconomy, self).__init__(parent)
         
         self.main = parent
-        self.dialogTitle = 'LUMENS Trade-Off Analysis [Regional Economy]'
+        self.dialogTitle = 'LUMENS ' + MenuFactory.getDescription(MenuFactory.TA_TITLE) + ' [' + MenuFactory.getLabel(MenuFactory.TAREGECO_TITLE) + ']' 
         self.settingsPath = os.path.join(self.main.appSettings['DialogLumensOpenDatabase']['projectFolder'], self.main.appSettings['folderTA'])
         self.currentDescriptiveAnalysisTemplate = None
         self.currentRegionalEconomicScenarioImpactTemplate = None
@@ -798,13 +799,13 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.tabLandUseChangeImpact = QtGui.QWidget()
         self.tabLog = QtGui.QWidget()
         
-        self.tabWidget.addTab(self.tabInitRegionalEconomyParameterTable, 'Initialize')
-        self.tabWidget.addTab(self.tabInputOutputTable, 'Input-Output Table')
-        self.tabWidget.addTab(self.tabDescriptiveAnalysis, 'Descriptive Analysis of Regional Economy')
-        self.tabWidget.addTab(self.tabRegionalEconomicScenarioImpact, 'Regional Economic Scenario Impact')
-        self.tabWidget.addTab(self.tabLandRequirementAnalysis, 'Land Requirement Analysis')
-        self.tabWidget.addTab(self.tabLandUseChangeImpact, 'Land Use Change Impact')
-        self.tabWidget.addTab(self.tabLog, 'Log')
+        self.tabWidget.addTab(self.tabInitRegionalEconomyParameterTable, MenuFactory.getLabel(MenuFactory.TAREGECO_INITIALIZE))
+        self.tabWidget.addTab(self.tabInputOutputTable, MenuFactory.getLabel(MenuFactory.TAREGECO_IO_TABLE))
+        self.tabWidget.addTab(self.tabDescriptiveAnalysis, MenuFactory.getLabel(MenuFactory.TAREGECO_DESCRIPTIVE_ANALYSIS_OF_RE))
+        self.tabWidget.addTab(self.tabRegionalEconomicScenarioImpact, MenuFactory.getLabel(MenuFactory.TAREGECO_RE_SCENARIO_IMPACT))
+        self.tabWidget.addTab(self.tabLandRequirementAnalysis, MenuFactory.getDescription(MenuFactory.TAREGECO_LAND_REQUIREMENT_ANALYSIS))
+        self.tabWidget.addTab(self.tabLandUseChangeImpact, MenuFactory.getLabel(MenuFactory.TAREGECO_LUC_IMPACT))
+        self.tabWidget.addTab(self.tabLog, MenuFactory.getLabel(MenuFactory.TA_LOG))
         
         #self.tabWidget.setTabEnabled(1, False)
         
@@ -833,7 +834,7 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         #***********************************************************
         # Setup 'Initialize' tab
         #***********************************************************
-        self.groupBoxInitialInput = QtGui.QGroupBox('Initial input')
+        self.groupBoxInitialInput = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.TAREGECO_INITIAL_INPUT))
         self.layoutGroupBoxInitialInput = QtGui.QVBoxLayout()
         self.layoutGroupBoxInitialInput.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxInitialInput.setLayout(self.layoutGroupBoxInitialInput)
@@ -844,20 +845,20 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxInitialInput.addLayout(self.layoutInitialInput)
         
         self.labelInitialInputInfo = QtGui.QLabel()
-        self.labelInitialInputInfo.setText('Lorem ipsum dolor sit amet...\n')
+        self.labelInitialInputInfo.setText(MenuFactory.getDescription(MenuFactory.TAREGECO_INITIAL_INPUT))
         self.layoutInitialInputInfo.addWidget(self.labelInitialInputInfo)
         
         self.labelInitialInputAreaName = QtGui.QLabel()
-        self.labelInitialInputAreaName.setText('Area name:')
+        self.labelInitialInputAreaName.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_AREA_NAME) + ':')
         self.layoutInitialInput.addWidget(self.labelInitialInputAreaName, 0, 0)
         
         self.lineEditInitialInputAreaName = QtGui.QLineEdit()
-        self.lineEditInitialInputAreaName.setText('area')
+        self.lineEditInitialInputAreaName.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_AREA))
         self.layoutInitialInput.addWidget(self.lineEditInitialInputAreaName, 0, 1)
         self.labelInitialInputAreaName.setBuddy(self.lineEditInitialInputAreaName)
 
         self.labelInitialInputPeriod = QtGui.QLabel()
-        self.labelInitialInputPeriod.setText('&Period:')
+        self.labelInitialInputPeriod.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_YEAR) + ':')
         self.layoutInitialInput.addWidget(self.labelInitialInputPeriod, 1, 0)
         
         self.spinBoxInitialInputPeriod = QtGui.QSpinBox()
@@ -868,7 +869,7 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.labelInitialInputPeriod.setBuddy(self.spinBoxInitialInputPeriod)
         
         self.labelInitialInputNumberOfSector = QtGui.QLabel()
-        self.labelInitialInputNumberOfSector.setText('Number of sector:')
+        self.labelInitialInputNumberOfSector.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_NUMBER_OF_SECTOR) + ':')
         self.layoutInitialInput.addWidget(self.labelInitialInputNumberOfSector, 2, 0)
         
         self.spinBoxInitialInputNumberOfSector = QtGui.QSpinBox()
@@ -878,23 +879,23 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.labelInitialInputNumberOfSector.setBuddy(self.spinBoxInitialInputNumberOfSector)
         
         self.labelInitialInputFinancialUnit = QtGui.QLabel()
-        self.labelInitialInputFinancialUnit.setText('Financial &unit:')
+        self.labelInitialInputFinancialUnit.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_FINANCIAL_UNIT) + ':')
         self.layoutInitialInput.addWidget(self.labelInitialInputFinancialUnit, 3, 0)
         
         self.lineEditInitialInputFinancialUnit = QtGui.QLineEdit()
-        self.lineEditInitialInputFinancialUnit.setText('Million Rupiah')
+        self.lineEditInitialInputFinancialUnit.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_CURRENCY))
         self.layoutInitialInput.addWidget(self.lineEditInitialInputFinancialUnit, 3, 1)
         self.labelInitialInputFinancialUnit.setBuddy(self.lineEditInitialInputFinancialUnit)
         
         # Next tab button
         self.layoutButtonInitialize = QtGui.QHBoxLayout()
         self.buttonNextInitialize = QtGui.QPushButton()
-        self.buttonNextInitialize.setText('&Next')
+        self.buttonNextInitialize.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_NEXT))
         self.layoutButtonInitialize.setAlignment(QtCore.Qt.AlignRight)
         self.layoutButtonInitialize.addWidget(self.buttonNextInitialize)
 
         # Template GroupBox
-        self.groupBoxInitializeTemplate = QtGui.QGroupBox('Template')
+        self.groupBoxInitializeTemplate = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.CONF_TEMPLATE))
         self.layoutGroupBoxInitializeTemplate = QtGui.QVBoxLayout()
         self.layoutGroupBoxInitializeTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxInitializeTemplate.setLayout(self.layoutGroupBoxInitializeTemplate)
@@ -904,21 +905,21 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxInitializeTemplate.addLayout(self.layoutInitializeTemplate)
         
         self.labelLoadedInitializeTemplate = QtGui.QLabel()
-        self.labelLoadedInitializeTemplate.setText('Loaded template:')
+        self.labelLoadedInitializeTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOADED_TEMPLATE) + ':')
         self.layoutInitializeTemplate.addWidget(self.labelLoadedInitializeTemplate, 0, 0)
         
         self.loadedInitializeTemplate = QtGui.QLabel()
-        self.loadedInitializeTemplate.setText('<None>')
+        self.loadedInitializeTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NONE))
         self.layoutInitializeTemplate.addWidget(self.loadedInitializeTemplate, 0, 1)
         
         self.labelInitializeTemplate = QtGui.QLabel()
-        self.labelInitializeTemplate.setText('Template name:')
+        self.labelInitializeTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_TEMPLATE_NAME) + ':')
         self.layoutInitializeTemplate.addWidget(self.labelInitializeTemplate, 1, 0)
         
         self.comboBoxInitializeTemplate = QtGui.QComboBox()
         self.comboBoxInitializeTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
         self.comboBoxInitializeTemplate.setDisabled(True)
-        self.comboBoxInitializeTemplate.addItem('No template found')
+        self.comboBoxInitializeTemplate.addItem(MenuFactory.getLabel(MenuFactory.CONF_NO_TEMPLATE_FOUND))
         self.layoutInitializeTemplate.addWidget(self.comboBoxInitializeTemplate, 1, 1)
         
         self.layoutButtonInitializeTemplate = QtGui.QHBoxLayout()
@@ -926,14 +927,14 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.buttonLoadInitializeTemplate = QtGui.QPushButton()
         self.buttonLoadInitializeTemplate.setDisabled(True)
         self.buttonLoadInitializeTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonLoadInitializeTemplate.setText('Load')
+        self.buttonLoadInitializeTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOAD))
         self.buttonSaveInitializeTemplate = QtGui.QPushButton()
         self.buttonSaveInitializeTemplate.setDisabled(True)
         self.buttonSaveInitializeTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveInitializeTemplate.setText('Save')
+        self.buttonSaveInitializeTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE))
         self.buttonSaveAsInitializeTemplate = QtGui.QPushButton()
         self.buttonSaveAsInitializeTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveAsInitializeTemplate.setText('Save As')
+        self.buttonSaveAsInitializeTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS))
         self.layoutButtonInitializeTemplate.addWidget(self.buttonLoadInitializeTemplate)
         self.layoutButtonInitializeTemplate.addWidget(self.buttonSaveInitializeTemplate)
         self.layoutButtonInitializeTemplate.addWidget(self.buttonSaveAsInitializeTemplate)
@@ -950,14 +951,14 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         # Setup 'Input-Output Table' tab
         #***********************************************************
         # 'Intermediate consumption matrix' GroupBox
-        self.groupBoxIntermediateConsumptionMatrix = QtGui.QGroupBox('Intermediate consumption matrix')
+        self.groupBoxIntermediateConsumptionMatrix = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.TAREGECO_INTERMEDIATE_CONSUMPTION_MATRIX))
         self.layoutGroupBoxIntermediateConsumptionMatrix = QtGui.QVBoxLayout()
         self.layoutGroupBoxIntermediateConsumptionMatrix.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxIntermediateConsumptionMatrix.setLayout(self.layoutGroupBoxIntermediateConsumptionMatrix)
         
         self.layoutIntermediateConsumptionMatrixInfo = QtGui.QVBoxLayout()
         self.labelIntermediateConsumptionMatrix = QtGui.QLabel()
-        self.labelIntermediateConsumptionMatrix.setText('Lorem ipsum dolor sit amet...')
+        self.labelIntermediateConsumptionMatrix.setText(MenuFactory.getDescription(MenuFactory.TAREGECO_INTERMEDIATE_CONSUMPTION_MATRIX))
         self.layoutIntermediateConsumptionMatrixInfo.addWidget(self.labelIntermediateConsumptionMatrix)
         
         self.tableIntermediateConsumptionMatrix = QtGui.QTableWidget()
@@ -968,14 +969,14 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxIntermediateConsumptionMatrix.addWidget(self.tableIntermediateConsumptionMatrix)
 
         # 'Final consumption matrix' GroupBox
-        self.groupBoxFinalConsumptionMatrix = QtGui.QGroupBox('Final consumption matrix')
+        self.groupBoxFinalConsumptionMatrix = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.TAREGECO_FINAL_CONSUMPTION_MATRIX))
         self.layoutGroupBoxFinalConsumptionMatrix = QtGui.QGridLayout()
         self.layoutGroupBoxFinalConsumptionMatrix.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxFinalConsumptionMatrix.setLayout(self.layoutGroupBoxFinalConsumptionMatrix)
         
         self.layoutFinalConsumptionMatrixInfo = QtGui.QVBoxLayout()
         self.labelFinalConsumptionMatrix = QtGui.QLabel()
-        self.labelFinalConsumptionMatrix.setText('Lorem ipsum dolor sit amet...')
+        self.labelFinalConsumptionMatrix.setText(MenuFactory.getDescription(MenuFactory.TAREGECO_FINAL_CONSUMPTION_MATRIX))
         self.layoutFinalConsumptionMatrixInfo.addWidget(self.labelFinalConsumptionMatrix)
         
         self.tableFinalConsumptionMatrix = QtGui.QTableWidget()
@@ -1000,14 +1001,14 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxFinalConsumptionMatrix.addLayout(self.layoutButtonFinalConsumptionMatrix, 1, 1, 2, 1, QtCore.Qt.AlignTop)
 
         # 'Added value matrix' GroupBox
-        self.groupBoxAddedValueMatrix = QtGui.QGroupBox('Added value matrix')
+        self.groupBoxAddedValueMatrix = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.TAREGECO_VALUE_ADDED_MATRIX))
         self.layoutGroupBoxAddedValueMatrix = QtGui.QVBoxLayout()
         self.layoutGroupBoxAddedValueMatrix.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxAddedValueMatrix.setLayout(self.layoutGroupBoxAddedValueMatrix)
         
         self.layoutAddedValueMatrixInfo = QtGui.QVBoxLayout()
         self.labelAddedValueMatrix = QtGui.QLabel()
-        self.labelAddedValueMatrix.setText('Lorem ipsum dolor sit amet...')
+        self.labelAddedValueMatrix.setText(MenuFactory.getDescription(MenuFactory.TAREGECO_VALUE_ADDED_MATRIX))
         self.layoutAddedValueMatrixInfo.addWidget(self.labelAddedValueMatrix)
         
         self.tableAddedValueMatrix = QtGui.QTableWidget()
@@ -1032,14 +1033,14 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxAddedValueMatrix.addLayout(self.layoutButtonAddedValueMatrix)
 
         # 'Labour matrix' GroupBox
-        self.groupBoxLabourMatrix = QtGui.QGroupBox('Labour matrix')
+        self.groupBoxLabourMatrix = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.TAREGECO_LABOUR_REQUIREMENT))
         self.layoutGroupBoxLabourMatrix = QtGui.QVBoxLayout()
         self.layoutGroupBoxLabourMatrix.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxLabourMatrix.setLayout(self.layoutGroupBoxLabourMatrix)
         
         self.layoutLabourMatrixInfo = QtGui.QVBoxLayout()
         self.labelLabourMatrix = QtGui.QLabel()
-        self.labelLabourMatrix.setText('Lorem ipsum dolor sit amet...')
+        self.labelLabourMatrix.setText(MenuFactory.getDescription(MenuFactory.TAREGECO_LABOUR_REQUIREMENT))
         self.layoutLabourMatrixInfo.addWidget(self.labelLabourMatrix)
         
         self.tableLabourMatrix = QtGui.QTableWidget()
@@ -1052,7 +1053,7 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         # Next tab button
         self.layoutButtonInputOutputTable = QtGui.QHBoxLayout()
         self.buttonNextInputOutputTable = QtGui.QPushButton()
-        self.buttonNextInputOutputTable.setText('&Next')
+        self.buttonNextInputOutputTable.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_NEXT))
         self.layoutButtonInputOutputTable.setAlignment(QtCore.Qt.AlignRight)
         self.layoutButtonInputOutputTable.addWidget(self.buttonNextInputOutputTable)
         
@@ -1081,7 +1082,7 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutTabDescriptiveAnalysis.addWidget(self.scrollDescriptiveAnalysis)
         
         # 'Single period' GroupBox
-        self.groupBoxSinglePeriod = QtGui.QGroupBox('Single period')
+        self.groupBoxSinglePeriod = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.TAREGECO_SINGLE_PERIOD))
         self.layoutGroupBoxSinglePeriod = QtGui.QVBoxLayout()
         self.layoutGroupBoxSinglePeriod.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxSinglePeriod.setLayout(self.layoutGroupBoxSinglePeriod)
@@ -1091,11 +1092,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxSinglePeriod.addLayout(self.layoutSinglePeriod)
         
         self.labelSinglePeriodInfo = QtGui.QLabel()
-        self.labelSinglePeriodInfo.setText('Lorem ipsum dolor sit amet...\n')
+        self.labelSinglePeriodInfo.setText(MenuFactory.getDescription(MenuFactory.TAREGECO_SINGLE_PERIOD))
         self.layoutSinglePeriodInfo.addWidget(self.labelSinglePeriodInfo)
         
         self.labelSinglePeriod = QtGui.QLabel()
-        self.labelSinglePeriod.setText('&Period T1:')
+        self.labelSinglePeriod.setText(MenuFactory.getDescription(MenuFactory.TAREGECO_PERIOD) + ' T1:')
         self.layoutSinglePeriod.addWidget(self.labelSinglePeriod, 0, 0)
         
         self.spinBoxSinglePeriod = QtGui.QSpinBox()
@@ -1106,7 +1107,7 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.labelSinglePeriod.setBuddy(self.spinBoxSinglePeriod)
         
         self.labelSingleIntermediateConsumptionMatrix = QtGui.QLabel()
-        self.labelSingleIntermediateConsumptionMatrix.setText('Intermediate consumption matrix:')
+        self.labelSingleIntermediateConsumptionMatrix.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_INTERMEDIATE_CONSUMPTION_MATRIX) + ':')
         self.layoutSinglePeriod.addWidget(self.labelSingleIntermediateConsumptionMatrix, 1, 0)
         
         self.lineEditSingleIntermediateConsumptionMatrix = QtGui.QLineEdit()
@@ -1114,11 +1115,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutSinglePeriod.addWidget(self.lineEditSingleIntermediateConsumptionMatrix, 1, 1)
         
         self.buttonSelectSingleIntermediateConsumptionMatrix = QtGui.QPushButton()
-        self.buttonSelectSingleIntermediateConsumptionMatrix.setText('&Browse')
+        self.buttonSelectSingleIntermediateConsumptionMatrix.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutSinglePeriod.addWidget(self.buttonSelectSingleIntermediateConsumptionMatrix, 1, 2)
         
         self.labelSingleValueAddedMatrix = QtGui.QLabel()
-        self.labelSingleValueAddedMatrix.setText('Value added matrix:')
+        self.labelSingleValueAddedMatrix.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_VALUE_ADDED_MATRIX) + ':')
         self.layoutSinglePeriod.addWidget(self.labelSingleValueAddedMatrix, 2, 0)
         
         self.lineEditSingleValueAddedMatrix = QtGui.QLineEdit()
@@ -1126,11 +1127,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutSinglePeriod.addWidget(self.lineEditSingleValueAddedMatrix, 2, 1)
         
         self.buttonSelectSingleValueAddedMatrix = QtGui.QPushButton()
-        self.buttonSelectSingleValueAddedMatrix.setText('&Browse')
+        self.buttonSelectSingleValueAddedMatrix.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutSinglePeriod.addWidget(self.buttonSelectSingleValueAddedMatrix, 2, 2)
         
         self.labelSingleFinalConsumptionMatrix = QtGui.QLabel()
-        self.labelSingleFinalConsumptionMatrix.setText('Final consumption matrix:')
+        self.labelSingleFinalConsumptionMatrix.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_FINAL_CONSUMPTION_MATRIX) + ':')
         self.layoutSinglePeriod.addWidget(self.labelSingleFinalConsumptionMatrix, 3, 0)
         
         self.lineEditSingleFinalConsumptionMatrix = QtGui.QLineEdit()
@@ -1138,11 +1139,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutSinglePeriod.addWidget(self.lineEditSingleFinalConsumptionMatrix, 3, 1)
         
         self.buttonSelectSingleFinalConsumptionMatrix = QtGui.QPushButton()
-        self.buttonSelectSingleFinalConsumptionMatrix.setText('&Browse')
+        self.buttonSelectSingleFinalConsumptionMatrix.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutSinglePeriod.addWidget(self.buttonSelectSingleFinalConsumptionMatrix, 3, 2)
         
         self.labelSingleLabourRequirement = QtGui.QLabel()
-        self.labelSingleLabourRequirement.setText('Labour requirement:')
+        self.labelSingleLabourRequirement.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_LABOUR_REQUIREMENT) + ':')
         self.layoutSinglePeriod.addWidget(self.labelSingleLabourRequirement, 4, 0)
         
         self.lineEditSingleLabourRequirement = QtGui.QLineEdit()
@@ -1150,11 +1151,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutSinglePeriod.addWidget(self.lineEditSingleLabourRequirement, 4, 1)
         
         self.buttonSelectSingleLabourRequirement = QtGui.QPushButton()
-        self.buttonSelectSingleLabourRequirement.setText('&Browse')
+        self.buttonSelectSingleLabourRequirement.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutSinglePeriod.addWidget(self.buttonSelectSingleLabourRequirement, 4, 2)
         
         # 'Multiple period' GroupBox
-        self.groupBoxMultiplePeriod = QtGui.QGroupBox('Multiple period')
+        self.groupBoxMultiplePeriod = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.TAREGECO_MULTI_PERIOD))
         self.layoutGroupBoxMultiplePeriod = QtGui.QHBoxLayout()
         self.groupBoxMultiplePeriod.setLayout(self.layoutGroupBoxMultiplePeriod)
         self.layoutOptionsMultiplePeriod = QtGui.QVBoxLayout()
@@ -1175,11 +1176,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutOptionsMultiplePeriod.addLayout(self.layoutMultiplePeriod)
         
         self.labelMultiplePeriodInfo = QtGui.QLabel()
-        self.labelMultiplePeriodInfo.setText('Lorem ipsum dolor sit amet...\n')
+        self.labelMultiplePeriodInfo.setText(MenuFactory.getDescription(MenuFactory.TAREGECO_MULTI_PERIOD))
         self.layoutMultiplePeriodInfo.addWidget(self.labelMultiplePeriodInfo)
         
         self.labelMultiplePeriod = QtGui.QLabel()
-        self.labelMultiplePeriod.setText('&Period T2:')
+        self.labelMultiplePeriod.setText(MenuFactory.getDescription(MenuFactory.TAREGECO_PERIOD) + ' T2:')
         self.layoutMultiplePeriod.addWidget(self.labelMultiplePeriod, 0, 0)
         
         self.spinBoxMultiplePeriod = QtGui.QSpinBox()
@@ -1189,7 +1190,7 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.labelMultiplePeriod.setBuddy(self.spinBoxMultiplePeriod)
         
         self.labelMultipleIntermediateConsumptionMatrix = QtGui.QLabel()
-        self.labelMultipleIntermediateConsumptionMatrix.setText('Intermediate consumption matrix:')
+        self.labelMultipleIntermediateConsumptionMatrix.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_INTERMEDIATE_CONSUMPTION_MATRIX) + ':')
         self.layoutMultiplePeriod.addWidget(self.labelMultipleIntermediateConsumptionMatrix, 1, 0)
         
         self.lineEditMultipleIntermediateConsumptionMatrix = QtGui.QLineEdit()
@@ -1197,11 +1198,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutMultiplePeriod.addWidget(self.lineEditMultipleIntermediateConsumptionMatrix, 1, 1)
         
         self.buttonSelectMultipleIntermediateConsumptionMatrix = QtGui.QPushButton()
-        self.buttonSelectMultipleIntermediateConsumptionMatrix.setText('&Browse')
+        self.buttonSelectMultipleIntermediateConsumptionMatrix.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutMultiplePeriod.addWidget(self.buttonSelectMultipleIntermediateConsumptionMatrix, 1, 2)
         
         self.labelMultipleValueAddedMatrix = QtGui.QLabel()
-        self.labelMultipleValueAddedMatrix.setText('Value added matrix:')
+        self.labelMultipleValueAddedMatrix.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_VALUE_ADDED_MATRIX) + ':')
         self.layoutMultiplePeriod.addWidget(self.labelMultipleValueAddedMatrix, 2, 0)
         
         self.lineEditMultipleValueAddedMatrix = QtGui.QLineEdit()
@@ -1209,11 +1210,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutMultiplePeriod.addWidget(self.lineEditMultipleValueAddedMatrix, 2, 1)
         
         self.buttonSelectMultipleValueAddedMatrix = QtGui.QPushButton()
-        self.buttonSelectMultipleValueAddedMatrix.setText('&Browse')
+        self.buttonSelectMultipleValueAddedMatrix.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutMultiplePeriod.addWidget(self.buttonSelectMultipleValueAddedMatrix, 2, 2)
         
         self.labelMultipleFinalConsumptionMatrix = QtGui.QLabel()
-        self.labelMultipleFinalConsumptionMatrix.setText('Final consumption matrix:')
+        self.labelMultipleFinalConsumptionMatrix.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_FINAL_CONSUMPTION_MATRIX) + ':')
         self.layoutMultiplePeriod.addWidget(self.labelMultipleFinalConsumptionMatrix, 3, 0)
         
         self.lineEditMultipleFinalConsumptionMatrix = QtGui.QLineEdit()
@@ -1221,11 +1222,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutMultiplePeriod.addWidget(self.lineEditMultipleFinalConsumptionMatrix, 3, 1)
         
         self.buttonSelectMultipleFinalConsumptionMatrix = QtGui.QPushButton()
-        self.buttonSelectMultipleFinalConsumptionMatrix.setText('&Browse')
+        self.buttonSelectMultipleFinalConsumptionMatrix.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutMultiplePeriod.addWidget(self.buttonSelectMultipleFinalConsumptionMatrix, 3, 2)
         
         self.labelMultipleLabourRequirement = QtGui.QLabel()
-        self.labelMultipleLabourRequirement.setText('Labour requirement:')
+        self.labelMultipleLabourRequirement.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_LABOUR_REQUIREMENT) + ':')
         self.layoutMultiplePeriod.addWidget(self.labelMultipleLabourRequirement, 4, 0)
         
         self.lineEditMultipleLabourRequirement = QtGui.QLineEdit()
@@ -1233,11 +1234,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutMultiplePeriod.addWidget(self.lineEditMultipleLabourRequirement, 4, 1)
         
         self.buttonSelectMultipleLabourRequirement = QtGui.QPushButton()
-        self.buttonSelectMultipleLabourRequirement.setText('&Browse')
+        self.buttonSelectMultipleLabourRequirement.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutMultiplePeriod.addWidget(self.buttonSelectMultipleLabourRequirement, 4, 2)
         
         # 'Other' GroupBox
-        self.groupBoxOther = QtGui.QGroupBox('Other parameters')
+        self.groupBoxOther = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.TAREGECO_OTHER_PARAMETERS))
         self.layoutGroupBoxOther = QtGui.QVBoxLayout()
         self.layoutGroupBoxOther.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxOther.setLayout(self.layoutGroupBoxOther)
@@ -1247,11 +1248,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxOther.addLayout(self.layoutOther)
         
         self.labelOtherInfo = QtGui.QLabel()
-        self.labelOtherInfo.setText('Lorem ipsum dolor sit amet...\n')
+        self.labelOtherInfo.setText(MenuFactory.getDescription(MenuFactory.TAREGECO_OTHER_PARAMETERS))
         self.layoutOtherInfo.addWidget(self.labelOtherInfo)
         
         self.labelOtherValueAddedComponent = QtGui.QLabel()
-        self.labelOtherValueAddedComponent.setText('Value added component:')
+        self.labelOtherValueAddedComponent.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_VALUE_ADDED_COMPONENT) + ':')
         self.layoutOther.addWidget(self.labelOtherValueAddedComponent, 0, 0)
         
         self.lineEditOtherValueAddedComponent = QtGui.QLineEdit()
@@ -1259,11 +1260,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutOther.addWidget(self.lineEditOtherValueAddedComponent, 0, 1)
         
         self.buttonSelectOtherValueAddedComponent = QtGui.QPushButton()
-        self.buttonSelectOtherValueAddedComponent.setText('&Browse')
+        self.buttonSelectOtherValueAddedComponent.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutOther.addWidget(self.buttonSelectOtherValueAddedComponent, 0, 2)
         
         self.labelOtherFinalConsumptionComponent = QtGui.QLabel()
-        self.labelOtherFinalConsumptionComponent.setText('Final consumption component:')
+        self.labelOtherFinalConsumptionComponent.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_FINAL_CONSUMPTION_COMPONENT) + ':')
         self.layoutOther.addWidget(self.labelOtherFinalConsumptionComponent, 1, 0)
         
         self.lineEditOtherFinalConsumptionComponent = QtGui.QLineEdit()
@@ -1271,11 +1272,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutOther.addWidget(self.lineEditOtherFinalConsumptionComponent, 1, 1)
         
         self.buttonSelectOtherFinalConsumptionComponent = QtGui.QPushButton()
-        self.buttonSelectOtherFinalConsumptionComponent.setText('&Browse')
+        self.buttonSelectOtherFinalConsumptionComponent.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutOther.addWidget(self.buttonSelectOtherFinalConsumptionComponent, 1, 2)
         
         self.labelOtherListOfEconomicSector = QtGui.QLabel()
-        self.labelOtherListOfEconomicSector.setText('List of economic sector:')
+        self.labelOtherListOfEconomicSector.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_LIST_OF_ECONOMIC_SECTOR) + ':')
         self.layoutOther.addWidget(self.labelOtherListOfEconomicSector, 2, 0)
         
         self.lineEditOtherListOfEconomicSector = QtGui.QLineEdit()
@@ -1283,31 +1284,31 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutOther.addWidget(self.lineEditOtherListOfEconomicSector, 2, 1)
         
         self.buttonSelectOtherListOfEconomicSector = QtGui.QPushButton()
-        self.buttonSelectOtherListOfEconomicSector.setText('&Browse')
+        self.buttonSelectOtherListOfEconomicSector.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutOther.addWidget(self.buttonSelectOtherListOfEconomicSector, 2, 2)
         
         self.labelOtherFinancialUnit = QtGui.QLabel()
-        self.labelOtherFinancialUnit.setText('Financial &unit:')
+        self.labelOtherFinancialUnit.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_FINANCIAL_UNIT) + ':')
         self.layoutOther.addWidget(self.labelOtherFinancialUnit, 3, 0)
         
         self.lineEditOtherFinancialUnit = QtGui.QLineEdit()
-        self.lineEditOtherFinancialUnit.setText('Million Rupiah')
+        self.lineEditOtherFinancialUnit.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_CURRENCY))
         self.layoutOther.addWidget(self.lineEditOtherFinancialUnit, 3, 1)
         self.labelOtherFinancialUnit.setBuddy(self.lineEditOtherFinancialUnit)
         
         self.labelOtherAreaName = QtGui.QLabel()
-        self.labelOtherAreaName.setText('&Area name:')
+        self.labelOtherAreaName.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_AREA_NAME) + ':')
         self.layoutOther.addWidget(self.labelOtherAreaName, 4, 0)
         
         self.lineEditOtherAreaName = QtGui.QLineEdit()
-        self.lineEditOtherAreaName.setText('area')
+        self.lineEditOtherAreaName.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_AREA))
         self.layoutOther.addWidget(self.lineEditOtherAreaName, 4, 1)
         self.labelOtherAreaName.setBuddy(self.lineEditOtherAreaName)
         
         # Process tab button
         self.layoutButtonDescriptiveAnalysis = QtGui.QHBoxLayout()
         self.buttonProcessDescriptiveAnalysis = QtGui.QPushButton()
-        self.buttonProcessDescriptiveAnalysis.setText('&Process')
+        self.buttonProcessDescriptiveAnalysis.setText(MenuFactory.getLabel(MenuFactory.TA_PROCESS))
         icon = QtGui.QIcon(':/ui/icons/iconActionHelp.png')
         self.buttonHelpTADescriptiveAnalysis = QtGui.QPushButton()
         self.buttonHelpTADescriptiveAnalysis.setIcon(icon)
@@ -1316,7 +1317,7 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutButtonDescriptiveAnalysis.addWidget(self.buttonHelpTADescriptiveAnalysis)
         
         # Template GroupBox
-        self.groupBoxDescriptiveAnalysisTemplate = QtGui.QGroupBox('Template')
+        self.groupBoxDescriptiveAnalysisTemplate = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.CONF_TEMPLATE))
         self.layoutGroupBoxDescriptiveAnalysisTemplate = QtGui.QVBoxLayout()
         self.layoutGroupBoxDescriptiveAnalysisTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxDescriptiveAnalysisTemplate.setLayout(self.layoutGroupBoxDescriptiveAnalysisTemplate)
@@ -1326,21 +1327,21 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxDescriptiveAnalysisTemplate.addLayout(self.layoutDescriptiveAnalysisTemplate)
         
         self.labelLoadedDescriptiveAnalysisTemplate = QtGui.QLabel()
-        self.labelLoadedDescriptiveAnalysisTemplate.setText('Loaded template:')
+        self.labelLoadedDescriptiveAnalysisTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOADED_TEMPLATE) + ':')
         self.layoutDescriptiveAnalysisTemplate.addWidget(self.labelLoadedDescriptiveAnalysisTemplate, 0, 0)
         
         self.loadedDescriptiveAnalysisTemplate = QtGui.QLabel()
-        self.loadedDescriptiveAnalysisTemplate.setText('<None>')
+        self.loadedDescriptiveAnalysisTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NONE))
         self.layoutDescriptiveAnalysisTemplate.addWidget(self.loadedDescriptiveAnalysisTemplate, 0, 1)
         
         self.labelDescriptiveAnalysisTemplate = QtGui.QLabel()
-        self.labelDescriptiveAnalysisTemplate.setText('Template name:')
+        self.labelDescriptiveAnalysisTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_TEMPLATE_NAME) + ':')
         self.layoutDescriptiveAnalysisTemplate.addWidget(self.labelDescriptiveAnalysisTemplate, 1, 0)
         
         self.comboBoxDescriptiveAnalysisTemplate = QtGui.QComboBox()
         self.comboBoxDescriptiveAnalysisTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
         self.comboBoxDescriptiveAnalysisTemplate.setDisabled(True)
-        self.comboBoxDescriptiveAnalysisTemplate.addItem('No template found')
+        self.comboBoxDescriptiveAnalysisTemplate.addItem(MenuFactory.getLabel(MenuFactory.CONF_NO_TEMPLATE_FOUND))
         self.layoutDescriptiveAnalysisTemplate.addWidget(self.comboBoxDescriptiveAnalysisTemplate, 1, 1)
         
         self.layoutButtonDescriptiveAnalysisTemplate = QtGui.QHBoxLayout()
@@ -1348,14 +1349,14 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.buttonLoadDescriptiveAnalysisTemplate = QtGui.QPushButton()
         self.buttonLoadDescriptiveAnalysisTemplate.setDisabled(True)
         self.buttonLoadDescriptiveAnalysisTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonLoadDescriptiveAnalysisTemplate.setText('Load')
+        self.buttonLoadDescriptiveAnalysisTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOAD))
         self.buttonSaveDescriptiveAnalysisTemplate = QtGui.QPushButton()
         self.buttonSaveDescriptiveAnalysisTemplate.setDisabled(True)
         self.buttonSaveDescriptiveAnalysisTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveDescriptiveAnalysisTemplate.setText('Save')
+        self.buttonSaveDescriptiveAnalysisTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE))
         self.buttonSaveAsDescriptiveAnalysisTemplate = QtGui.QPushButton()
         self.buttonSaveAsDescriptiveAnalysisTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveAsDescriptiveAnalysisTemplate.setText('Save As')
+        self.buttonSaveAsDescriptiveAnalysisTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS))
         self.layoutButtonDescriptiveAnalysisTemplate.addWidget(self.buttonLoadDescriptiveAnalysisTemplate)
         self.layoutButtonDescriptiveAnalysisTemplate.addWidget(self.buttonSaveDescriptiveAnalysisTemplate)
         self.layoutButtonDescriptiveAnalysisTemplate.addWidget(self.buttonSaveAsDescriptiveAnalysisTemplate)
@@ -1384,7 +1385,7 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutTabRegionalEconomicScenarioImpact.addWidget(self.scrollRegionalEconomicScenarioImpact)
         
         # 'Type' GroupBox
-        self.groupBoxRegionalEconomicScenarioImpactType = QtGui.QGroupBox('Scenario type')
+        self.groupBoxRegionalEconomicScenarioImpactType = QtGui.QGroupBox(MenuFactory.getDescription(MenuFactory.TAREGECO_SCENARIO_TYPE))
         self.layoutGroupBoxRegionalEconomicScenarioImpactType = QtGui.QVBoxLayout()
         self.layoutGroupBoxRegionalEconomicScenarioImpactType.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxRegionalEconomicScenarioImpactType.setLayout(self.layoutGroupBoxRegionalEconomicScenarioImpactType)
@@ -1394,15 +1395,15 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxRegionalEconomicScenarioImpactType.addLayout(self.layoutRegionalEconomicScenarioImpactType)
         
         self.labelRegionalEconomicScenarioImpactTypeInfo = QtGui.QLabel()
-        self.labelRegionalEconomicScenarioImpactTypeInfo.setText('Lorem ipsum dolor sit amet...\n')
+        self.labelRegionalEconomicScenarioImpactTypeInfo.setText(MenuFactory.getDescription(MenuFactory.TAREGECO_OTHER_PARAMETERS))
         self.layoutRegionalEconomicScenarioImpactTypeInfo.addWidget(self.labelRegionalEconomicScenarioImpactTypeInfo)
         
-        self.checkBoxRegionalEconomicScenarioImpactFinalDemand = QtGui.QCheckBox('Final Demand Scenario')
+        self.checkBoxRegionalEconomicScenarioImpactFinalDemand = QtGui.QCheckBox(MenuFactory.getLabel(MenuFactory.TAREGECO_FINAL_DEMAND_SCENARIO))
         self.checkBoxRegionalEconomicScenarioImpactFinalDemand.setChecked(True)
         self.layoutRegionalEconomicScenarioImpactType.addWidget(self.checkBoxRegionalEconomicScenarioImpactFinalDemand, 0, 0)
         
         self.labelRegionalEconomicScenarioImpactFinalDemandChangeScenario = QtGui.QLabel()
-        self.labelRegionalEconomicScenarioImpactFinalDemandChangeScenario.setText('Final demand change scenario:')
+        self.labelRegionalEconomicScenarioImpactFinalDemandChangeScenario.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_FINAL_DEMAND_CHANGE_SCENARIO) + ':')
         self.layoutRegionalEconomicScenarioImpactType.addWidget(self.labelRegionalEconomicScenarioImpactFinalDemandChangeScenario, 1, 0)
         
         self.lineEditRegionalEconomicScenarioImpactFinalDemandChangeScenario = QtGui.QLineEdit()
@@ -1410,15 +1411,15 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutRegionalEconomicScenarioImpactType.addWidget(self.lineEditRegionalEconomicScenarioImpactFinalDemandChangeScenario, 1, 1)
         
         self.buttonSelectRegionalEconomicScenarioImpactFinalDemandChangeScenario = QtGui.QPushButton()
-        self.buttonSelectRegionalEconomicScenarioImpactFinalDemandChangeScenario.setText('&Browse')
+        self.buttonSelectRegionalEconomicScenarioImpactFinalDemandChangeScenario.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutRegionalEconomicScenarioImpactType.addWidget(self.buttonSelectRegionalEconomicScenarioImpactFinalDemandChangeScenario, 1, 2)
         
-        self.checkBoxRegionalEconomicScenarioImpactGDP = QtGui.QCheckBox('GDP Scenario')
+        self.checkBoxRegionalEconomicScenarioImpactGDP = QtGui.QCheckBox(MenuFactory.getLabel(MenuFactory.TAREGECO_GDP_SCENARIO))
         self.checkBoxRegionalEconomicScenarioImpactGDP.setChecked(False)
         self.layoutRegionalEconomicScenarioImpactType.addWidget(self.checkBoxRegionalEconomicScenarioImpactGDP, 2, 0)
         
         self.labelRegionalEconomicScenarioImpactGDPChangeScenario = QtGui.QLabel()
-        self.labelRegionalEconomicScenarioImpactGDPChangeScenario.setText('GDP change scenario:')
+        self.labelRegionalEconomicScenarioImpactGDPChangeScenario.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_GDP_CHANGE_SCENARIO) + ':')
         self.labelRegionalEconomicScenarioImpactGDPChangeScenario.setDisabled(True)
         self.layoutRegionalEconomicScenarioImpactType.addWidget(self.labelRegionalEconomicScenarioImpactGDPChangeScenario, 3, 0)
         
@@ -1428,12 +1429,12 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutRegionalEconomicScenarioImpactType.addWidget(self.lineEditRegionalEconomicScenarioImpactGDPChangeScenario, 3, 1)
         
         self.buttonSelectRegionalEconomicScenarioImpactGDPChangeScenario = QtGui.QPushButton()
-        self.buttonSelectRegionalEconomicScenarioImpactGDPChangeScenario.setText('&Browse')
+        self.buttonSelectRegionalEconomicScenarioImpactGDPChangeScenario.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.buttonSelectRegionalEconomicScenarioImpactGDPChangeScenario.setDisabled(True)
         self.layoutRegionalEconomicScenarioImpactType.addWidget(self.buttonSelectRegionalEconomicScenarioImpactGDPChangeScenario, 3, 2)
         
         # 'Parameters' GroupBox
-        self.groupBoxRegionalEconomicScenarioImpactParameters = QtGui.QGroupBox('Parameters')
+        self.groupBoxRegionalEconomicScenarioImpactParameters = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.TAREGECO_OTHER_PARAMETERS))
         self.layoutGroupBoxRegionalEconomicScenarioImpactParameters = QtGui.QVBoxLayout()
         self.layoutGroupBoxRegionalEconomicScenarioImpactParameters.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxRegionalEconomicScenarioImpactParameters.setLayout(self.layoutGroupBoxRegionalEconomicScenarioImpactParameters)
@@ -1443,11 +1444,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxRegionalEconomicScenarioImpactParameters.addLayout(self.layoutRegionalEconomicScenarioImpactParameters)
         
         self.labelRegionalEconomicScenarioImpactParametersInfo = QtGui.QLabel()
-        self.labelRegionalEconomicScenarioImpactParametersInfo.setText('Lorem ipsum dolor sit amet...\n')
+        self.labelRegionalEconomicScenarioImpactParametersInfo.setText(MenuFactory.getDescription(MenuFactory.TAREGECO_OTHER_PARAMETERS))
         self.layoutRegionalEconomicScenarioImpactParametersInfo.addWidget(self.labelRegionalEconomicScenarioImpactParametersInfo)
         
         self.labelRegionalEconomicScenarioImpactIntermediateConsumptionMatrix = QtGui.QLabel()
-        self.labelRegionalEconomicScenarioImpactIntermediateConsumptionMatrix.setText('Intermediate consumption matrix:')
+        self.labelRegionalEconomicScenarioImpactIntermediateConsumptionMatrix.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_INTERMEDIATE_CONSUMPTION_MATRIX) + ':')
         self.layoutRegionalEconomicScenarioImpactParameters.addWidget(self.labelRegionalEconomicScenarioImpactIntermediateConsumptionMatrix, 0, 0)
         
         self.lineEditRegionalEconomicScenarioImpactIntermediateConsumptionMatrix = QtGui.QLineEdit()
@@ -1455,11 +1456,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutRegionalEconomicScenarioImpactParameters.addWidget(self.lineEditRegionalEconomicScenarioImpactIntermediateConsumptionMatrix, 0, 1)
         
         self.buttonSelectRegionalEconomicScenarioImpactIntermediateConsumptionMatrix = QtGui.QPushButton()
-        self.buttonSelectRegionalEconomicScenarioImpactIntermediateConsumptionMatrix.setText('&Browse')
+        self.buttonSelectRegionalEconomicScenarioImpactIntermediateConsumptionMatrix.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutRegionalEconomicScenarioImpactParameters.addWidget(self.buttonSelectRegionalEconomicScenarioImpactIntermediateConsumptionMatrix, 0, 2)
         
         self.labelRegionalEconomicScenarioImpactValueAddedMatrix = QtGui.QLabel()
-        self.labelRegionalEconomicScenarioImpactValueAddedMatrix.setText('Value added matrix:')
+        self.labelRegionalEconomicScenarioImpactValueAddedMatrix.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_VALUE_ADDED_MATRIX) + ':')
         self.layoutRegionalEconomicScenarioImpactParameters.addWidget(self.labelRegionalEconomicScenarioImpactValueAddedMatrix, 1, 0)
         
         self.lineEditRegionalEconomicScenarioImpactValueAddedMatrix = QtGui.QLineEdit()
@@ -1467,11 +1468,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutRegionalEconomicScenarioImpactParameters.addWidget(self.lineEditRegionalEconomicScenarioImpactValueAddedMatrix, 1, 1)
         
         self.buttonSelectRegionalEconomicScenarioImpactValueAddedMatrix = QtGui.QPushButton()
-        self.buttonSelectRegionalEconomicScenarioImpactValueAddedMatrix.setText('&Browse')
+        self.buttonSelectRegionalEconomicScenarioImpactValueAddedMatrix.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutRegionalEconomicScenarioImpactParameters.addWidget(self.buttonSelectRegionalEconomicScenarioImpactValueAddedMatrix, 1, 2)
         
         self.labelRegionalEconomicScenarioImpactFinalConsumptionMatrix = QtGui.QLabel()
-        self.labelRegionalEconomicScenarioImpactFinalConsumptionMatrix.setText('Final consumption matrix:')
+        self.labelRegionalEconomicScenarioImpactFinalConsumptionMatrix.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_FINAL_CONSUMPTION_MATRIX) + ':')
         self.layoutRegionalEconomicScenarioImpactParameters.addWidget(self.labelRegionalEconomicScenarioImpactFinalConsumptionMatrix, 2, 0)
         
         self.lineEditRegionalEconomicScenarioImpactFinalConsumptionMatrix = QtGui.QLineEdit()
@@ -1479,11 +1480,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutRegionalEconomicScenarioImpactParameters.addWidget(self.lineEditRegionalEconomicScenarioImpactFinalConsumptionMatrix, 2, 1)
         
         self.buttonSelectRegionalEconomicScenarioImpactFinalConsumptionMatrix = QtGui.QPushButton()
-        self.buttonSelectRegionalEconomicScenarioImpactFinalConsumptionMatrix.setText('&Browse')
+        self.buttonSelectRegionalEconomicScenarioImpactFinalConsumptionMatrix.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutRegionalEconomicScenarioImpactParameters.addWidget(self.buttonSelectRegionalEconomicScenarioImpactFinalConsumptionMatrix, 2, 2)
         
         self.labelRegionalEconomicScenarioImpactValueAddedComponent = QtGui.QLabel()
-        self.labelRegionalEconomicScenarioImpactValueAddedComponent.setText('Value added component:')
+        self.labelRegionalEconomicScenarioImpactValueAddedComponent.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_VALUE_ADDED_COMPONENT) + ':')
         self.layoutRegionalEconomicScenarioImpactParameters.addWidget(self.labelRegionalEconomicScenarioImpactValueAddedComponent, 3, 0)
         
         self.lineEditRegionalEconomicScenarioImpactValueAddedComponent = QtGui.QLineEdit()
@@ -1491,11 +1492,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutRegionalEconomicScenarioImpactParameters.addWidget(self.lineEditRegionalEconomicScenarioImpactValueAddedComponent, 3, 1)
         
         self.buttonSelectRegionalEconomicScenarioImpactValueAddedComponent = QtGui.QPushButton()
-        self.buttonSelectRegionalEconomicScenarioImpactValueAddedComponent.setText('&Browse')
+        self.buttonSelectRegionalEconomicScenarioImpactValueAddedComponent.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutRegionalEconomicScenarioImpactParameters.addWidget(self.buttonSelectRegionalEconomicScenarioImpactValueAddedComponent, 3, 2)
         
         self.labelRegionalEconomicScenarioImpactFinalConsumptionComponent = QtGui.QLabel()
-        self.labelRegionalEconomicScenarioImpactFinalConsumptionComponent.setText('Final consumption component:')
+        self.labelRegionalEconomicScenarioImpactFinalConsumptionComponent.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_FINAL_CONSUMPTION_COMPONENT) + ':')
         self.layoutRegionalEconomicScenarioImpactParameters.addWidget(self.labelRegionalEconomicScenarioImpactFinalConsumptionComponent, 4, 0)
         
         self.lineEditRegionalEconomicScenarioImpactFinalConsumptionComponent = QtGui.QLineEdit()
@@ -1503,11 +1504,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutRegionalEconomicScenarioImpactParameters.addWidget(self.lineEditRegionalEconomicScenarioImpactFinalConsumptionComponent, 4, 1)
         
         self.buttonSelectRegionalEconomicScenarioImpactFinalConsumptionComponent = QtGui.QPushButton()
-        self.buttonSelectRegionalEconomicScenarioImpactFinalConsumptionComponent.setText('&Browse')
+        self.buttonSelectRegionalEconomicScenarioImpactFinalConsumptionComponent.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutRegionalEconomicScenarioImpactParameters.addWidget(self.buttonSelectRegionalEconomicScenarioImpactFinalConsumptionComponent, 4, 2)
         
         self.labelRegionalEconomicScenarioImpactListOfEconomicSector = QtGui.QLabel()
-        self.labelRegionalEconomicScenarioImpactListOfEconomicSector.setText('List of economic sector:')
+        self.labelRegionalEconomicScenarioImpactListOfEconomicSector.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_LIST_OF_ECONOMIC_SECTOR) + ':')
         self.layoutRegionalEconomicScenarioImpactParameters.addWidget(self.labelRegionalEconomicScenarioImpactListOfEconomicSector, 5, 0)
         
         self.lineEditRegionalEconomicScenarioImpactListOfEconomicSector = QtGui.QLineEdit()
@@ -1515,11 +1516,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutRegionalEconomicScenarioImpactParameters.addWidget(self.lineEditRegionalEconomicScenarioImpactListOfEconomicSector, 5, 1)
         
         self.buttonSelectRegionalEconomicScenarioImpactListOfEconomicSector = QtGui.QPushButton()
-        self.buttonSelectRegionalEconomicScenarioImpactListOfEconomicSector.setText('&Browse')
+        self.buttonSelectRegionalEconomicScenarioImpactListOfEconomicSector.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutRegionalEconomicScenarioImpactParameters.addWidget(self.buttonSelectRegionalEconomicScenarioImpactListOfEconomicSector, 5, 2)
         
         self.labelRegionalEconomicScenarioImpactLandDistributionMatrix = QtGui.QLabel()
-        self.labelRegionalEconomicScenarioImpactLandDistributionMatrix.setText('Land distribution matrix:')
+        self.labelRegionalEconomicScenarioImpactLandDistributionMatrix.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_LAND_DISTRIBUTION_MATRIX) + ':')
         self.layoutRegionalEconomicScenarioImpactParameters.addWidget(self.labelRegionalEconomicScenarioImpactLandDistributionMatrix, 6, 0)
         
         self.lineEditRegionalEconomicScenarioImpactLandDistributionMatrix = QtGui.QLineEdit()
@@ -1527,11 +1528,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutRegionalEconomicScenarioImpactParameters.addWidget(self.lineEditRegionalEconomicScenarioImpactLandDistributionMatrix, 6, 1)
         
         self.buttonSelectRegionalEconomicScenarioImpactLandDistributionMatrix = QtGui.QPushButton()
-        self.buttonSelectRegionalEconomicScenarioImpactLandDistributionMatrix.setText('&Browse')
+        self.buttonSelectRegionalEconomicScenarioImpactLandDistributionMatrix.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutRegionalEconomicScenarioImpactParameters.addWidget(self.buttonSelectRegionalEconomicScenarioImpactLandDistributionMatrix, 6, 2)
         
         self.labelRegionalEconomicScenarioImpactLandRequirementCoefficientMatrix = QtGui.QLabel()
-        self.labelRegionalEconomicScenarioImpactLandRequirementCoefficientMatrix.setText('Land requirement coefficient matrix:')
+        self.labelRegionalEconomicScenarioImpactLandRequirementCoefficientMatrix.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_LAND_REQUIREMENT_COEFFICIENT_MATRIX) + ':')
         self.layoutRegionalEconomicScenarioImpactParameters.addWidget(self.labelRegionalEconomicScenarioImpactLandRequirementCoefficientMatrix, 7, 0)
         
         self.lineEditRegionalEconomicScenarioImpactLandRequirementCoefficientMatrix = QtGui.QLineEdit()
@@ -1539,11 +1540,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutRegionalEconomicScenarioImpactParameters.addWidget(self.lineEditRegionalEconomicScenarioImpactLandRequirementCoefficientMatrix, 7, 1)
         
         self.buttonSelectRegionalEconomicScenarioImpactLandRequirementCoefficientMatrix = QtGui.QPushButton()
-        self.buttonSelectRegionalEconomicScenarioImpactLandRequirementCoefficientMatrix.setText('&Browse')
+        self.buttonSelectRegionalEconomicScenarioImpactLandRequirementCoefficientMatrix.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutRegionalEconomicScenarioImpactParameters.addWidget(self.buttonSelectRegionalEconomicScenarioImpactLandRequirementCoefficientMatrix, 7, 2)
         
         self.labelRegionalEconomicScenarioImpactLandCoverComponent = QtGui.QLabel()
-        self.labelRegionalEconomicScenarioImpactLandCoverComponent.setText('Land cover component:')
+        self.labelRegionalEconomicScenarioImpactLandCoverComponent.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_LAND_COVER_COMPONENT) + ':')
         self.layoutRegionalEconomicScenarioImpactParameters.addWidget(self.labelRegionalEconomicScenarioImpactLandCoverComponent, 8, 0)
         
         self.lineEditRegionalEconomicScenarioImpactLandCoverComponent = QtGui.QLineEdit()
@@ -1551,11 +1552,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutRegionalEconomicScenarioImpactParameters.addWidget(self.lineEditRegionalEconomicScenarioImpactLandCoverComponent, 8, 1)
         
         self.buttonSelectRegionalEconomicScenarioImpactLandCoverComponent = QtGui.QPushButton()
-        self.buttonSelectRegionalEconomicScenarioImpactLandCoverComponent.setText('&Browse')
+        self.buttonSelectRegionalEconomicScenarioImpactLandCoverComponent.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutRegionalEconomicScenarioImpactParameters.addWidget(self.buttonSelectRegionalEconomicScenarioImpactLandCoverComponent, 8, 2)
         
         self.labelRegionalEconomicScenarioImpactLabourRequirement = QtGui.QLabel()
-        self.labelRegionalEconomicScenarioImpactLabourRequirement.setText('Labour requirement:')
+        self.labelRegionalEconomicScenarioImpactLabourRequirement.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_LABOUR_REQUIREMENT) + ':')
         self.layoutRegionalEconomicScenarioImpactParameters.addWidget(self.labelRegionalEconomicScenarioImpactLabourRequirement, 9, 0)
         
         self.lineEditRegionalEconomicScenarioImpactLabourRequirement = QtGui.QLineEdit()
@@ -1563,29 +1564,29 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutRegionalEconomicScenarioImpactParameters.addWidget(self.lineEditRegionalEconomicScenarioImpactLabourRequirement, 9, 1)
         
         self.buttonSelectRegionalEconomicScenarioImpactLabourRequirement = QtGui.QPushButton()
-        self.buttonSelectRegionalEconomicScenarioImpactLabourRequirement.setText('&Browse')
+        self.buttonSelectRegionalEconomicScenarioImpactLabourRequirement.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutRegionalEconomicScenarioImpactParameters.addWidget(self.buttonSelectRegionalEconomicScenarioImpactLabourRequirement, 9, 2)
         
         self.labelRegionalEconomicScenarioImpactFinancialUnit = QtGui.QLabel()
-        self.labelRegionalEconomicScenarioImpactFinancialUnit.setText('Financial &unit:')
+        self.labelRegionalEconomicScenarioImpactFinancialUnit.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_FINANCIAL_UNIT) + ':')
         self.layoutRegionalEconomicScenarioImpactParameters.addWidget(self.labelRegionalEconomicScenarioImpactFinancialUnit, 10, 0)
         
         self.lineEditRegionalEconomicScenarioImpactFinancialUnit = QtGui.QLineEdit()
-        self.lineEditRegionalEconomicScenarioImpactFinancialUnit.setText('Million Rupiah')
+        self.lineEditRegionalEconomicScenarioImpactFinancialUnit.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_CURRENCY))
         self.layoutRegionalEconomicScenarioImpactParameters.addWidget(self.lineEditRegionalEconomicScenarioImpactFinancialUnit, 10, 1)
         self.labelRegionalEconomicScenarioImpactFinancialUnit.setBuddy(self.lineEditRegionalEconomicScenarioImpactFinancialUnit)
         
         self.labelRegionalEconomicScenarioImpactAreaName = QtGui.QLabel()
-        self.labelRegionalEconomicScenarioImpactAreaName.setText('&Area name:')
+        self.labelRegionalEconomicScenarioImpactAreaName.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_AREA_NAME) + ':')
         self.layoutRegionalEconomicScenarioImpactParameters.addWidget(self.labelRegionalEconomicScenarioImpactAreaName, 11, 0)
         
         self.lineEditRegionalEconomicScenarioImpactAreaName = QtGui.QLineEdit()
-        self.lineEditRegionalEconomicScenarioImpactAreaName.setText('area')
+        self.lineEditRegionalEconomicScenarioImpactAreaName.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_AREA))
         self.layoutRegionalEconomicScenarioImpactParameters.addWidget(self.lineEditRegionalEconomicScenarioImpactAreaName, 11, 1)
         self.labelRegionalEconomicScenarioImpactAreaName.setBuddy(self.lineEditRegionalEconomicScenarioImpactAreaName)
         
         self.labelRegionalEconomicScenarioImpactSpinBoxPeriod = QtGui.QLabel()
-        self.labelRegionalEconomicScenarioImpactSpinBoxPeriod.setText('&Period:')
+        self.labelRegionalEconomicScenarioImpactSpinBoxPeriod.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_PERIOD) + ':')
         self.layoutRegionalEconomicScenarioImpactParameters.addWidget(self.labelRegionalEconomicScenarioImpactSpinBoxPeriod, 12, 0)
         
         self.spinBoxRegionalEconomicScenarioImpactPeriod = QtGui.QSpinBox()
@@ -1597,7 +1598,7 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         # Process tab button
         self.layoutButtonRegionalEconomicScenarioImpact = QtGui.QHBoxLayout()
         self.buttonProcessRegionalEconomicScenarioImpact = QtGui.QPushButton()
-        self.buttonProcessRegionalEconomicScenarioImpact.setText('&Process')
+        self.buttonProcessRegionalEconomicScenarioImpact.setText(MenuFactory.getLabel(MenuFactory.TA_PROCESS))
         self.buttonHelpTARegionalEconomicScenarioImpact = QtGui.QPushButton()
         self.buttonHelpTARegionalEconomicScenarioImpact.setIcon(icon)
         self.layoutButtonRegionalEconomicScenarioImpact.setAlignment(QtCore.Qt.AlignRight)
@@ -1605,7 +1606,7 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutButtonRegionalEconomicScenarioImpact.addWidget(self.buttonHelpTARegionalEconomicScenarioImpact)
         
         # Template GroupBox
-        self.groupBoxRegionalEconomicScenarioImpactTemplate = QtGui.QGroupBox('Template')
+        self.groupBoxRegionalEconomicScenarioImpactTemplate = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.CONF_TEMPLATE))
         self.layoutGroupBoxRegionalEconomicScenarioImpactTemplate = QtGui.QVBoxLayout()
         self.layoutGroupBoxRegionalEconomicScenarioImpactTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxRegionalEconomicScenarioImpactTemplate.setLayout(self.layoutGroupBoxRegionalEconomicScenarioImpactTemplate)
@@ -1615,21 +1616,21 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxRegionalEconomicScenarioImpactTemplate.addLayout(self.layoutRegionalEconomicScenarioImpactTemplate)
         
         self.labelLoadedRegionalEconomicScenarioImpactTemplate = QtGui.QLabel()
-        self.labelLoadedRegionalEconomicScenarioImpactTemplate.setText('Loaded template:')
+        self.labelLoadedRegionalEconomicScenarioImpactTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOADED_TEMPLATE) + ':')
         self.layoutRegionalEconomicScenarioImpactTemplate.addWidget(self.labelLoadedRegionalEconomicScenarioImpactTemplate, 0, 0)
         
         self.loadedRegionalEconomicScenarioImpactTemplate = QtGui.QLabel()
-        self.loadedRegionalEconomicScenarioImpactTemplate.setText('<None>')
+        self.loadedRegionalEconomicScenarioImpactTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NONE))
         self.layoutRegionalEconomicScenarioImpactTemplate.addWidget(self.loadedRegionalEconomicScenarioImpactTemplate, 0, 1)
         
         self.labelRegionalEconomicScenarioImpactTemplate = QtGui.QLabel()
-        self.labelRegionalEconomicScenarioImpactTemplate.setText('Template name:')
+        self.labelRegionalEconomicScenarioImpactTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_TEMPLATE_NAME) + ':')
         self.layoutRegionalEconomicScenarioImpactTemplate.addWidget(self.labelRegionalEconomicScenarioImpactTemplate, 1, 0)
         
         self.comboBoxRegionalEconomicScenarioImpactTemplate = QtGui.QComboBox()
         self.comboBoxRegionalEconomicScenarioImpactTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
         self.comboBoxRegionalEconomicScenarioImpactTemplate.setDisabled(True)
-        self.comboBoxRegionalEconomicScenarioImpactTemplate.addItem('No template found')
+        self.comboBoxRegionalEconomicScenarioImpactTemplate.addItem(MenuFactory.getLabel(MenuFactory.CONF_NO_TEMPLATE_FOUND))
         self.layoutRegionalEconomicScenarioImpactTemplate.addWidget(self.comboBoxRegionalEconomicScenarioImpactTemplate, 1, 1)
         
         self.layoutButtonRegionalEconomicScenarioImpactTemplate = QtGui.QHBoxLayout()
@@ -1637,14 +1638,14 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.buttonLoadRegionalEconomicScenarioImpactTemplate = QtGui.QPushButton()
         self.buttonLoadRegionalEconomicScenarioImpactTemplate.setDisabled(True)
         self.buttonLoadRegionalEconomicScenarioImpactTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonLoadRegionalEconomicScenarioImpactTemplate.setText('Load')
+        self.buttonLoadRegionalEconomicScenarioImpactTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOAD))
         self.buttonSaveRegionalEconomicScenarioImpactTemplate = QtGui.QPushButton()
         self.buttonSaveRegionalEconomicScenarioImpactTemplate.setDisabled(True)
         self.buttonSaveRegionalEconomicScenarioImpactTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveRegionalEconomicScenarioImpactTemplate.setText('Save')
+        self.buttonSaveRegionalEconomicScenarioImpactTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE))
         self.buttonSaveAsRegionalEconomicScenarioImpactTemplate = QtGui.QPushButton()
         self.buttonSaveAsRegionalEconomicScenarioImpactTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveAsRegionalEconomicScenarioImpactTemplate.setText('Save As')
+        self.buttonSaveAsRegionalEconomicScenarioImpactTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS))
         self.layoutButtonRegionalEconomicScenarioImpactTemplate.addWidget(self.buttonLoadRegionalEconomicScenarioImpactTemplate)
         self.layoutButtonRegionalEconomicScenarioImpactTemplate.addWidget(self.buttonSaveRegionalEconomicScenarioImpactTemplate)
         self.layoutButtonRegionalEconomicScenarioImpactTemplate.addWidget(self.buttonSaveAsRegionalEconomicScenarioImpactTemplate)
@@ -1672,7 +1673,7 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutTabLandRequirementAnalysis.addWidget(self.scrollLandRequirementAnalysis)
         
         # Parameters 'GroupBox'
-        self.groupBoxLandRequirementAnalysisParameters = QtGui.QGroupBox('Parameters')
+        self.groupBoxLandRequirementAnalysisParameters = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.TAREGECO_OTHER_PARAMETERS))
         self.layoutGroupBoxLandRequirementAnalysisParameters = QtGui.QVBoxLayout()
         self.layoutGroupBoxLandRequirementAnalysisParameters.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxLandRequirementAnalysisParameters.setLayout(self.layoutGroupBoxLandRequirementAnalysisParameters)
@@ -1682,11 +1683,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxLandRequirementAnalysisParameters.addLayout(self.layoutLandRequirementAnalysisParameters)
         
         self.labelLandRequirementAnalysisParametersInfo = QtGui.QLabel()
-        self.labelLandRequirementAnalysisParametersInfo.setText('Lorem ipsum dolor sit amet...\n')
+        self.labelLandRequirementAnalysisParametersInfo.setText(MenuFactory.getDescription(MenuFactory.TAREGECO_OTHER_PARAMETERS))
         self.layoutLandRequirementAnalysisParametersInfo.addWidget(self.labelLandRequirementAnalysisParametersInfo)
         
         self.labelLandRequirementAnalysisIntermediateConsumptionMatrix = QtGui.QLabel()
-        self.labelLandRequirementAnalysisIntermediateConsumptionMatrix.setText('Intermediate consumption matrix:')
+        self.labelLandRequirementAnalysisIntermediateConsumptionMatrix.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_INTERMEDIATE_CONSUMPTION_MATRIX) + ':')
         self.layoutLandRequirementAnalysisParameters.addWidget(self.labelLandRequirementAnalysisIntermediateConsumptionMatrix, 0, 0)
         
         self.lineEditLandRequirementAnalysisIntermediateConsumptionMatrix = QtGui.QLineEdit()
@@ -1694,11 +1695,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutLandRequirementAnalysisParameters.addWidget(self.lineEditLandRequirementAnalysisIntermediateConsumptionMatrix, 0, 1)
         
         self.buttonSelectLandRequirementAnalysisIntermediateConsumptionMatrix = QtGui.QPushButton()
-        self.buttonSelectLandRequirementAnalysisIntermediateConsumptionMatrix.setText('&Browse')
+        self.buttonSelectLandRequirementAnalysisIntermediateConsumptionMatrix.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutLandRequirementAnalysisParameters.addWidget(self.buttonSelectLandRequirementAnalysisIntermediateConsumptionMatrix, 0, 2)
         
         self.labelLandRequirementAnalysisValueAddedMatrix = QtGui.QLabel()
-        self.labelLandRequirementAnalysisValueAddedMatrix.setText('Value added matrix:')
+        self.labelLandRequirementAnalysisValueAddedMatrix.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_VALUE_ADDED_MATRIX) + ':')
         self.layoutLandRequirementAnalysisParameters.addWidget(self.labelLandRequirementAnalysisValueAddedMatrix, 1, 0)
         
         self.lineEditLandRequirementAnalysisValueAddedMatrix = QtGui.QLineEdit()
@@ -1706,11 +1707,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutLandRequirementAnalysisParameters.addWidget(self.lineEditLandRequirementAnalysisValueAddedMatrix, 1, 1)
         
         self.buttonSelectLandRequirementAnalysisValueAddedMatrix = QtGui.QPushButton()
-        self.buttonSelectLandRequirementAnalysisValueAddedMatrix.setText('&Browse')
+        self.buttonSelectLandRequirementAnalysisValueAddedMatrix.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutLandRequirementAnalysisParameters.addWidget(self.buttonSelectLandRequirementAnalysisValueAddedMatrix, 1, 2)
         
         self.labelLandRequirementAnalysisFinalConsumptionMatrix = QtGui.QLabel()
-        self.labelLandRequirementAnalysisFinalConsumptionMatrix.setText('Final consumption matrix:')
+        self.labelLandRequirementAnalysisFinalConsumptionMatrix.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_FINAL_CONSUMPTION_MATRIX) + ':')
         self.layoutLandRequirementAnalysisParameters.addWidget(self.labelLandRequirementAnalysisFinalConsumptionMatrix, 2, 0)
         
         self.lineEditLandRequirementAnalysisFinalConsumptionMatrix = QtGui.QLineEdit()
@@ -1718,11 +1719,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutLandRequirementAnalysisParameters.addWidget(self.lineEditLandRequirementAnalysisFinalConsumptionMatrix, 2, 1)
         
         self.buttonSelectLandRequirementAnalysisFinalConsumptionMatrix = QtGui.QPushButton()
-        self.buttonSelectLandRequirementAnalysisFinalConsumptionMatrix.setText('&Browse')
+        self.buttonSelectLandRequirementAnalysisFinalConsumptionMatrix.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutLandRequirementAnalysisParameters.addWidget(self.buttonSelectLandRequirementAnalysisFinalConsumptionMatrix, 2, 2)
         
         self.labelLandRequirementAnalysisValueAddedComponent = QtGui.QLabel()
-        self.labelLandRequirementAnalysisValueAddedComponent.setText('Value added component:')
+        self.labelLandRequirementAnalysisValueAddedComponent.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_VALUE_ADDED_COMPONENT) + ':')
         self.layoutLandRequirementAnalysisParameters.addWidget(self.labelLandRequirementAnalysisValueAddedComponent, 3, 0)
         
         self.lineEditLandRequirementAnalysisValueAddedComponent = QtGui.QLineEdit()
@@ -1730,11 +1731,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutLandRequirementAnalysisParameters.addWidget(self.lineEditLandRequirementAnalysisValueAddedComponent, 3, 1)
         
         self.buttonSelectLandRequirementAnalysisValueAddedComponent = QtGui.QPushButton()
-        self.buttonSelectLandRequirementAnalysisValueAddedComponent.setText('&Browse')
+        self.buttonSelectLandRequirementAnalysisValueAddedComponent.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutLandRequirementAnalysisParameters.addWidget(self.buttonSelectLandRequirementAnalysisValueAddedComponent, 3, 2)
         
         self.labelLandRequirementAnalysisFinalConsumptionComponent = QtGui.QLabel()
-        self.labelLandRequirementAnalysisFinalConsumptionComponent.setText('Final consumption component:')
+        self.labelLandRequirementAnalysisFinalConsumptionComponent.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_FINAL_CONSUMPTION_COMPONENT) + ':')
         self.layoutLandRequirementAnalysisParameters.addWidget(self.labelLandRequirementAnalysisFinalConsumptionComponent, 4, 0)
         
         self.lineEditLandRequirementAnalysisFinalConsumptionComponent = QtGui.QLineEdit()
@@ -1742,11 +1743,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutLandRequirementAnalysisParameters.addWidget(self.lineEditLandRequirementAnalysisFinalConsumptionComponent, 4, 1)
         
         self.buttonSelectLandRequirementAnalysisFinalConsumptionComponent = QtGui.QPushButton()
-        self.buttonSelectLandRequirementAnalysisFinalConsumptionComponent.setText('&Browse')
+        self.buttonSelectLandRequirementAnalysisFinalConsumptionComponent.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutLandRequirementAnalysisParameters.addWidget(self.buttonSelectLandRequirementAnalysisFinalConsumptionComponent, 4, 2)
         
         self.labelLandRequirementAnalysisListOfEconomicSector = QtGui.QLabel()
-        self.labelLandRequirementAnalysisListOfEconomicSector.setText('List of economic sector:')
+        self.labelLandRequirementAnalysisListOfEconomicSector.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_LIST_OF_ECONOMIC_SECTOR) + ':')
         self.layoutLandRequirementAnalysisParameters.addWidget(self.labelLandRequirementAnalysisListOfEconomicSector, 5, 0)
         
         self.lineEditLandRequirementAnalysisListOfEconomicSector = QtGui.QLineEdit()
@@ -1754,11 +1755,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutLandRequirementAnalysisParameters.addWidget(self.lineEditLandRequirementAnalysisListOfEconomicSector, 5, 1)
         
         self.buttonSelectLandRequirementAnalysisListOfEconomicSector = QtGui.QPushButton()
-        self.buttonSelectLandRequirementAnalysisListOfEconomicSector.setText('&Browse')
+        self.buttonSelectLandRequirementAnalysisListOfEconomicSector.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutLandRequirementAnalysisParameters.addWidget(self.buttonSelectLandRequirementAnalysisListOfEconomicSector, 5, 2)
         
         self.labelLandRequirementAnalysisLandDistributionMatrix = QtGui.QLabel()
-        self.labelLandRequirementAnalysisLandDistributionMatrix.setText('Land distribution matrix:')
+        self.labelLandRequirementAnalysisLandDistributionMatrix.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_LAND_DISTRIBUTION_MATRIX) + ':')
         self.layoutLandRequirementAnalysisParameters.addWidget(self.labelLandRequirementAnalysisLandDistributionMatrix, 6, 0)
         
         self.lineEditLandRequirementAnalysisLandDistributionMatrix = QtGui.QLineEdit()
@@ -1766,11 +1767,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutLandRequirementAnalysisParameters.addWidget(self.lineEditLandRequirementAnalysisLandDistributionMatrix, 6, 1)
         
         self.buttonSelectLandRequirementAnalysisLandDistributionMatrix = QtGui.QPushButton()
-        self.buttonSelectLandRequirementAnalysisLandDistributionMatrix.setText('&Browse')
+        self.buttonSelectLandRequirementAnalysisLandDistributionMatrix.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutLandRequirementAnalysisParameters.addWidget(self.buttonSelectLandRequirementAnalysisLandDistributionMatrix, 6, 2)
         
         self.labelLandRequirementAnalysisLandCoverComponent = QtGui.QLabel()
-        self.labelLandRequirementAnalysisLandCoverComponent.setText('Land cover component:')
+        self.labelLandRequirementAnalysisLandCoverComponent.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_LAND_COVER_COMPONENT) + ':')
         self.layoutLandRequirementAnalysisParameters.addWidget(self.labelLandRequirementAnalysisLandCoverComponent, 7, 0)
         
         self.lineEditLandRequirementAnalysisLandCoverComponent = QtGui.QLineEdit()
@@ -1778,11 +1779,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutLandRequirementAnalysisParameters.addWidget(self.lineEditLandRequirementAnalysisLandCoverComponent, 7, 1)
         
         self.buttonSelectLandRequirementAnalysisLandCoverComponent = QtGui.QPushButton()
-        self.buttonSelectLandRequirementAnalysisLandCoverComponent.setText('&Browse')
+        self.buttonSelectLandRequirementAnalysisLandCoverComponent.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutLandRequirementAnalysisParameters.addWidget(self.buttonSelectLandRequirementAnalysisLandCoverComponent, 7, 2)
         
         self.labelLandRequirementAnalysisLabourRequirement = QtGui.QLabel()
-        self.labelLandRequirementAnalysisLabourRequirement.setText('Labour requirement:')
+        self.labelLandRequirementAnalysisLabourRequirement.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_LABOUR_REQUIREMENT) + ':')
         self.layoutLandRequirementAnalysisParameters.addWidget(self.labelLandRequirementAnalysisLabourRequirement, 8, 0)
         
         self.lineEditLandRequirementAnalysisLabourRequirement = QtGui.QLineEdit()
@@ -1790,30 +1791,30 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutLandRequirementAnalysisParameters.addWidget(self.lineEditLandRequirementAnalysisLabourRequirement, 8, 1)
         
         self.buttonSelectLandRequirementAnalysisLabourRequirement = QtGui.QPushButton()
-        self.buttonSelectLandRequirementAnalysisLabourRequirement.setText('&Browse')
+        self.buttonSelectLandRequirementAnalysisLabourRequirement.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutLandRequirementAnalysisParameters.addWidget(self.buttonSelectLandRequirementAnalysisLabourRequirement, 8, 2)
         
         self.labelLandRequirementAnalysisFinancialUnit = QtGui.QLabel()
-        self.labelLandRequirementAnalysisFinancialUnit.setText('Financial &unit:')
+        self.labelLandRequirementAnalysisFinancialUnit.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_FINANCIAL_UNIT) + ':')
         self.layoutLandRequirementAnalysisParameters.addWidget(self.labelLandRequirementAnalysisFinancialUnit, 9, 0)
         
         self.lineEditLandRequirementAnalysisFinancialUnit = QtGui.QLineEdit()
-        self.lineEditLandRequirementAnalysisFinancialUnit.setText('Million Rupiah')
+        self.lineEditLandRequirementAnalysisFinancialUnit.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_CURRENCY))
         self.layoutLandRequirementAnalysisParameters.addWidget(self.lineEditLandRequirementAnalysisFinancialUnit, 9, 1)
         
         self.labelLandRequirementAnalysisFinancialUnit.setBuddy(self.lineEditLandRequirementAnalysisFinancialUnit)
         
         self.labelLandRequirementAnalysisAreaName = QtGui.QLabel()
-        self.labelLandRequirementAnalysisAreaName.setText('&Area name:')
+        self.labelLandRequirementAnalysisAreaName.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_AREA_NAME) + ':')
         self.layoutLandRequirementAnalysisParameters.addWidget(self.labelLandRequirementAnalysisAreaName, 10, 0)
         
         self.lineEditLandRequirementAnalysisAreaName = QtGui.QLineEdit()
-        self.lineEditLandRequirementAnalysisAreaName.setText('area')
+        self.lineEditLandRequirementAnalysisAreaName.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_AREA))
         self.layoutLandRequirementAnalysisParameters.addWidget(self.lineEditLandRequirementAnalysisAreaName, 10, 1)
         self.labelLandRequirementAnalysisAreaName.setBuddy(self.lineEditLandRequirementAnalysisAreaName)
         
         self.labelLandRequirementAnalysisPeriod = QtGui.QLabel()
-        self.labelLandRequirementAnalysisPeriod.setText('&Period:')
+        self.labelLandRequirementAnalysisPeriod.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_PERIOD) + ':')
         self.layoutLandRequirementAnalysisParameters.addWidget(self.labelLandRequirementAnalysisPeriod, 11, 0)
         
         self.spinBoxLandRequirementAnalysisPeriod = QtGui.QSpinBox()
@@ -1825,7 +1826,7 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         # Process tab button
         self.layoutButtonLandRequirementAnalysis = QtGui.QHBoxLayout()
         self.buttonProcessLandRequirementAnalysis = QtGui.QPushButton()
-        self.buttonProcessLandRequirementAnalysis.setText('&Process')
+        self.buttonProcessLandRequirementAnalysis.setText(MenuFactory.getLabel(MenuFactory.TA_PROCESS))
         self.buttonHelpTALandRequirementAnalysis = QtGui.QPushButton()
         self.buttonHelpTALandRequirementAnalysis.setIcon(icon)
         self.layoutButtonLandRequirementAnalysis.setAlignment(QtCore.Qt.AlignRight)
@@ -1833,7 +1834,7 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutButtonLandRequirementAnalysis.addWidget(self.buttonHelpTALandRequirementAnalysis)
         
         # Template GroupBox
-        self.groupBoxLandRequirementAnalysisTemplate = QtGui.QGroupBox('Template')
+        self.groupBoxLandRequirementAnalysisTemplate = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.CONF_TEMPLATE))
         self.layoutGroupBoxLandRequirementAnalysisTemplate = QtGui.QVBoxLayout()
         self.layoutGroupBoxLandRequirementAnalysisTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxLandRequirementAnalysisTemplate.setLayout(self.layoutGroupBoxLandRequirementAnalysisTemplate)
@@ -1843,21 +1844,21 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxLandRequirementAnalysisTemplate.addLayout(self.layoutLandRequirementAnalysisTemplate)
         
         self.labelLoadedLandRequirementAnalysisTemplate = QtGui.QLabel()
-        self.labelLoadedLandRequirementAnalysisTemplate.setText('Loaded template:')
+        self.labelLoadedLandRequirementAnalysisTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOADED_TEMPLATE) + ':')
         self.layoutLandRequirementAnalysisTemplate.addWidget(self.labelLoadedLandRequirementAnalysisTemplate, 0, 0)
         
         self.loadedLandRequirementAnalysisTemplate = QtGui.QLabel()
-        self.loadedLandRequirementAnalysisTemplate.setText('<None>')
+        self.loadedLandRequirementAnalysisTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NONE))
         self.layoutLandRequirementAnalysisTemplate.addWidget(self.loadedLandRequirementAnalysisTemplate, 0, 1)
         
         self.labelLandRequirementAnalysisTemplate = QtGui.QLabel()
-        self.labelLandRequirementAnalysisTemplate.setText('Template name:')
+        self.labelLandRequirementAnalysisTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_TEMPLATE_NAME) + ':')
         self.layoutLandRequirementAnalysisTemplate.addWidget(self.labelLandRequirementAnalysisTemplate, 1, 0)
         
         self.comboBoxLandRequirementAnalysisTemplate = QtGui.QComboBox()
         self.comboBoxLandRequirementAnalysisTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
         self.comboBoxLandRequirementAnalysisTemplate.setDisabled(True)
-        self.comboBoxLandRequirementAnalysisTemplate.addItem('No template found')
+        self.comboBoxLandRequirementAnalysisTemplate.addItem(MenuFactory.getLabel(MenuFactory.CONF_NO_TEMPLATE_FOUND))
         self.layoutLandRequirementAnalysisTemplate.addWidget(self.comboBoxLandRequirementAnalysisTemplate, 1, 1)
         
         self.layoutButtonLandRequirementAnalysisTemplate = QtGui.QHBoxLayout()
@@ -1865,14 +1866,14 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.buttonLoadLandRequirementAnalysisTemplate = QtGui.QPushButton()
         self.buttonLoadLandRequirementAnalysisTemplate.setDisabled(True)
         self.buttonLoadLandRequirementAnalysisTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonLoadLandRequirementAnalysisTemplate.setText('Load')
+        self.buttonLoadLandRequirementAnalysisTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOAD))
         self.buttonSaveLandRequirementAnalysisTemplate = QtGui.QPushButton()
         self.buttonSaveLandRequirementAnalysisTemplate.setDisabled(True)
         self.buttonSaveLandRequirementAnalysisTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveLandRequirementAnalysisTemplate.setText('Save')
+        self.buttonSaveLandRequirementAnalysisTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE))
         self.buttonSaveAsLandRequirementAnalysisTemplate = QtGui.QPushButton()
         self.buttonSaveAsLandRequirementAnalysisTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveAsLandRequirementAnalysisTemplate.setText('Save As')
+        self.buttonSaveAsLandRequirementAnalysisTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS))
         self.layoutButtonLandRequirementAnalysisTemplate.addWidget(self.buttonLoadLandRequirementAnalysisTemplate)
         self.layoutButtonLandRequirementAnalysisTemplate.addWidget(self.buttonSaveLandRequirementAnalysisTemplate)
         self.layoutButtonLandRequirementAnalysisTemplate.addWidget(self.buttonSaveAsLandRequirementAnalysisTemplate)
@@ -1899,7 +1900,7 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutTabLandUseChangeImpact.addWidget(self.scrollLandUseChangeImpact)
         
         # Parameters 'GroupBox'
-        self.groupBoxLandUseChangeImpactParameters = QtGui.QGroupBox('Parameters')
+        self.groupBoxLandUseChangeImpactParameters = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.TAREGECO_OTHER_PARAMETERS))
         self.layoutGroupBoxLandUseChangeImpactParameters = QtGui.QVBoxLayout()
         self.layoutGroupBoxLandUseChangeImpactParameters.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxLandUseChangeImpactParameters.setLayout(self.layoutGroupBoxLandUseChangeImpactParameters)
@@ -1909,11 +1910,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxLandUseChangeImpactParameters.addLayout(self.layoutLandUseChangeImpactParameters)
         
         self.labelLandUseChangeImpactParametersInfo = QtGui.QLabel()
-        self.labelLandUseChangeImpactParametersInfo.setText('Lorem ipsum dolor sit amet...\n')
+        self.labelLandUseChangeImpactParametersInfo.setText(MenuFactory.getDescription(MenuFactory.TAREGECO_OTHER_PARAMETERS))
         self.layoutLandUseChangeImpactParametersInfo.addWidget(self.labelLandUseChangeImpactParametersInfo)
         
         self.labelLandUseChangeImpactIntermediateConsumptionMatrix = QtGui.QLabel()
-        self.labelLandUseChangeImpactIntermediateConsumptionMatrix.setText('Intermediate consumption matrix:')
+        self.labelLandUseChangeImpactIntermediateConsumptionMatrix.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_INTERMEDIATE_CONSUMPTION_MATRIX) + ':')
         self.layoutLandUseChangeImpactParameters.addWidget(self.labelLandUseChangeImpactIntermediateConsumptionMatrix, 0, 0)
         
         self.lineEditLandUseChangeImpactIntermediateConsumptionMatrix = QtGui.QLineEdit()
@@ -1921,11 +1922,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutLandUseChangeImpactParameters.addWidget(self.lineEditLandUseChangeImpactIntermediateConsumptionMatrix, 0, 1)
         
         self.buttonSelectLandUseChangeImpactIntermediateConsumptionMatrix = QtGui.QPushButton()
-        self.buttonSelectLandUseChangeImpactIntermediateConsumptionMatrix.setText('&Browse')
+        self.buttonSelectLandUseChangeImpactIntermediateConsumptionMatrix.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutLandUseChangeImpactParameters.addWidget(self.buttonSelectLandUseChangeImpactIntermediateConsumptionMatrix, 0, 2)
         
         self.labelLandUseChangeImpactValueAddedMatrix = QtGui.QLabel()
-        self.labelLandUseChangeImpactValueAddedMatrix.setText('Value added matrix:')
+        self.labelLandUseChangeImpactValueAddedMatrix.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_VALUE_ADDED_MATRIX) + ':')
         self.layoutLandUseChangeImpactParameters.addWidget(self.labelLandUseChangeImpactValueAddedMatrix, 1, 0)
         
         self.lineEditLandUseChangeImpactValueAddedMatrix = QtGui.QLineEdit()
@@ -1933,11 +1934,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutLandUseChangeImpactParameters.addWidget(self.lineEditLandUseChangeImpactValueAddedMatrix, 1, 1)
         
         self.buttonSelectLandUseChangeImpactValueAddedMatrix = QtGui.QPushButton()
-        self.buttonSelectLandUseChangeImpactValueAddedMatrix.setText('&Browse')
+        self.buttonSelectLandUseChangeImpactValueAddedMatrix.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutLandUseChangeImpactParameters.addWidget(self.buttonSelectLandUseChangeImpactValueAddedMatrix, 1, 2)
         
         self.labelLandUseChangeImpactFinalConsumptionMatrix = QtGui.QLabel()
-        self.labelLandUseChangeImpactFinalConsumptionMatrix.setText('Final consumption matrix:')
+        self.labelLandUseChangeImpactFinalConsumptionMatrix.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_FINAL_CONSUMPTION_MATRIX) + ':')
         self.layoutLandUseChangeImpactParameters.addWidget(self.labelLandUseChangeImpactFinalConsumptionMatrix, 2, 0)
         
         self.lineEditLandUseChangeImpactFinalConsumptionMatrix = QtGui.QLineEdit()
@@ -1945,11 +1946,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutLandUseChangeImpactParameters.addWidget(self.lineEditLandUseChangeImpactFinalConsumptionMatrix, 2, 1)
         
         self.buttonSelectLandUseChangeImpactFinalConsumptionMatrix = QtGui.QPushButton()
-        self.buttonSelectLandUseChangeImpactFinalConsumptionMatrix.setText('&Browse')
+        self.buttonSelectLandUseChangeImpactFinalConsumptionMatrix.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutLandUseChangeImpactParameters.addWidget(self.buttonSelectLandUseChangeImpactFinalConsumptionMatrix, 2, 2)
         
         self.labelLandUseChangeImpactValueAddedComponent = QtGui.QLabel()
-        self.labelLandUseChangeImpactValueAddedComponent.setText('Value added component:')
+        self.labelLandUseChangeImpactValueAddedComponent.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_VALUE_ADDED_COMPONENT) + ':')
         self.layoutLandUseChangeImpactParameters.addWidget(self.labelLandUseChangeImpactValueAddedComponent, 3, 0)
         
         self.lineEditLandUseChangeImpactValueAddedComponent = QtGui.QLineEdit()
@@ -1957,11 +1958,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutLandUseChangeImpactParameters.addWidget(self.lineEditLandUseChangeImpactValueAddedComponent, 3, 1)
         
         self.buttonSelectLandUseChangeImpactValueAddedComponent = QtGui.QPushButton()
-        self.buttonSelectLandUseChangeImpactValueAddedComponent.setText('&Browse')
+        self.buttonSelectLandUseChangeImpactValueAddedComponent.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutLandUseChangeImpactParameters.addWidget(self.buttonSelectLandUseChangeImpactValueAddedComponent, 3, 2)
         
         self.labelLandUseChangeImpactFinalConsumptionComponent = QtGui.QLabel()
-        self.labelLandUseChangeImpactFinalConsumptionComponent.setText('Final consumption component:')
+        self.labelLandUseChangeImpactFinalConsumptionComponent.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_FINAL_CONSUMPTION_COMPONENT) + ':')
         self.layoutLandUseChangeImpactParameters.addWidget(self.labelLandUseChangeImpactFinalConsumptionComponent, 4, 0)
         
         self.lineEditLandUseChangeImpactFinalConsumptionComponent = QtGui.QLineEdit()
@@ -1969,11 +1970,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutLandUseChangeImpactParameters.addWidget(self.lineEditLandUseChangeImpactFinalConsumptionComponent, 4, 1)
         
         self.buttonSelectLandUseChangeImpactFinalConsumptionComponent = QtGui.QPushButton()
-        self.buttonSelectLandUseChangeImpactFinalConsumptionComponent.setText('&Browse')
+        self.buttonSelectLandUseChangeImpactFinalConsumptionComponent.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutLandUseChangeImpactParameters.addWidget(self.buttonSelectLandUseChangeImpactFinalConsumptionComponent, 4, 2)
         
         self.labelLandUseChangeImpactListOfEconomicSector = QtGui.QLabel()
-        self.labelLandUseChangeImpactListOfEconomicSector.setText('List of economic sector:')
+        self.labelLandUseChangeImpactListOfEconomicSector.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_LIST_OF_ECONOMIC_SECTOR) + ':')
         self.layoutLandUseChangeImpactParameters.addWidget(self.labelLandUseChangeImpactListOfEconomicSector, 5, 0)
         
         self.lineEditLandUseChangeImpactListOfEconomicSector = QtGui.QLineEdit()
@@ -1981,11 +1982,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutLandUseChangeImpactParameters.addWidget(self.lineEditLandUseChangeImpactListOfEconomicSector, 5, 1)
         
         self.buttonSelectLandUseChangeImpactListOfEconomicSector = QtGui.QPushButton()
-        self.buttonSelectLandUseChangeImpactListOfEconomicSector.setText('&Browse')
+        self.buttonSelectLandUseChangeImpactListOfEconomicSector.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutLandUseChangeImpactParameters.addWidget(self.buttonSelectLandUseChangeImpactListOfEconomicSector, 5, 2)
         
         self.labelLandUseChangeImpactLandDistributionMatrix = QtGui.QLabel()
-        self.labelLandUseChangeImpactLandDistributionMatrix.setText('Land distribution matrix:')
+        self.labelLandUseChangeImpactLandDistributionMatrix.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_LAND_DISTRIBUTION_MATRIX) + ':')
         self.layoutLandUseChangeImpactParameters.addWidget(self.labelLandUseChangeImpactLandDistributionMatrix, 6, 0)
         
         self.lineEditLandUseChangeImpactLandDistributionMatrix = QtGui.QLineEdit()
@@ -1993,11 +1994,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutLandUseChangeImpactParameters.addWidget(self.lineEditLandUseChangeImpactLandDistributionMatrix, 6, 1)
         
         self.buttonSelectLandUseChangeImpactLandDistributionMatrix = QtGui.QPushButton()
-        self.buttonSelectLandUseChangeImpactLandDistributionMatrix.setText('&Browse')
+        self.buttonSelectLandUseChangeImpactLandDistributionMatrix.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutLandUseChangeImpactParameters.addWidget(self.buttonSelectLandUseChangeImpactLandDistributionMatrix, 6, 2)
         
         self.labelLandUseChangeImpactLandRequirementCoefficientMatrix = QtGui.QLabel()
-        self.labelLandUseChangeImpactLandRequirementCoefficientMatrix.setText('Land requirement coefficient matrix:')
+        self.labelLandUseChangeImpactLandRequirementCoefficientMatrix.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_LAND_REQUIREMENT_COEFFICIENT_MATRIX) + ':')
         self.layoutLandUseChangeImpactParameters.addWidget(self.labelLandUseChangeImpactLandRequirementCoefficientMatrix, 7, 0)
         
         self.lineEditLandUseChangeImpactLandRequirementCoefficientMatrix = QtGui.QLineEdit()
@@ -2005,11 +2006,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutLandUseChangeImpactParameters.addWidget(self.lineEditLandUseChangeImpactLandRequirementCoefficientMatrix, 7, 1)
         
         self.buttonSelectLandUseChangeImpactLandRequirementCoefficientMatrix = QtGui.QPushButton()
-        self.buttonSelectLandUseChangeImpactLandRequirementCoefficientMatrix.setText('&Browse')
+        self.buttonSelectLandUseChangeImpactLandRequirementCoefficientMatrix.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutLandUseChangeImpactParameters.addWidget(self.buttonSelectLandUseChangeImpactLandRequirementCoefficientMatrix, 7, 2)
         
         self.labelLandUseChangeImpactLandCoverComponent = QtGui.QLabel()
-        self.labelLandUseChangeImpactLandCoverComponent.setText('Land cover component:')
+        self.labelLandUseChangeImpactLandCoverComponent.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_LAND_COVER_COMPONENT) + ':')
         self.layoutLandUseChangeImpactParameters.addWidget(self.labelLandUseChangeImpactLandCoverComponent, 8, 0)
         
         self.lineEditLandUseChangeImpactLandCoverComponent = QtGui.QLineEdit()
@@ -2017,11 +2018,11 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutLandUseChangeImpactParameters.addWidget(self.lineEditLandUseChangeImpactLandCoverComponent, 8, 1)
         
         self.buttonSelectLandUseChangeImpactLandCoverComponent = QtGui.QPushButton()
-        self.buttonSelectLandUseChangeImpactLandCoverComponent.setText('&Browse')
+        self.buttonSelectLandUseChangeImpactLandCoverComponent.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutLandUseChangeImpactParameters.addWidget(self.buttonSelectLandUseChangeImpactLandCoverComponent, 8, 2)
         
         self.labelLandUseChangeImpactLabourRequirement = QtGui.QLabel()
-        self.labelLandUseChangeImpactLabourRequirement.setText('Labour requirement:')
+        self.labelLandUseChangeImpactLabourRequirement.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_LABOUR_REQUIREMENT) + ':')
         self.layoutLandUseChangeImpactParameters.addWidget(self.labelLandUseChangeImpactLabourRequirement, 9, 0)
         
         self.lineEditLandUseChangeImpactLabourRequirement = QtGui.QLineEdit()
@@ -2029,29 +2030,29 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutLandUseChangeImpactParameters.addWidget(self.lineEditLandUseChangeImpactLabourRequirement, 9, 1)
         
         self.buttonSelectLandUseChangeImpactLabourRequirement = QtGui.QPushButton()
-        self.buttonSelectLandUseChangeImpactLabourRequirement.setText('&Browse')
+        self.buttonSelectLandUseChangeImpactLabourRequirement.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutLandUseChangeImpactParameters.addWidget(self.buttonSelectLandUseChangeImpactLabourRequirement, 9, 2)
         
         self.labelLandUseChangeImpactFinancialUnit = QtGui.QLabel()
-        self.labelLandUseChangeImpactFinancialUnit.setText('Financial &unit:')
+        self.labelLandUseChangeImpactFinancialUnit.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_FINANCIAL_UNIT) + ':')
         self.layoutLandUseChangeImpactParameters.addWidget(self.labelLandUseChangeImpactFinancialUnit, 10, 0)
         
         self.lineEditLandUseChangeImpactFinancialUnit = QtGui.QLineEdit()
-        self.lineEditLandUseChangeImpactFinancialUnit.setText('Million Rupiah')
+        self.lineEditLandUseChangeImpactFinancialUnit.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_CURRENCY))
         self.layoutLandUseChangeImpactParameters.addWidget(self.lineEditLandUseChangeImpactFinancialUnit, 10, 1)
         self.labelLandUseChangeImpactFinancialUnit.setBuddy(self.lineEditLandUseChangeImpactFinancialUnit)
         
         self.labelLandUseChangeImpactAreaName = QtGui.QLabel()
-        self.labelLandUseChangeImpactAreaName.setText('&Area name:')
+        self.labelLandUseChangeImpactAreaName.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_AREA_NAME) + ':')
         self.layoutLandUseChangeImpactParameters.addWidget(self.labelLandUseChangeImpactAreaName, 11, 0)
         
         self.lineEditLandUseChangeImpactAreaName = QtGui.QLineEdit()
-        self.lineEditLandUseChangeImpactAreaName.setText('area')
+        self.lineEditLandUseChangeImpactAreaName.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_AREA))
         self.layoutLandUseChangeImpactParameters.addWidget(self.lineEditLandUseChangeImpactAreaName, 11, 1)
         self.labelLandUseChangeImpactAreaName.setBuddy(self.lineEditLandUseChangeImpactAreaName)
         
         self.labelLandUseChangeImpactPeriod = QtGui.QLabel()
-        self.labelLandUseChangeImpactPeriod.setText('&Period:')
+        self.labelLandUseChangeImpactPeriod.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_PERIOD) + ':')
         self.layoutLandUseChangeImpactParameters.addWidget(self.labelLandUseChangeImpactPeriod, 12, 0)
         
         self.spinBoxLandUseChangeImpactPeriod = QtGui.QSpinBox()
@@ -2063,7 +2064,7 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         # Process tab button
         self.layoutButtonLandUseChangeImpact = QtGui.QHBoxLayout()
         self.buttonProcessLandUseChangeImpact = QtGui.QPushButton()
-        self.buttonProcessLandUseChangeImpact.setText('&Process')
+        self.buttonProcessLandUseChangeImpact.setText(MenuFactory.getLabel(MenuFactory.TA_PROCESS))
         self.buttonHelpTALandUseChangeImpact = QtGui.QPushButton()
         self.buttonHelpTALandUseChangeImpact.setIcon(icon)
         self.layoutButtonLandUseChangeImpact.setAlignment(QtCore.Qt.AlignRight)
@@ -2071,7 +2072,7 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutButtonLandUseChangeImpact.addWidget(self.buttonHelpTALandUseChangeImpact)
         
         # Template GroupBox
-        self.groupBoxLandUseChangeImpactTemplate = QtGui.QGroupBox('Template')
+        self.groupBoxLandUseChangeImpactTemplate = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.CONF_TEMPLATE))
         self.layoutGroupBoxLandUseChangeImpactTemplate = QtGui.QVBoxLayout()
         self.layoutGroupBoxLandUseChangeImpactTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxLandUseChangeImpactTemplate.setLayout(self.layoutGroupBoxLandUseChangeImpactTemplate)
@@ -2081,21 +2082,21 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxLandUseChangeImpactTemplate.addLayout(self.layoutLandUseChangeImpactTemplate)
         
         self.labelLoadedLandUseChangeImpactTemplate = QtGui.QLabel()
-        self.labelLoadedLandUseChangeImpactTemplate.setText('Loaded template:')
+        self.labelLoadedLandUseChangeImpactTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOADED_TEMPLATE) + ':')
         self.layoutLandUseChangeImpactTemplate.addWidget(self.labelLoadedLandUseChangeImpactTemplate, 0, 0)
         
         self.loadedLandUseChangeImpactTemplate = QtGui.QLabel()
-        self.loadedLandUseChangeImpactTemplate.setText('<None>')
+        self.loadedLandUseChangeImpactTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NONE))
         self.layoutLandUseChangeImpactTemplate.addWidget(self.loadedLandUseChangeImpactTemplate, 0, 1)
         
         self.labelLandUseChangeImpactTemplate = QtGui.QLabel()
-        self.labelLandUseChangeImpactTemplate.setText('Template name:')
+        self.labelLandUseChangeImpactTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_TEMPLATE_NAME) + ':')
         self.layoutLandUseChangeImpactTemplate.addWidget(self.labelLandUseChangeImpactTemplate, 1, 0)
         
         self.comboBoxLandUseChangeImpactTemplate = QtGui.QComboBox()
         self.comboBoxLandUseChangeImpactTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
         self.comboBoxLandUseChangeImpactTemplate.setDisabled(True)
-        self.comboBoxLandUseChangeImpactTemplate.addItem('No template found')
+        self.comboBoxLandUseChangeImpactTemplate.addItem(MenuFactory.getLabel(MenuFactory.CONF_NO_TEMPLATE_FOUND))
         self.layoutLandUseChangeImpactTemplate.addWidget(self.comboBoxLandUseChangeImpactTemplate, 1, 1)
         
         self.layoutButtonLandUseChangeImpactTemplate = QtGui.QHBoxLayout()
@@ -2103,14 +2104,14 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.buttonLoadLandUseChangeImpactTemplate = QtGui.QPushButton()
         self.buttonLoadLandUseChangeImpactTemplate.setDisabled(True)
         self.buttonLoadLandUseChangeImpactTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonLoadLandUseChangeImpactTemplate.setText('Load')
+        self.buttonLoadLandUseChangeImpactTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOAD))
         self.buttonSaveLandUseChangeImpactTemplate = QtGui.QPushButton()
         self.buttonSaveLandUseChangeImpactTemplate.setDisabled(True)
         self.buttonSaveLandUseChangeImpactTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveLandUseChangeImpactTemplate.setText('Save')
+        self.buttonSaveLandUseChangeImpactTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE))
         self.buttonSaveAsLandUseChangeImpactTemplate = QtGui.QPushButton()
         self.buttonSaveAsLandUseChangeImpactTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveAsLandUseChangeImpactTemplate.setText('Save As')
+        self.buttonSaveAsLandUseChangeImpactTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS))
         self.layoutButtonLandUseChangeImpactTemplate.addWidget(self.buttonLoadLandUseChangeImpactTemplate)
         self.layoutButtonLandUseChangeImpactTemplate.addWidget(self.buttonSaveLandUseChangeImpactTemplate)
         self.layoutButtonLandUseChangeImpactTemplate.addWidget(self.buttonSaveAsLandUseChangeImpactTemplate)
@@ -2138,7 +2139,7 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxHistoryLog.addLayout(self.layoutHistoryLog)
         
         self.labelHistoryLogInfo = QtGui.QLabel()
-        self.labelHistoryLogInfo.setText('Lorem ipsum dolor sit amet...\n')
+        self.labelHistoryLogInfo.setText(MenuFactory.getDescription(MenuFactory.TA_HISTORY_LOG))
         self.layoutHistoryLogInfo.addWidget(self.labelHistoryLogInfo)
         
         self.log_box = QPlainTextEditLogger(self)
@@ -2253,14 +2254,14 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         else:
             reply = QtGui.QMessageBox.question(
                 self,
-                'Load Template',
-                'Do you want to load \'{0}\'?'.format(templateFile),
+                MenuFactory.getLabel(MenuFactory.CONF_LOAD_TEMPLATE),
+                MenuFactory.getDescription(MenuFactory.CONF_LOAD_TEMPLATE) + ' \'{0}\'?'.format(templateFile),
                 QtGui.QMessageBox.Yes|QtGui.QMessageBox.No,
                 QtGui.QMessageBox.No
             )
             
         if reply == QtGui.QMessageBox.Yes or fileName:
-            self.loadTemplate('Descriptive Analysis of Regional Economy', templateFile)
+            self.loadTemplate(MenuFactory.getLabel(MenuFactory.TAREGECO_DESCRIPTIVE_ANALYSIS_OF_RE), templateFile)
     
     
     def handlerSaveDescriptiveAnalysisTemplate(self, fileName=None):
@@ -2276,14 +2277,14 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         
         reply = QtGui.QMessageBox.question(
             self,
-            'Save Template',
-            'Do you want save \'{0}\'?\nThis action will overwrite the template file.'.format(templateFile),
+            MenuFactory.getLabel(MenuFactory.CONF_SAVE_TEMPLATE),
+            MenuFactory.getDescription(MenuFactory.CONF_SAVE_TEMPLATE),
             QtGui.QMessageBox.Yes|QtGui.QMessageBox.No,
             QtGui.QMessageBox.No
         )
             
         if reply == QtGui.QMessageBox.Yes:
-            self.saveTemplate('Descriptive Analysis of Regional Economy', templateFile)
+            self.saveTemplate(MenuFactory.getLabel(MenuFactory.TAREGECO_DESCRIPTIVE_ANALYSIS_OF_RE), templateFile)
             return True
         else:
             return False
@@ -2292,7 +2293,7 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
     def handlerSaveAsDescriptiveAnalysisTemplate(self):
         """Slot method for saving a module template to a new file.
         """
-        fileName, ok = QtGui.QInputDialog.getText(self, 'Save As', 'Enter a new template name:')
+        fileName, ok = QtGui.QInputDialog.getText(self, MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS), MenuFactory.getDescription(MenuFactory.CONF_SAVE_AS) + ':')
         fileSaved = False
         
         if ok:
@@ -2302,7 +2303,7 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
             if os.path.exists(os.path.join(self.settingsPath, fileName)):
                 fileSaved = self.handlerSaveDescriptiveAnalysisTemplate(fileName)
             else:
-                self.saveTemplate('Descriptive Analysis of Regional Economy', fileName)
+                self.saveTemplate(MenuFactory.getLabel(MenuFactory.TAREGECO_DESCRIPTIVE_ANALYSIS_OF_RE), fileName)
                 fileSaved = True
             
             self.loadTemplateFiles()
@@ -2450,14 +2451,14 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         else:
             reply = QtGui.QMessageBox.question(
                 self,
-                'Load Template',
-                'Do you want to load \'{0}\'?'.format(templateFile),
+                MenuFactory.getLabel(MenuFactory.CONF_LOAD_TEMPLATE),
+                MenuFactory.getDescription(MenuFactory.CONF_LOAD_TEMPLATE) + ' \'{0}\'?'.format(templateFile),
                 QtGui.QMessageBox.Yes|QtGui.QMessageBox.No,
                 QtGui.QMessageBox.No
             )
             
         if reply == QtGui.QMessageBox.Yes or fileName:
-            self.loadTemplate('Regional Economic Scenario Impact', templateFile)
+            self.loadTemplate(MenuFactory.getLabel(MenuFactory.TAREGECO_RE_SCENARIO_IMPACT), templateFile)
     
     
     def handlerSaveRegionalEconomicScenarioImpactTemplate(self, fileName=None):
@@ -2473,14 +2474,14 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         
         reply = QtGui.QMessageBox.question(
             self,
-            'Save Template',
-            'Do you want save \'{0}\'?\nThis action will overwrite the template file.'.format(templateFile),
+            MenuFactory.getLabel(MenuFactory.CONF_SAVE_TEMPLATE),
+            MenuFactory.getDescription(MenuFactory.CONF_SAVE_TEMPLATE),
             QtGui.QMessageBox.Yes|QtGui.QMessageBox.No,
             QtGui.QMessageBox.No
         )
             
         if reply == QtGui.QMessageBox.Yes:
-            self.saveTemplate('Regional Economic Scenario Impact', templateFile)
+            self.saveTemplate(MenuFactory.getLabel(MenuFactory.TAREGECO_RE_SCENARIO_IMPACT), templateFile)
             return True
         else:
             return False
@@ -2489,7 +2490,7 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
     def handlerSaveAsRegionalEconomicScenarioImpactTemplate(self):
         """Slot method for saving a module template to a new file.
         """
-        fileName, ok = QtGui.QInputDialog.getText(self, 'Save As', 'Enter a new template name:')
+        fileName, ok = QtGui.QInputDialog.getText(self, MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS), MenuFactory.getDescription(MenuFactory.CONF_SAVE_AS) + ':')
         fileSaved = False
         
         if ok:
@@ -2499,7 +2500,7 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
             if os.path.exists(os.path.join(self.settingsPath, fileName)):
                 fileSaved = self.handlerSaveRegionalEconomicScenarioImpactTemplate(fileName)
             else:
-                self.saveTemplate('Regional Economic Scenario Impact', fileName)
+                self.saveTemplate(MenuFactory.getLabel(MenuFactory.TAREGECO_RE_SCENARIO_IMPACT), fileName)
                 fileSaved = True
             
             self.loadTemplateFiles()
@@ -2658,14 +2659,14 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         else:
             reply = QtGui.QMessageBox.question(
                 self,
-                'Load Template',
-                'Do you want to load \'{0}\'?'.format(templateFile),
+                MenuFactory.getLabel(MenuFactory.CONF_LOAD_TEMPLATE),
+                MenuFactory.getDescription(MenuFactory.CONF_LOAD_TEMPLATE) + ' \'{0}\'?'.format(templateFile),
                 QtGui.QMessageBox.Yes|QtGui.QMessageBox.No,
                 QtGui.QMessageBox.No
             )
             
         if reply == QtGui.QMessageBox.Yes or fileName:
-            self.loadTemplate('Land Requirement Analysis', templateFile)
+            self.loadTemplate(MenuFactory.getDescription(MenuFactory.TAREGECO_LAND_REQUIREMENT_ANALYSIS), templateFile)
     
     
     def handlerSaveLandRequirementAnalysisTemplate(self, fileName=None):
@@ -2681,14 +2682,14 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         
         reply = QtGui.QMessageBox.question(
             self,
-            'Save Template',
-            'Do you want save \'{0}\'?\nThis action will overwrite the template file.'.format(templateFile),
+            MenuFactory.getLabel(MenuFactory.CONF_SAVE_TEMPLATE),
+            MenuFactory.getDescription(MenuFactory.CONF_SAVE_TEMPLATE),
             QtGui.QMessageBox.Yes|QtGui.QMessageBox.No,
             QtGui.QMessageBox.No
         )
             
         if reply == QtGui.QMessageBox.Yes:
-            self.saveTemplate('Land Requirement Analysis', templateFile)
+            self.saveTemplate(MenuFactory.getDescription(MenuFactory.TAREGECO_LAND_REQUIREMENT_ANALYSIS), templateFile)
             return True
         else:
             return False
@@ -2697,7 +2698,7 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
     def handlerSaveAsLandRequirementAnalysisTemplate(self):
         """Slot method for saving a module template to a new file.
         """
-        fileName, ok = QtGui.QInputDialog.getText(self, 'Save As', 'Enter a new template name:')
+        fileName, ok = QtGui.QInputDialog.getText(self, MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS), MenuFactory.getDescription(MenuFactory.CONF_SAVE_AS) + ':')
         fileSaved = False
         
         if ok:
@@ -2707,7 +2708,7 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
             if os.path.exists(os.path.join(self.settingsPath, fileName)):
                 fileSaved = self.handlerSaveLandRequirementAnalysisTemplate(fileName)
             else:
-                self.saveTemplate('Land Requirement Analysis', fileName)
+                self.saveTemplate(MenuFactory.getDescription(MenuFactory.TAREGECO_LAND_REQUIREMENT_ANALYSIS), fileName)
                 fileSaved = True
             
             self.loadTemplateFiles()
@@ -2833,14 +2834,14 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         else:
             reply = QtGui.QMessageBox.question(
                 self,
-                'Load Template',
-                'Do you want to load \'{0}\'?'.format(templateFile),
+                MenuFactory.getLabel(MenuFactory.CONF_LOAD_TEMPLATE),
+                MenuFactory.getDescription(MenuFactory.CONF_LOAD_TEMPLATE) + ' \'{0}\'?'.format(templateFile),
                 QtGui.QMessageBox.Yes|QtGui.QMessageBox.No,
                 QtGui.QMessageBox.No
             )
             
         if reply == QtGui.QMessageBox.Yes or fileName:
-            self.loadTemplate('Land Use Change Impact', templateFile)
+            self.loadTemplate(MenuFactory.getLabel(MenuFactory.TAREGECO_LUC_IMPACT), templateFile)
     
     
     def handlerSaveLandUseChangeImpactTemplate(self, fileName=None):
@@ -2856,14 +2857,14 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
         
         reply = QtGui.QMessageBox.question(
             self,
-            'Save Template',
-            'Do you want save \'{0}\'?\nThis action will overwrite the template file.'.format(templateFile),
+            MenuFactory.getLabel(MenuFactory.CONF_SAVE_TEMPLATE),
+            MenuFactory.getDescription(MenuFactory.CONF_SAVE_TEMPLATE),
             QtGui.QMessageBox.Yes|QtGui.QMessageBox.No,
             QtGui.QMessageBox.No
         )
             
         if reply == QtGui.QMessageBox.Yes:
-            self.saveTemplate('Land Use Change Impact', templateFile)
+            self.saveTemplate(MenuFactory.getLabel(MenuFactory.TAREGECO_LUC_IMPACT), templateFile)
             return True
         else:
             return False
@@ -2872,7 +2873,7 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
     def handlerSaveAsLandUseChangeImpactTemplate(self):
         """Slot method for saving a module template to a new file.
         """
-        fileName, ok = QtGui.QInputDialog.getText(self, 'Save As', 'Enter a new template name:')
+        fileName, ok = QtGui.QInputDialog.getText(self, MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS), MenuFactory.getDescription(MenuFactory.CONF_SAVE_AS) + ':')
         fileSaved = False
         
         if ok:
@@ -2882,7 +2883,7 @@ class DialogLumensTARegionalEconomy(QtGui.QDialog, DialogLumensBase):
             if os.path.exists(os.path.join(self.settingsPath, fileName)):
                 fileSaved = self.handlerSaveLandUseChangeImpactTemplate(fileName)
             else:
-                self.saveTemplate('Land Use Change Impact', fileName)
+                self.saveTemplate(MenuFactory.getLabel(MenuFactory.TAREGECO_LUC_IMPACT), fileName)
                 fileSaved = True
             
             self.loadTemplateFiles()

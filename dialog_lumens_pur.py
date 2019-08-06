@@ -282,7 +282,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         self.setStyleSheet('QDialog { background-color: rgb(225, 229, 237); }')
         self.dialogLayout = QtGui.QVBoxLayout()
 
-        self.groupBoxPURDialog = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.PUR_TITLE))
+        self.groupBoxPURDialog = QtGui.QGroupBox(MenuFactory.getDescription(MenuFactory.PUR_TITLE))
         self.layoutGroupBoxPURDialog = QtGui.QVBoxLayout()
         self.layoutGroupBoxPURDialog.setAlignment(QtCore.Qt.AlignTop)
         self.groupBoxPURDialog.setLayout(self.layoutGroupBoxPURDialog)
@@ -474,7 +474,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxPURTemplate.addLayout(self.layoutPURTemplate)
         
         self.labelLoadedPURTemplate = QtGui.QLabel()
-        self.labelLoadedPURTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOADED_CONFIGURATION))
+        self.labelLoadedPURTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOADED_CONFIGURATION) + ':')
         self.layoutPURTemplate.addWidget(self.labelLoadedPURTemplate, 0, 0)
         
         self.loadedPURTemplate = QtGui.QLabel()

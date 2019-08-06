@@ -11,6 +11,7 @@ from dialog_lumens_base import DialogLumensBase
 from dialog_lumens_viewer import DialogLumensViewer
 import resource
 
+from menu_factory import MenuFactory
 
 class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
     """ LUMENS "QUES" module dialog class.
@@ -621,8 +622,8 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         if duplicateTemplate:
             reply = QtGui.QMessageBox.question(
                 self,
-                'Load Existing Configuration',
-                'The configuration you are about to save matches an existing configuration.\nDo you want to load \'{0}\' instead?'.format(duplicateTemplate),
+                MenuFactory.getLabel(MenuFactory.CONF_LOAD_EXISTING_CONFIGURATION),
+                MenuFactory.getDescription(MenuFactory.CONF_LOAD_EXISTING_CONFIGURATION) + ' \'{0}\'?'.format(duplicateTemplate),
                 QtGui.QMessageBox.Yes|QtGui.QMessageBox.No,
                 QtGui.QMessageBox.No
             )
@@ -825,7 +826,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.setStyleSheet('QDialog { background-color: rgb(225, 229, 237); } QMessageBox QLabel { color: #fff; }')
         self.dialogLayout = QtGui.QVBoxLayout()
 
-        self.groupBoxQUESDialog = QtGui.QGroupBox('Quantification of Environmental Services')
+        self.groupBoxQUESDialog = QtGui.QGroupBox(MenuFactory.getDescription(MenuFactory.QUES_TITLE))
         self.layoutGroupBoxQUESDialog = QtGui.QVBoxLayout()
         self.layoutGroupBoxQUESDialog.setAlignment(QtCore.Qt.AlignTop)
         self.groupBoxQUESDialog.setLayout(self.layoutGroupBoxQUESDialog)
@@ -895,7 +896,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         # Setup 'Pre-QUES' tab
         #***********************************************************
         # 'Land cover' GroupBox
-        self.groupBoxLandCover = QtGui.QGroupBox('Parameterization')
+        self.groupBoxLandCover = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.PREQUES_PARAMETERIZATION))
         self.layoutGroupBoxLandCover = QtGui.QVBoxLayout()
         self.layoutGroupBoxLandCover.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxLandCover.setLayout(self.layoutGroupBoxLandCover)
@@ -910,7 +911,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.layoutLandCoverOptions.setContentsMargins(0, 0, 0, 0)
         
         self.labelPreQUESLandCoverLandUse1 = QtGui.QLabel()
-        self.labelPreQUESLandCoverLandUse1.setText('Earlier land use/cover:')
+        self.labelPreQUESLandCoverLandUse1.setText(MenuFactory.getLabel(MenuFactory.PREQUES_EARLIER_LAND_USE_COVER) + ':')
         self.layoutLandCoverOptions.addWidget(self.labelPreQUESLandCoverLandUse1, 0, 0)
         
         self.comboBoxPreQUESLandCoverLandUse1 = QtGui.QComboBox()
@@ -920,7 +921,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxPreQUESLandCoverLandUse1)
         
         self.labelPreQUESLandCoverLandUse2 = QtGui.QLabel()
-        self.labelPreQUESLandCoverLandUse2.setText('Later land use/cover:')
+        self.labelPreQUESLandCoverLandUse2.setText(MenuFactory.getLabel(MenuFactory.PREQUES_LATER_LAND_USE_COVER) + ':')
         self.layoutLandCoverOptions.addWidget(self.labelPreQUESLandCoverLandUse2, 1, 0)
         
         self.comboBoxPreQUESLandCoverLandUse2 = QtGui.QComboBox()
@@ -930,7 +931,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxPreQUESLandCoverLandUse2)
         
         self.labelPreQUESLandCoverPlanningUnit = QtGui.QLabel()
-        self.labelPreQUESLandCoverPlanningUnit.setText('Planning unit:')
+        self.labelPreQUESLandCoverPlanningUnit.setText(MenuFactory.getLabel(MenuFactory.PREQUES_PLANNING_UNIT) + ':')
         self.layoutLandCoverOptions.addWidget(self.labelPreQUESLandCoverPlanningUnit, 2, 0)
         
         self.comboBoxPreQUESLandCoverPlanningUnit = QtGui.QComboBox()
@@ -940,7 +941,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataPlanningUnit, self.comboBoxPreQUESLandCoverPlanningUnit)        
         
         self.labelPreQUESLandCoverTable = QtGui.QLabel()
-        self.labelPreQUESLandCoverTable.setText('Land use/cover lookup table:')
+        self.labelPreQUESLandCoverTable.setText(MenuFactory.getLabel(MenuFactory.PREQUES_LAND_USE_COVER_LOOKUP_TABLE) + ':')
         self.layoutLandCoverOptions.addWidget(self.labelPreQUESLandCoverTable, 3, 0)
         
         self.comboBoxPreQUESLandCoverTable = QtGui.QComboBox()
@@ -950,21 +951,21 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxPreQUESLandCoverTable) 
         
         self.labelLandCoverAnalysisOption = QtGui.QLabel()
-        self.labelLandCoverAnalysisOption.setText('Analysis option:')
+        self.labelLandCoverAnalysisOption.setText(MenuFactory.getLabel(MenuFactory.PREQUES_ANALYSIS_OPTION) + ':')
         self.layoutLandCoverOptions.addWidget(self.labelLandCoverAnalysisOption, 4, 0)
         
         analysisOptions = [
-            'All analysis',
-            'Dominant land use change',
-            'Land use change dynamics',
-            'Land use change trajectory',
+            MenuFactory.getLabel(MenuFactory.PREQUES_ANALYSIS_OPTION_ONE),
+            MenuFactory.getLabel(MenuFactory.PREQUES_ANALYSIS_OPTION_TWO),
+            MenuFactory.getLabel(MenuFactory.PREQUES_ANALYSIS_OPTION_THREE),
+            MenuFactory.getLabel(MenuFactory.PREQUES_ANALYSIS_OPTION_FOUR),
         ]
         self.comboBoxLandCoverAnalysisOption = QtGui.QComboBox()
         self.comboBoxLandCoverAnalysisOption.addItems(analysisOptions)
         self.layoutLandCoverOptions.addWidget(self.comboBoxLandCoverAnalysisOption, 4, 1)
         
         self.labelPreQUESNodata = QtGui.QLabel()
-        self.labelPreQUESNodata.setText('&No data value:')
+        self.labelPreQUESNodata.setText('&' + MenuFactory.getLabel(MenuFactory.PREQUES_NO_DATA_VALUE) + ':')
         self.layoutLandCoverOptions.addWidget(self.labelPreQUESNodata, 5, 0)
         
         self.spinBoxPreQUESNodata = QtGui.QSpinBox()
@@ -979,7 +980,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         # Process tab button
         self.layoutButtonPreQUES = QtGui.QHBoxLayout()
         self.buttonProcessPreQUES = QtGui.QPushButton()
-        self.buttonProcessPreQUES.setText('&Process')
+        self.buttonProcessPreQUES.setText('&' + MenuFactory.getLabel(MenuFactory.PREQUES_PROCESS))
         icon = QtGui.QIcon(':/ui/icons/iconActionHelp.png')
         self.buttonHelpPreQUES = QtGui.QPushButton()
         self.buttonHelpPreQUES.setIcon(icon)
@@ -988,7 +989,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.layoutButtonPreQUES.addWidget(self.buttonHelpPreQUES)
         
         # Template GroupBox
-        self.groupBoxPreQUESTemplate = QtGui.QGroupBox('Configuration')
+        self.groupBoxPreQUESTemplate = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.CONF_TITLE))
         self.layoutGroupBoxPreQUESTemplate = QtGui.QVBoxLayout()
         self.layoutGroupBoxPreQUESTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxPreQUESTemplate.setLayout(self.layoutGroupBoxPreQUESTemplate)
@@ -998,21 +999,21 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxPreQUESTemplate.addLayout(self.layoutPreQUESTemplate)
         
         self.labelLoadedPreQUESTemplate = QtGui.QLabel()
-        self.labelLoadedPreQUESTemplate.setText('Loaded configuration:')
+        self.labelLoadedPreQUESTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOADED_CONFIGURATION) + ':')
         self.layoutPreQUESTemplate.addWidget(self.labelLoadedPreQUESTemplate, 0, 0)
         
         self.loadedPreQUESTemplate = QtGui.QLabel()
-        self.loadedPreQUESTemplate.setText('<None>')
+        self.loadedPreQUESTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NONE))
         self.layoutPreQUESTemplate.addWidget(self.loadedPreQUESTemplate, 0, 1)
         
         self.labelPreQUESTemplate = QtGui.QLabel()
-        self.labelPreQUESTemplate.setText('Name:')
+        self.labelPreQUESTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NAME) + ':')
         self.layoutPreQUESTemplate.addWidget(self.labelPreQUESTemplate, 1, 0)
         
         self.comboBoxPreQUESTemplate = QtGui.QComboBox()
         self.comboBoxPreQUESTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
         self.comboBoxPreQUESTemplate.setDisabled(True)
-        self.comboBoxPreQUESTemplate.addItem('No configuration found')
+        self.comboBoxPreQUESTemplate.addItem(MenuFactory.getLabel(MenuFactory.CONF_NO_FOUND))
         self.layoutPreQUESTemplate.addWidget(self.comboBoxPreQUESTemplate, 1, 1)
         
         self.layoutButtonPreQUESTemplate = QtGui.QHBoxLayout()
@@ -1020,14 +1021,14 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.buttonLoadPreQUESTemplate = QtGui.QPushButton()
         self.buttonLoadPreQUESTemplate.setDisabled(True)
         self.buttonLoadPreQUESTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonLoadPreQUESTemplate.setText('Load')
+        self.buttonLoadPreQUESTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOAD))
         self.buttonSavePreQUESTemplate = QtGui.QPushButton()
         self.buttonSavePreQUESTemplate.setDisabled(True)
         self.buttonSavePreQUESTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSavePreQUESTemplate.setText('Save')
+        self.buttonSavePreQUESTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE))
         self.buttonSaveAsPreQUESTemplate = QtGui.QPushButton()
         self.buttonSaveAsPreQUESTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveAsPreQUESTemplate.setText('Save As')
+        self.buttonSaveAsPreQUESTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS))
         self.layoutButtonPreQUESTemplate.addWidget(self.buttonLoadPreQUESTemplate)
         self.layoutButtonPreQUESTemplate.addWidget(self.buttonSavePreQUESTemplate)
         self.layoutButtonPreQUESTemplate.addWidget(self.buttonSaveAsPreQUESTemplate)
@@ -1044,7 +1045,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         # Setup 'QUES-C' tab
         #***********************************************************
         # 'Carbon accounting' GroupBox
-        self.groupBoxCarbonAccounting = QtGui.QGroupBox('Carbon accounting')
+        self.groupBoxCarbonAccounting = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.QUESC_CARBON_ACCOUNTING))
         self.layoutGroupBoxCarbonAccounting = QtGui.QHBoxLayout()
         self.groupBoxCarbonAccounting.setLayout(self.layoutGroupBoxCarbonAccounting)
         self.layoutOptionsCarbonAccounting = QtGui.QVBoxLayout()
@@ -1065,12 +1066,12 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.layoutOptionsCarbonAccounting.addLayout(self.layoutCarbonAccounting)
         
         self.labelCarbonAccountingInfo = QtGui.QLabel()
-        self.labelCarbonAccountingInfo.setText('Emission from land use change\n')
+        self.labelCarbonAccountingInfo.setText(MenuFactory.getLabel(MenuFactory.QUESC_EMISSION_FROM_LAND_USE_CHANGE))
         self.labelCarbonAccountingInfo.setWordWrap(True)
         self.layoutCarbonAccountingInfo.addWidget(self.labelCarbonAccountingInfo)
 
         self.labelCALandCoverLandUse1 = QtGui.QLabel()
-        self.labelCALandCoverLandUse1.setText('Earlier land use/cover:')
+        self.labelCALandCoverLandUse1.setText(MenuFactory.getLabel(MenuFactory.QUESC_EARLIER_LAND_USE_COVER) + ':')
         self.layoutCarbonAccounting.addWidget(self.labelCALandCoverLandUse1, 0, 0)
         
         self.comboBoxCALandCoverLandUse1 = QtGui.QComboBox()
@@ -1080,7 +1081,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxCALandCoverLandUse1)
         
         self.labelCALandCoverLandUse2 = QtGui.QLabel()
-        self.labelCALandCoverLandUse2.setText('Later land use/cover:')
+        self.labelCALandCoverLandUse2.setText(MenuFactory.getLabel(MenuFactory.QUESC_LATER_LAND_USE_COVER) + ':')
         self.layoutCarbonAccounting.addWidget(self.labelCALandCoverLandUse2, 1, 0)
         
         self.comboBoxCALandCoverLandUse2 = QtGui.QComboBox()
@@ -1090,7 +1091,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxCALandCoverLandUse2)
         
         self.labelCALandCoverPlanningUnit = QtGui.QLabel()
-        self.labelCALandCoverPlanningUnit.setText('Planning unit:')
+        self.labelCALandCoverPlanningUnit.setText(MenuFactory.getLabel(MenuFactory.QUESC_PLANNING_UNIT) + ':')
         self.layoutCarbonAccounting.addWidget(self.labelCALandCoverPlanningUnit, 2, 0)
         
         self.comboBoxCALandCoverPlanningUnit = QtGui.QComboBox()
@@ -1100,7 +1101,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataPlanningUnit, self.comboBoxCALandCoverPlanningUnit)        
         
         self.labelCACarbonTable = QtGui.QLabel()
-        self.labelCACarbonTable.setText('Carbon stock lookup table:')
+        self.labelCACarbonTable.setText(MenuFactory.getLabel(MenuFactory.QUESC_CARBON_STOCK_LOOKUP_TABLE) + ':')
         self.layoutCarbonAccounting.addWidget(self.labelCACarbonTable, 3, 0)
         
         self.comboBoxCACarbonTable = QtGui.QComboBox()
@@ -1110,7 +1111,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxCACarbonTable) 
         
         self.labelCANoDataValue = QtGui.QLabel()
-        self.labelCANoDataValue.setText('&No data value:')
+        self.labelCANoDataValue.setText('&' + MenuFactory.getLabel(MenuFactory.QUESC_NO_DATA_VALUE) + ':')
         self.layoutCarbonAccounting.addWidget(self.labelCANoDataValue, 4, 0)
         
         self.spinBoxCANoDataValue = QtGui.QSpinBox()
@@ -1125,7 +1126,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.layoutCarbonAccounting.addWidget(self.labelSpace, 5, 0)
         
         self.labelcheckBoxPeatlandCarbonAccounting = QtGui.QLabel()
-        self.labelcheckBoxPeatlandCarbonAccounting.setText('Include peat emission:')
+        self.labelcheckBoxPeatlandCarbonAccounting.setText(MenuFactory.getLabel(MenuFactory.QUESC_INCLUDE_PEAT_EMISSION) + ':')
         self.layoutCarbonAccounting.addWidget(self.labelcheckBoxPeatlandCarbonAccounting, 6, 0)
         
         self.checkBoxPeatlandCarbonAccounting = QtGui.QCheckBox()
@@ -1133,7 +1134,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.layoutCarbonAccounting.addWidget(self.checkBoxPeatlandCarbonAccounting, 6, 1)
         
         self.labelPCACsvfile = QtGui.QLabel()
-        self.labelPCACsvfile.setText('Peat emission lookup table:')
+        self.labelPCACsvfile.setText(MenuFactory.getLabel(MenuFactory.QUESC_PEAT_EMISSION_LOOKUP_TABLE) + ':')
         self.layoutCarbonAccounting.addWidget(self.labelPCACsvfile, 7, 0)
         
         self.comboBoxPCACsvfile = QtGui.QComboBox()
@@ -1143,7 +1144,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxPCACsvfile)
         
         self.labelPeatlandMap = QtGui.QLabel()
-        self.labelPeatlandMap.setText('Peat map:')
+        self.labelPeatlandMap.setText(MenuFactory.getLabel(MenuFactory.QUESC_PEAT_MAP) + ':')
         self.layoutCarbonAccounting.addWidget(self.labelPeatlandMap, 8, 0)
         
         self.comboBoxPeatlandMap = QtGui.QComboBox()
@@ -1153,7 +1154,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataPlanningUnit, self.comboBoxPeatlandMap)
         
         self.buttonLoadLookupTablePeat = QtGui.QPushButton()
-        self.buttonLoadLookupTablePeat.setText('Load')
+        self.buttonLoadLookupTablePeat.setText(MenuFactory.getLabel(MenuFactory.QUESC_LOAD))
         self.layoutCarbonAccounting.addWidget(self.buttonLoadLookupTablePeat, 8, 2)        
         
         self.tablePeat = QtGui.QTableWidget()
@@ -1163,7 +1164,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         
         
         # 'Summarize multiple period' GroupBox
-        self.groupBoxSummarizeMultiplePeriod = QtGui.QGroupBox('Summarize multiple period')
+        self.groupBoxSummarizeMultiplePeriod = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.QUESC_SUMMARIZE_MULTIPLE_PERIOD))
         self.layoutGroupBoxSummarizeMultiplePeriod = QtGui.QHBoxLayout()
         self.groupBoxSummarizeMultiplePeriod.setLayout(self.layoutGroupBoxSummarizeMultiplePeriod)
         self.layoutOptionsSummarizeMultiplePeriod = QtGui.QVBoxLayout()
@@ -1184,7 +1185,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.layoutOptionsSummarizeMultiplePeriod.addLayout(self.layoutSummarizeMultiplePeriod)
         
         self.labelSummarizeMultiplePeriodInfo = QtGui.QLabel()
-        self.labelSummarizeMultiplePeriodInfo.setText('Calculate emission from multiple QUES-C database\n')
+        self.labelSummarizeMultiplePeriodInfo.setText(MenuFactory.getLabel(MenuFactory.QUESC_CALCULATE_SUMMARIZE_MULTIPLE_PERIOD))
         self.labelSummarizeMultiplePeriodInfo.setWordWrap(True)
         self.layoutSummarizeMultiplePeriodInfo.addWidget(self.labelSummarizeMultiplePeriodInfo)
         
@@ -1193,7 +1194,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         # Process tab button
         self.layoutButtonQUESC = QtGui.QHBoxLayout()
         self.buttonProcessQUESC = QtGui.QPushButton()
-        self.buttonProcessQUESC.setText('&Process')
+        self.buttonProcessQUESC.setText('&' + MenuFactory.getLabel(MenuFactory.QUESC_PROCESS))
         self.buttonHelpQUESC = QtGui.QPushButton()
         self.buttonHelpQUESC.setIcon(icon)
         self.layoutButtonQUESC.setAlignment(QtCore.Qt.AlignRight)
@@ -1201,7 +1202,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.layoutButtonQUESC.addWidget(self.buttonHelpQUESC)
         
         # Template GroupBox
-        self.groupBoxQUESCTemplate = QtGui.QGroupBox('Configuration')
+        self.groupBoxQUESCTemplate = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.CONF_TITLE))
         self.layoutGroupBoxQUESCTemplate = QtGui.QVBoxLayout()
         self.layoutGroupBoxQUESCTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxQUESCTemplate.setLayout(self.layoutGroupBoxQUESCTemplate)
@@ -1211,21 +1212,21 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxQUESCTemplate.addLayout(self.layoutQUESCTemplate)
         
         self.labelLoadedQUESCTemplate = QtGui.QLabel()
-        self.labelLoadedQUESCTemplate.setText('Loaded configuration:')
+        self.labelLoadedQUESCTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOADED_CONFIGURATION) + ':')
         self.layoutQUESCTemplate.addWidget(self.labelLoadedQUESCTemplate, 0, 0)
         
         self.loadedQUESCTemplate = QtGui.QLabel()
-        self.loadedQUESCTemplate.setText('<None>')
+        self.loadedQUESCTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NONE))
         self.layoutQUESCTemplate.addWidget(self.loadedQUESCTemplate, 0, 1)
         
         self.labelQUESCTemplate = QtGui.QLabel()
-        self.labelQUESCTemplate.setText('Name:')
+        self.labelQUESCTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NAME) + ':')
         self.layoutQUESCTemplate.addWidget(self.labelQUESCTemplate, 1, 0)
         
         self.comboBoxQUESCTemplate = QtGui.QComboBox()
         self.comboBoxQUESCTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
         self.comboBoxQUESCTemplate.setDisabled(True)
-        self.comboBoxQUESCTemplate.addItem('No configuration found')
+        self.comboBoxQUESCTemplate.addItem(MenuFactory.getLabel(MenuFactory.CONF_NO_FOUND))
         self.layoutQUESCTemplate.addWidget(self.comboBoxQUESCTemplate, 1, 1)
         
         self.layoutButtonQUESCTemplate = QtGui.QHBoxLayout()
@@ -1233,14 +1234,14 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.buttonLoadQUESCTemplate = QtGui.QPushButton()
         self.buttonLoadQUESCTemplate.setDisabled(True)
         self.buttonLoadQUESCTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonLoadQUESCTemplate.setText('Load')
+        self.buttonLoadQUESCTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOAD))
         self.buttonSaveQUESCTemplate = QtGui.QPushButton()
         self.buttonSaveQUESCTemplate.setDisabled(True)
         self.buttonSaveQUESCTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveQUESCTemplate.setText('Save')
+        self.buttonSaveQUESCTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE))
         self.buttonSaveAsQUESCTemplate = QtGui.QPushButton()
         self.buttonSaveAsQUESCTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveAsQUESCTemplate.setText('Save As')
+        self.buttonSaveAsQUESCTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS))
         self.layoutButtonQUESCTemplate.addWidget(self.buttonLoadQUESCTemplate)
         self.layoutButtonQUESCTemplate.addWidget(self.buttonSaveQUESCTemplate)
         self.layoutButtonQUESCTemplate.addWidget(self.buttonSaveAsQUESCTemplate)
@@ -1258,7 +1259,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         # Setup 'QUES-B' tab
         #***********************************************************
         # 'Parameters' GroupBox
-        self.groupBoxQUESBParameters = QtGui.QGroupBox('Parameterization')
+        self.groupBoxQUESBParameters = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.QUESB_PARAMETERIZATION))
         self.layoutGroupBoxQUESBParameters = QtGui.QVBoxLayout()
         self.layoutGroupBoxQUESBParameters.setAlignment(QtCore.Qt.AlignTop)
         self.groupBoxQUESBParameters.setLayout(self.layoutGroupBoxQUESBParameters)
@@ -1273,7 +1274,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.layoutQUESBParametersInfo.addWidget(self.labelQUESBParametersInfo)
 
         self.labelQUESBLandCoverLandUse1 = QtGui.QLabel()
-        self.labelQUESBLandCoverLandUse1.setText('Earlier land use/cover:')
+        self.labelQUESBLandCoverLandUse1.setText(MenuFactory.getLabel(MenuFactory.QUESB_EARLIER_LAND_USE_COVER) + ':')
         self.layoutQUESBParameters.addWidget(self.labelQUESBLandCoverLandUse1, 0, 0)
 
         self.comboBoxQUESBLandCoverLandUse1 = QtGui.QComboBox()
@@ -1283,7 +1284,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxQUESBLandCoverLandUse1)
 
         self.labelQUESBLandCoverLandUse2 = QtGui.QLabel()
-        self.labelQUESBLandCoverLandUse2.setText('Later land use/cover:')
+        self.labelQUESBLandCoverLandUse2.setText(MenuFactory.getLabel(MenuFactory.QUESB_LATER_LAND_USE_COVER) + ':')
         self.layoutQUESBParameters.addWidget(self.labelQUESBLandCoverLandUse2, 1, 0)
 
         self.comboBoxQUESBLandCoverLandUse2 = QtGui.QComboBox()
@@ -1293,7 +1294,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxQUESBLandCoverLandUse2)
 
         self.labelQUESBLandCoverLandUse3 = QtGui.QLabel()
-        self.labelQUESBLandCoverLandUse3.setText('Intact focal area:')
+        self.labelQUESBLandCoverLandUse3.setText(MenuFactory.getLabel(MenuFactory.QUESB_INTACT_FOCAL_AREA) + ':')
         self.layoutQUESBParameters.addWidget(self.labelQUESBLandCoverLandUse3, 2, 0)
 
         self.comboBoxQUESBLandCoverLandUse3 = QtGui.QComboBox()
@@ -1303,7 +1304,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxQUESBLandCoverLandUse3)
 
         self.labelQUESBPlanningUnit = QtGui.QLabel()
-        self.labelQUESBPlanningUnit.setText('Planning unit:')
+        self.labelQUESBPlanningUnit.setText(MenuFactory.getLabel(MenuFactory.QUESB_PLANNING_UNIT) + ':')
         self.layoutQUESBParameters.addWidget(self.labelQUESBPlanningUnit, 3, 0)
         
         self.comboBoxQUESBPlanningUnit = QtGui.QComboBox()
@@ -1313,7 +1314,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataPlanningUnit, self.comboBoxQUESBPlanningUnit)
         
         self.labelQUESBNodata = QtGui.QLabel()
-        self.labelQUESBNodata.setText('No data value:')
+        self.labelQUESBNodata.setText(MenuFactory.getLabel(MenuFactory.QUESB_NO_DATA_VALUE) + ':')
         self.layoutQUESBParameters.addWidget(self.labelQUESBNodata, 4, 0)
         
         self.spinBoxQUESBNodata = QtGui.QSpinBox()
@@ -1322,7 +1323,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.layoutQUESBParameters.addWidget(self.spinBoxQUESBNodata, 4, 1)
         
         self.labelQUESBEdgeContrast = QtGui.QLabel()
-        self.labelQUESBEdgeContrast.setText('Edge contrast weight:')
+        self.labelQUESBEdgeContrast.setText(MenuFactory.getLabel(MenuFactory.QUESB_EDGE_CONTRAST_WEIGHT) + ':')
         self.layoutQUESBParameters.addWidget(self.labelQUESBEdgeContrast, 5, 0)        
         
         self.comboBoxQUESBEdgeContrast = QtGui.QComboBox()
@@ -1332,7 +1333,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxQUESBEdgeContrast)
         
         self.labelQUESBHabitat = QtGui.QLabel()
-        self.labelQUESBHabitat.setText('Focal area class(es):')
+        self.labelQUESBHabitat.setText(MenuFactory.getLabel(MenuFactory.QUESB_FOCAL_AREA_CLASS) + ':')
         self.layoutQUESBParameters.addWidget(self.labelQUESBHabitat, 6, 0)
       
         self.comboBoxTableHabitat = QtGui.QComboBox()
@@ -1342,7 +1343,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxTableHabitat)
         
         self.buttonLoadLookupTableHabitat = QtGui.QPushButton()
-        self.buttonLoadLookupTableHabitat.setText('Load')
+        self.buttonLoadLookupTableHabitat.setText(MenuFactory.getLabel(MenuFactory.QUESB_LOAD))
         self.layoutQUESBParameters.addWidget(self.buttonLoadLookupTableHabitat, 6, 2)
       
         self.tableHabitat = QtGui.QTableWidget()
@@ -1350,25 +1351,25 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.tableHabitat.verticalHeader().setVisible(False)
         self.layoutQUESBParameters.addWidget(self.tableHabitat, 7, 0, 1, 3)
         
-        self.groupBoxQUESBMovingWindow = QtGui.QGroupBox('Moving window')
+        self.groupBoxQUESBMovingWindow = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.QUESB_MOVING_WINDOW))
         self.layoutGroupBoxMovingWindow = QtGui.QGridLayout()
         self.layoutGroupBoxMovingWindow.setAlignment(QtCore.Qt.AlignTop)
         self.groupBoxQUESBMovingWindow.setLayout(self.layoutGroupBoxMovingWindow)
         
         self.labelQUESBWindowShape = QtGui.QLabel()
-        self.labelQUESBWindowShape.setText('Shape:')
+        self.labelQUESBWindowShape.setText(MenuFactory.getLabel(MenuFactory.QUESB_SHAPE) + ':')
         self.layoutGroupBoxMovingWindow.addWidget(self.labelQUESBWindowShape, 0, 0)
         
         WindowShapeOptions = [
-            'Square',
-            'Circle',
+            MenuFactory.getLabel(MenuFactory.QUESB_SHAPE_SQUARE),
+            MenuFactory.getLabel(MenuFactory.QUESB_SHAPE_CIRCLE),
         ]
         self.comboBoxQUESBWindowShapeOptions = QtGui.QComboBox()
         self.comboBoxQUESBWindowShapeOptions.addItems(WindowShapeOptions)
         self.layoutGroupBoxMovingWindow.addWidget(self.comboBoxQUESBWindowShapeOptions, 0, 1)
         
         self.labelQUESBSamplingWindowSize = QtGui.QLabel()
-        self.labelQUESBSamplingWindowSize.setText('Size:')
+        self.labelQUESBSamplingWindowSize.setText(MenuFactory.getLabel(MenuFactory.QUESB_SIZE) + ':')
         self.layoutGroupBoxMovingWindow.addWidget(self.labelQUESBSamplingWindowSize, 1, 0)
         
         self.spinBoxQUESBSamplingWindowSize = QtGui.QSpinBox()
@@ -1379,19 +1380,19 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.layoutQUESBParameters.addWidget(self.groupBoxQUESBMovingWindow, 8, 0, 1, 2)
         
         self.labelQUESBAdjacentOnly = QtGui.QLabel()
-        self.labelQUESBAdjacentOnly.setText('Adjacent Only:')
+        self.labelQUESBAdjacentOnly.setText(MenuFactory.getLabel(MenuFactory.QUESB_ADJACENT_ONLY) + ':')
         self.layoutQUESBParameters.addWidget(self.labelQUESBAdjacentOnly, 9, 0)    
         
         adjacentOnlyOptions = [
-            'False',
-            'True',
+            MenuFactory.getLabel(MenuFactory.QUESB_TRUE),
+            MenuFactory.getLabel(MenuFactory.QUESB_FALSE),
         ]
         self.comboBoxQUESBAdjacentOnly = QtGui.QComboBox()
         self.comboBoxQUESBAdjacentOnly.addItems(adjacentOnlyOptions)
         self.layoutQUESBParameters.addWidget(self.comboBoxQUESBAdjacentOnly, 9, 1)        
         
         self.labelQUESBSamplingGridRes = QtGui.QLabel()
-        self.labelQUESBSamplingGridRes.setText('Sampling grid size:')
+        self.labelQUESBSamplingGridRes.setText(MenuFactory.getLabel(MenuFactory.QUESB_SAMPLING_GRID_SIZE) + ':')
         self.layoutQUESBParameters.addWidget(self.labelQUESBSamplingGridRes, 10, 0)
         
         self.spinBoxQUESBSamplingGridRes = QtGui.QSpinBox()
@@ -1402,7 +1403,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         # Process tab button
         self.layoutButtonQUESB = QtGui.QHBoxLayout()
         self.buttonProcessQUESB = QtGui.QPushButton()
-        self.buttonProcessQUESB.setText('&Process')
+        self.buttonProcessQUESB.setText('&' + MenuFactory.getLabel(MenuFactory.QUESB_PROCESS))
         self.buttonHelpQUESB = QtGui.QPushButton()
         self.buttonHelpQUESB.setIcon(icon)
         self.layoutButtonQUESB.setAlignment(QtCore.Qt.AlignRight)
@@ -1410,7 +1411,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.layoutButtonQUESB.addWidget(self.buttonHelpQUESB)
         
         # Template GroupBox
-        self.groupBoxQUESBTemplate = QtGui.QGroupBox('Configuration')
+        self.groupBoxQUESBTemplate = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.CONF_TITLE))
         self.layoutGroupBoxQUESBTemplate = QtGui.QVBoxLayout()
         self.layoutGroupBoxQUESBTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxQUESBTemplate.setLayout(self.layoutGroupBoxQUESBTemplate)
@@ -1420,21 +1421,21 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxQUESBTemplate.addLayout(self.layoutQUESBTemplate)
         
         self.labelLoadedQUESBTemplate = QtGui.QLabel()
-        self.labelLoadedQUESBTemplate.setText('Loaded configuration:')
+        self.labelLoadedQUESBTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOADED_CONFIGURATION) + ':')
         self.layoutQUESBTemplate.addWidget(self.labelLoadedQUESBTemplate, 0, 0)
         
         self.loadedQUESBTemplate = QtGui.QLabel()
-        self.loadedQUESBTemplate.setText('<None>')
+        self.loadedQUESBTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NO_FOUND))
         self.layoutQUESBTemplate.addWidget(self.loadedQUESBTemplate, 0, 1)
         
         self.labelQUESBTemplate = QtGui.QLabel()
-        self.labelQUESBTemplate.setText('Name:')
+        self.labelQUESBTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NAME) + ':')
         self.layoutQUESBTemplate.addWidget(self.labelQUESBTemplate, 1, 0)
         
         self.comboBoxQUESBTemplate = QtGui.QComboBox()
         self.comboBoxQUESBTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
         self.comboBoxQUESBTemplate.setDisabled(True)
-        self.comboBoxQUESBTemplate.addItem('No configuration found')
+        self.comboBoxQUESBTemplate.addItem(MenuFactory.getLabel(MenuFactory.CONF_NO_FOUND))
         self.layoutQUESBTemplate.addWidget(self.comboBoxQUESBTemplate, 1, 1)
         
         self.layoutButtonQUESBTemplate = QtGui.QHBoxLayout()
@@ -1442,14 +1443,14 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.buttonLoadQUESBTemplate = QtGui.QPushButton()
         self.buttonLoadQUESBTemplate.setDisabled(True)
         self.buttonLoadQUESBTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonLoadQUESBTemplate.setText('Load')
+        self.buttonLoadQUESBTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOAD))
         self.buttonSaveQUESBTemplate = QtGui.QPushButton()
         self.buttonSaveQUESBTemplate.setDisabled(True)
         self.buttonSaveQUESBTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveQUESBTemplate.setText('Save')
+        self.buttonSaveQUESBTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE))
         self.buttonSaveAsQUESBTemplate = QtGui.QPushButton()
         self.buttonSaveAsQUESBTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveAsQUESBTemplate.setText('Save As')
+        self.buttonSaveAsQUESBTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS))
         self.layoutButtonQUESBTemplate.addWidget(self.buttonLoadQUESBTemplate)
         self.layoutButtonQUESBTemplate.addWidget(self.buttonSaveQUESBTemplate)
         self.layoutButtonQUESBTemplate.addWidget(self.buttonSaveAsQUESBTemplate)
@@ -2203,7 +2204,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                 checkBoxSummarizeMultiplePeriodQUESCDatabase.toggled.connect(self.toggleSummarizeMultiplePeriodQUESCDatabase)
         else:
             labelQUESCDatabaseSummarizeMultiplePeriod = QtGui.QLabel()
-            labelQUESCDatabaseSummarizeMultiplePeriod.setText('\nNo QUES-C Database found!\n')
+            labelQUESCDatabaseSummarizeMultiplePeriod.setText(MenuFactory.getLabel(MenuFactory.MSG_SCIENDO_NO_QUESC_DB))
             layoutCheckBoxQUESCDatabase.addWidget(labelQUESCDatabaseSummarizeMultiplePeriod)
 
         self.layoutOptionsSummarizeMultiplePeriod.addLayout(layoutCheckBoxQUESCDatabase)
@@ -2311,8 +2312,8 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         else:
             reply = QtGui.QMessageBox.question(
                 self,
-                'Load Template',
-                'Do you want to load \'{0}\'?'.format(templateFile),
+                MenuFactory.getLabel(MenuFactory.CONF_LOAD_TEMPLATE),
+                MenuFactory.getDescription(MenuFactory.CONF_LOAD_TEMPLATE) + ' \'{0}\'?'.format(templateFile),
                 QtGui.QMessageBox.Yes|QtGui.QMessageBox.No,
                 QtGui.QMessageBox.No
             )
@@ -2334,8 +2335,8 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         
         reply = QtGui.QMessageBox.question(
             self,
-            'Save Template',
-            'Do you want save \'{0}\'?\nThis action will overwrite the template file.'.format(templateFile),
+            MenuFactory.getLabel(MenuFactory.CONF_SAVE_TEMPLATE),
+            MenuFactory.getDescription(MenuFactory.CONF_SAVE_TEMPLATE),
             QtGui.QMessageBox.Yes|QtGui.QMessageBox.No,
             QtGui.QMessageBox.No
         )
@@ -2350,7 +2351,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
     def handlerSaveAsPreQUESTemplate(self):
         """Slot method for saving a module template to a new file.
         """
-        fileName, ok = QtGui.QInputDialog.getText(self, 'Save As', 'Enter a new template name:')
+        fileName, ok = QtGui.QInputDialog.getText(self, MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS_TEMPATE), MenuFactory.getDescription(MenuFactory.CONF_SAVE_AS_TEMPATE) + ':')
         fileSaved = False
         
         if ok:
@@ -2387,8 +2388,8 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         else:
             reply = QtGui.QMessageBox.question(
                 self,
-                'Load Template',
-                'Do you want to load \'{0}\'?'.format(templateFile),
+                MenuFactory.getLabel(MenuFactory.CONF_LOAD_TEMPLATE),
+                MenuFactory.getDescription(MenuFactory.CONF_LOAD_TEMPLATE) + ' \'{0}\'?'.format(templateFile),
                 QtGui.QMessageBox.Yes|QtGui.QMessageBox.No,
                 QtGui.QMessageBox.No
             )
@@ -2410,8 +2411,8 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         
         reply = QtGui.QMessageBox.question(
             self,
-            'Save Template',
-            'Do you want save \'{0}\'?\nThis action will overwrite the template file.'.format(templateFile),
+            MenuFactory.getLabel(MenuFactory.CONF_SAVE_TEMPLATE),
+            MenuFactory.getDescription(MenuFactory.CONF_SAVE_TEMPLATE),
             QtGui.QMessageBox.Yes|QtGui.QMessageBox.No,
             QtGui.QMessageBox.No
         )
@@ -2426,7 +2427,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
     def handlerSaveAsQUESCTemplate(self):
         """Slot method for saving a module template to a new file.
         """
-        fileName, ok = QtGui.QInputDialog.getText(self, 'Save As', 'Enter a new template name:')
+        fileName, ok = QtGui.QInputDialog.getText(self, MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS_TEMPATE), MenuFactory.getDescription(MenuFactory.CONF_SAVE_AS_TEMPATE) + ':')
         fileSaved = False
         
         if ok:
@@ -2463,8 +2464,8 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         else:
             reply = QtGui.QMessageBox.question(
                 self,
-                'Load Template',
-                'Do you want to load \'{0}\'?'.format(templateFile),
+                MenuFactory.getLabel(MenuFactory.CONF_LOAD_TEMPLATE),
+                MenuFactory.getDescription(MenuFactory.CONF_LOAD_TEMPLATE) + ' \'{0}\'?'.format(templateFile),
                 QtGui.QMessageBox.Yes|QtGui.QMessageBox.No,
                 QtGui.QMessageBox.No
             )
@@ -2486,8 +2487,8 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         
         reply = QtGui.QMessageBox.question(
             self,
-            'Save Template',
-            'Do you want save \'{0}\'?\nThis action will overwrite the template file.'.format(templateFile),
+            MenuFactory.getLabel(MenuFactory.CONF_SAVE_TEMPLATE),
+            MenuFactory.getDescription(MenuFactory.CONF_SAVE_TEMPLATE),
             QtGui.QMessageBox.Yes|QtGui.QMessageBox.No,
             QtGui.QMessageBox.No
         )
@@ -2502,7 +2503,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
     def handlerSaveAsQUESBTemplate(self):
         """Slot method for saving a module template to a new file.
         """
-        fileName, ok = QtGui.QInputDialog.getText(self, 'Save As', 'Enter a new template name:')
+        fileName, ok = QtGui.QInputDialog.getText(self, MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS_TEMPATE), MenuFactory.getDescription(MenuFactory.CONF_SAVE_AS_TEMPATE) + ':')
         fileSaved = False
         
         if ok:
@@ -3025,11 +3026,11 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.main.appSettings['DialogLumensPreQUESLandcoverTrajectoriesAnalysis']['planningUnit'] \
             = unicode(self.comboBoxPreQUESLandCoverPlanningUnit.currentText())
         analysisOption = unicode(self.comboBoxLandCoverAnalysisOption.currentText())
-        if analysisOption == 'All analysis':
+        if analysisOption == MenuFactory.getLabel(MenuFactory.PREQUES_ANALYSIS_OPTION_ONE):
             analysisOption = 0
-        elif analysisOption == 'Dominant land use change':
+        elif analysisOption == MenuFactory.getLabel(MenuFactory.PREQUES_ANALYSIS_OPTION_TWO):
             analysisOption = 1
-        elif analysisOption == 'Land use change dynamics':
+        elif analysisOption == MenuFactory.getLabel(MenuFactory.PREQUES_ANALYSIS_OPTION_THREE):
             analysisOption = 2
         else:
             analysisOption = 3
@@ -3394,7 +3395,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                 logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
                 logging.getLogger(self.historyLog).info('alg end: %s' % formName)
             else:
-                QtGui.QMessageBox.information(self, 'Summarize Multiple Period', 'Choose at least two QUES-C Database.')
+                QtGui.QMessageBox.information(self, MenuFactory.getLabel(MenuFactory.QUESC_SUMMARIZE_MULTIPLE_PERIOD), MenuFactory.getLabel(MenuFactory.MSG_SCIENDO_CHOOSE_QUESC_DB))
                 return
     
     
@@ -3475,7 +3476,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                 logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
                 logging.getLogger(self.historyLog).info('alg end: %s' % formName)
         else:
-            QtGui.QMessageBox.information(self, self.dialogTitle, 'Please select focal area.')
+            QtGui.QMessageBox.information(self, self.dialogTitle, MenuFactory.getLabel(MenuFactory.MSG_QUES_SELECT_FOCAL_AREA))
             return
           
     

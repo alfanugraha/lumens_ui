@@ -11,6 +11,7 @@ from dialog_lumens_base import DialogLumensBase
 from dialog_lumens_viewer import DialogLumensViewer
 import resource
 
+from menu_factory import MenuFactory
 
 class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
     """LUMENS "TA Opportunity Cost" module dialog class.
@@ -152,7 +153,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         
         td = datetime.date.today()
         
-        if tabName == 'Abacus Opportunity Cost':
+        if tabName == MenuFactory.getLabel(MenuFactory.TAOPCOST_ABACUS_OPPORTUNITY_COST):
             dialogsToLoad = (
                 'DialogLumensTAAbacusOpportunityCostCurve',
             )
@@ -183,7 +184,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
             
             settings.endGroup()
             # /tab
-        elif tabName == 'Opportunity Cost Curve':
+        elif tabName == MenuFactory.getLabel(MenuFactory.TAOPCOST_OPPORTUNITY_COST_CURVE):
             dialogsToLoad = (
                 'DialogLumensTAOpportunityCostCurve',
             )
@@ -229,7 +230,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
             
             settings.endGroup()
             # /tab
-        elif tabName == 'Opportunity Cost Map':
+        elif tabName == MenuFactory.getLabel(MenuFactory.TAOPCOST_OPPORTUNITY_COST_MAP):
             dialogsToLoad = (
                 'DialogLumensTAOpportunityCostMap',
             )
@@ -260,7 +261,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
             
             settings.endGroup()
             # /tab
-        elif tabName == 'Descriptive analysis':
+        elif tabName == MenuFactory.getLabel(MenuFactory.TAREGECO_DESCRIPTIVE_ANALYSIS):
             dialogsToLoad = (
                 'DialogLumensTARegionalEconomySingleIODescriptiveAnalysis',
             )
@@ -335,7 +336,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
             
             settings.endGroup()
             # /tab            
-        elif tabName == 'Land requirement analysis':
+        elif tabName == MenuFactory.getLabel(MenuFactory.TAREGECO_LAND_REQUIREMENT_ANALYSIS):
             dialogsToLoad = (
                 'DialogLumensTARegionalEconomyLandDistributionRequirementAnalysis',
             )
@@ -377,7 +378,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
             
             settings.endGroup()
             # /tab            
-        elif tabName == 'Regional economy scenario':
+        elif tabName == MenuFactory.getLabel(MenuFactory.TAREGECO_REGIONAL_ECONOMY_SCENARIO):
             dialogsToLoad = (
                 'DialogLumensTARegionalEconomyScenario',
             )
@@ -418,7 +419,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
             
             settings.endGroup()
             # /tab            
-        elif tabName == 'Land use scenario':
+        elif tabName == MenuFactory.getLabel(MenuFactory.TAREGECO_LAND_USE_SCENARIO):
             dialogsToLoad = (
                 'DialogLumensTAImpactofLandUsetoRegionalEconomyIndicatorAnalysis',
             ) 
@@ -473,31 +474,31 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         templateFiles = [os.path.basename(name) for name in glob.glob(os.path.join(self.settingsPath, '*.ini')) if os.path.isfile(os.path.join(self.settingsPath, name))]
         dialogsToLoad = None
         
-        if tabName == 'Abacus Opportunity Cost':
+        if tabName == MenuFactory.getLabel(MenuFactory.TAOPCOST_ABACUS_OPPORTUNITY_COST):
             dialogsToLoad = (
                 'DialogLumensTAAbacusOpportunityCostCurve',
             )
-        elif tabName == 'Opportunity Cost Curve':
+        elif tabName == MenuFactory.getLabel(MenuFactory.TAOPCOST_OPPORTUNITY_COST_CURVE):
             dialogsToLoad = (
                 'DialogLumensTAOpportunityCostCurve',
             )
-        elif tabName == 'Opportunity Cost Map':
+        elif tabName == MenuFactory.getLabel(MenuFactory.TAOPCOST_OPPORTUNITY_COST_MAP):
             dialogsToLoad = (
                 'DialogLumensTAOpportunityCostMap',
             )
-        elif tabName == 'Descriptive analysis':
+        elif tabName == MenuFactory.getLabel(MenuFactory.TAREGECO_DESCRIPTIVE_ANALYSIS):
             dialogsToSave = (
                 'DialogLumensTARegionalEconomyTimeSeriesIODescriptiveAnalysis',
             )
-        elif tabName == 'Land requirement analysis':
+        elif tabName == MenuFactory.getLabel(MenuFactory.TAREGECO_LAND_REQUIREMENT_ANALYSIS):
             dialogsToSave = (
                 'DialogLumensTARegionalEconomyLandDistributionRequirementAnalysis',
             )
-        elif tabName == 'Regional economy scenario':
+        elif tabName == MenuFactory.getLabel(MenuFactory.TAREGECO_REGIONAL_ECONOMY_SCENARIO):
             dialogsToSave = (
                 'DialogLumensTARegionalEconomyScenario',
             )
-        elif tabName == 'Land use scenario':
+        elif tabName == MenuFactory.getLabel(MenuFactory.TAREGECO_LAND_USE_SCENARIO):
             dialogsToSave = (
                 'DialogLumensTAImpactofLandUsetoRegionalEconomyIndicatorAnalysis',
             ) 
@@ -527,26 +528,26 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         if duplicateTemplate:
             reply = QtGui.QMessageBox.question(
                 self,
-                'Load Existing Configuration',
-                'The configuration you are about to save matches an existing template.\nDo you want to load \'{0}\' instead?'.format(duplicateTemplate),
+                MenuFactory.getLabel(MenuFactory.CONF_LOAD_EXISTING_CONFIGURATION),
+                MenuFactory.getDescription(MenuFactory.CONF_LOAD_EXISTING_CONFIGURATION) + ' \'{0}\'?'.format(duplicateTemplate),
                 QtGui.QMessageBox.Yes|QtGui.QMessageBox.No,
                 QtGui.QMessageBox.No
             )
             
             if reply == QtGui.QMessageBox.Yes:
-                if tabName == 'Abacus Opportunity Cost':
+                if tabName == MenuFactory.getLabel(MenuFactory.TAOPCOST_ABACUS_OPPORTUNITY_COST):
                     self.handlerLoadAbacusOpportunityCostTemplate(duplicateTemplate)
-                elif tabName == 'Opportunity Cost Curve':
+                elif tabName == MenuFactory.getLabel(MenuFactory.TAOPCOST_OPPORTUNITY_COST_CURVE):
                     self.handlerLoadOpportunityCostCurveTemplate(duplicateTemplate)
-                elif tabName == 'Opportunity Cost Map':
+                elif tabName == MenuFactory.getLabel(MenuFactory.TAOPCOST_OPPORTUNITY_COST_MAP):
                     self.handlerLoadOpportunityCostMapTemplate(duplicateTemplate)
-                elif tabName == 'Descriptive analysis':
+                elif tabName == MenuFactory.getLabel(MenuFactory.TAREGECO_DESCRIPTIVE_ANALYSIS):
                     self.handlerLoadDescriptiveAnalysisTemplate(duplicateTemplate)
-                elif tabName == 'Land requirement analysis':
+                elif tabName == MenuFactory.getLabel(MenuFactory.TAREGECO_LAND_REQUIREMENT_ANALYSIS):
                     self.handlerLoadLandRequirementAnalysisTemplate(duplicateTemplate)
-                elif tabName == 'Regional economy scenario':
+                elif tabName == MenuFactory.getLabel(MenuFactory.TAREGECO_REGIONAL_ECONOMY_SCENARIO):
                     self.handlerLoadRegionalEconomicScenarioImpactTemplate(duplicateTemplate)
-                elif tabName == 'Land use scenario':
+                elif tabName == MenuFactory.getLabel(MenuFactory.TAREGECO_LAND_USE_SCENARIO):
                     self.handlerLoadLandUseChangeImpactTemplate(duplicateTemplate)
                     
                 return True
@@ -571,31 +572,31 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
             
             dialogsToSave = None
             
-            if tabName == 'Abacus Opportunity Cost':
+            if tabName == MenuFactory.getLabel(MenuFactory.TAOPCOST_ABACUS_OPPORTUNITY_COST):
                 dialogsToSave = (
                     'DialogLumensTAAbacusOpportunityCostCurve',
                 )
-            elif tabName == 'Opportunity Cost Curve':
+            elif tabName == MenuFactory.getLabel(MenuFactory.TAOPCOST_OPPORTUNITY_COST_CURVE):
                 dialogsToSave = (
                     'DialogLumensTAOpportunityCostCurve',
                 )
-            elif tabName == 'Opportunity Cost Map':
+            elif tabName == MenuFactory.getLabel(MenuFactory.TAOPCOST_OPPORTUNITY_COST_MAP):
                 dialogsToSave = (
                     'DialogLumensTAOpportunityCostMap',
                 )
-            elif tabName == 'Descriptive analysis':
+            elif tabName == MenuFactory.getLabel(MenuFactory.TAREGECO_DESCRIPTIVE_ANALYSIS):
                 dialogsToSave = (
                     'DialogLumensTARegionalEconomyTimeSeriesIODescriptiveAnalysis',
                 )
-            elif tabName == 'Land requirement analysis':
+            elif tabName == MenuFactory.getLabel(MenuFactory.TAREGECO_LAND_REQUIREMENT_ANALYSIS):
                 dialogsToSave = (
                     'DialogLumensTARegionalEconomyLandDistributionRequirementAnalysis',
                 )
-            elif tabName == 'Regional economy scenario':
+            elif tabName == MenuFactory.getLabel(MenuFactory.TAREGECO_REGIONAL_ECONOMY_SCENARIO):
                 dialogsToSave = (
                     'DialogLumensTARegionalEconomyScenario',
                 )
-            elif tabName == 'Land use scenario':
+            elif tabName == MenuFactory.getLabel(MenuFactory.TAREGECO_LAND_USE_SCENARIO):
                 dialogsToSave = (
                     'DialogLumensTAImpactofLandUsetoRegionalEconomyIndicatorAnalysis',
                 )                
@@ -702,7 +703,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.setStyleSheet('QDialog { background-color: rgb(225, 229, 237); }')
         self.dialogLayout = QtGui.QVBoxLayout()
 
-        self.groupBoxTADialog = QtGui.QGroupBox('Trade-Off Analysis')
+        self.groupBoxTADialog = QtGui.QGroupBox(MenuFactory.getDescription(MenuFactory.TA_TITLE))
         self.layoutGroupBoxTADialog = QtGui.QVBoxLayout()
         self.layoutGroupBoxTADialog.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxTADialog.setLayout(self.layoutGroupBoxTADialog)
@@ -738,9 +739,9 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.tabRegionalEconomy = QtGui.QWidget()
         self.tabLog = QtGui.QWidget()
         
-        self.tabWidget.addTab(self.tabOpportunityCost, 'Opportunity Cost')
-        self.tabWidget.addTab(self.tabRegionalEconomy, 'Regional Economy')
-        self.tabWidget.addTab(self.tabLog, 'Log')
+        self.tabWidget.addTab(self.tabOpportunityCost, MenuFactory.getLabel(MenuFactory.TAOPCOST_TITLE))
+        self.tabWidget.addTab(self.tabRegionalEconomy, MenuFactory.getLabel(MenuFactory.TAREGECO_TITLE))
+        self.tabWidget.addTab(self.tabLog, MenuFactory.getLabel(MenuFactory.TA_LOG))
         
         self.layoutTabOpportunityCost = QtGui.QVBoxLayout()
         self.layoutTabRegionalEconomy = QtGui.QVBoxLayout()
@@ -782,9 +783,9 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.tabOpportunityCostCurve = QtGui.QWidget()
         self.tabOpportunityCostMap = QtGui.QWidget()
         
-        # self.tabWidgetOpportunityCost.addTab(self.tabAbacusOpportunityCost, 'Abacus Opportunity Cost')
-        self.tabWidgetOpportunityCost.addTab(self.tabOpportunityCostCurve, 'Opportunity Cost Curve')
-        self.tabWidgetOpportunityCost.addTab(self.tabOpportunityCostMap, 'Opportunity Cost Map')
+        # self.tabWidgetOpportunityCost.addTab(self.tabAbacusOpportunityCost, MenuFactory.getLabel(MenuFactory.TAOPCOST_ABACUS_OPPORTUNITY_COST))
+        self.tabWidgetOpportunityCost.addTab(self.tabOpportunityCostCurve, MenuFactory.getLabel(MenuFactory.TAOPCOST_OPPORTUNITY_COST_CURVE))
+        self.tabWidgetOpportunityCost.addTab(self.tabOpportunityCostMap, MenuFactory.getLabel(MenuFactory.TAOPCOST_OPPORTUNITY_COST_MAP))
         
         self.layoutTabOpportunityCost.addWidget(self.tabWidgetOpportunityCost)
         
@@ -800,7 +801,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         # Setup 'Abacus opportunity cost' tab
         #***********************************************************
         # 'Other' GroupBox
-        self.groupBoxOther = QtGui.QGroupBox('Other')
+        self.groupBoxOther = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.TAOPCOST_OTHER))
         self.layoutGroupBoxOther = QtGui.QVBoxLayout()
         self.layoutGroupBoxOther.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxOther.setLayout(self.layoutGroupBoxOther)
@@ -810,11 +811,11 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxOther.addLayout(self.layoutOther)
         
         self.labelOtherInfo = QtGui.QLabel()
-        self.labelOtherInfo.setText('Lorem ipsum dolor sit amet...\n')
+        self.labelOtherInfo.setText(MenuFactory.getDescription(MenuFactory.TAOPCOST_OTHER))
         self.layoutOtherInfo.addWidget(self.labelOtherInfo)
         
         self.labelAOCProjectFile = QtGui.QLabel(parent)
-        self.labelAOCProjectFile.setText('Abacus project file:')
+        self.labelAOCProjectFile.setText(MenuFactory.getLabel(MenuFactory.TAOPCOST_ABACUS_PROJECT_FILE) + ':')
         self.layoutOther.addWidget(self.labelAOCProjectFile, 0, 0)
         
         self.lineEditAOCProjectFile = QtGui.QLineEdit(parent)
@@ -822,13 +823,13 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutOther.addWidget(self.lineEditAOCProjectFile, 0, 1)
         
         self.buttonSelectAOCProjectFile = QtGui.QPushButton(parent)
-        self.buttonSelectAOCProjectFile.setText('&Browse')
+        self.buttonSelectAOCProjectFile.setText('&' + MenuFactory.getLabel(MenuFactory.TAOPCOST_ABACUS_BROWSE))
         self.layoutOther.addWidget(self.buttonSelectAOCProjectFile, 0, 2)
         
         # Process tab button
         self.layoutButtonAbacusOpportunityCost = QtGui.QHBoxLayout()
         self.buttonProcessAbacusOpportunityCost = QtGui.QPushButton()
-        self.buttonProcessAbacusOpportunityCost.setText('&Process')
+        self.buttonProcessAbacusOpportunityCost.setText('&' + MenuFactory.getLabel(MenuFactory.TAOPCOST_ABACUS_PROCESS))
         icon = QtGui.QIcon(':/ui/icons/iconActionHelp.png')
         self.buttonHelpTAAbacusOpportunityCost = QtGui.QPushButton()
         self.buttonHelpTAAbacusOpportunityCost.setIcon(icon)
@@ -837,7 +838,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutButtonAbacusOpportunityCost.addWidget(self.buttonHelpTAAbacusOpportunityCost)
         
         # Template GroupBox
-        self.groupBoxAbacusOpportunityCostTemplate = QtGui.QGroupBox('Template')
+        self.groupBoxAbacusOpportunityCostTemplate = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.CONF_TEMPLATE))
         self.layoutGroupBoxAbacusOpportunityCostTemplate = QtGui.QVBoxLayout()
         self.layoutGroupBoxAbacusOpportunityCostTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxAbacusOpportunityCostTemplate.setLayout(self.layoutGroupBoxAbacusOpportunityCostTemplate)
@@ -847,21 +848,21 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxAbacusOpportunityCostTemplate.addLayout(self.layoutAbacusOpportunityCostTemplate)
         
         self.labelLoadedAbacusOpportunityCostTemplate = QtGui.QLabel()
-        self.labelLoadedAbacusOpportunityCostTemplate.setText('Loaded template:')
+        self.labelLoadedAbacusOpportunityCostTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOADED_TEMPLATE) + ':')
         self.layoutAbacusOpportunityCostTemplate.addWidget(self.labelLoadedAbacusOpportunityCostTemplate, 0, 0)
         
         self.loadedAbacusOpportunityCostTemplate = QtGui.QLabel()
-        self.loadedAbacusOpportunityCostTemplate.setText('<None>')
+        self.loadedAbacusOpportunityCostTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NONE))
         self.layoutAbacusOpportunityCostTemplate.addWidget(self.loadedAbacusOpportunityCostTemplate, 0, 1)
         
         self.labelAbacusOpportunityCostTemplate = QtGui.QLabel()
-        self.labelAbacusOpportunityCostTemplate.setText('Template name:')
+        self.labelAbacusOpportunityCostTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_TEMPLATE_NAME) + ':')
         self.layoutAbacusOpportunityCostTemplate.addWidget(self.labelAbacusOpportunityCostTemplate, 1, 0)
         
         self.comboBoxAbacusOpportunityCostTemplate = QtGui.QComboBox()
         self.comboBoxAbacusOpportunityCostTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
         self.comboBoxAbacusOpportunityCostTemplate.setDisabled(True)
-        self.comboBoxAbacusOpportunityCostTemplate.addItem('No template found')
+        self.comboBoxAbacusOpportunityCostTemplate.addItem(MenuFactory.getLabel(MenuFactory.CONF_NO_TEMPLATE_FOUND))
         self.layoutAbacusOpportunityCostTemplate.addWidget(self.comboBoxAbacusOpportunityCostTemplate, 1, 1)
         
         self.layoutButtonAbacusOpportunityCostTemplate = QtGui.QHBoxLayout()
@@ -869,14 +870,14 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.buttonLoadAbacusOpportunityCostTemplate = QtGui.QPushButton()
         self.buttonLoadAbacusOpportunityCostTemplate.setDisabled(True)
         self.buttonLoadAbacusOpportunityCostTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonLoadAbacusOpportunityCostTemplate.setText('Load')
+        self.buttonLoadAbacusOpportunityCostTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOAD))
         self.buttonSaveAbacusOpportunityCostTemplate = QtGui.QPushButton()
         self.buttonSaveAbacusOpportunityCostTemplate.setDisabled(True)
         self.buttonSaveAbacusOpportunityCostTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveAbacusOpportunityCostTemplate.setText('Save')
+        self.buttonSaveAbacusOpportunityCostTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE))
         self.buttonSaveAsAbacusOpportunityCostTemplate = QtGui.QPushButton()
         self.buttonSaveAsAbacusOpportunityCostTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveAsAbacusOpportunityCostTemplate.setText('Save As')
+        self.buttonSaveAsAbacusOpportunityCostTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS))
         self.layoutButtonAbacusOpportunityCostTemplate.addWidget(self.buttonLoadAbacusOpportunityCostTemplate)
         self.layoutButtonAbacusOpportunityCostTemplate.addWidget(self.buttonSaveAbacusOpportunityCostTemplate)
         self.layoutButtonAbacusOpportunityCostTemplate.addWidget(self.buttonSaveAsAbacusOpportunityCostTemplate)
@@ -893,7 +894,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         # Setup 'Opportunity cost curve' sub tab
         #***********************************************************
         # 'Parameters' GroupBox
-        self.groupBoxOCCParameters = QtGui.QGroupBox('Parameterization')
+        self.groupBoxOCCParameters = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.TAOPCOST_PARAMETERIZATION))
         self.layoutGroupBoxOCCParameters = QtGui.QVBoxLayout()
         self.layoutGroupBoxOCCParameters.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxOCCParameters.setLayout(self.layoutGroupBoxOCCParameters)
@@ -907,7 +908,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutOCCParametersInfo.addWidget(self.labelOCCParametersInfo)
         
         self.labelOCCCsvNPVTable = QtGui.QLabel(parent)
-        self.labelOCCCsvNPVTable.setText('Profitability lookup table:')
+        self.labelOCCCsvNPVTable.setText(MenuFactory.getLabel(MenuFactory.TAOPCOST_PROFITABILITY_LOOKUP_TABLE) + ':')
         self.layoutOCCParameters.addWidget(self.labelOCCCsvNPVTable, 0, 0)
         
         self.comboBoxOCCCsvNPVTable = QtGui.QComboBox()
@@ -917,7 +918,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxOCCCsvNPVTable)
 
         self.labelOCCQUESCDatabase = QtGui.QLabel(parent)
-        self.labelOCCQUESCDatabase.setText('QUES-C Database:')
+        self.labelOCCQUESCDatabase.setText(MenuFactory.getLabel(MenuFactory.TAOPCOST_QUESC_DATABASE) + ':')
         self.layoutOCCParameters.addWidget(self.labelOCCQUESCDatabase, 1, 0)
         
         self.comboBoxOCCQUESCDatabase = QtGui.QComboBox()
@@ -927,7 +928,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxOCCQUESCDatabase)
         
         self.labelOCCCostThreshold = QtGui.QLabel()
-        self.labelOCCCostThreshold.setText('Cost threshold:')
+        self.labelOCCCostThreshold.setText(MenuFactory.getLabel(MenuFactory.TAOPCOST_COST_THRESHOLD) + ':')
         self.layoutOCCParameters.addWidget(self.labelOCCCostThreshold, 2, 0)
         
         self.spinBoxOCCCostThreshold = QtGui.QSpinBox()
@@ -937,7 +938,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         # Process tab button
         self.layoutButtonOpportunityCostCurve = QtGui.QHBoxLayout()
         self.buttonProcessOpportunityCostCurve = QtGui.QPushButton()
-        self.buttonProcessOpportunityCostCurve.setText('&Process')
+        self.buttonProcessOpportunityCostCurve.setText('&' + MenuFactory.getLabel(MenuFactory.TA_PROCESS))
         self.buttonHelpTAOpportunityCostCurve = QtGui.QPushButton()
         self.buttonHelpTAOpportunityCostCurve.setIcon(icon)
         self.layoutButtonOpportunityCostCurve.setAlignment(QtCore.Qt.AlignRight)
@@ -945,7 +946,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutButtonOpportunityCostCurve.addWidget(self.buttonHelpTAOpportunityCostCurve)
         
         # Template GroupBox
-        self.groupBoxOpportunityCostCurveTemplate = QtGui.QGroupBox('Configuration')
+        self.groupBoxOpportunityCostCurveTemplate = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.CONF_TITLE))
         self.layoutGroupBoxOpportunityCostCurveTemplate = QtGui.QVBoxLayout()
         self.layoutGroupBoxOpportunityCostCurveTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxOpportunityCostCurveTemplate.setLayout(self.layoutGroupBoxOpportunityCostCurveTemplate)
@@ -955,21 +956,21 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxOpportunityCostCurveTemplate.addLayout(self.layoutOpportunityCostCurveTemplate)
         
         self.labelLoadedOpportunityCostCurveTemplate = QtGui.QLabel()
-        self.labelLoadedOpportunityCostCurveTemplate.setText('Loaded configuration:')
+        self.labelLoadedOpportunityCostCurveTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOADED_CONFIGURATION) + ':')
         self.layoutOpportunityCostCurveTemplate.addWidget(self.labelLoadedOpportunityCostCurveTemplate, 0, 0)
         
         self.loadedOpportunityCostCurveTemplate = QtGui.QLabel()
-        self.loadedOpportunityCostCurveTemplate.setText('<None>')
+        self.loadedOpportunityCostCurveTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NONE))
         self.layoutOpportunityCostCurveTemplate.addWidget(self.loadedOpportunityCostCurveTemplate, 0, 1)
         
         self.labelOpportunityCostCurveTemplate = QtGui.QLabel()
-        self.labelOpportunityCostCurveTemplate.setText('Name:')
+        self.labelOpportunityCostCurveTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NAME) + ':')
         self.layoutOpportunityCostCurveTemplate.addWidget(self.labelOpportunityCostCurveTemplate, 1, 0)
         
         self.comboBoxOpportunityCostCurveTemplate = QtGui.QComboBox()
         self.comboBoxOpportunityCostCurveTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
         self.comboBoxOpportunityCostCurveTemplate.setDisabled(True)
-        self.comboBoxOpportunityCostCurveTemplate.addItem('No configuration found')
+        self.comboBoxOpportunityCostCurveTemplate.addItem(MenuFactory.getLabel(MenuFactory.CONF_NO_FOUND))
         self.layoutOpportunityCostCurveTemplate.addWidget(self.comboBoxOpportunityCostCurveTemplate, 1, 1)
         
         self.layoutButtonOpportunityCostCurveTemplate = QtGui.QHBoxLayout()
@@ -977,14 +978,14 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.buttonLoadOpportunityCostCurveTemplate = QtGui.QPushButton()
         self.buttonLoadOpportunityCostCurveTemplate.setDisabled(True)
         self.buttonLoadOpportunityCostCurveTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonLoadOpportunityCostCurveTemplate.setText('Load')
+        self.buttonLoadOpportunityCostCurveTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOAD))
         self.buttonSaveOpportunityCostCurveTemplate = QtGui.QPushButton()
         self.buttonSaveOpportunityCostCurveTemplate.setDisabled(True)
         self.buttonSaveOpportunityCostCurveTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveOpportunityCostCurveTemplate.setText('Save')
+        self.buttonSaveOpportunityCostCurveTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE))
         self.buttonSaveAsOpportunityCostCurveTemplate = QtGui.QPushButton()
         self.buttonSaveAsOpportunityCostCurveTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveAsOpportunityCostCurveTemplate.setText('Save As')
+        self.buttonSaveAsOpportunityCostCurveTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS))
         self.layoutButtonOpportunityCostCurveTemplate.addWidget(self.buttonLoadOpportunityCostCurveTemplate)
         self.layoutButtonOpportunityCostCurveTemplate.addWidget(self.buttonSaveOpportunityCostCurveTemplate)
         self.layoutButtonOpportunityCostCurveTemplate.addWidget(self.buttonSaveAsOpportunityCostCurveTemplate)
@@ -1006,7 +1007,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         # Setup 'Opportunity cost map' sub tab
         #***********************************************************
         # 'Parameters' GroupBox
-        self.groupBoxOCMParameters = QtGui.QGroupBox('Parameterization')
+        self.groupBoxOCMParameters = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.TAOPCOST_PARAMETERIZATION))
         self.layoutGroupBoxOCMParameters = QtGui.QVBoxLayout()
         self.layoutGroupBoxOCMParameters.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxOCMParameters.setLayout(self.layoutGroupBoxOCMParameters)
@@ -1020,7 +1021,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutOCMParametersInfo.addWidget(self.labelOCMParametersInfo)
 
         self.labelOCMLandCoverLandUse1 = QtGui.QLabel()
-        self.labelOCMLandCoverLandUse1.setText('Earlier land use/cover:')
+        self.labelOCMLandCoverLandUse1.setText(MenuFactory.getLabel(MenuFactory.TAOPCOST_EARLIER_LAND_USE_COVER) + ':')
         self.layoutOCMParameters.addWidget(self.labelOCMLandCoverLandUse1, 0, 0)
         
         self.comboBoxOCMLandCoverLandUse1 = QtGui.QComboBox()
@@ -1030,7 +1031,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxOCMLandCoverLandUse1)
         
         self.labelOCMLandCoverLandUse2 = QtGui.QLabel()
-        self.labelOCMLandCoverLandUse2.setText('Later land use/cover:')
+        self.labelOCMLandCoverLandUse2.setText(MenuFactory.getLabel(MenuFactory.TAOPCOST_LATER_LAND_USE_COVER) + ':')
         self.layoutOCMParameters.addWidget(self.labelOCMLandCoverLandUse2, 1, 0)
         
         self.comboBoxOCMLandCoverLandUse2 = QtGui.QComboBox()
@@ -1040,7 +1041,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxOCMLandCoverLandUse2)
         
         self.labelOCMLandCoverPlanningUnit = QtGui.QLabel()
-        self.labelOCMLandCoverPlanningUnit.setText('Planning unit:')
+        self.labelOCMLandCoverPlanningUnit.setText(MenuFactory.getLabel(MenuFactory.TAOPCOST_PLANNING_UNIT) + ':')
         self.layoutOCMParameters.addWidget(self.labelOCMLandCoverPlanningUnit, 2, 0)
         
         self.comboBoxOCMLandCoverPlanningUnit = QtGui.QComboBox()
@@ -1050,7 +1051,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataPlanningUnit, self.comboBoxOCMLandCoverPlanningUnit)        
         
         self.labelOCMCarbonTable = QtGui.QLabel()
-        self.labelOCMCarbonTable.setText('Carbon stock lookup table:')
+        self.labelOCMCarbonTable.setText(MenuFactory.getLabel(MenuFactory.TAOPCOST_CARBON_STOCK_LOOKUP_TABLE) + ':')
         self.layoutOCMParameters.addWidget(self.labelOCMCarbonTable, 3, 0)
         
         self.comboBoxOCMCarbonTable = QtGui.QComboBox()
@@ -1060,7 +1061,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxOCMCarbonTable) 
         
         self.labelOCMCsvProfitability = QtGui.QLabel(parent)
-        self.labelOCMCsvProfitability.setText('Profitability lookup table:')
+        self.labelOCMCsvProfitability.setText(MenuFactory.getLabel(MenuFactory.TAOPCOST_PROFITABILITY_LOOKUP_TABLE) + ':')
         self.layoutOCMParameters.addWidget(self.labelOCMCsvProfitability, 4, 0)
         
         self.comboBoxOCMCsvProfitability = QtGui.QComboBox()
@@ -1070,7 +1071,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxOCMCsvProfitability)        
         
         self.labelOCMNoDataValue = QtGui.QLabel()
-        self.labelOCMNoDataValue.setText('&No data value:')
+        self.labelOCMNoDataValue.setText(MenuFactory.getLabel(MenuFactory.TAOPCOST_NO_DATA_VALUE) + ':')
         self.layoutOCMParameters.addWidget(self.labelOCMNoDataValue, 5, 0)
         
         self.spinBoxOCMNoDataValue = QtGui.QSpinBox()
@@ -1083,7 +1084,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         # Process tab button
         self.layoutButtonOpportunityCostMap = QtGui.QHBoxLayout()
         self.buttonProcessOpportunityCostMap = QtGui.QPushButton()
-        self.buttonProcessOpportunityCostMap.setText('&Process')
+        self.buttonProcessOpportunityCostMap.setText(MenuFactory.getLabel(MenuFactory.TA_PROCESS))
         self.buttonHelpTAOpportunityCostMap = QtGui.QPushButton()
         self.buttonHelpTAOpportunityCostMap.setIcon(icon)
         self.layoutButtonOpportunityCostMap.setAlignment(QtCore.Qt.AlignRight)
@@ -1091,7 +1092,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutButtonOpportunityCostMap.addWidget(self.buttonHelpTAOpportunityCostMap)
         
         # Template GroupBox
-        self.groupBoxOpportunityCostMapTemplate = QtGui.QGroupBox('Configuration')
+        self.groupBoxOpportunityCostMapTemplate = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.CONF_TITLE))
         self.layoutGroupBoxOpportunityCostMapTemplate = QtGui.QVBoxLayout()
         self.layoutGroupBoxOpportunityCostMapTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxOpportunityCostMapTemplate.setLayout(self.layoutGroupBoxOpportunityCostMapTemplate)
@@ -1101,21 +1102,21 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxOpportunityCostMapTemplate.addLayout(self.layoutOpportunityCostMapTemplate)
         
         self.labelLoadedOpportunityCostMapTemplate = QtGui.QLabel()
-        self.labelLoadedOpportunityCostMapTemplate.setText('Loaded configuration:')
+        self.labelLoadedOpportunityCostMapTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOADED_CONFIGURATION) + ':')
         self.layoutOpportunityCostMapTemplate.addWidget(self.labelLoadedOpportunityCostMapTemplate, 0, 0)
         
         self.loadedOpportunityCostMapTemplate = QtGui.QLabel()
-        self.loadedOpportunityCostMapTemplate.setText('<None>')
+        self.loadedOpportunityCostMapTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NONE))
         self.layoutOpportunityCostMapTemplate.addWidget(self.loadedOpportunityCostMapTemplate, 0, 1)
         
         self.labelOpportunityCostMapTemplate = QtGui.QLabel()
-        self.labelOpportunityCostMapTemplate.setText('Name:')
+        self.labelOpportunityCostMapTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NAME) + ':')
         self.layoutOpportunityCostMapTemplate.addWidget(self.labelOpportunityCostMapTemplate, 1, 0)
         
         self.comboBoxOpportunityCostMapTemplate = QtGui.QComboBox()
         self.comboBoxOpportunityCostMapTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
         self.comboBoxOpportunityCostMapTemplate.setDisabled(True)
-        self.comboBoxOpportunityCostMapTemplate.addItem('No configuration found')
+        self.comboBoxOpportunityCostMapTemplate.addItem(MenuFactory.getLabel(MenuFactory.CONF_NO_FOUND))
         self.layoutOpportunityCostMapTemplate.addWidget(self.comboBoxOpportunityCostMapTemplate, 1, 1)
         
         self.layoutButtonOpportunityCostMapTemplate = QtGui.QHBoxLayout()
@@ -1123,14 +1124,14 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.buttonLoadOpportunityCostMapTemplate = QtGui.QPushButton()
         self.buttonLoadOpportunityCostMapTemplate.setDisabled(True)
         self.buttonLoadOpportunityCostMapTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonLoadOpportunityCostMapTemplate.setText('Load')
+        self.buttonLoadOpportunityCostMapTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOAD))
         self.buttonSaveOpportunityCostMapTemplate = QtGui.QPushButton()
         self.buttonSaveOpportunityCostMapTemplate.setDisabled(True)
         self.buttonSaveOpportunityCostMapTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveOpportunityCostMapTemplate.setText('Save')
+        self.buttonSaveOpportunityCostMapTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE))
         self.buttonSaveAsOpportunityCostMapTemplate = QtGui.QPushButton()
         self.buttonSaveAsOpportunityCostMapTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveAsOpportunityCostMapTemplate.setText('Save As')
+        self.buttonSaveAsOpportunityCostMapTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS))
         self.layoutButtonOpportunityCostMapTemplate.addWidget(self.buttonLoadOpportunityCostMapTemplate)
         self.layoutButtonOpportunityCostMapTemplate.addWidget(self.buttonSaveOpportunityCostMapTemplate)
         self.layoutButtonOpportunityCostMapTemplate.addWidget(self.buttonSaveAsOpportunityCostMapTemplate)
@@ -1175,10 +1176,10 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.tabLandUseChangeImpact = QtGui.QWidget()
         
         # self.tabWidgetRegionalEconomy.addTab(self.tabInputOutputTable, 'Input-Output Table')
-        self.tabWidgetRegionalEconomy.addTab(self.tabDescriptiveAnalysis, 'Descriptive analysis')
-        self.tabWidgetRegionalEconomy.addTab(self.tabLandRequirementAnalysis, 'Land requirement analysis')
-        self.tabWidgetRegionalEconomy.addTab(self.tabRegionalEconomicScenarioImpact, 'Regional economy scenario')
-        self.tabWidgetRegionalEconomy.addTab(self.tabLandUseChangeImpact, 'Land use scenario')
+        self.tabWidgetRegionalEconomy.addTab(self.tabDescriptiveAnalysis, MenuFactory.getLabel(MenuFactory.TAREGECO_DESCRIPTIVE_ANALYSIS))
+        self.tabWidgetRegionalEconomy.addTab(self.tabLandRequirementAnalysis, MenuFactory.getLabel(MenuFactory.TAREGECO_LAND_REQUIREMENT_ANALYSIS))
+        self.tabWidgetRegionalEconomy.addTab(self.tabRegionalEconomicScenarioImpact, MenuFactory.getLabel(MenuFactory.TAREGECO_REGIONAL_ECONOMY_SCENARIO))
+        self.tabWidgetRegionalEconomy.addTab(self.tabLandUseChangeImpact, MenuFactory.getLabel(MenuFactory.TAREGECO_LAND_USE_SCENARIO))
         
         self.layoutTabRegionalEconomy.addWidget(self.tabWidgetRegionalEconomy)
       
@@ -1208,7 +1209,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutTabDescriptiveAnalysis.addWidget(self.scrollDescriptiveAnalysis)
         
         # 'Single period' GroupBox
-        self.groupBoxSinglePeriod = QtGui.QGroupBox('Initialize')
+        self.groupBoxSinglePeriod = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.TAREGECO_INITIALIZE))
         self.layoutGroupBoxSinglePeriod = QtGui.QVBoxLayout()
         self.layoutGroupBoxSinglePeriod.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxSinglePeriod.setLayout(self.layoutGroupBoxSinglePeriod)
@@ -1222,7 +1223,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutSinglePeriodInfo.addWidget(self.labelSinglePeriodInfo)
         
         self.labelSingleIntermediateConsumptionMatrix = QtGui.QLabel()
-        self.labelSingleIntermediateConsumptionMatrix.setText('Intermediate consumption matrix:')
+        self.labelSingleIntermediateConsumptionMatrix.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_INTERMEDIATE_CONSUMPTION_MATRIX) + ':')
         self.layoutSinglePeriod.addWidget(self.labelSingleIntermediateConsumptionMatrix, 0, 0)
         
         self.comboBoxSingleIntermediateConsumptionMatrix = QtGui.QComboBox()
@@ -1232,7 +1233,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxSingleIntermediateConsumptionMatrix)
         
         self.labelSingleValueAddedMatrix = QtGui.QLabel()
-        self.labelSingleValueAddedMatrix.setText('Value added matrix:')
+        self.labelSingleValueAddedMatrix.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_VALUE_ADDED_MATRIX) + ':')
         self.layoutSinglePeriod.addWidget(self.labelSingleValueAddedMatrix, 1, 0)
         
         self.comboBoxSingleValueAddedMatrix = QtGui.QComboBox()
@@ -1242,7 +1243,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxSingleValueAddedMatrix)
         
         self.labelSingleFinalConsumptionMatrix = QtGui.QLabel()
-        self.labelSingleFinalConsumptionMatrix.setText('Final consumption matrix:')
+        self.labelSingleFinalConsumptionMatrix.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_FINAL_CONSUMPTION_MATRIX) + ':')
         self.layoutSinglePeriod.addWidget(self.labelSingleFinalConsumptionMatrix, 2, 0)
         
         self.comboBoxSingleFinalConsumptionMatrix = QtGui.QComboBox()
@@ -1252,7 +1253,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxSingleFinalConsumptionMatrix)
         
         self.labelOtherValueAddedComponent = QtGui.QLabel()
-        self.labelOtherValueAddedComponent.setText('Value added component:')
+        self.labelOtherValueAddedComponent.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_VALUE_ADDED_COMPONENT) + ':')
         self.layoutSinglePeriod.addWidget(self.labelOtherValueAddedComponent, 3, 0)
         
         self.comboBoxOtherValueAddedComponent = QtGui.QComboBox()
@@ -1262,7 +1263,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxOtherValueAddedComponent)
         
         self.labelOtherFinalConsumptionComponent = QtGui.QLabel()
-        self.labelOtherFinalConsumptionComponent.setText('Final consumption component:')
+        self.labelOtherFinalConsumptionComponent.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_FINAL_CONSUMPTION_COMPONENT) + ':')
         self.layoutSinglePeriod.addWidget(self.labelOtherFinalConsumptionComponent, 4, 0)
         
         self.comboBoxOtherFinalConsumptionComponent = QtGui.QComboBox()
@@ -1272,7 +1273,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxOtherFinalConsumptionComponent)
         
         self.labelOtherListOfEconomicSector = QtGui.QLabel()
-        self.labelOtherListOfEconomicSector.setText('List of economic sector:')
+        self.labelOtherListOfEconomicSector.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_LIST_OF_ECONOMIC_SECTOR) + ':')
         self.layoutSinglePeriod.addWidget(self.labelOtherListOfEconomicSector, 5, 0)
         
         self.comboBoxOtherListOfEconomicSector = QtGui.QComboBox()
@@ -1282,7 +1283,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxOtherListOfEconomicSector)
 
         self.labelSingleLabourRequirement = QtGui.QLabel()
-        self.labelSingleLabourRequirement.setText('Labour requirement:')
+        self.labelSingleLabourRequirement.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_LABOUR_REQUIREMENT) + ':')
         self.layoutSinglePeriod.addWidget(self.labelSingleLabourRequirement, 6, 0)
         
         self.comboBoxSingleLabourRequirement = QtGui.QComboBox()
@@ -1292,25 +1293,25 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxSingleLabourRequirement)
         
         self.labelOtherFinancialUnit = QtGui.QLabel()
-        self.labelOtherFinancialUnit.setText('Financial &unit:')
+        self.labelOtherFinancialUnit.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_FINANCIAL_UNIT) + ':')
         self.layoutSinglePeriod.addWidget(self.labelOtherFinancialUnit, 7, 0)
         
         self.lineEditOtherFinancialUnit = QtGui.QLineEdit()
-        self.lineEditOtherFinancialUnit.setText('Million Rupiah')
+        self.lineEditOtherFinancialUnit.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_CURRENCY))
         self.layoutSinglePeriod.addWidget(self.lineEditOtherFinancialUnit, 7, 1)
         self.labelOtherFinancialUnit.setBuddy(self.lineEditOtherFinancialUnit)
         
         self.labelOtherAreaName = QtGui.QLabel()
-        self.labelOtherAreaName.setText('&Area name:')
+        self.labelOtherAreaName.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_AREA_NAME) + ':')
         self.layoutSinglePeriod.addWidget(self.labelOtherAreaName, 8, 0)
         
         self.lineEditOtherAreaName = QtGui.QLineEdit()
-        self.lineEditOtherAreaName.setText('area')
+        self.lineEditOtherAreaName.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_AREA))
         self.layoutSinglePeriod.addWidget(self.lineEditOtherAreaName, 8, 1)
         self.labelOtherAreaName.setBuddy(self.lineEditOtherAreaName)
         
         self.labelSinglePeriod = QtGui.QLabel()
-        self.labelSinglePeriod.setText('&Year:')
+        self.labelSinglePeriod.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_YEAR) + ':')
         self.layoutSinglePeriod.addWidget(self.labelSinglePeriod, 9, 0)
         
         self.spinBoxSinglePeriod = QtGui.QSpinBox()
@@ -1323,7 +1324,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         # Process tab button
         self.layoutButtonDescriptiveAnalysis = QtGui.QHBoxLayout()
         self.buttonProcessDescriptiveAnalysis = QtGui.QPushButton()
-        self.buttonProcessDescriptiveAnalysis.setText('&Process')
+        self.buttonProcessDescriptiveAnalysis.setText('&' + MenuFactory.getLabel(MenuFactory.TAREGECO_LAND_USE_SCENARIO))
         icon = QtGui.QIcon(':/ui/icons/iconActionHelp.png')
         self.buttonHelpTADescriptiveAnalysis = QtGui.QPushButton()
         self.buttonHelpTADescriptiveAnalysis.setIcon(icon)
@@ -1332,7 +1333,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutButtonDescriptiveAnalysis.addWidget(self.buttonHelpTADescriptiveAnalysis)
         
         # Template GroupBox
-        self.groupBoxDescriptiveAnalysisTemplate = QtGui.QGroupBox('Configuration')
+        self.groupBoxDescriptiveAnalysisTemplate = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.CONF_TITLE))
         self.layoutGroupBoxDescriptiveAnalysisTemplate = QtGui.QVBoxLayout()
         self.layoutGroupBoxDescriptiveAnalysisTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxDescriptiveAnalysisTemplate.setLayout(self.layoutGroupBoxDescriptiveAnalysisTemplate)
@@ -1342,21 +1343,21 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxDescriptiveAnalysisTemplate.addLayout(self.layoutDescriptiveAnalysisTemplate)
         
         self.labelLoadedDescriptiveAnalysisTemplate = QtGui.QLabel()
-        self.labelLoadedDescriptiveAnalysisTemplate.setText('Loaded configuration:')
+        self.labelLoadedDescriptiveAnalysisTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOADED_CONFIGURATION) + ':')
         self.layoutDescriptiveAnalysisTemplate.addWidget(self.labelLoadedDescriptiveAnalysisTemplate, 0, 0)
         
         self.loadedDescriptiveAnalysisTemplate = QtGui.QLabel()
-        self.loadedDescriptiveAnalysisTemplate.setText('<None>')
+        self.loadedDescriptiveAnalysisTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NONE))
         self.layoutDescriptiveAnalysisTemplate.addWidget(self.loadedDescriptiveAnalysisTemplate, 0, 1)
         
         self.labelDescriptiveAnalysisTemplate = QtGui.QLabel()
-        self.labelDescriptiveAnalysisTemplate.setText('Name:')
+        self.labelDescriptiveAnalysisTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NAME) + ':')
         self.layoutDescriptiveAnalysisTemplate.addWidget(self.labelDescriptiveAnalysisTemplate, 1, 0)
         
         self.comboBoxDescriptiveAnalysisTemplate = QtGui.QComboBox()
         self.comboBoxDescriptiveAnalysisTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
         self.comboBoxDescriptiveAnalysisTemplate.setDisabled(True)
-        self.comboBoxDescriptiveAnalysisTemplate.addItem('No configuration found')
+        self.comboBoxDescriptiveAnalysisTemplate.addItem(MenuFactory.getLabel(MenuFactory.CONF_NO_FOUND))
         self.layoutDescriptiveAnalysisTemplate.addWidget(self.comboBoxDescriptiveAnalysisTemplate, 1, 1)
         
         self.layoutButtonDescriptiveAnalysisTemplate = QtGui.QHBoxLayout()
@@ -1364,14 +1365,14 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.buttonLoadDescriptiveAnalysisTemplate = QtGui.QPushButton()
         self.buttonLoadDescriptiveAnalysisTemplate.setDisabled(True)
         self.buttonLoadDescriptiveAnalysisTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonLoadDescriptiveAnalysisTemplate.setText('Load')
+        self.buttonLoadDescriptiveAnalysisTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOAD))
         self.buttonSaveDescriptiveAnalysisTemplate = QtGui.QPushButton()
         self.buttonSaveDescriptiveAnalysisTemplate.setDisabled(True)
         self.buttonSaveDescriptiveAnalysisTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveDescriptiveAnalysisTemplate.setText('Save')
+        self.buttonSaveDescriptiveAnalysisTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE))
         self.buttonSaveAsDescriptiveAnalysisTemplate = QtGui.QPushButton()
         self.buttonSaveAsDescriptiveAnalysisTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveAsDescriptiveAnalysisTemplate.setText('Save As')
+        self.buttonSaveAsDescriptiveAnalysisTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS))
         self.layoutButtonDescriptiveAnalysisTemplate.addWidget(self.buttonLoadDescriptiveAnalysisTemplate)
         self.layoutButtonDescriptiveAnalysisTemplate.addWidget(self.buttonSaveDescriptiveAnalysisTemplate)
         self.layoutButtonDescriptiveAnalysisTemplate.addWidget(self.buttonSaveAsDescriptiveAnalysisTemplate)
@@ -1399,7 +1400,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutTabLandRequirementAnalysis.addWidget(self.scrollLandRequirementAnalysis)
         
         # Parameters 'GroupBox'
-        self.groupBoxLandRequirementAnalysisParameters = QtGui.QGroupBox('Parameterization')
+        self.groupBoxLandRequirementAnalysisParameters = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.TAOPCOST_PARAMETERIZATION))
         self.layoutGroupBoxLandRequirementAnalysisParameters = QtGui.QVBoxLayout()
         self.layoutGroupBoxLandRequirementAnalysisParameters.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxLandRequirementAnalysisParameters.setLayout(self.layoutGroupBoxLandRequirementAnalysisParameters)
@@ -1413,7 +1414,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutLandRequirementAnalysisParametersInfo.addWidget(self.labelLandRequirementAnalysisParametersInfo)
         
         self.labelLandRequirementAnalysisLandUseCover = QtGui.QLabel()
-        self.labelLandRequirementAnalysisLandUseCover.setText('Current land cover map:')
+        self.labelLandRequirementAnalysisLandUseCover.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_CURRENT_LAND_COVER_MAP) + ':')
         self.layoutLandRequirementAnalysisParameters.addWidget(self.labelLandRequirementAnalysisLandUseCover, 0, 0)
         
         self.comboBoxLandRequirementAnalysisLandUseCover = QtGui.QComboBox()
@@ -1423,7 +1424,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxLandRequirementAnalysisLandUseCover)
         
         self.labelLandRequirementAnalysisLookupTable = QtGui.QLabel()
-        self.labelLandRequirementAnalysisLookupTable.setText('Land requirement lookup table:')
+        self.labelLandRequirementAnalysisLookupTable.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_LAND_REQUIREMENT_LOOKUP_TABLE) + ':')
         self.layoutLandRequirementAnalysisParameters.addWidget(self.labelLandRequirementAnalysisLookupTable, 1, 0)
         
         self.comboBoxLandRequirementAnalysisLookupTable = QtGui.QComboBox()
@@ -1433,7 +1434,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxLandRequirementAnalysisLookupTable)
         
         self.labelLandRequirementAnalysisDescriptiveOutput = QtGui.QLabel()
-        self.labelLandRequirementAnalysisDescriptiveOutput.setText('Descriptive analysis output:')
+        self.labelLandRequirementAnalysisDescriptiveOutput.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_DESCRIPTIVE_ANALYSIS_OUTPUT) + ':')
         self.layoutLandRequirementAnalysisParameters.addWidget(self.labelLandRequirementAnalysisDescriptiveOutput, 2, 0)
         
         self.lineEditLandRequirementAnalysisDescriptiveOutput = QtGui.QLineEdit()
@@ -1441,13 +1442,13 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutLandRequirementAnalysisParameters.addWidget(self.lineEditLandRequirementAnalysisDescriptiveOutput, 2, 1)
         
         self.buttonSelectLandRequirementAnalysisDescriptiveOutput = QtGui.QPushButton()
-        self.buttonSelectLandRequirementAnalysisDescriptiveOutput.setText('&Browse')
+        self.buttonSelectLandRequirementAnalysisDescriptiveOutput.setText(MenuFactory.getLabel(MenuFactory.TAOPCOST_BROWSE))
         self.layoutLandRequirementAnalysisParameters.addWidget(self.buttonSelectLandRequirementAnalysisDescriptiveOutput, 2, 2)
         
         # Process tab button
         self.layoutButtonLandRequirementAnalysis = QtGui.QHBoxLayout()
         self.buttonProcessLandRequirementAnalysis = QtGui.QPushButton()
-        self.buttonProcessLandRequirementAnalysis.setText('&Process')
+        self.buttonProcessLandRequirementAnalysis.setText(MenuFactory.getLabel(MenuFactory.TA_PROCESS))
         self.buttonHelpTALandRequirementAnalysis = QtGui.QPushButton()
         self.buttonHelpTALandRequirementAnalysis.setIcon(icon)
         self.layoutButtonLandRequirementAnalysis.setAlignment(QtCore.Qt.AlignRight)
@@ -1455,7 +1456,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutButtonLandRequirementAnalysis.addWidget(self.buttonHelpTALandRequirementAnalysis)
         
         # Template GroupBox
-        self.groupBoxLandRequirementAnalysisTemplate = QtGui.QGroupBox('Configuration')
+        self.groupBoxLandRequirementAnalysisTemplate = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.CONF_TITLE))
         self.layoutGroupBoxLandRequirementAnalysisTemplate = QtGui.QVBoxLayout()
         self.layoutGroupBoxLandRequirementAnalysisTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxLandRequirementAnalysisTemplate.setLayout(self.layoutGroupBoxLandRequirementAnalysisTemplate)
@@ -1465,21 +1466,21 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxLandRequirementAnalysisTemplate.addLayout(self.layoutLandRequirementAnalysisTemplate)
         
         self.labelLoadedLandRequirementAnalysisTemplate = QtGui.QLabel()
-        self.labelLoadedLandRequirementAnalysisTemplate.setText('Loaded configuration:')
+        self.labelLoadedLandRequirementAnalysisTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOADED_CONFIGURATION) + ':')
         self.layoutLandRequirementAnalysisTemplate.addWidget(self.labelLoadedLandRequirementAnalysisTemplate, 0, 0)
         
         self.loadedLandRequirementAnalysisTemplate = QtGui.QLabel()
-        self.loadedLandRequirementAnalysisTemplate.setText('<None>')
+        self.loadedLandRequirementAnalysisTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NONE))
         self.layoutLandRequirementAnalysisTemplate.addWidget(self.loadedLandRequirementAnalysisTemplate, 0, 1)
         
         self.labelLandRequirementAnalysisTemplate = QtGui.QLabel()
-        self.labelLandRequirementAnalysisTemplate.setText('Name:')
+        self.labelLandRequirementAnalysisTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NAME) + ':')
         self.layoutLandRequirementAnalysisTemplate.addWidget(self.labelLandRequirementAnalysisTemplate, 1, 0)
         
         self.comboBoxLandRequirementAnalysisTemplate = QtGui.QComboBox()
         self.comboBoxLandRequirementAnalysisTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
         self.comboBoxLandRequirementAnalysisTemplate.setDisabled(True)
-        self.comboBoxLandRequirementAnalysisTemplate.addItem('No configuration found')
+        self.comboBoxLandRequirementAnalysisTemplate.addItem(MenuFactory.getLabel(MenuFactory.CONF_NO_FOUND))
         self.layoutLandRequirementAnalysisTemplate.addWidget(self.comboBoxLandRequirementAnalysisTemplate, 1, 1)
         
         self.layoutButtonLandRequirementAnalysisTemplate = QtGui.QHBoxLayout()
@@ -1487,14 +1488,14 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.buttonLoadLandRequirementAnalysisTemplate = QtGui.QPushButton()
         self.buttonLoadLandRequirementAnalysisTemplate.setDisabled(True)
         self.buttonLoadLandRequirementAnalysisTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonLoadLandRequirementAnalysisTemplate.setText('Load')
+        self.buttonLoadLandRequirementAnalysisTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOAD))
         self.buttonSaveLandRequirementAnalysisTemplate = QtGui.QPushButton()
         self.buttonSaveLandRequirementAnalysisTemplate.setDisabled(True)
         self.buttonSaveLandRequirementAnalysisTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveLandRequirementAnalysisTemplate.setText('Save')
+        self.buttonSaveLandRequirementAnalysisTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE))
         self.buttonSaveAsLandRequirementAnalysisTemplate = QtGui.QPushButton()
         self.buttonSaveAsLandRequirementAnalysisTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveAsLandRequirementAnalysisTemplate.setText('Save As')
+        self.buttonSaveAsLandRequirementAnalysisTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS))
         self.layoutButtonLandRequirementAnalysisTemplate.addWidget(self.buttonLoadLandRequirementAnalysisTemplate)
         self.layoutButtonLandRequirementAnalysisTemplate.addWidget(self.buttonSaveLandRequirementAnalysisTemplate)
         self.layoutButtonLandRequirementAnalysisTemplate.addWidget(self.buttonSaveAsLandRequirementAnalysisTemplate)
@@ -1522,7 +1523,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutTabRegionalEconomicScenarioImpact.addWidget(self.scrollRegionalEconomicScenarioImpact)
         
         # 'Type' GroupBox
-        self.groupBoxRegionalEconomicScenarioImpactType = QtGui.QGroupBox('Scenario type')
+        self.groupBoxRegionalEconomicScenarioImpactType = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.TAREGECO_SCENARIO_TYPE))
         self.layoutGroupBoxRegionalEconomicScenarioImpactType = QtGui.QVBoxLayout()
         self.layoutGroupBoxRegionalEconomicScenarioImpactType.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxRegionalEconomicScenarioImpactType.setLayout(self.layoutGroupBoxRegionalEconomicScenarioImpactType)
@@ -1536,7 +1537,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutRegionalEconomicScenarioImpactType.addWidget(self.labelRegionalEconomicScenarioImpactTypeInfo)        
         
         self.labelRegionalEconomicScenarioLandRequirement = QtGui.QLabel()
-        self.labelRegionalEconomicScenarioLandRequirement.setText('Land requirement:')
+        self.labelRegionalEconomicScenarioLandRequirement.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_LAND_REQUIREMENT))
         self.layoutRegionalEconomicScenarioImpactType.addWidget(self.labelRegionalEconomicScenarioLandRequirement, 0, 0)
         
         self.lineEditRegionalEconomicScenarioLandRequirement = QtGui.QLineEdit()
@@ -1544,15 +1545,15 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutRegionalEconomicScenarioImpactType.addWidget(self.lineEditRegionalEconomicScenarioLandRequirement, 0, 1)
         
         self.buttonSelectRegionalEconomicScenarioLandRequirement = QtGui.QPushButton()
-        self.buttonSelectRegionalEconomicScenarioLandRequirement.setText('&Browse')
+        self.buttonSelectRegionalEconomicScenarioLandRequirement.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutRegionalEconomicScenarioImpactType.addWidget(self.buttonSelectRegionalEconomicScenarioLandRequirement, 0, 2)        
         
-        self.checkBoxRegionalEconomicScenarioImpactFinalDemand = QtGui.QCheckBox('Final demand scenario')
+        self.checkBoxRegionalEconomicScenarioImpactFinalDemand = QtGui.QCheckBox(MenuFactory.getLabel(MenuFactory.TAREGECO_FINAL_DEMAND_SCENARIO))
         self.checkBoxRegionalEconomicScenarioImpactFinalDemand.setChecked(True)
         self.layoutRegionalEconomicScenarioImpactType.addWidget(self.checkBoxRegionalEconomicScenarioImpactFinalDemand, 1, 0)
         
         self.labelRegionalEconomicScenarioImpactFinalDemandChangeScenario = QtGui.QLabel()
-        self.labelRegionalEconomicScenarioImpactFinalDemandChangeScenario.setText('Final demand lookup table:')
+        self.labelRegionalEconomicScenarioImpactFinalDemandChangeScenario.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_FINAL_DEMAND_LOOKUP_TABLE) + ':')
         self.layoutRegionalEconomicScenarioImpactType.addWidget(self.labelRegionalEconomicScenarioImpactFinalDemandChangeScenario, 2, 0)
         
         self.comboBoxRegionalEconomicScenarioImpactFinalDemandChangeScenario = QtGui.QComboBox()
@@ -1561,12 +1562,12 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         
         self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxRegionalEconomicScenarioImpactFinalDemandChangeScenario)
         
-        self.checkBoxRegionalEconomicScenarioImpactGDP = QtGui.QCheckBox('GDP Scenario')
+        self.checkBoxRegionalEconomicScenarioImpactGDP = QtGui.QCheckBox(MenuFactory.getLabel(MenuFactory.TAREGECO_GDP_SCENARIO))
         self.checkBoxRegionalEconomicScenarioImpactGDP.setChecked(False)
         self.layoutRegionalEconomicScenarioImpactType.addWidget(self.checkBoxRegionalEconomicScenarioImpactGDP, 3, 0)
         
         self.labelRegionalEconomicScenarioImpactGDPChangeScenario = QtGui.QLabel()
-        self.labelRegionalEconomicScenarioImpactGDPChangeScenario.setText('GDP lookup table:')
+        self.labelRegionalEconomicScenarioImpactGDPChangeScenario.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_GDP_LOOKUP) + ':')
         self.labelRegionalEconomicScenarioImpactGDPChangeScenario.setDisabled(True)
         self.layoutRegionalEconomicScenarioImpactType.addWidget(self.labelRegionalEconomicScenarioImpactGDPChangeScenario, 4, 0)
         
@@ -1579,7 +1580,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         # Process tab button
         self.layoutButtonRegionalEconomicScenarioImpact = QtGui.QHBoxLayout()
         self.buttonProcessRegionalEconomicScenarioImpact = QtGui.QPushButton()
-        self.buttonProcessRegionalEconomicScenarioImpact.setText('&Process')
+        self.buttonProcessRegionalEconomicScenarioImpact.setText(MenuFactory.getLabel(MenuFactory.TA_PROCESS))
         self.buttonHelpTARegionalEconomicScenarioImpact = QtGui.QPushButton()
         self.buttonHelpTARegionalEconomicScenarioImpact.setIcon(icon)
         self.layoutButtonRegionalEconomicScenarioImpact.setAlignment(QtCore.Qt.AlignRight)
@@ -1587,7 +1588,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutButtonRegionalEconomicScenarioImpact.addWidget(self.buttonHelpTARegionalEconomicScenarioImpact)
         
         # Template GroupBox
-        self.groupBoxRegionalEconomicScenarioImpactTemplate = QtGui.QGroupBox('Configuration')
+        self.groupBoxRegionalEconomicScenarioImpactTemplate = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.CONF_TITLE))
         self.layoutGroupBoxRegionalEconomicScenarioImpactTemplate = QtGui.QVBoxLayout()
         self.layoutGroupBoxRegionalEconomicScenarioImpactTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxRegionalEconomicScenarioImpactTemplate.setLayout(self.layoutGroupBoxRegionalEconomicScenarioImpactTemplate)
@@ -1597,21 +1598,21 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxRegionalEconomicScenarioImpactTemplate.addLayout(self.layoutRegionalEconomicScenarioImpactTemplate)
         
         self.labelLoadedRegionalEconomicScenarioImpactTemplate = QtGui.QLabel()
-        self.labelLoadedRegionalEconomicScenarioImpactTemplate.setText('Loaded configuration:')
+        self.labelLoadedRegionalEconomicScenarioImpactTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOADED_CONFIGURATION) + ':')
         self.layoutRegionalEconomicScenarioImpactTemplate.addWidget(self.labelLoadedRegionalEconomicScenarioImpactTemplate, 0, 0)
         
         self.loadedRegionalEconomicScenarioImpactTemplate = QtGui.QLabel()
-        self.loadedRegionalEconomicScenarioImpactTemplate.setText('<None>')
+        self.loadedRegionalEconomicScenarioImpactTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NONE))
         self.layoutRegionalEconomicScenarioImpactTemplate.addWidget(self.loadedRegionalEconomicScenarioImpactTemplate, 0, 1)
         
         self.labelRegionalEconomicScenarioImpactTemplate = QtGui.QLabel()
-        self.labelRegionalEconomicScenarioImpactTemplate.setText('Name:')
+        self.labelRegionalEconomicScenarioImpactTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NAME) + ':')
         self.layoutRegionalEconomicScenarioImpactTemplate.addWidget(self.labelRegionalEconomicScenarioImpactTemplate, 1, 0)
         
         self.comboBoxRegionalEconomicScenarioImpactTemplate = QtGui.QComboBox()
         self.comboBoxRegionalEconomicScenarioImpactTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
         self.comboBoxRegionalEconomicScenarioImpactTemplate.setDisabled(True)
-        self.comboBoxRegionalEconomicScenarioImpactTemplate.addItem('No configuration found')
+        self.comboBoxRegionalEconomicScenarioImpactTemplate.addItem(MenuFactory.getLabel(MenuFactory.CONF_NO_FOUND))
         self.layoutRegionalEconomicScenarioImpactTemplate.addWidget(self.comboBoxRegionalEconomicScenarioImpactTemplate, 1, 1)
         
         self.layoutButtonRegionalEconomicScenarioImpactTemplate = QtGui.QHBoxLayout()
@@ -1619,14 +1620,14 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.buttonLoadRegionalEconomicScenarioImpactTemplate = QtGui.QPushButton()
         self.buttonLoadRegionalEconomicScenarioImpactTemplate.setDisabled(True)
         self.buttonLoadRegionalEconomicScenarioImpactTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonLoadRegionalEconomicScenarioImpactTemplate.setText('Load')
+        self.buttonLoadRegionalEconomicScenarioImpactTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOAD))
         self.buttonSaveRegionalEconomicScenarioImpactTemplate = QtGui.QPushButton()
         self.buttonSaveRegionalEconomicScenarioImpactTemplate.setDisabled(True)
         self.buttonSaveRegionalEconomicScenarioImpactTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveRegionalEconomicScenarioImpactTemplate.setText('Save')
+        self.buttonSaveRegionalEconomicScenarioImpactTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE))
         self.buttonSaveAsRegionalEconomicScenarioImpactTemplate = QtGui.QPushButton()
         self.buttonSaveAsRegionalEconomicScenarioImpactTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveAsRegionalEconomicScenarioImpactTemplate.setText('Save As')
+        self.buttonSaveAsRegionalEconomicScenarioImpactTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS))
         self.layoutButtonRegionalEconomicScenarioImpactTemplate.addWidget(self.buttonLoadRegionalEconomicScenarioImpactTemplate)
         self.layoutButtonRegionalEconomicScenarioImpactTemplate.addWidget(self.buttonSaveRegionalEconomicScenarioImpactTemplate)
         self.layoutButtonRegionalEconomicScenarioImpactTemplate.addWidget(self.buttonSaveAsRegionalEconomicScenarioImpactTemplate)
@@ -1654,7 +1655,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutTabLandUseChangeImpact.addWidget(self.scrollLandUseChangeImpact)
         
         # Parameters 'GroupBox'
-        self.groupBoxLandUseChangeImpactParameters = QtGui.QGroupBox('Parameterization')
+        self.groupBoxLandUseChangeImpactParameters = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.TAOPCOST_PARAMETERIZATION))
         self.layoutGroupBoxLandUseChangeImpactParameters = QtGui.QVBoxLayout()
         self.layoutGroupBoxLandUseChangeImpactParameters.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxLandUseChangeImpactParameters.setLayout(self.layoutGroupBoxLandUseChangeImpactParameters)
@@ -1668,7 +1669,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutLandUseChangeImpactParametersInfo.addWidget(self.labelLandUseChangeImpactParametersInfo)
         
         self.labelLandUseChangeLandRequirement = QtGui.QLabel()
-        self.labelLandUseChangeLandRequirement.setText('Land requirement:')
+        self.labelLandUseChangeLandRequirement.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_LAND_REQUIREMENT))
         self.layoutLandUseChangeImpactParameters.addWidget(self.labelLandUseChangeLandRequirement, 0, 0)
         
         self.lineEditLandUseChangeLandRequirement = QtGui.QLineEdit()
@@ -1676,11 +1677,11 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutLandUseChangeImpactParameters.addWidget(self.lineEditLandUseChangeLandRequirement, 0, 1)
         
         self.buttonSelectLandUseChangeLandRequirement = QtGui.QPushButton()
-        self.buttonSelectLandUseChangeLandRequirement.setText('&Browse')
+        self.buttonSelectLandUseChangeLandRequirement.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutLandUseChangeImpactParameters.addWidget(self.buttonSelectLandUseChangeLandRequirement, 0, 2)
         
         self.labelSelectLandUseChangeMap = QtGui.QLabel()
-        self.labelSelectLandUseChangeMap.setText('Projected land cover map:')
+        self.labelSelectLandUseChangeMap.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_PROJECTED_LAND_COVER_MAP) + ':')
         self.layoutLandUseChangeImpactParameters.addWidget(self.labelSelectLandUseChangeMap, 1, 0)
         
         self.comboBoxSelectLandUseChangeMap = QtGui.QComboBox()
@@ -1692,7 +1693,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         # Process tab button
         self.layoutButtonLandUseChangeImpact = QtGui.QHBoxLayout()
         self.buttonProcessLandUseChangeImpact = QtGui.QPushButton()
-        self.buttonProcessLandUseChangeImpact.setText('&Process')
+        self.buttonProcessLandUseChangeImpact.setText(MenuFactory.getLabel(MenuFactory.TA_PROCESS))
         self.buttonHelpTALandUseChangeImpact = QtGui.QPushButton()
         self.buttonHelpTALandUseChangeImpact.setIcon(icon)
         self.layoutButtonLandUseChangeImpact.setAlignment(QtCore.Qt.AlignRight)
@@ -1700,7 +1701,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutButtonLandUseChangeImpact.addWidget(self.buttonHelpTALandUseChangeImpact)
         
         # Template GroupBox
-        self.groupBoxLandUseChangeImpactTemplate = QtGui.QGroupBox('Configuration')
+        self.groupBoxLandUseChangeImpactTemplate = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.CONF_TITLE))
         self.layoutGroupBoxLandUseChangeImpactTemplate = QtGui.QVBoxLayout()
         self.layoutGroupBoxLandUseChangeImpactTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.groupBoxLandUseChangeImpactTemplate.setLayout(self.layoutGroupBoxLandUseChangeImpactTemplate)
@@ -1710,21 +1711,21 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxLandUseChangeImpactTemplate.addLayout(self.layoutLandUseChangeImpactTemplate)
         
         self.labelLoadedLandUseChangeImpactTemplate = QtGui.QLabel()
-        self.labelLoadedLandUseChangeImpactTemplate.setText('Loaded configuration:')
+        self.labelLoadedLandUseChangeImpactTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOADED_CONFIGURATION) + ':')
         self.layoutLandUseChangeImpactTemplate.addWidget(self.labelLoadedLandUseChangeImpactTemplate, 0, 0)
         
         self.loadedLandUseChangeImpactTemplate = QtGui.QLabel()
-        self.loadedLandUseChangeImpactTemplate.setText('<None>')
+        self.loadedLandUseChangeImpactTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NONE))
         self.layoutLandUseChangeImpactTemplate.addWidget(self.loadedLandUseChangeImpactTemplate, 0, 1)
         
         self.labelLandUseChangeImpactTemplate = QtGui.QLabel()
-        self.labelLandUseChangeImpactTemplate.setText('Name:')
+        self.labelLandUseChangeImpactTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NAME) + ':')
         self.layoutLandUseChangeImpactTemplate.addWidget(self.labelLandUseChangeImpactTemplate, 1, 0)
         
         self.comboBoxLandUseChangeImpactTemplate = QtGui.QComboBox()
         self.comboBoxLandUseChangeImpactTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
         self.comboBoxLandUseChangeImpactTemplate.setDisabled(True)
-        self.comboBoxLandUseChangeImpactTemplate.addItem('No configuration found')
+        self.comboBoxLandUseChangeImpactTemplate.addItem(MenuFactory.getLabel(MenuFactory.CONF_NO_FOUND))
         self.layoutLandUseChangeImpactTemplate.addWidget(self.comboBoxLandUseChangeImpactTemplate, 1, 1)
         
         self.layoutButtonLandUseChangeImpactTemplate = QtGui.QHBoxLayout()
@@ -1732,14 +1733,14 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.buttonLoadLandUseChangeImpactTemplate = QtGui.QPushButton()
         self.buttonLoadLandUseChangeImpactTemplate.setDisabled(True)
         self.buttonLoadLandUseChangeImpactTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonLoadLandUseChangeImpactTemplate.setText('Load')
+        self.buttonLoadLandUseChangeImpactTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOAD))
         self.buttonSaveLandUseChangeImpactTemplate = QtGui.QPushButton()
         self.buttonSaveLandUseChangeImpactTemplate.setDisabled(True)
         self.buttonSaveLandUseChangeImpactTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveLandUseChangeImpactTemplate.setText('Save')
+        self.buttonSaveLandUseChangeImpactTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE))
         self.buttonSaveAsLandUseChangeImpactTemplate = QtGui.QPushButton()
         self.buttonSaveAsLandUseChangeImpactTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveAsLandUseChangeImpactTemplate.setText('Save As')
+        self.buttonSaveAsLandUseChangeImpactTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS))
         self.layoutButtonLandUseChangeImpactTemplate.addWidget(self.buttonLoadLandUseChangeImpactTemplate)
         self.layoutButtonLandUseChangeImpactTemplate.addWidget(self.buttonSaveLandUseChangeImpactTemplate)
         self.layoutButtonLandUseChangeImpactTemplate.addWidget(self.buttonSaveAsLandUseChangeImpactTemplate)
@@ -1835,14 +1836,14 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         else:
             reply = QtGui.QMessageBox.question(
                 self,
-                'Load Template',
-                'Do you want to load \'{0}\'?'.format(templateFile),
+                MenuFactory.getLabel(MenuFactory.CONF_LOAD_TEMPLATE),
+                MenuFactory.getDescription(MenuFactory.CONF_LOAD_TEMPLATE) + ' \'{0}\'?'.format(templateFile),
                 QtGui.QMessageBox.Yes|QtGui.QMessageBox.No,
                 QtGui.QMessageBox.No
             )
             
         if reply == QtGui.QMessageBox.Yes or fileName:
-            self.loadTemplate('Abacus Opportunity Cost', templateFile)
+            self.loadTemplate(MenuFactory.getLabel(MenuFactory.TAOPCOST_ABACUS_OPPORTUNITY_COST), templateFile)
     
     
     def handlerSaveAbacusOpportunityCostTemplate(self, fileName=None):
@@ -1858,14 +1859,14 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         
         reply = QtGui.QMessageBox.question(
             self,
-            'Save Template',
-            'Do you want save \'{0}\'?\nThis action will overwrite the template file.'.format(templateFile),
+            MenuFactory.getLabel(MenuFactory.CONF_SAVE_TEMPLATE),
+            MenuFactory.getDescription(MenuFactory.CONF_SAVE_TEMPLATE),
             QtGui.QMessageBox.Yes|QtGui.QMessageBox.No,
             QtGui.QMessageBox.No
         )
             
         if reply == QtGui.QMessageBox.Yes:
-            self.saveTemplate('Abacus Opportunity Cost', templateFile)
+            self.saveTemplate(MenuFactory.getLabel(MenuFactory.TAOPCOST_ABACUS_OPPORTUNITY_COST), templateFile)
             return True
         else:
             return False
@@ -1874,7 +1875,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
     def handlerSaveAsAbacusOpportunityCostTemplate(self):
         """Slot method for saving a module template to a new file.
         """
-        fileName, ok = QtGui.QInputDialog.getText(self, 'Save As', 'Enter a new template name:')
+        fileName, ok = QtGui.QInputDialog.getText(self, MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS), MenuFactory.getDescription(MenuFactory.CONF_SAVE_AS) + ':')
         fileSaved = False
         
         if ok:
@@ -1884,7 +1885,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
             if os.path.exists(os.path.join(self.settingsPath, fileName)):
                 fileSaved = self.handlerSaveAbacusOpportunityCostTemplate(fileName)
             else:
-                self.saveTemplate('Abacus Opportunity Cost', fileName)
+                self.saveTemplate(MenuFactory.getLabel(MenuFactory.TAOPCOST_ABACUS_OPPORTUNITY_COST), fileName)
                 fileSaved = True
             
             self.loadTemplateFiles()
@@ -1898,7 +1899,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         """Slot method for a file select dialog.
         """
         file = unicode(QtGui.QFileDialog.getOpenFileName(
-            self, 'Select Project File', QtCore.QDir.homePath(), 'Project File (*{0})'.format(self.main.appSettings['selectCarfileExt'])))
+            self, MenuFactory.getLabel(MenuFactory.MSG_TA_SELECT_PROJECT_FILE), QtCore.QDir.homePath(), MenuFactory.getDescription(MenuFactory.MSG_TA_SELECT_PROJECT_FILE) + ' (*{0})'.format(self.main.appSettings['selectCarfileExt'])))
         
         if file:
             self.lineEditAOCProjectFile.setText(file)
@@ -1922,14 +1923,14 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         else:
             reply = QtGui.QMessageBox.question(
                 self,
-                'Load Template',
-                'Do you want to load \'{0}\'?'.format(templateFile),
+                MenuFactory.getLabel(MenuFactory.CONF_LOAD_TEMPLATE),
+                MenuFactory.getDescription(MenuFactory.CONF_LOAD_TEMPLATE) + ' \'{0}\'?'.format(templateFile),
                 QtGui.QMessageBox.Yes|QtGui.QMessageBox.No,
                 QtGui.QMessageBox.No
             )
             
         if reply == QtGui.QMessageBox.Yes or fileName:
-            self.loadTemplate('Opportunity Cost Curve', templateFile)
+            self.loadTemplate(MenuFactory.getLabel(MenuFactory.TAOPCOST_OPPORTUNITY_COST_CURVE), templateFile)
     
     
     def handlerSaveOpportunityCostCurveTemplate(self, fileName=None):
@@ -1945,14 +1946,14 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         
         reply = QtGui.QMessageBox.question(
             self,
-            'Save Template',
-            'Do you want save \'{0}\'?\nThis action will overwrite the template file.'.format(templateFile),
+            MenuFactory.getLabel(MenuFactory.CONF_SAVE_TEMPLATE),
+            MenuFactory.getDescription(MenuFactory.CONF_SAVE_TEMPLATE),
             QtGui.QMessageBox.Yes|QtGui.QMessageBox.No,
             QtGui.QMessageBox.No
         )
             
         if reply == QtGui.QMessageBox.Yes:
-            self.saveTemplate('Opportunity Cost Curve', templateFile)
+            self.saveTemplate(MenuFactory.getLabel(MenuFactory.TAOPCOST_OPPORTUNITY_COST_CURVE), templateFile)
             return True
         else:
             return False
@@ -1961,7 +1962,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
     def handlerSaveAsOpportunityCostCurveTemplate(self):
         """Slot method for saving a module template to a new file.
         """
-        fileName, ok = QtGui.QInputDialog.getText(self, 'Save As', 'Enter a new template name:')
+        fileName, ok = QtGui.QInputDialog.getText(self, MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS), MenuFactory.getDescription(MenuFactory.CONF_SAVE_AS) + ':')
         fileSaved = False
         
         if ok:
@@ -1971,7 +1972,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
             if os.path.exists(os.path.join(self.settingsPath, fileName)):
                 fileSaved = self.handlerSaveOpportunityCostCurveTemplate(fileName)
             else:
-                self.saveTemplate('Opportunity Cost Curve', fileName)
+                self.saveTemplate(MenuFactory.getLabel(MenuFactory.TAOPCOST_OPPORTUNITY_COST_CURVE), fileName)
                 fileSaved = True
             
             self.loadTemplateFiles()
@@ -1998,14 +1999,14 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         else:
             reply = QtGui.QMessageBox.question(
                 self,
-                'Load Template',
-                'Do you want to load \'{0}\'?'.format(templateFile),
+                MenuFactory.getLabel(MenuFactory.CONF_LOAD_TEMPLATE),
+                MenuFactory.getDescription(MenuFactory.CONF_LOAD_TEMPLATE) + ' \'{0}\'?'.format(templateFile),
                 QtGui.QMessageBox.Yes|QtGui.QMessageBox.No,
                 QtGui.QMessageBox.No
             )
             
         if reply == QtGui.QMessageBox.Yes or fileName:
-            self.loadTemplate('Opportunity Cost Map', templateFile)
+            self.loadTemplate(MenuFactory.getLabel(MenuFactory.TAOPCOST_OPPORTUNITY_COST_MAP), templateFile)
     
     
     def handlerSaveOpportunityCostMapTemplate(self, fileName=None):
@@ -2021,14 +2022,14 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         
         reply = QtGui.QMessageBox.question(
             self,
-            'Save Template',
-            'Do you want save \'{0}\'?\nThis action will overwrite the template file.'.format(templateFile),
+            MenuFactory.getLabel(MenuFactory.CONF_SAVE_TEMPLATE),
+            MenuFactory.getDescription(MenuFactory.CONF_SAVE_TEMPLATE),
             QtGui.QMessageBox.Yes|QtGui.QMessageBox.No,
             QtGui.QMessageBox.No
         )
             
         if reply == QtGui.QMessageBox.Yes:
-            self.saveTemplate('Opportunity Cost Map', templateFile)
+            self.saveTemplate(MenuFactory.getLabel(MenuFactory.TAOPCOST_OPPORTUNITY_COST_MAP), templateFile)
             return True
         else:
             return False
@@ -2037,7 +2038,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
     def handlerSaveAsOpportunityCostMapTemplate(self):
         """Slot method for saving a module template to a new file.
         """
-        fileName, ok = QtGui.QInputDialog.getText(self, 'Save As', 'Enter a new template name:')
+        fileName, ok = QtGui.QInputDialog.getText(self, MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS), MenuFactory.getDescription(MenuFactory.CONF_SAVE_AS) + ':')
         fileSaved = False
         
         if ok:
@@ -2047,7 +2048,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
             if os.path.exists(os.path.join(self.settingsPath, fileName)):
                 fileSaved = self.handlerSaveOpportunityCostMapTemplate(fileName)
             else:
-                self.saveTemplate('Opportunity Cost Map', fileName)
+                self.saveTemplate(MenuFactory.getLabel(MenuFactory.TAOPCOST_OPPORTUNITY_COST_MAP), fileName)
                 fileSaved = True
             
             self.loadTemplateFiles()
@@ -2064,7 +2065,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         """Slot method for a file select dialog.
         """
         file = unicode(QtGui.QFileDialog.getOpenFileName(
-            self, 'Select Descriptive Analysis Output', QtCore.QDir.homePath(), 'Descriptive Analysis Output (*{0})'.format(self.main.appSettings['selectLdbasefileExt'])))
+            self, MenuFactory.getLabel(MenuFactory.MSG_TA_SELECT_DESCRIPTIVE_ANALYSIS_OUTPUT), QtCore.QDir.homePath(),  MenuFactory.getDescription(MenuFactory.MSG_TA_SELECT_DESCRIPTIVE_ANALYSIS_OUTPUT) + ' (*{0})'.format(self.main.appSettings['selectLdbasefileExt'])))
         
         if file:
             self.lineEditLandRequirementAnalysisDescriptiveOutput.setText(file)
@@ -2078,7 +2079,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         """Slot method for a file select dialog.
         """
         file = unicode(QtGui.QFileDialog.getOpenFileName(
-            self, 'Select Land Requirement File', QtCore.QDir.homePath(), 'Land Requirement (*{0})'.format(self.main.appSettings['selectLdbasefileExt'])))
+            self, MenuFactory.getLabel(MenuFactory.MSG_TA_SELECT_LAND_REQUIREMENT), QtCore.QDir.homePath(), MenuFactory.getDescription(MenuFactory.MSG_TA_SELECT_LAND_REQUIREMENT) + ' (*{0})'.format(self.main.appSettings['selectLdbasefileExt'])))
         
         if file:
             self.lineEditRegionalEconomicScenarioLandRequirement.setText(file)
@@ -2092,7 +2093,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         """Slot method for a file select dialog.
         """
         file = unicode(QtGui.QFileDialog.getOpenFileName(
-            self, 'Select Land Requirement File', QtCore.QDir.homePath(), 'Land Requirement (*{0})'.format(self.main.appSettings['selectLdbasefileExt'])))
+            self, MenuFactory.getLabel(MenuFactory.MSG_TA_SELECT_LAND_REQUIREMENT), QtCore.QDir.homePath(), MenuFactory.getDescription(MenuFactory.MSG_TA_SELECT_LAND_REQUIREMENT) + ' (*{0})'.format(self.main.appSettings['selectLdbasefileExt'])))
         
         if file:
             self.lineEditLandUseChangeLandRequirement.setText(file)
