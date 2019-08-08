@@ -136,7 +136,9 @@ class MenuFactory:
     APP_TABLE_EDITOR_LOAD = "Application.table_editor_load"
     APP_TABLE_EDITOR_SAVE= "Application.table_editor_save"
     
-    FILE_EXIT = "FileMenu.exit"
+    FILE_TITLE = "FileMenu.title"
+    FILE_QUIT = "FileMenu.quit"
+    VIEW_TITLE = "ViewMenu.title"
     VIEW_MENU_BAR = "ViewMenu.menu_bar"
     VIEW_DASHBOARD = "ViewMenu.dashboard"
     VIEW_TOP_TOOLBAR = "ViewMenu.top_toolbar"
@@ -144,7 +146,10 @@ class MenuFactory:
     MODE_PAN = "ModeMenu.pan"
     MODE_SELECT = "ModeMenu.select"
     MODE_INFO = "ModeMenu.info"
+    TOOLS_TITLE = "ToolsMenu.title"
     TOOLS_PIVOT_TABLE = "ToolsMenu.pivot_table"
+    DATABASE_TITLE = "DatabaseMenu.title"
+    HELP_TITLE = "HelpMenu.title"
     HELP_OPEN_HELP = "HelpMenu.open_help"
     HELP_ABOUT_LUMENS = "HelpMenu.about_lumens"
     

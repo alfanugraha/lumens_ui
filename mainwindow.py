@@ -605,20 +605,20 @@ class MainWindow(QtGui.QMainWindow):
         
         # Create the default menus
         self.menubar = self.menuBar()
-        self.fileMenu = self.menubar.addMenu('&File')
-        self.viewMenu = self.menubar.addMenu('&View')
-        self.modeMenu = self.menubar.addMenu('&Mode')
-        self.toolsMenu = self.menubar.addMenu('&Tools')
-        self.databaseMenu = self.menubar.addMenu('&Database')
+        self.fileMenu = self.menubar.addMenu('&' + MenuFactory.getLabel(MenuFactory.FILE_TITLE))
+        self.viewMenu = self.menubar.addMenu('&' + MenuFactory.getLabel(MenuFactory.VIEW_TITLE))
+        self.modeMenu = self.menubar.addMenu('&' + MenuFactory.getLabel(MenuFactory.MODE_PAN))
+        self.toolsMenu = self.menubar.addMenu('&' + MenuFactory.getLabel(MenuFactory.TOOLS_TITLE))
+        self.databaseMenu = self.menubar.addMenu('&' + MenuFactory.getLabel(MenuFactory.DATABASE_TITLE))
         self.purMenu = self.menubar.addMenu('&PUR')
         self.quesMenu = self.menubar.addMenu('&QUES')
         self.taMenu = self.menubar.addMenu('&TA')
         self.sciendoMenu = self.menubar.addMenu('&SCIENDO')
-        self.helpMenu = self.menubar.addMenu('&Help')
+        self.helpMenu = self.menubar.addMenu('&' + MenuFactory.getLabel(MenuFactory.HELP_TITLE))
         
         # 20160601: the menu bar must be hidden
         self.actionToggleMenubar = QtGui.QAction(MenuFactory.getLabel(MenuFactory.VIEW_MENU_BAR), self) 
-        self.actionToggleMenubar.setShortcut('f11')
+        self.actionToggleMenubar.setShortcut('F11')
         self.actionToggleMenubar.setCheckable(True)
         self.actionToggleMenubar.setChecked(False)
         self.actionToggleMenubar.triggered.connect(self.handlerToggleMenuBar)
@@ -651,7 +651,7 @@ class MainWindow(QtGui.QMainWindow):
         self.setStatusBar(self.statusBar)
         
         # Create the actions and assigned them to the menus
-        self.actionQuit = QtGui.QAction('Quit', self)
+        self.actionQuit = QtGui.QAction(MenuFactory.getLabel(MenuFactory.FILE_QUIT), self)
         self.actionQuit.setShortcut(QtGui.QKeySequence.Quit)
         
         self.actionToggleDialogToolbar = QtGui.QAction(MenuFactory.getLabel(MenuFactory.VIEW_TOP_TOOLBAR), self)
