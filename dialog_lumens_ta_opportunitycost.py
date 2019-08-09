@@ -565,7 +565,7 @@ class DialogLumensTAOpportunityCost(QtGui.QDialog, DialogLumensBase):
         self.layoutOCCParametersInfo.addWidget(self.labelOCCParametersInfo)
         
         self.labelOCCCsvNPVTable = QtGui.QLabel(parent)
-        self.labelOCCCsvNPVTable.setText(MenuFactory.getLabel(TAOPCOST_PROFITABILITY_LOOKUP_TABLE) + ':')
+        self.labelOCCCsvNPVTable.setText(MenuFactory.getLabel(MenuFactory.TAOPCOST_PROFITABILITY_LOOKUP_TABLE) + ':')
         self.layoutOCCParameters.addWidget(self.labelOCCCsvNPVTable, 0, 0)
         
         self.lineEditOCCCsvNPVTable = QtGui.QLineEdit(parent)
