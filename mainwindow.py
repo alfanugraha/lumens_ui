@@ -3170,7 +3170,8 @@ class MainWindow(QtGui.QMainWindow):
         """Slot method for a file select dialog to open a LUMENS .lpj project database file.
         """
         lumensDatabase = unicode(QtGui.QFileDialog.getOpenFileName(
-            self, MenuFactory.getLabel(MenuFactory.APP_SELECT_LUMENS_DATABASE), QtCore.QDir.homePath(), MenuFactory.getLabel(MenuFactory.APP_LUMENS_PROJ_FILE) + ' (*{0});;' + MenuFactory.getLabel(MenuFactory.APP_LUMENS_PROJ_ARCHIVE) + ' (*{1})'
+            self, MenuFactory.getLabel(MenuFactory.APP_SELECT_LUMENS_DATABASE), QtCore.QDir.homePath(), 'LUMENS Project File (*{0});;LUMENS Project Archive (*{1})'
+            # self, MenuFactory.getLabel(MenuFactory.APP_SELECT_LUMENS_DATABASE), QtCore.QDir.homePath(), MenuFactory.getLabel(MenuFactory.APP_LUMENS_PROJ_FILE) + ' (*{0});;' + MenuFactory.getLabel(MenuFactory.APP_LUMENS_PROJ_ARCHIVE) + ' (*{1})'
                 .format(self.appSettings['selectProjectfileExt'], self.appSettings['selectZipfileExt'])))
         
         lumensDatabaseName, lumensDatabaseExt = os.path.splitext(lumensDatabase)
@@ -3609,7 +3610,7 @@ class MainWindow(QtGui.QMainWindow):
         
         file = unicode(QtGui.QFileDialog.getOpenFileName(
             self, MenuFactory.getLabel(MenuFactory.APP_ADD_LAYER), QtCore.QDir.homePath(), 
-                MenuFactory.getLabel(MenuFactory.APP_VECTOR_RASTER_FILE) + ' (*{0});;' + MenuFactory.getLabel(MenuFactory.APP_DBF_FILE) + ' (*{1});;' + MenuFactory.getLabel(MenuFactory.APP_DBF_FILE) + ' (*{2})'
+                'Vector/Raster File ({0});;DBF File (*{1});;CSV File (*{2})'
                 .format(filterFormats, self.appSettings['selectDatabasefileExt'], self.appSettings['selectCsvfileExt'])))
                 
         if file:

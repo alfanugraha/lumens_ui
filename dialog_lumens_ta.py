@@ -1442,7 +1442,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutLandRequirementAnalysisParameters.addWidget(self.lineEditLandRequirementAnalysisDescriptiveOutput, 2, 1)
         
         self.buttonSelectLandRequirementAnalysisDescriptiveOutput = QtGui.QPushButton()
-        self.buttonSelectLandRequirementAnalysisDescriptiveOutput.setText(MenuFactory.getLabel(MenuFactory.TAOPCOST_BROWSE))
+        self.buttonSelectLandRequirementAnalysisDescriptiveOutput.setText(MenuFactory.getLabel(MenuFactory.TA_BROWSE))
         self.layoutLandRequirementAnalysisParameters.addWidget(self.buttonSelectLandRequirementAnalysisDescriptiveOutput, 2, 2)
         
         # Process tab button
@@ -1567,7 +1567,7 @@ class DialogLumensTA(QtGui.QDialog, DialogLumensBase):
         self.layoutRegionalEconomicScenarioImpactType.addWidget(self.checkBoxRegionalEconomicScenarioImpactGDP, 3, 0)
         
         self.labelRegionalEconomicScenarioImpactGDPChangeScenario = QtGui.QLabel()
-        self.labelRegionalEconomicScenarioImpactGDPChangeScenario.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_GDP_LOOKUP) + ':')
+        self.labelRegionalEconomicScenarioImpactGDPChangeScenario.setText(MenuFactory.getLabel(MenuFactory.TAREGECO_GDP_LOOKUP))
         self.labelRegionalEconomicScenarioImpactGDPChangeScenario.setDisabled(True)
         self.layoutRegionalEconomicScenarioImpactType.addWidget(self.labelRegionalEconomicScenarioImpactGDPChangeScenario, 4, 0)
         
