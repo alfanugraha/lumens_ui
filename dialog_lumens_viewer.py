@@ -2,11 +2,14 @@
 #-*- coding:utf-8 -*-
 
 import os, tempfile, csv
-from PyQt4 import QtCore, QtGui, QtWebKit
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import QDialog
+from PyQt5.QtWebKitWidgets import QWebView
 
 from menu_factory import MenuFactory
 
-class DialogLumensViewer(QtGui.QDialog):
+class DialogLumensViewer(QDialog):
     """LUMENS dialog class for displaying csv, html, and text content.
     """
     
@@ -137,7 +140,7 @@ class DialogLumensViewer(QtGui.QDialog):
             
             self.tableContent.horizontalHeader().resizeSections()
         elif self.contentType == 'html':
-            self.webContent = QtWebKit.QWebView()
+            self.webContent = QWebView()
             self.dialogLayout.addWidget(self.webContent)
             
             self.webContent.load(QtCore.QUrl.fromLocalFile(self.contentSource))

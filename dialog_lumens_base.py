@@ -2,7 +2,7 @@
 #-*- coding:utf-8 -*-
 
 import os, logging, csv, tempfile
-from PyQt4 import QtGui
+from PyQt5.QtGui import *
 
 from dialog_lumens_viewer import DialogLumensViewer
 
@@ -11,7 +11,7 @@ from menu_factory import MenuFactory
 class DialogLumensBase:
     """Base class for LUMENS dialogs.
     """
-    
+
     def __init__(self, parent):
         self.main = parent
     
@@ -70,7 +70,7 @@ class DialogLumensBase:
             dialog = DialogLumensViewer(self, MenuFactory.getLabel(MenuFactory.APP_LUMENS_HELP) + ' - {0}'.format(dialogName), 'html', filePath)
             dialog.exec_()
         else:
-            QtGui.QMessageBox.critical(self, MenuFactory.getLabel(MenuFactory.MSG_APP_HELP_NOT_FOUND), MenuFactory.getDescription(MenuFactory.MSG_APP_HELP_NOT_FOUND) + " '{0}'.".format(filePath))
+            QMessageBox.critical(self, MenuFactory.getLabel(MenuFactory.MSG_APP_HELP_NOT_FOUND), MenuFactory.getDescription(MenuFactory.MSG_APP_HELP_NOT_FOUND) + " '{0}'.".format(filePath))
     
     
     def validForm(self, formName=False):
@@ -98,7 +98,7 @@ class DialogLumensBase:
                 valid = False
         
         if not valid:
-            QtGui.QMessageBox.critical(self, MenuFactory.getLabel(MenuFactory.MSG_ERROR),  MenuFactory.getDescription(MenuFactory.MSG_ERROR))
+            QMessageBox.critical(self, MenuFactory.getLabel(MenuFactory.MSG_ERROR),  MenuFactory.getDescription(MenuFactory.MSG_ERROR))
         
         return valid
     
@@ -146,11 +146,11 @@ class DialogLumensBase:
         
         if success:
             logging.getLogger(type(self).__name__).info(outputMessage)
-            QtGui.QMessageBox.information(self, MenuFactory.getLabel(MenuFactory.MSG_APP_RESULT_SUCCESS), successMessage)
+            QMessageBox.information(self, MenuFactory.getLabel(MenuFactory.MSG_APP_RESULT_SUCCESS), successMessage)
             return True
         
         logging.getLogger(type(self).__name__).error(outputMessage)
-        QtGui.QMessageBox.critical(self, MenuFactory.getLabel(MenuFactory.MSG_APP_RESULT_ERROR), errorMessage)
+        QMessageBox.critical(self, MenuFactory.getLabel(MenuFactory.MSG_APP_RESULT_ERROR), errorMessage)
         return False
     
 

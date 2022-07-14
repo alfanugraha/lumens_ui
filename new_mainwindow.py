@@ -5,9 +5,14 @@ import os, sys, logging, subprocess
 from qgis.core import *
 from qgis.gui import *
 
-from qgis.PyQt.QtCore import *
-from qgis.PyQt.QtWidgets import *
-from qgis.PyQt.QtGui import *
+# from qgis.PyQt.QtCore import *
+# from qgis.PyQt.QtWidgets import *
+# from qgis.PyQt.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+
+from PyQt5.QtWebKitWidgets import QWebView
 
 import resource
 
@@ -33,7 +38,9 @@ splashScreen.show()
 # from processing.tools import *
 
 from utils import QPlainTextEditLogger
-# from dialog_lumens_createdatabase import DialogLumensCreateDatabase
+
+# Import LUMENS dialog classes here
+from dialog_lumens_createdatabase import DialogLumensCreateDatabase
 
 from menu_factory import MenuFactory
 
@@ -44,6 +51,7 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__(parent)
 
         self.appSettings = {
+            'debug': False,
             'appDir': os.path.dirname(os.path.realpath(__file__)),
             'selectShapefileExt': '.shp',
             'selectRasterfileExt': '.tif',
@@ -67,6 +75,7 @@ class MainWindow(QMainWindow):
                 'projectProvince': '',
                 'projectCountry': '',
                 'projectSpatialRes': '',
+                'dissolvedShapefile': '', 
             },
             'DialogLumensOpenDatabase': {
                 'projectFile': '',
@@ -88,7 +97,7 @@ class MainWindow(QMainWindow):
         self.appSettings['defaultLanguageProperties'] = os.path.join(self.appSettings['langDir'], 'lang_' + self.appSettings['defaultLanguage'] + '.properties')
         MenuFactory.setMenuProperties(self.appSettings['defaultLanguageProperties'], self.appSettings['defaultLanguage'])   
          
-
+        # Build the mainwindow UI!
         self.setupUi()
 
         # For holding QgsVectorLayer/QgsRasterLayer objects
@@ -99,39 +108,9 @@ class MainWindow(QMainWindow):
         ##self.layerListModel.setSupportedDragActions(QtCore.Qt.MoveAction)
         self.layerListView.setModel(self.layerListModel)
 
-#         self.installEventFilter(self)
-
-#         self.logger = logging.getLogger(__name__)
-#         formatter = logging.Formatter(
-#             '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-#         self.log_box.setFormatter(formatter)
-#         self.logger.addHandler(self.log_box)
-#         self.logger.setLevel(logging.DEBUG)
-
-#         self.buttonDialogLumensCreateDatabase.clicked.connect(self.handlerDialogLumensCreateDatabase)
-
-
-#     def eventFilter(self, object, event):
-#         """
-#         """
-#         if event.type() == QtCore.QEvent.WindowActivate:
-#             print("widget window has gained focus")
-#             if not self.appSettings['DialogLumensOpenDatabase']['projectFile']:
-#                 self.buttonLumensCloseDatabase.setDisabled(True)
-#                 self.buttonDialogLumensAddLandcoverRaster.setDisabled(True)
-#                 # self.buttonDialogLumensAddPeat.setDisabled(True)
-#             else:
-#                 self.buttonLumensCloseDatabase.setEnabled(True)
-#                 self.buttonDialogLumensAddLandcoverRaster.setEnabled(True)
-#                 # self.buttonDialogLumeensAddPeat.setEnabled(True)
-#         elif event.type()== QtCore.QEvnt.WindowDeactivate:
-#             print("widget window has lost focus")
-#         elif event.type()== QtCore.QEvent.FocusIn:
-#             print("widget has gained keyboard focus")
-#         elif event.type()== QtCore.QEvent.FocusOut:
-#             print("widget has lost keyboard focus")
-
-#         return False
+        # LUMENS action handlers
+        # Database menu
+        self.actionDialogLumensCreateDatabase.triggered.connect(self.handlerDialogLumensCreateDatabase)
 
 
     def setupUi(self):
@@ -181,7 +160,7 @@ class MainWindow(QMainWindow):
         # self.actionToggleMenubar.triggered.connect(self.handlerToggleMenuBar)
         # self.actionToggleMenubar.trigger()
 
-        # Floating toolbar
+        # Left floating toolbar for map
         self.toolBar = QToolBar(self)
         self.toolBar.setStyleSheet('QToolBar { background-color: rgb(225, 229, 237); } QToolButton { color: rgb(173, 185, 202); }')
         self.addToolBar(QtCore.Qt.LeftToolBarArea, self.toolBar)
@@ -442,6 +421,10 @@ class MainWindow(QMainWindow):
 
         self.layerListView.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
 
+        #***********************************************************
+        # 'Dashboard' setup
+        #***********************************************************
+
         self.projectModel = QFileSystemModel()
         self.projectModel.setRootPath(QDir.rootPath())
         
@@ -452,9 +435,100 @@ class MainWindow(QMainWindow):
         self.projectTreeView.hideColumn(2)
         self.projectTreeView.hideColumn(3)
 
+        self.sidebarTabWidget = QTabWidget()
+        sidebarTabWidgetStylesheet = """
+        QTabWidget::pane {
+            border: none;
+            background-color: rgb(244, 248, 252);
+        }
+        QTabBar::tab {
+            background-color: rgb(174, 176, 178);
+            color: rgb(95, 98, 102);
+            height: 40px; 
+            width: 100px;
+        }
+        QTabBar::tab:selected, QTabBar::tab:hover {
+            background-color: rgb(244, 248, 252);
+            color: rgb(56, 65, 73);
+        }
+        QTabBar::tab:selected{
+            font: bold;
+        }
+        """
+        self.sidebarTabWidget.setStyleSheet(sidebarTabWidgetStylesheet)
+        self.sidebarTabWidget.setTabPosition(QTabWidget.North)
+
+        self.tabLayers = QWidget()
+        self.tabDatabase = QWidget()
+        self.tabDatabase.setStyleSheet('QWidget{ background-color: rgb(244, 248, 252); }')        
+
+        self.layoutTabLayers = QVBoxLayout()
+        self.layoutTabDatabase = QVBoxLayout()
+
+        self.tabLayers.setLayout(self.layoutTabLayers)
+        self.tabDatabase.setLayout(self.layoutTabDatabase)
+
+        # Move module tab to top level
+        self.sidebarTabWidget.addTab(self.tabLayers, MenuFactory.getLabel(MenuFactory.APP_BROWSER)) 
+        self.sidebarTabWidget.addTab(self.tabDatabase, MenuFactory.getLabel(MenuFactory.APP_PROJ))
+
+        self.groupBoxProjectLayers = QGroupBox(MenuFactory.getLabel(MenuFactory.APP_LAYERS))
+        self.layoutGroupBoxProjectLayers = QHBoxLayout()
+        self.groupBoxProjectLayers.setLayout(self.layoutGroupBoxProjectLayers)
+        
+        self.groupBoxProjectExplore = QGroupBox(MenuFactory.getLabel(MenuFactory.APP_EXPLORE))
+        self.layoutGroupBoxProjectExplore = QVBoxLayout()
+        self.groupBoxProjectExplore.setLayout(self.layoutGroupBoxProjectExplore)
+
+        self.layoutGroupBoxProjectLayers.addWidget(self.layerListView)
+        self.layoutGroupBoxProjectExplore.addWidget(self.projectTreeView)
+        self.layoutTabLayers.addWidget(self.groupBoxProjectLayers)
+        self.layoutTabLayers.addWidget(self.groupBoxProjectExplore)        
+
+        self.layersToolBar = QToolBar(self)
+        self.layersToolBar.setOrientation(QtCore.Qt.Vertical)
+        self.layersToolBar.addAction(self.actionAddLayer)
+        self.layersToolBar.addAction(self.actionLayerAttributeTable)
+        self.layersToolBar.addAction(self.actionLayerAttributeEditor)
+        self.layersToolBar.addAction(self.actionLayerProperties)
+        self.layersToolBar.addAction(self.actionDeleteLayer)
+        self.layersToolBar.addAction(self.actionTableEditor)
+        self.layoutGroupBoxProjectLayers.addWidget(self.layersToolBar)
+
+        self.databaseToolBar = QToolBar(self)
+        self.databaseToolBar.setIconSize(QtCore.QSize(32, 32))
+        self.databaseToolBar.addAction(self.actionDialogLumensCreateDatabase)
+        self.databaseToolBar.addAction(self.actionLumensOpenDatabase)
+        self.databaseToolBar.addAction(self.actionLumensCloseDatabase)
+        self.databaseToolBar.addAction(self.actionLumensExportDatabase)
+        self.databaseToolBar.addAction(self.actionDialogLumensAddData)
+        self.databaseToolBar.addAction(self.actionLumensDeleteData)
+        self.databaseToolBar.addAction(self.actionLumensDatabaseStatus)
+        self.databaseToolBar.setStyleSheet('QToolBar QToolButton::hover{ background-color: rgb(225, 229, 237); }')
+        self.layoutTabDatabase.addWidget(self.databaseToolBar)
+
+        self.webContentDatabaseStatus = QWebView(self)
+
+        self.groupBoxDatabaseStatus = QGroupBox(MenuFactory.getLabel(MenuFactory.APP_PROJ_STATUS))
+        self.layoutGroupBoxDatabaseStatus = QVBoxLayout()
+        self.groupBoxDatabaseStatus.setLayout(self.layoutGroupBoxDatabaseStatus)
+        self.layoutTabDatabase.addWidget(self.groupBoxDatabaseStatus)
+        self.layoutGroupBoxDatabaseStatus.addWidget(self.webContentDatabaseStatus)  
+
+        # Floating dashboard
+        self.sidebarDockWidget = QDockWidget(MenuFactory.getLabel(MenuFactory.VIEW_DASHBOARD), self) 
+        self.sidebarDockWidget.setContentsMargins(5, 10, 5, 5)
+        self.sidebarDockWidget.setFeatures(self.sidebarDockWidget.features() & QDockWidget.AllDockWidgetFeatures)
+        self.sidebarDockWidget.setWidget(self.sidebarTabWidget)
+        self.sidebarDockWidget.setStyleSheet('QDockWidget { background-color: rgb(225, 229, 237); } QToolBar { border: none; }') # Remove border for all child QToolBar in sidebar
+        # self.sidebarDockWidget.setFloating(True) 
+        self.sidebarDockWidgetAction = self.sidebarDockWidget.toggleViewAction()
+
+        self.addDockWidget(Qt.RightDockWidgetArea, self.sidebarDockWidget)
+
         # Add VIEW menu
         self.viewMenu.addAction(self.actionToggleMenubar)
-        # self.viewMenu.addAction(self.sidebarDockWidgetAction)
+        self.viewMenu.addAction(self.sidebarDockWidgetAction)
         self.viewMenu.addAction(self.actionToggleDialogToolbar)
         self.viewMenu.addAction(self.actionToggleToolbar)
         self.viewMenu.addSeparator()
@@ -525,8 +599,15 @@ class MainWindow(QMainWindow):
         ##self.resize(self.sizeHint())
 
 
-    def openDialog(self, DialogClass):
-        """Keep track of already opened dialog instances instead of creating new ones
+    def openDialog(self, DialogClass, tabName='', showDialog=True):
+        """Method for opening and keeping track of opened module dialogs instances.
+        
+        Open and keep track of already opened dialog instances instead of creating new ones.
+        This allow input fields that have been set to persist when the dialog window is reopened.
+        
+        Args:
+            DialogClass (str): class name of the dialog.
+            showDialog (bool): show the dialog or return the dialog instance instead.
         """
         dialog = None
 
@@ -535,74 +616,48 @@ class MainWindow(QMainWindow):
                 dialog = dlg
                 break
 
-        if dialog:
-            dialog.exec_()
-        else:
+        if not dialog:
             dialog = DialogClass(self)
             self.openDialogs.append(dialog)
+
+        if showDialog:
+            if tabName:
+                if tabName == 'Pre-QUES':
+                    dialog.tabWidget.setCurrentWidget(dialog.tabPreQUES)
+                elif tabName == 'QUES-C':
+                    dialog.tabWidget.setCurrentWidget(dialog.tabQUESC)
+                elif tabName == 'QUES-B':
+                    dialog.tabWidget.setCurrentWidget(dialog.tabQUESB)
+                elif tabName == 'QUES-H':
+                    dialog.tabWidget.setCurrentWidget(dialog.tabQUESH)
+                elif tabName == 'Abacus Opportunity Cost':
+                    dialog.tabWidget.setCurrentWidget(dialog.tabAbacusOpportunityCost)
+                elif tabName == 'Opportunity Cost Curve':
+                    dialog.tabWidget.setCurrentWidget(dialog.tabOpportunityCostCurve)
+                elif tabName == 'Opportunity Cost Map':
+                    dialog.tabWidget.setCurrentWidget(dialog.tabOpportunityCostMap)
+                elif tabName == 'Descriptive Analysis of Regional Economy':
+                    dialog.tabWidget.setCurrentWidget(dialog.tabDescriptiveAnalysis)
+                elif tabName == 'Regional Economic Scenario Impact':
+                    dialog.tabWidget.setCurrentWidget(dialog.tabRegionalEconomicScenarioImpact)
+                elif tabName == 'Land Requirement Analysis':
+                    dialog.tabWidget.setCurrentWidget(dialog.tabLandRequirementAnalysis)
+                elif tabName == 'Land Use Change Impact':
+                    dialog.tabWidget.setCurrentWidget(dialog.tabLandUseChangeImpact)
+                elif tabName == 'Low Emission Development Analysis':
+                    dialog.tabWidget.setCurrentWidget(dialog.tabLowEmissionDevelopmentAnalysis)
+                elif tabName == 'Land Use Change Modeling':
+                    dialog.tabWidget.setCurrentWidget(dialog.tabLandUseChangeModeling)
             dialog.exec_()
+        else:
+            return dialog
 
 
-#     def handlerDialogLumensCreateDatabase(self):
-#         """
-#         """
-#         self.openDialog(DialogLumensCreateDatabase)
+    def handlerDialogLumensCreateDatabase(self):
+        """Slot method for opening a dialog window.
+        """
+        self.openDialog(DialogLumensCreateDatabase)
 
-#         """
-#         try:
-#             subprocess.check_call(['rscript', '--version'])
-#             logging.getLogger(__name__).info('subprocess ended')
-#         except subprocess.CalledProcessError as e:
-#             logging.getLogger(__name__).error('subprocess error: %s', e)
-#         """
-
-
-#     def handlerDialogLumensOpenDatabase(self):
-#         """
-#         """
-#         self.openDialog(DialogLumensOpenDatabase)
-
-
-#     def handlerLumensOpenDatabase(self):
-#         """Select a .lpj database file and open it
-#         """
-#         lumensDatabase = unicode(QtGui.QFileDialog.getOpenFileName(
-#             self, 'Select LUMENS Database', QtCore.QDir.homePath(), 'LUMENS Database (*{0})'.format(self.appSettings['selectProjectFileExt'])))
-
-#         if lumensDatabase:
-#             logging.getLogger(type(self).__name__).info('select LUMENS database: %s', lumensDatabase)
-
-#             self.lumensOpenDatabase(lumensDatabase)
-
-
-#     def lumensOpenDatabase(self, lumensDatabase):
-#         """
-#         """
-#         logging.getLogger(__name__).info('start: LUMENS Open Database')
-
-#         self.buttonLumensOpenDatabase.setDisabled(True)
-
-#         outputs = general.runalg(
-#             'modeler:lumens_open_database',
-#             lumensDatabase,
-#             None
-#         )
-
-#         if outputs:
-#             #print outputs
-#             # outputs['overview_ALG0'] => temporary raster file
-
-#             self.appSettings['DialogLumensOpenDatabase']['projectFile'] = lumensDatabase
-#             self.appSettings['DialogLumensOpenDatabase']['projectFolder'] = os.path.dirname(lumensDatabase)
-
-#             self.lineEditActiveProject.setText(lumensDatabase)
-#             self.buttonLumensCloseDatabase.setEnabled(True)
-#             self.buttonDialogLumensAddLandcoverRaster.setEnabled(True)
-#             self.buttonDialogLumensAddPeat.setEnabled(True)
-
-#         self.buttonLumensOpenDatabase.setEnabled(True)
-
-#         logging.getLogger(__name__).info('end: LUMENS Open Database')
 
     def addLayer(self, layerFile):
         """Method for adding a spatial format file to the layer list and show it on the map canvas.
