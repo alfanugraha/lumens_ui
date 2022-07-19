@@ -2,12 +2,14 @@
 #-*- coding:utf-8 -*-
 
 import os, logging
-from PyQt4 import QtCore, QtGui
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 import resource
 
 from menu_factory import MenuFactory
 
-class DialogLumensPURReferenceClasses(QtGui.QDialog):
+class DialogLumensPURReferenceClasses(QDialog):
     """LUMENS dialog class for PUR reference classes edit window.
     
     Attributes:
@@ -22,7 +24,7 @@ class DialogLumensPURReferenceClasses(QtGui.QDialog):
             parent: the main window's parent instance.
         """
         super(DialogLumensPURReferenceClasses, self).__init__(parent)
-        print 'DEBUG: DialogLumensPURReferenceClasses init'
+        print('DEBUG: DialogLumensPURReferenceClasses init')
         
         self.main = parent
         self.dialogTitle = MenuFactory.getLabel(MenuFactory.PURBUILD_EDIT_REFERENCE_CLASS)
@@ -44,42 +46,42 @@ class DialogLumensPURReferenceClasses(QtGui.QDialog):
         Args:
             parent: the dialog's parent instance.
         """
-        self.dialogLayout = QtGui.QVBoxLayout()
+        self.dialogLayout = QVBoxLayout()
         
         # 'Setup planning unit' GroupBox
-        self.groupBoxEditReferenceClasses = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.PURBUILD_REFERENCE_CLASS))
-        self.layoutGroupBoxEditReferenceClasses = QtGui.QVBoxLayout()
+        self.groupBoxEditReferenceClasses = QGroupBox(MenuFactory.getLabel(MenuFactory.PURBUILD_REFERENCE_CLASS))
+        self.layoutGroupBoxEditReferenceClasses = QVBoxLayout()
         self.groupBoxEditReferenceClasses.setLayout(self.layoutGroupBoxEditReferenceClasses)
         self.dialogLayout.addWidget(self.groupBoxEditReferenceClasses)
         
-        self.contentButtonEditReferenceClasses = QtGui.QWidget()
-        self.layoutButtonEditReferenceClasses = QtGui.QHBoxLayout()
+        self.contentButtonEditReferenceClasses = QWidget()
+        self.layoutButtonEditReferenceClasses = QHBoxLayout()
         self.layoutButtonEditReferenceClasses.setContentsMargins(0, 0, 0, 0)
         self.contentButtonEditReferenceClasses.setLayout(self.layoutButtonEditReferenceClasses)
         self.layoutButtonEditReferenceClasses.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
-        self.buttonAddRow = QtGui.QPushButton()
+        self.buttonAddRow = QPushButton()
         self.buttonAddRow.setText(MenuFactory.getLabel(MenuFactory.PURBUILD_ADD_REFERENCE_CLASS))
-        self.buttonAddRow.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonAddRow.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         self.layoutButtonEditReferenceClasses.addWidget(self.buttonAddRow)
         
-        self.layoutContentGroupBoxEditReferenceClasses = QtGui.QVBoxLayout()
+        self.layoutContentGroupBoxEditReferenceClasses = QVBoxLayout()
         self.layoutContentGroupBoxEditReferenceClasses.setContentsMargins(5, 5, 5, 5)
-        self.contentGroupBoxEditReferenceClasses = QtGui.QWidget()
+        self.contentGroupBoxEditReferenceClasses = QWidget()
         self.contentGroupBoxEditReferenceClasses.setLayout(self.layoutContentGroupBoxEditReferenceClasses)
-        self.scrollEditReferenceClasses = QtGui.QScrollArea()
+        self.scrollEditReferenceClasses = QScrollArea()
         self.scrollEditReferenceClasses.setWidgetResizable(True);
         self.scrollEditReferenceClasses.setWidget(self.contentGroupBoxEditReferenceClasses)
-        self.layoutEditReferenceClassesInfo = QtGui.QVBoxLayout()
-        self.labelEditReferenceClassesInfo = QtGui.QLabel()
+        self.layoutEditReferenceClassesInfo = QVBoxLayout()
+        self.labelEditReferenceClassesInfo = QLabel()
         self.labelEditReferenceClassesInfo.setText('\n')
         self.labelEditReferenceClassesInfo.setWordWrap(True)
         self.layoutEditReferenceClassesInfo.addWidget(self.labelEditReferenceClassesInfo)
         
-        self.layoutButtonBox = QtGui.QHBoxLayout()
+        self.layoutButtonBox = QHBoxLayout()
         self.layoutButtonBox.setAlignment(QtCore.Qt.AlignRight)
-        self.buttonBox = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Save|QtGui.QDialogButtonBox.Cancel)
-        icon = QtGui.QIcon(':/ui/icons/iconActionHelp.png')
-        self.buttonPURReferenceClassesHelp = QtGui.QPushButton()
+        self.buttonBox = QDialogButtonBox(QDialogButtonBox.Save|QDialogButtonBox.Cancel)
+        icon = QIcon(':/ui/icons/iconActionHelp.png')
+        self.buttonPURReferenceClassesHelp = QPushButton()
         self.buttonPURReferenceClassesHelp.setIcon(icon)
         self.layoutButtonBox.addWidget(self.buttonBox)
         self.layoutButtonBox.addWidget(self.buttonPURReferenceClassesHelp)
@@ -89,7 +91,7 @@ class DialogLumensPURReferenceClasses(QtGui.QDialog):
         self.layoutGroupBoxEditReferenceClasses.addWidget(self.scrollEditReferenceClasses)
         self.dialogLayout.addLayout(self.layoutButtonBox)
         
-        self.layoutTableReferenceClasses = QtGui.QVBoxLayout()
+        self.layoutTableReferenceClasses = QVBoxLayout()
         self.layoutTableReferenceClasses.setAlignment(QtCore.Qt.AlignTop)
         self.layoutContentGroupBoxEditReferenceClasses.addLayout(self.layoutTableReferenceClasses)
         
@@ -132,20 +134,20 @@ class DialogLumensPURReferenceClasses(QtGui.QDialog):
         """
         self.tableRowCount = self.tableRowCount + 1
         
-        layoutRow = QtGui.QHBoxLayout()
+        layoutRow = QHBoxLayout()
         
-        buttonDeleteReferenceClass = QtGui.QPushButton()
-        icon = QtGui.QIcon(':/ui/icons/iconActionClear.png')
+        buttonDeleteReferenceClass = QPushButton()
+        icon = QIcon(':/ui/icons/iconActionClear.png')
         buttonDeleteReferenceClass.setIcon(icon)
         buttonDeleteReferenceClass.setObjectName('buttonDeleteReferenceClass_{0}'.format(str(self.tableRowCount)))
         layoutRow.addWidget(buttonDeleteReferenceClass)
         
-        lineEditReferenceClassID = QtGui.QLineEdit()
+        lineEditReferenceClassID = QLineEdit()
         lineEditReferenceClassID.setObjectName('lineEditReferenceClassID_{0}'.format(str(self.tableRowCount)))
         lineEditReferenceClassID.setText(str(self.tableRowCount))
         layoutRow.addWidget(lineEditReferenceClassID)
         
-        lineEditReferenceClassTitle = QtGui.QLineEdit()
+        lineEditReferenceClassTitle = QLineEdit()
         lineEditReferenceClassTitle.setText('title')
         lineEditReferenceClassTitle.setObjectName('lineEditReferenceClassTitle_{0}'.format(str(self.tableRowCount)))
         layoutRow.addWidget(lineEditReferenceClassTitle)
@@ -169,9 +171,9 @@ class DialogLumensPURReferenceClasses(QtGui.QDialog):
         for i in reversed(range(layout.count())):
             item = layout.itemAt(i)
 
-            if isinstance(item, QtGui.QWidgetItem):
+            if isinstance(item, QWidgetItem):
                 item.widget().deleteLater() # use this to properly delete the widget
-            elif isinstance(item, QtGui.QSpacerItem):
+            elif isinstance(item, QSpacerItem):
                 pass
             else:
                 self.clearLayout(item.layout())
@@ -188,7 +190,7 @@ class DialogLumensPURReferenceClasses(QtGui.QDialog):
             dialog = DialogLumensViewer(self, MenuFactory.getLabel(MenuFactory.APP_LUMENS_HELP) + ' - {0}'.format('PUR Reference Classes'), 'html', filePath)
             dialog.exec_()
         else:
-            QtGui.QMessageBox.critical(self, MenuFactory.getLabel(MenuFactory.MSG_APP_HELP_NOT_FOUND), MenuFactory.getDescription(MenuFactory.MSG_APP_HELP_NOT_FOUND) + " '{0}'.".format(filePath))        
+            QMessageBox.critical(self, MenuFactory.getLabel(MenuFactory.MSG_APP_HELP_NOT_FOUND), MenuFactory.getDescription(MenuFactory.MSG_APP_HELP_NOT_FOUND) + " '{0}'.".format(filePath))        
 
     
     def handlerButtonAddRow(self):
@@ -213,13 +215,13 @@ class DialogLumensPURReferenceClasses(QtGui.QDialog):
         self.referenceClasses = {}
         
         for tableRow in range(1, self.tableRowCount + 1):
-            lineEditReferenceClassID = self.findChild(QtGui.QLineEdit, 'lineEditReferenceClassID_' + str(tableRow))
+            lineEditReferenceClassID = self.findChild(QLineEdit, 'lineEditReferenceClassID_' + str(tableRow))
             
             if not lineEditReferenceClassID: # Row has been deleted
-                print 'DEBUG: skipping a deleted row.'
+                print('DEBUG: skipping a deleted row.')
                 continue
             
-            lineEditReferenceClassTitle = self.findChild(QtGui.QLineEdit, 'lineEditReferenceClassTitle_' + str(tableRow))
+            lineEditReferenceClassTitle = self.findChild(QLineEdit, 'lineEditReferenceClassTitle_' + str(tableRow))
             
             # Check for duplicate reference class IDs and empty titles
             try:
@@ -227,32 +229,32 @@ class DialogLumensPURReferenceClasses(QtGui.QDialog):
                 referenceClassTitle = unicode(lineEditReferenceClassTitle.text())
                 
                 if self.referenceClasses.has_key(referenceClassID):
-                    print 'DEBUG ERROR found duplicate reference class ID.'
-                    QtGui.QMessageBox.critical(self, MenuFactory.getLabel(MenuFactory.MSG_PUR_DUPLICATE_REFERENCE), MenuFactory.getDescription(MenuFactory.MSG_PUR_DUPLICATE_REFERENCE))
+                    print('DEBUG ERROR found duplicate reference class ID.')
+                    QMessageBox.critical(self, MenuFactory.getLabel(MenuFactory.MSG_PUR_DUPLICATE_REFERENCE), MenuFactory.getDescription(MenuFactory.MSG_PUR_DUPLICATE_REFERENCE))
                     return
                 
                 if not referenceClassTitle:
-                    print 'DEBUG ERROR reference class title cannot be empty.'
-                    QtGui.QMessageBox.critical(self, MenuFactory.getLabel(MenuFactory.MSG_PUR_EMPTY_REFERENCE), MenuFactory.getDescription(MenuFactory.MSG_PUR_EMPTY_REFERENCE))
+                    print('DEBUG ERROR reference class title cannot be empty.')
+                    QMessageBox.critical(self, MenuFactory.getLabel(MenuFactory.MSG_PUR_EMPTY_REFERENCE), MenuFactory.getDescription(MenuFactory.MSG_PUR_EMPTY_REFERENCE))
                     return
                 
                 self.referenceClasses[referenceClassID] = referenceClassTitle
             except ValueError as verr:
-                print 'DEBUG: ERROR reference class ID must be an integer!'
-                QtGui.QMessageBox.critical(self, MenuFactory.getLabel(MenuFactory.MSG_PUR_NON_NUMBER_REFERENCE), MenuFactory.getDescription(MenuFactory.MSG_PUR_NON_NUMBER_REFERENCE))
+                print('DEBUG: ERROR reference class ID must be an integer!')
+                QMessageBox.critical(self, MenuFactory.getLabel(MenuFactory.MSG_PUR_NON_NUMBER_REFERENCE), MenuFactory.getDescription(MenuFactory.MSG_PUR_NON_NUMBER_REFERENCE))
                 return
         
         if self.referenceClasses:
             self.close()
-            self.setResult(QtGui.QDialog.Accepted)
+            self.setResult(QDialog.Accepted)
         else:
-            print 'DEBUG: ERROR no reference classes have been set.'
-            QtGui.QMessageBox.critical(self, MenuFactory.getLabel(MenuFactory.MSG_PUR_NO_REFERENCE_FOUND), MenuFactory.getDescription(MenuFactory.MSG_PUR_NO_REFERENCE_FOUND))
+            print('DEBUG: ERROR no reference classes have been set.')
+            QMessageBox.critical(self, MenuFactory.getLabel(MenuFactory.MSG_PUR_NO_REFERENCE_FOUND), MenuFactory.getDescription(MenuFactory.MSG_PUR_NO_REFERENCE_FOUND))
     
     
     def handlerButtonCancel(self):
         """Slot method when rejecting/closing the dialog.
         """
         self.close()
-        self.setResult(QtGui.QDialog.Rejected)
+        self.setResult(QDialog.Rejected)
     

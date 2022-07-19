@@ -42,6 +42,8 @@ from utils import QPlainTextEditLogger
 # Import LUMENS dialog classes here
 from dialog_lumens_createdatabase import DialogLumensCreateDatabase
 
+from dialog_lumens_pur import DialogLumensPUR
+
 from menu_factory import MenuFactory
 
 __version__ = '2.0.0'
@@ -65,6 +67,7 @@ class MainWindow(QMainWindow):
             'defaultBasemapFilePath': 'data/basemap/lu00_48s_100m.tif',
             'defaultExtent': QgsRectangle(95, -11, 140, 11), # Southeast Asia extent
             'defaultCRS': "EPSG:4326", # EPSG 4326 - WGS 84
+            'folderPUR': 'PUR',
             'DialogLumensCreateDatabase': {
                 'projectName': '',
                 'outputFolder': '',
@@ -90,9 +93,38 @@ class MainWindow(QMainWindow):
                 'rasterfile': '',
                 'description': '',
             },
+            'DialogLumensPUR': {
+                'referenceData': '',
+                'referenceClasses': '',
+                'referenceMapping': '',
+                'planningUnits': '',
+            },
+            'DialogLumensPURCreateReferenceData': {
+                'shapefile': '',
+                'shapefileAttr': '',
+                'dataTitle': '',
+            },
+            'DialogLumensPURPreparePlanningUnit': {
+                'shapefile': '',
+                'shapefileAttr': '',
+                'planningUnitTitle': '',
+                'planningUnitType': '',
+            },
+            'DialogLumensPURReconcilePlanningUnit': {
+                'outputFile': '',
+            },
+            'DialogLumensPURFinalization': {
+                'shapefile': '',
+            },
         }
 
         self.openDialogs = []
+
+        # For keeping track of data added to the project
+        self.dataLandUseCover = {}
+        self.dataPlanningUnit = {}
+        self.dataFactor = {}
+        self.dataTable = {}
 
         self.appSettings['defaultLanguageProperties'] = os.path.join(self.appSettings['langDir'], 'lang_' + self.appSettings['defaultLanguage'] + '.properties')
         MenuFactory.setMenuProperties(self.appSettings['defaultLanguageProperties'], self.appSettings['defaultLanguage'])   
@@ -111,7 +143,26 @@ class MainWindow(QMainWindow):
         # LUMENS action handlers
         # Database menu
         self.actionDialogLumensCreateDatabase.triggered.connect(self.handlerDialogLumensCreateDatabase)
-
+        # self.actionLumensOpenDatabase.triggered.connect(self.handlerLumensOpenDatabase)
+        # self.actionLumensCloseDatabase.triggered.connect(self.handlerLumensCloseDatabase)
+        # self.actionLumensExportDatabase.triggered.connect(self.handlerLumensExportDatabase)
+        # self.actionDialogLumensAddData.triggered.connect(self.handlerDialogLumensAddData)
+        # self.actionLumensDeleteData.triggered.connect(self.handlerLumensDeleteData)
+        # self.actionLumensDatabaseStatus.triggered.connect(self.handlerLumensDatabaseStatus)
+        
+        # PUR menu
+        self.actionDialogLumensPUR.triggered.connect(self.handlerDialogLumensPUR)
+        
+        # QUES menu
+        # self.actionDialogLumensQUES.triggered.connect(self.handlerDialogLumensQUES)
+        
+        # TA menu
+        # self.actionDialogLumensTA.triggered.connect(self.handlerDialogLumensTA)
+        # self.actionDialogLumensTAOpportunityCost.triggered.connect(self.handlerDialogLumensTAOpportunityCost)
+        # self.actionDialogLumensTARegionalEconomy.triggered.connect(self.handlerDialogLumensTARegionalEconomy)
+        
+        # SCIENDO menu
+        # self.actionDialogLumensSCIENDO.triggered.connect(self.handlerDialogLumensSCIENDO)
 
     def setupUi(self):
         """Method for building the LUMENS main window UI.
@@ -657,6 +708,30 @@ class MainWindow(QMainWindow):
         """Slot method for opening a dialog window.
         """
         self.openDialog(DialogLumensCreateDatabase)
+
+
+    def handlerDialogLumensPUR(self):
+        """Slot method for opening a dialog window.
+        """
+        self.openDialog(DialogLumensPUR)        
+
+
+    def handlerDialogLumensQUES(self, tabName=''):
+        """Slot method for opening a dialog window.
+        """
+        self.openDialog(DialogLumensQUES, tabName=tabName)        
+
+
+    def handlerDialogLumensTA(self):
+        """Slot method for opening a dialog window.
+        """
+        self.openDialog(DialogLumensTA)        
+
+
+    def handlerDialogLumensSCIENDO(self, tabName=''):
+        """Slot method for opening a dialog window.
+        """
+        self.openDialog(DialogLumensSCIENDO, tabName=tabName)        
 
 
     def addLayer(self, layerFile):

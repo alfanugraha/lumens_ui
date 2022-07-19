@@ -3,8 +3,10 @@
 
 import os, logging, glob, tempfile, csv
 from qgis.core import *
-from processing.tools import *
-from PyQt4 import QtCore, QtGui
+# from processing.tools import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 
 from utils import QPlainTextEditLogger
 from dialog_lumens_base import DialogLumensBase
@@ -14,7 +16,7 @@ import resource
 
 from menu_factory import MenuFactory
 
-class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
+class DialogLumensPUR(QDialog): # DialogLumensBase
     """LUMENS "PUR" module dialog class.
     """
     
@@ -142,8 +144,8 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
             duplicateTemplate = templateFile
             templateSettings = self.loadTemplate(tabName, templateFile, True)
             
-            print 'DEBUG'
-            print templateFile, templateSettings
+            print('DEBUG')
+            print(templateFile, templateSettings)
             
             # Loop thru all dialogs in a tab
             for dialog in dialogsToLoad:
@@ -153,8 +155,8 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
                         # A setting doesn't match! This is not a matching template file, move along
                         duplicateTemplate = None
                     else:
-                        print 'DEBUG equal settings'
-                        print templateSettings[dialog][key], val
+                        print('DEBUG equal settings')
+                        print(templateSettings[dialog][key], val)
         
         # Found a duplicate template, offer to load it?
         if duplicateTemplate:
@@ -230,7 +232,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         
         # Module debug log to stdout and file
         if self.main.appSettings['debug']:
-            print 'DEBUG: DialogLumensPUR init'
+            print('DEBUG: DialogLumensPUR init')
             self.logger = logging.getLogger(type(self).__name__)
             ch = logging.StreamHandler()
             ch.setFormatter(formatter)
@@ -243,19 +245,19 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         self.setupUi(self)
         
         # History log
-        self.historyLog = '{0}{1}'.format('history', type(self).__name__)
-        self.historyLogPath = os.path.join(self.settingsPath, self.historyLog + '.log')
-        self.historyLogger = logging.getLogger(self.historyLog)
-        fh = logging.FileHandler(self.historyLogPath)
-        fh.setFormatter(formatter)
-        self.log_box.setFormatter(formatter)
-        self.historyLogger.addHandler(fh)
-        self.historyLogger.addHandler(self.log_box)
-        self.historyLogger.setLevel(logging.INFO)
+        # self.historyLog = '{0}{1}'.format('history', type(self).__name__)
+        # self.historyLogPath = os.path.join(self.settingsPath, self.historyLog + '.log')
+        # self.historyLogger = logging.getLogger(self.historyLog)
+        # fh = logging.FileHandler(self.historyLogPath)
+        # fh.setFormatter(formatter)
+        # self.log_box.setFormatter(formatter)
+        # self.historyLogger.addHandler(fh)
+        # self.historyLogger.addHandler(self.log_box)
+        # self.historyLogger.setLevel(logging.INFO)
         
-        self.loadHistoryLog()
+        # self.loadHistoryLog()
         
-        self.loadTemplateFiles()
+        # self.loadTemplateFiles()
         
         self.tabWidget.currentChanged.connect(self.handlerTabWidgetChanged)
         self.buttonProcessSetup.clicked.connect(self.handlerProcessSetup)
@@ -280,18 +282,18 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
             parent: the dialog's parent instance.
         """
         self.setStyleSheet('QDialog { background-color: rgb(225, 229, 237); }')
-        self.dialogLayout = QtGui.QVBoxLayout()
+        self.dialogLayout = QVBoxLayout()
 
-        self.groupBoxPURDialog = QtGui.QGroupBox(MenuFactory.getDescription(MenuFactory.PUR_TITLE))
-        self.layoutGroupBoxPURDialog = QtGui.QVBoxLayout()
-        self.layoutGroupBoxPURDialog.setAlignment(QtCore.Qt.AlignTop)
+        self.groupBoxPURDialog = QGroupBox(MenuFactory.getDescription(MenuFactory.PUR_TITLE))
+        self.layoutGroupBoxPURDialog = QVBoxLayout()
+        self.layoutGroupBoxPURDialog.setAlignment(Qt.AlignTop)
         self.groupBoxPURDialog.setLayout(self.layoutGroupBoxPURDialog)
-        self.labelPURDialogInfo = QtGui.QLabel()
+        self.labelPURDialogInfo = QLabel()
         self.labelPURDialogInfo.setText('\n ')
         self.labelPURDialogInfo.setWordWrap(True)
         self.layoutGroupBoxPURDialog.addWidget(self.labelPURDialogInfo)
 
-        self.tabWidget = QtGui.QTabWidget()
+        self.tabWidget = QTabWidget()
         tabWidgetStylesheet = """
         QTabWidget::pane {
             border: none;
@@ -314,18 +316,18 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         """
         self.tabWidget.setStyleSheet(tabWidgetStylesheet)
         
-        self.tabSetup = QtGui.QWidget()
-        self.tabReconcile = QtGui.QWidget()
-        self.tabLog = QtGui.QWidget()
+        self.tabSetup = QWidget()
+        self.tabReconcile = QWidget()
+        self.tabLog = QWidget()
         
         self.tabWidget.addTab(self.tabSetup, MenuFactory.getLabel(MenuFactory.PURBUILD_BUILD))
         self.tabWidget.addTab(self.tabReconcile, MenuFactory.getLabel(MenuFactory.PURRECONCILE_RECONCILE))
         self.tabWidget.addTab(self.tabLog, MenuFactory.getLabel(MenuFactory.PURLOG_LOG))
         
         ##self.layoutTabSetup = QtGui.QVBoxLayout()
-        self.layoutTabSetup = QtGui.QGridLayout()
-        self.layoutTabReconcile = QtGui.QVBoxLayout()
-        self.layoutTabLog = QtGui.QVBoxLayout()
+        self.layoutTabSetup = QGridLayout()
+        self.layoutTabReconcile = QVBoxLayout()
+        self.layoutTabLog = QVBoxLayout()
 
         self.dialogLayout.addWidget(self.groupBoxPURDialog)
         self.dialogLayout.addWidget(self.tabWidget)
@@ -337,64 +339,64 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         #***********************************************************
         
         # 'Setup reference' GroupBox
-        self.groupBoxSetupReference = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.PURBUILD_SETUP_REFERENCE))
-        self.layoutGroupBoxSetupReference = QtGui.QVBoxLayout()
-        self.layoutGroupBoxSetupReference.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.groupBoxSetupReference = QGroupBox(MenuFactory.getLabel(MenuFactory.PURBUILD_SETUP_REFERENCE))
+        self.layoutGroupBoxSetupReference = QVBoxLayout()
+        self.layoutGroupBoxSetupReference.setAlignment(Qt.AlignLeft|Qt.AlignTop)
         self.groupBoxSetupReference.setLayout(self.layoutGroupBoxSetupReference)
-        self.layoutSetupReferenceInfo = QtGui.QVBoxLayout()
-        self.layoutSetupReferenceOptions = QtGui.QGridLayout()
+        self.layoutSetupReferenceInfo = QVBoxLayout()
+        self.layoutSetupReferenceOptions = QGridLayout()
         self.layoutGroupBoxSetupReference.addLayout(self.layoutSetupReferenceInfo)
         self.layoutGroupBoxSetupReference.addLayout(self.layoutSetupReferenceOptions)
         
-        self.labelSetupReferenceInfo = QtGui.QLabel()
+        self.labelSetupReferenceInfo = QLabel()
         self.labelSetupReferenceInfo.setText('\n')
         self.labelSetupReferenceInfo.setWordWrap(True)
         self.layoutSetupReferenceInfo.addWidget(self.labelSetupReferenceInfo)
         
-        self.labelShapefile = QtGui.QLabel()
+        self.labelShapefile = QLabel()
         self.labelShapefile.setText(MenuFactory.getLabel(MenuFactory.PURBUILD_REFERENCE_DATA) + ':')
         self.layoutSetupReferenceOptions.addWidget(self.labelShapefile, 0, 0)
-        self.comboBoxReferenceData = QtGui.QComboBox()
+        self.comboBoxReferenceData = QComboBox()
         self.comboBoxReferenceData.setDisabled(True)
         self.layoutSetupReferenceOptions.addWidget(self.comboBoxReferenceData, 0, 1)
-        self.handlerPopulateNameFromLookupData(self.main.dataPlanningUnit, self.comboBoxReferenceData)
-        self.buttonLoadLookupTableReferenceData = QtGui.QPushButton()
+        DialogLumensBase.handlerPopulateNameFromLookupData(parent, self.main.dataPlanningUnit, self.comboBoxReferenceData)
+        self.buttonLoadLookupTableReferenceData = QPushButton()
         self.buttonLoadLookupTableReferenceData.setText(MenuFactory.getLabel(MenuFactory.PURBUILD_LOAD_TABLE))
         self.layoutSetupReferenceOptions.addWidget(self.buttonLoadLookupTableReferenceData, 0, 2)
-        self.labelReferenceClasses = QtGui.QLabel()
+        self.labelReferenceClasses = QLabel()
         self.labelReferenceClasses.setText(MenuFactory.getLabel(MenuFactory.PURBUILD_REFERENCE_CLASS) + ':')
         self.layoutSetupReferenceOptions.addWidget(self.labelReferenceClasses, 1, 0)
-        self.buttonEditReferenceClasses = QtGui.QPushButton()
+        self.buttonEditReferenceClasses = QPushButton()
         self.buttonEditReferenceClasses.setText(MenuFactory.getLabel(MenuFactory.PURBUILD_EDIT_CLASS))
-        self.buttonEditReferenceClasses.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonEditReferenceClasses.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         self.layoutSetupReferenceOptions.addWidget(self.buttonEditReferenceClasses, 1, 1)
         
         #######################################################################
         # 'Attribute reference mapping' GroupBox
-        self.groupBoxReferenceMapping = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.PURBUILD_ATTRIBUTE_REFERENCE_MAPPING))
-        self.layoutGroupBoxReferenceMapping = QtGui.QVBoxLayout()
-        self.layoutGroupBoxReferenceMapping.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.groupBoxReferenceMapping = QGroupBox(MenuFactory.getLabel(MenuFactory.PURBUILD_ATTRIBUTE_REFERENCE_MAPPING))
+        self.layoutGroupBoxReferenceMapping = QVBoxLayout()
+        self.layoutGroupBoxReferenceMapping.setAlignment(Qt.AlignLeft|Qt.AlignTop)
         self.groupBoxReferenceMapping.setLayout(self.layoutGroupBoxReferenceMapping)
         
-        self.layoutReferenceMappingInfo = QtGui.QVBoxLayout()
-        self.labelReferenceMappingInfo = QtGui.QLabel()
+        self.layoutReferenceMappingInfo = QVBoxLayout()
+        self.labelReferenceMappingInfo = QLabel()
         self.labelReferenceMappingInfo.setText('\n')
         self.labelReferenceMappingInfo.setWordWrap(True)
         self.layoutReferenceMappingInfo.addWidget(self.labelReferenceMappingInfo)
         
-        self.tableReferenceMapping = QtGui.QTableWidget()
+        self.tableReferenceMapping = QTableWidget()
         self.tableReferenceMapping.setRowCount(1)
         self.tableReferenceMapping.setColumnCount(2)
-        self.tableReferenceMapping.setSelectionMode(QtGui.QAbstractItemView.NoSelection)
-        self.tableReferenceMapping.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
+        self.tableReferenceMapping.setSelectionMode(QAbstractItemView.NoSelection)
+        self.tableReferenceMapping.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.tableReferenceMapping.verticalHeader().setVisible(False)
         self.tableReferenceMapping.setHorizontalHeaderLabels([MenuFactory.getLabel(MenuFactory.PURBUILD_ATTRIBUTE_VALUE), MenuFactory.getLabel(MenuFactory.PURBUILD_REFERENCE_CLASS)])
-        self.tableReferenceMapping.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
+        # self.tableReferenceMapping.horizontalHeader().setResizeMode(0, QHeaderView.ResizeToContents)
         
-        attribute = QtGui.QTableWidgetItem('ATTRIBUTE_VALUE')
-        comboBoxReferenceClasses = QtGui.QComboBox()
+        attribute = QTableWidgetItem('ATTRIBUTE_VALUE')
+        comboBoxReferenceClasses = QComboBox()
         
-        for key, val in self.referenceClasses.iteritems():
+        for key, val in iter(self.referenceClasses.items()):
             comboBoxReferenceClasses.addItem(val, key)
         
         self.tableReferenceMapping.setItem(0, 0, attribute)
@@ -406,35 +408,35 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         #######################################################################
         
         # 'Setup planning unit' GroupBox
-        self.groupBoxSetupPlanningUnit = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.PURBUILD_SETUP_PLANNING_UNIT))
-        self.layoutGroupBoxSetupPlanningUnit = QtGui.QVBoxLayout()
-        self.layoutGroupBoxSetupPlanningUnit.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.groupBoxSetupPlanningUnit = QGroupBox(MenuFactory.getLabel(MenuFactory.PURBUILD_SETUP_PLANNING_UNIT))
+        self.layoutGroupBoxSetupPlanningUnit = QVBoxLayout()
+        self.layoutGroupBoxSetupPlanningUnit.setAlignment(Qt.AlignLeft|Qt.AlignTop)
         self.groupBoxSetupPlanningUnit.setLayout(self.layoutGroupBoxSetupPlanningUnit)
         
-        self.layoutSetupPlanningUnitInfo = QtGui.QVBoxLayout()
-        self.labelSetupPlanningUnitInfo = QtGui.QLabel()
+        self.layoutSetupPlanningUnitInfo = QVBoxLayout()
+        self.labelSetupPlanningUnitInfo = QLabel()
         self.labelSetupPlanningUnitInfo.setText('\n')
         self.labelSetupPlanningUnitInfo.setWordWrap(True)
         self.layoutSetupPlanningUnitInfo.addWidget(self.labelSetupPlanningUnitInfo)
         
-        self.layoutButtonSetupPlanningUnit = QtGui.QHBoxLayout()
+        self.layoutButtonSetupPlanningUnit = QHBoxLayout()
         self.layoutButtonSetupPlanningUnit.setContentsMargins(0, 0, 0, 0)
-        self.layoutButtonSetupPlanningUnit.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
-        self.buttonAddPlanningUnitRow = QtGui.QPushButton()
+        self.layoutButtonSetupPlanningUnit.setAlignment(Qt.AlignLeft|Qt.AlignTop)
+        self.buttonAddPlanningUnitRow = QPushButton()
         self.buttonAddPlanningUnitRow.setText(MenuFactory.getLabel(MenuFactory.PURBUILD_ADD_PLANNING_UNIT))
-        self.buttonAddPlanningUnitRow.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonAddPlanningUnitRow.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         self.layoutButtonSetupPlanningUnit.addWidget(self.buttonAddPlanningUnitRow)
-        self.buttonClearAllPlanningUnits = QtGui.QPushButton()
+        self.buttonClearAllPlanningUnits = QPushButton()
         self.buttonClearAllPlanningUnits.setText(MenuFactory.getLabel(MenuFactory.PURBUILD_CLEAR_PLANNING_UNIT))
         self.buttonClearAllPlanningUnits.setVisible(False) # BUG, hide it
-        self.buttonClearAllPlanningUnits.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonClearAllPlanningUnits.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         self.layoutButtonSetupPlanningUnit.addWidget(self.buttonClearAllPlanningUnits)
         
-        self.layoutContentGroupBoxSetupPlanningUnit = QtGui.QVBoxLayout()
+        self.layoutContentGroupBoxSetupPlanningUnit = QVBoxLayout()
         self.layoutContentGroupBoxSetupPlanningUnit.setContentsMargins(5, 5, 5, 5)
-        self.contentGroupBoxSetupPlanningUnit = QtGui.QWidget()
+        self.contentGroupBoxSetupPlanningUnit = QWidget()
         self.contentGroupBoxSetupPlanningUnit.setLayout(self.layoutContentGroupBoxSetupPlanningUnit)
-        self.scrollSetupPlanningUnit = QtGui.QScrollArea()
+        self.scrollSetupPlanningUnit = QScrollArea()
         ##self.scrollSetupPlanningUnit.setStyleSheet('QScrollArea > QWidget > QWidget { background: white; }')
         self.scrollSetupPlanningUnit.setWidgetResizable(True)
         self.scrollSetupPlanningUnit.setWidget(self.contentGroupBoxSetupPlanningUnit)
@@ -443,8 +445,8 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxSetupPlanningUnit.addLayout(self.layoutButtonSetupPlanningUnit)
         self.layoutGroupBoxSetupPlanningUnit.addWidget(self.scrollSetupPlanningUnit)
         
-        self.layoutTablePlanningUnit = QtGui.QVBoxLayout()
-        self.layoutTablePlanningUnit.setAlignment(QtCore.Qt.AlignTop)
+        self.layoutTablePlanningUnit = QVBoxLayout()
+        self.layoutTablePlanningUnit.setAlignment(Qt.AlignTop)
         self.layoutContentGroupBoxSetupPlanningUnit.addLayout(self.layoutTablePlanningUnit)
         
         # Create 3 default planning units
@@ -453,56 +455,56 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         ##self.addPlanningUnitRow()
         
         # Process tab button
-        self.layoutButtonSetup = QtGui.QHBoxLayout()
-        self.buttonProcessSetup = QtGui.QPushButton()
+        self.layoutButtonSetup = QHBoxLayout()
+        self.buttonProcessSetup = QPushButton()
         self.buttonProcessSetup.setText('&' + MenuFactory.getLabel(MenuFactory.PURBUILD_BUILD))
-        icon = QtGui.QIcon(':/ui/icons/iconActionHelp.png')
-        self.buttonHelp = QtGui.QPushButton()
+        icon = QIcon(':/ui/icons/iconActionHelp.png')
+        self.buttonHelp = QPushButton()
         self.buttonHelp.setIcon(icon)
-        self.layoutButtonSetup.setAlignment(QtCore.Qt.AlignRight)
+        self.layoutButtonSetup.setAlignment(Qt.AlignRight)
         self.layoutButtonSetup.addWidget(self.buttonProcessSetup)
         self.layoutButtonSetup.addWidget(self.buttonHelp)
         
         # Template GroupBox
-        self.groupBoxPURTemplate = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.CONF_TITLE))
-        self.layoutGroupBoxPURTemplate = QtGui.QVBoxLayout()
-        self.layoutGroupBoxPURTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.groupBoxPURTemplate = QGroupBox(MenuFactory.getLabel(MenuFactory.CONF_TITLE))
+        self.layoutGroupBoxPURTemplate = QVBoxLayout()
+        self.layoutGroupBoxPURTemplate.setAlignment(Qt.AlignLeft|Qt.AlignTop)
         self.groupBoxPURTemplate.setLayout(self.layoutGroupBoxPURTemplate)
-        self.layoutPURTemplateInfo = QtGui.QVBoxLayout()
-        self.layoutPURTemplate = QtGui.QGridLayout()
+        self.layoutPURTemplateInfo = QVBoxLayout()
+        self.layoutPURTemplate = QGridLayout()
         self.layoutGroupBoxPURTemplate.addLayout(self.layoutPURTemplateInfo)
         self.layoutGroupBoxPURTemplate.addLayout(self.layoutPURTemplate)
         
-        self.labelLoadedPURTemplate = QtGui.QLabel()
+        self.labelLoadedPURTemplate = QLabel()
         self.labelLoadedPURTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOADED_CONFIGURATION) + ':')
         self.layoutPURTemplate.addWidget(self.labelLoadedPURTemplate, 0, 0)
         
-        self.loadedPURTemplate = QtGui.QLabel()
+        self.loadedPURTemplate = QLabel()
         self.loadedPURTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NONE))
         self.layoutPURTemplate.addWidget(self.loadedPURTemplate, 0, 1)
         
-        self.labelPURTemplate = QtGui.QLabel()
+        self.labelPURTemplate = QLabel()
         self.labelPURTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NAME) + ':')
         self.layoutPURTemplate.addWidget(self.labelPURTemplate, 1, 0)
         
-        self.comboBoxPURTemplate = QtGui.QComboBox()
-        self.comboBoxPURTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
+        self.comboBoxPURTemplate = QComboBox()
+        self.comboBoxPURTemplate.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Maximum)
         self.comboBoxPURTemplate.setDisabled(True)
         self.comboBoxPURTemplate.addItem(MenuFactory.getLabel(MenuFactory.CONF_NO_FOUND))
         self.layoutPURTemplate.addWidget(self.comboBoxPURTemplate, 1, 1)
         
-        self.layoutButtonPURTemplate = QtGui.QHBoxLayout()
-        self.layoutButtonPURTemplate.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTop)
-        self.buttonLoadPURTemplate = QtGui.QPushButton()
+        self.layoutButtonPURTemplate = QHBoxLayout()
+        self.layoutButtonPURTemplate.setAlignment(Qt.AlignRight|Qt.AlignTop)
+        self.buttonLoadPURTemplate = QPushButton()
         self.buttonLoadPURTemplate.setDisabled(True)
-        self.buttonLoadPURTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonLoadPURTemplate.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         self.buttonLoadPURTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOAD))
-        self.buttonSavePURTemplate = QtGui.QPushButton()
+        self.buttonSavePURTemplate = QPushButton()
         self.buttonSavePURTemplate.setDisabled(True)
-        self.buttonSavePURTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonSavePURTemplate.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         self.buttonSavePURTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE))
-        self.buttonSaveAsPURTemplate = QtGui.QPushButton()
-        self.buttonSaveAsPURTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonSaveAsPURTemplate = QPushButton()
+        self.buttonSaveAsPURTemplate.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         self.buttonSaveAsPURTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS))
         self.layoutButtonPURTemplate.addWidget(self.buttonLoadPURTemplate)
         self.layoutButtonPURTemplate.addWidget(self.buttonSavePURTemplate)
@@ -513,7 +515,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         self.layoutTabSetup.addWidget(self.groupBoxSetupReference, 0, 0)
         self.layoutTabSetup.addWidget(self.groupBoxReferenceMapping, 1, 0)
         self.layoutTabSetup.addWidget(self.groupBoxSetupPlanningUnit, 2, 0)
-        self.layoutTabSetup.addLayout(self.layoutButtonSetup, 3, 0, 1, 2, QtCore.Qt.AlignRight)
+        self.layoutTabSetup.addLayout(self.layoutButtonSetup, 3, 0, 1, 2, Qt.AlignRight)
         self.layoutTabSetup.addWidget(self.groupBoxPURTemplate, 0, 1, 3, 1)
         self.layoutTabSetup.setColumnStretch(0, 3)
         self.layoutTabSetup.setColumnStretch(1, 1) # Smaller template column
@@ -523,26 +525,26 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         #***********************************************************
         # Setup 'Reconcile' tab
         #***********************************************************
-        self.groupBoxReconcile = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.PURRECONCILE_UNRESOLVED_CASES))
-        self.layoutGroupBoxReconcile = QtGui.QVBoxLayout()
-        self.layoutGroupBoxReconcile.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.groupBoxReconcile = QGroupBox(MenuFactory.getLabel(MenuFactory.PURRECONCILE_UNRESOLVED_CASES))
+        self.layoutGroupBoxReconcile = QVBoxLayout()
+        self.layoutGroupBoxReconcile.setAlignment(Qt.AlignLeft|Qt.AlignTop)
         self.groupBoxReconcile.setLayout(self.layoutGroupBoxReconcile)
         
-        self.labelReconcileInfo = QtGui.QLabel()
+        self.labelReconcileInfo = QLabel()
         self.labelReconcileInfo.setText('\n')
         self.labelReconcileInfo.setWordWrap(True)
         self.layoutGroupBoxReconcile.addWidget(self.labelReconcileInfo)
         
-        self.reconcileTable = QtGui.QTableWidget()
+        self.reconcileTable = QTableWidget()
         self.reconcileTable.setDisabled(True)
         self.reconcileTable.verticalHeader().setVisible(False)
         self.layoutGroupBoxReconcile.addWidget(self.reconcileTable)
         
-        self.layoutButtonReconcile = QtGui.QHBoxLayout()
-        self.buttonProcessReconcile = QtGui.QPushButton()
+        self.layoutButtonReconcile = QHBoxLayout()
+        self.buttonProcessReconcile = QPushButton()
         self.buttonProcessReconcile.setText('&' + MenuFactory.getLabel(MenuFactory.PURRECONCILE_RECONCILE))
         self.buttonProcessReconcile.setDisabled(True)
-        self.layoutButtonReconcile.setAlignment(QtCore.Qt.AlignRight)
+        self.layoutButtonReconcile.setAlignment(Qt.AlignRight)
         self.layoutButtonReconcile.addWidget(self.buttonProcessReconcile)
         
         self.layoutTabReconcile.addWidget(self.groupBoxReconcile)
@@ -556,16 +558,16 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         self.tabLog.setLayout(self.layoutTabLog)
         
         # 'History Log' GroupBox
-        self.groupBoxHistoryLog = QtGui.QGroupBox('{0} {1}'.format(self.dialogTitle, 'history log'))
-        self.layoutGroupBoxHistoryLog = QtGui.QVBoxLayout()
-        self.layoutGroupBoxHistoryLog.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.groupBoxHistoryLog = QGroupBox('{0} {1}'.format(self.dialogTitle, 'history log'))
+        self.layoutGroupBoxHistoryLog = QVBoxLayout()
+        self.layoutGroupBoxHistoryLog.setAlignment(Qt.AlignLeft|Qt.AlignTop)
         self.groupBoxHistoryLog.setLayout(self.layoutGroupBoxHistoryLog)
-        self.layoutHistoryLogInfo = QtGui.QVBoxLayout()
-        self.layoutHistoryLog = QtGui.QVBoxLayout()
+        self.layoutHistoryLogInfo = QVBoxLayout()
+        self.layoutHistoryLog = QVBoxLayout()
         self.layoutGroupBoxHistoryLog.addLayout(self.layoutHistoryLogInfo)
         self.layoutGroupBoxHistoryLog.addLayout(self.layoutHistoryLog)
         
-        self.labelHistoryLogInfo = QtGui.QLabel()
+        self.labelHistoryLogInfo = QLabel()
         self.labelHistoryLogInfo.setText('\n')
         self.layoutHistoryLogInfo.addWidget(self.labelHistoryLogInfo)
         
@@ -617,35 +619,35 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         """
         self.tablePlanningUnitRowCount = self.tablePlanningUnitRowCount + 1
         
-        layoutRow = QtGui.QHBoxLayout()
+        layoutRow = QHBoxLayout()
         
-        buttonDeletePlanningUnitData = QtGui.QPushButton()
-        icon = QtGui.QIcon(':/ui/icons/iconActionClear.png')
+        buttonDeletePlanningUnitData = QPushButton()
+        icon = QIcon(':/ui/icons/iconActionClear.png')
         buttonDeletePlanningUnitData.setIcon(icon)
         buttonDeletePlanningUnitData.setObjectName('buttonDeletePlanningUnitData_{0}'.format(str(self.tablePlanningUnitRowCount)))
         layoutRow.addWidget(buttonDeletePlanningUnitData)
         
         buttonDeletePlanningUnitData.clicked.connect(self.handlerDeletePlanningUnitData)
         
-        comboBoxPlanningUnitData = QtGui.QComboBox()
+        comboBoxPlanningUnitData = QComboBox()
         comboBoxPlanningUnitData.setDisabled(True)
         comboBoxPlanningUnitData.setObjectName('comboBoxPlanningUnitData_{0}'.format(str(self.tablePlanningUnitRowCount)))
         layoutRow.addWidget(comboBoxPlanningUnitData)
         
         comboBoxPlanningUnitData.currentIndexChanged.connect(self.handlerChangePlanningUnitData)
         
-        lineEditPlanningUnitTitle = QtGui.QLineEdit()
+        lineEditPlanningUnitTitle = QLineEdit()
         lineEditPlanningUnitTitle.setDisabled(True)
         lineEditPlanningUnitTitle.setObjectName('lineEditPlanningUnitTitle_{0}'.format(str(self.tablePlanningUnitRowCount)))
         layoutRow.addWidget(lineEditPlanningUnitTitle)
         
-        comboBoxReferenceClasses = QtGui.QComboBox()
+        comboBoxReferenceClasses = QComboBox()
         for key, val in self.referenceClasses.iteritems():
             comboBoxReferenceClasses.addItem(val, key)
         comboBoxReferenceClasses.setObjectName('comboBoxReferenceClasses_{0}'.format(str(self.tablePlanningUnitRowCount)))
         layoutRow.addWidget(comboBoxReferenceClasses)
         
-        comboBoxPlanningUnitType = QtGui.QComboBox()
+        comboBoxPlanningUnitType = QComboBox()
         comboBoxPlanningUnitType.addItems([MenuFactory.getLabel(MenuFactory.PUBBUILD_RECONCILIATION), MenuFactory.getLabel(MenuFactory.PUBBUILD_ADDITIONAL)])
         comboBoxPlanningUnitType.setObjectName('comboBoxPlanningUnitType_{0}'.format(str(self.tablePlanningUnitRowCount)))
         layoutRow.addWidget(comboBoxPlanningUnitType)
@@ -670,7 +672,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
     def clearPlanningUnitRows(self):
         """Method for clearing all planning unit rows.
         """
-        for planningUnitButton in self.contentGroupBoxSetupPlanningUnit.findChildren(QtGui.QPushButton):
+        for planningUnitButton in self.contentGroupBoxSetupPlanningUnit.findChildren(QPushButton):
             if 'buttonDeletePlanningUnitData' in planningUnitButton.objectName():
                 planningUnitButton.click()
     
@@ -684,7 +686,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         for i in reversed(range(layout.count())):
             item = layout.itemAt(i)
 
-            if isinstance(item, QtGui.QWidgetItem):
+            if isinstance(item, QWidgetItem):
                 item.widget().deleteLater() # use this to properly delete the widget
             elif isinstance(item, QtGui.QSpacerItem):
                 pass
@@ -703,13 +705,13 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         self.referenceClasses = newReferenceClasses
         
         # Update reference classes in 'Setup reference data' groupbox
-        for comboBoxReferenceClasses in self.tableReferenceMapping.findChildren(QtGui.QComboBox):
+        for comboBoxReferenceClasses in self.tableReferenceMapping.findChildren(QComboBox):
             comboBoxReferenceClasses.clear()
             for key, val in self.referenceClasses.iteritems():
                 comboBoxReferenceClasses.addItem(val, key)
                 
         # Update reference classes in 'Setup planning unit' groupbox
-        for comboBoxReferenceClasses in self.contentGroupBoxSetupPlanningUnit.findChildren(QtGui.QComboBox):
+        for comboBoxReferenceClasses in self.contentGroupBoxSetupPlanningUnit.findChildren(QComboBox):
             if 'comboBoxReferenceClasses' in comboBoxReferenceClasses.objectName():
                 comboBoxReferenceClasses.clear()
                 for key, val in self.referenceClasses.iteritems():
@@ -769,7 +771,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
                 widget = tableWidget.cellWidget(tableRow, tableColumn)
                 
                 # Check if cell is a combobox widget
-                if widget and isinstance(widget, QtGui.QComboBox):
+                if widget and isinstance(widget, QComboBox):
                     dataRow.append(widget.currentText())
                 else:
                     itemText = item.text()
@@ -808,7 +810,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
             index (int): the current tab index.
         """
         if self.tabWidget.widget(index) == self.tabLog:
-            self.log_box.widget.verticalScrollBar().triggerAction(QtGui.QAbstractSlider.SliderToMaximum)
+            self.log_box.widget.verticalScrollBar().triggerAction(QAbstractSlider.SliderToMaximum)
     
     
     def handlerLoadPURTemplate(self, fileName=None):
@@ -823,7 +825,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         if fileName:
             templateFile = fileName
         else:
-            reply = QtGui.QMessageBox.question(
+            reply = QMessageBox.question(
                 self,
                 MenuFactory.getLabel(MenuFactory.CONF_LOAD_TEMPLATE),
                 MenuFactory.getDescription(MenuFactory.CONF_LOAD_TEMPLATE) + ' \'{0}\'?'.format(templateFile),
@@ -831,7 +833,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
                 QtGui.QMessageBox.No
             )
             
-        if reply == QtGui.QMessageBox.Yes or fileName:
+        if reply == QMessageBox.Yes or fileName:
             self.loadTemplate('Setup', templateFile)
     
     
@@ -846,15 +848,15 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         if fileName:
             templateFile = fileName
         
-        reply = QtGui.QMessageBox.question(
+        reply = QMessageBox.question(
             self,
             MenuFactory.getLabel(MenuFactory.CONF_SAVE_TEMPLATE),
             MenuFactory.getDescription(MenuFactory.CONF_SAVE_TEMPLATE), # 'Do you want save \'{0}\'?\nThis action will overwrite the template file.'.format(templateFile),
-            QtGui.QMessageBox.Yes|QtGui.QMessageBox.No,
-            QtGui.QMessageBox.No
+            QMessageBox.Yes|QMessageBox.No,
+            QMessageBox.No
         )
             
-        if reply == QtGui.QMessageBox.Yes:
+        if reply == QMessageBox.Yes:
             self.saveTemplate('Setup', templateFile)
             return True
         else:
@@ -864,11 +866,11 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
     def handlerSaveAsPURTemplate(self):
         """Slot method for saving a module template to a new file.
         """
-        fileName, ok = QtGui.QInputDialog.getText(self, MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS_TEMPATE), MenuFactory.getDescription(MenuFactory.CONF_SAVE_AS_TEMPATE) + ':')
+        fileName, ok = QInputDialog.getText(self, MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS_TEMPATE), MenuFactory.getDescription(MenuFactory.CONF_SAVE_AS_TEMPATE) + ':')
         fileSaved = False
         
         if ok:
-            now = QtCore.QDateTime.currentDateTime().toString('yyyyMMdd-hhmmss')
+            now = QDateTime.currentDateTime().toString('yyyyMMdd-hhmmss')
             fileName = now + '__' + fileName + '.ini'
             
             if os.path.exists(os.path.join(self.settingsPath, fileName)):
@@ -923,7 +925,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         
         addedPlanningUnit = comboBoxPlanningUnitData.itemData(comboBoxPlanningUnitData.findText(planningUnitData))
         
-        lineEditPlanningUnitTitle = self.contentGroupBoxSetupPlanningUnit.findChild(QtGui.QLineEdit, 'lineEditPlanningUnitTitle_' + tableRow)
+        lineEditPlanningUnitTitle = self.contentGroupBoxSetupPlanningUnit.findChild(QLineEdit, 'lineEditPlanningUnitTitle_' + tableRow)
         lineEditPlanningUnitTitle.setText(addedPlanningUnit['RST_NAME'])
     
     
@@ -983,7 +985,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         """
         dialog = DialogLumensPURReferenceClasses(self)
         
-        if dialog.exec_() == QtGui.QDialog.Accepted:
+        if dialog.exec_() == QDialog.Accepted:
             self.updateReferenceClasses(dialog.getReferenceClasses())
     
     
@@ -1002,8 +1004,8 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
         unresolvedCasesKey = 'database_unresolved_out'
         attributeKey = 'data_attribute'
         
-        print 'DEBUG'
-        print outputs
+        print('DEBUG')
+        print(outputs)
         
         if outputs and (unresolvedCasesKey in outputs) and (attributeKey in outputs):
             if os.path.exists(outputs[unresolvedCasesKey]):
@@ -1125,17 +1127,17 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
             comboBoxPlanningUnitData = self.findChild(QtGui.QComboBox, 'comboBoxPlanningUnitData_' + str(tableRow))
             
             if not comboBoxPlanningUnitData: # Row has been deleted
-                print 'DEBUG: skipping a deleted row.'
+                print('DEBUG: skipping a deleted row.')
                 continue
             
-            lineEditPlanningUnitTitle = self.findChild(QtGui.QLineEdit, 'lineEditPlanningUnitTitle_' + str(tableRow))
-            comboBoxReferenceClasses = self.findChild(QtGui.QComboBox, 'comboBoxReferenceClasses_' + str(tableRow))
-            comboBoxPlanningUnitType = self.findChild(QtGui.QComboBox, 'comboBoxPlanningUnitType_' + str(tableRow))
+            lineEditPlanningUnitTitle = self.findChild(QLineEdit, 'lineEditPlanningUnitTitle_' + str(tableRow))
+            comboBoxReferenceClasses = self.findChild(QComboBox, 'comboBoxReferenceClasses_' + str(tableRow))
+            comboBoxPlanningUnitType = self.findChild(QComboBox, 'comboBoxPlanningUnitType_' + str(tableRow))
             
-            planningUnitData = unicode(comboBoxPlanningUnitData.currentText())
-            planningUnitTitle = unicode(lineEditPlanningUnitTitle.text())
+            planningUnitData = str(comboBoxPlanningUnitData.currentText())
+            planningUnitTitle = str(lineEditPlanningUnitTitle.text())
             referenceClassID = comboBoxReferenceClasses.itemData(comboBoxReferenceClasses.currentIndex())
-            planningUnitType = unicode(comboBoxPlanningUnitType.currentText())
+            planningUnitType = str(comboBoxPlanningUnitType.currentText())
             
             if planningUnitData and planningUnitTitle and referenceClassID and planningUnitType:
                 if planningUnitType == MenuFactory.getLabel(MenuFactory.PUBBUILD_RECONCILIATION):
@@ -1152,12 +1154,12 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
                 
                 self.tablePlanningUnitData.append(tableRowData)
             else:
-                print 'DEBUG: ERROR incomplete planning unit details.'
+                print('DEBUG: ERROR incomplete planning unit details.')
         
         self.main.appSettings[type(self).__name__]['planningUnits'] = self.tablePlanningUnitData
         
-        print 'DEBUG: appSettings["DialogLumensPUR"]'
-        print self.main.appSettings[type(self).__name__]
+        print('DEBUG: appSettings["DialogLumensPUR"]')
+        print(self.main.appSettings[type(self).__name__])
     
     
     def handlerProcessSetup(self):
@@ -1176,7 +1178,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
             algName = 'r:pursetup'
             
             # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
-            self.main.setWindowState(QtCore.Qt.WindowMinimized)
+            self.main.setWindowState(Qt.WindowMinimized)
             
             # Pass referenceClasses, referenceMapping, planningUnits as temp csv files
             activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
@@ -1221,7 +1223,7 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
                 dialog.exec_()
             
             # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
-            self.main.setWindowState(QtCore.Qt.WindowActive)
+            self.main.setWindowState(Qt.WindowActive)
             
             algSuccess = self.outputsMessageBox(algName, self.outputsPURSetup, MenuFactory.getLabel(MenuFactory.MSG_PUR_SETUP_RUN_SUCCESS), 'Something happened.')
 
@@ -1260,9 +1262,9 @@ class DialogLumensPUR(QtGui.QDialog, DialogLumensBase):
             # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
             # self.main.setWindowState(QtCore.Qt.WindowMinimized)
             
-            print 'DEBUG'
-            print reconcileTableCsv
-            print outputs[reconKey]
+            print('DEBUG')
+            print(reconcileTableCsv)
+            print(outputs[reconKey])
             
             outputsReconcile = general.runalg(
                 algName,
