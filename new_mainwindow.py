@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #-*- coding:utf-8 -*-
 
-import os, sys, logging, subprocess
+import os, sys, logging, subprocess, tempfile
 from qgis.core import *
 from qgis.gui import *
 
@@ -27,15 +27,17 @@ splashScreen = QSplashScreen(splashImage, Qt.WindowStaysOnTopHint)
 splashScreen.setMask(splashImage.mask())
 splashScreen.show()
 
+# import qgis.processing
 # ##import processing
-# from processing.core.ProcessingConfig import ProcessingConfig
-# from processing.core.Processing import Processing
-# ProcessingConfig.setSettingValue('ACTIVATE_R', True) # R provider is not activated by default
-# ProcessingConfig.setSettingValue('R_FOLDER', os.environ['RPATH'])
-# ProcessingConfig.setSettingValue('R_LIBS_USER', os.environ['RLIBS'])
-# ProcessingConfig.setSettingValue('R_SCRIPTS_FOLDER', os.environ['RSCRIPTS'])
-# Processing.initialize()
-# from processing.tools import *
+from core.ProcessingConfig import ProcessingConfig
+from core.Processing import Processing
+ProcessingConfig.setSettingValue('ACTIVATE_R', True) # R provider is not activated by default
+ProcessingConfig.setSettingValue('R_FOLDER', os.environ['RPATH'])
+ProcessingConfig.setSettingValue('R_LIBS_USER', os.environ['RLIBS'])
+ProcessingConfig.setSettingValue('RSCRIPTS_FOLDER', os.environ['RSCRIPTS'])
+ProcessingConfig.setSettingValue('R_USE64', os.environ['R_USE64'])
+Processing.initialize()
+from tools.system import *
 
 from utils import QPlainTextEditLogger
 
@@ -43,6 +45,9 @@ from utils import QPlainTextEditLogger
 from dialog_lumens_createdatabase import DialogLumensCreateDatabase
 
 from dialog_lumens_pur import DialogLumensPUR
+from dialog_lumens_ques import DialogLumensQUES
+from dialog_lumens_ta import DialogLumensTA
+from dialog_lumens_sciendo import DialogLumensSCIENDO
 
 from menu_factory import MenuFactory
 
@@ -55,19 +60,43 @@ class MainWindow(QMainWindow):
         self.appSettings = {
             'debug': False,
             'appDir': os.path.dirname(os.path.realpath(__file__)),
+            'appSettingsFile': 'settings.ini',
+            'ROutFile': os.path.join(userFolder(), 'processing_script.r.Rout'),
             'selectShapefileExt': '.shp',
             'selectRasterfileExt': '.tif',
             'selectProjectFileExt': '.lpj',
             'langDir': 'lang',
             'dataDir': 'data',
             'basemapDir': 'basemap',
+            'vectorDir': 'vector',
             'defaultLanguage': 'en',
             'defaultLanguageProperties': '',
             'defaultBasemapFile': 'basemap.tif',
             'defaultBasemapFilePath': 'data/basemap/lu00_48s_100m.tif',
+            'defaultVectorFile': 'landmarks.shp',
+            'defaultVectorFilePath': '',
+            'defaultHabitatLookupTable': '',
+            'selectQgsProjectfileExt': '.qgs',
+            'selectShapefileExt': '.shp',
+            'selectRasterfileExt': '.tif',
+            'selectCsvfileExt': '.csv',
+            'selectProjectfileExt': '.lpj',
+            'selectZipfileExt': '.lpa',
+            'selectDatabasefileExt': '.dbf',
+            'selectHTMLfileExt': '.html',
+            'selectTextfileExt': '.txt',
+            'selectCarfileExt': '.car',
+            'selectLdbasefileExt': '.ldb',
             'defaultExtent': QgsRectangle(95, -11, 140, 11), # Southeast Asia extent
             'defaultCRS': "EPSG:4326", # EPSG 4326 - WGS 84
             'folderPUR': 'PUR',
+            'folderQUES': 'QUES',
+            'folderTA': 'TA',
+            'folderSCIENDO': 'SCIENDO',
+            'folderTemp': os.path.join(tempfile.gettempdir(), 'LUMENS'),
+            'acceptedDocumentFormats': ('.doc', 'docx', '.rtf', '.xls', '.xlsx', '.txt', '.log', '.csv'),
+            'acceptedWebFormats': ('.html', '.htm'),
+            'acceptedSpatialFormats': ('.shp', '.tif'),
             'DialogLumensCreateDatabase': {
                 'projectName': '',
                 'outputFolder': '',
@@ -116,6 +145,148 @@ class MainWindow(QMainWindow):
             'DialogLumensPURFinalization': {
                 'shapefile': '',
             },
+            'DialogLumensPreQUESLandcoverChangeAnalysis': {
+                'csvfile': '',
+                'option': '',
+                'nodata': '',
+            },
+            'DialogLumensPreQUESLandcoverTrajectoriesAnalysis': {
+                'landUse1': '',
+                'landUse2': '',
+                'planningUnit': '',
+                'landUseTable': '',
+                'analysisOption': '',
+                'nodata': '',
+            },
+            'DialogLumensQUESCCarbonAccounting': {
+                'landUse1': '',
+                'landUse2': '',
+                'planningUnit': '',
+                'carbonTable': '',
+                'nodata': '',
+                #'includePeat': '',
+            },
+            'DialogLumensQUESCPeatlandCarbonAccounting': {
+                'landUse1': '',
+                'landUse2': '',
+                'planningUnit': '',
+                'carbonTable': '',
+                'nodata': '',
+                #'includePeat': '',
+                'peat': '',
+                # 'peatCell': '',
+                'peatTable': '',
+            },
+            # 'DialogLumensQUESCSummarizeMultiplePeriod': { '': '', },
+            'DialogLumensQUESBAnalysis': {
+                'landUse1': '',
+                'landUse2': '',
+                'landUse3': '',
+                'planningUnit': '',
+                'nodata': '',
+                'edgeContrast': '',
+                # 'habitatLookup': '',
+                'windowShape': '',
+                'samplingWindowSize': '',
+                'adjacentOnly': '',
+                'samplingGridRes': '',
+            },
+            'DialogLumensTAAbacusOpportunityCostCurve': {
+                'projectFile': '',
+            },
+            'DialogLumensTAOpportunityCostCurve': {
+                'csvNPVTable': '',
+                'QUESCDatabase': '',
+                'costThreshold': '',
+            },
+            'DialogLumensTAOpportunityCostMap': {
+                'landUse1': '',
+                'landUse2': '',
+                'planningUnit': '',
+                'carbon': '',
+                'csvProfitability': '',
+                'nodata': '',
+            },
+            'DialogLumensTARegionalEconomySingleIODescriptiveAnalysis': {
+                'intermediateConsumptionMatrix': '',
+                'valueAddedMatrix': '',
+                'finalConsumptionMatrix': '',
+                'valueAddedComponent': '',
+                'finalConsumptionComponent': '',
+                'listOfEconomicSector': '',
+                'labourRequirement': '',
+                'financialUnit': '',
+                'areaName': '',
+                'year': '',
+            },
+            'DialogLumensTARegionalEconomyTimeSeriesIODescriptiveAnalysis': {
+                'intermediateConsumptionMatrixP1': '',
+                'intermediateConsumptionMatrixP2': '',
+                'valueAddedMatrixP1': '',
+                'valueAddedMatrixP2': '',
+                'finalConsumptionMatrixP1': '',
+                'finalConsumptionMatrixP2': '',
+                'valueAddedComponent': '',
+                'finalConsumptionComponent': '',
+                'listOfEconomicSector': '',
+                'labourRequirementP1': '',
+                'labourRequirementP2': '',
+                'financialUnit': '',
+                'areaName': '',
+                'period1': '',
+                'period2': '',
+            },
+            'DialogLumensTARegionalEconomyLandDistributionRequirementAnalysis': {
+                'landUseCover': '',
+                'landRequirementTable': '',
+                'descriptiveAnalysisOutput': '',
+            },
+            'DialogLumensTARegionalEconomyScenario': {
+                'landRequirement': '',
+                'finalDemandChangeScenario': '',
+                'gdpChangeScenario': '',
+            },
+            'DialogLumensTAImpactofLandUsetoRegionalEconomyIndicatorAnalysis': {
+                'landRequirement': '',
+                'landUseCover': '',
+            },
+            'DialogLumensSCIENDOHistoricalBaselineProjection': {
+                'QUESCDatabase': '',
+                'iteration': '',
+            },
+            'DialogLumensSCIENDOHistoricalBaselineAnnualProjection': {
+                'iteration': '',
+            },
+            'DialogLumensSCIENDODriversAnalysis': {
+                'landUseCoverChangeDrivers': '',
+                'landUseCoverChangeType': '',
+            },
+            'DialogLumensSCIENDOBuildScenario': {
+                'historicalBaselineCar': '',
+            },
+            'DialogLumensSCIENDOCalculateTransitionMatrix': {
+                'landUse1': '',
+                'landUse2': '',
+                'planningUnit': '',
+            },
+            'DialogLumensSCIENDOCreateRasterCube': {
+                'simulationIndex': '',
+                'factorsDir': '',
+            },
+            'DialogLumensSCIENDOCalculateWeightofEvidence': {
+                'simulationIndex': '',
+                'landUseLookup': '',
+            },
+            'DialogLumensSCIENDOSimulateLandUseChange': {
+                'simulationIndex': '',
+                'iteration': '',
+            },
+            'DialogLumensSCIENDOSimulateWithScenario': {
+                'factorsDir': '',
+                'landUseLookup': '',
+                'baseYear': '',
+                'location': '',
+            },
         }
 
         self.openDialogs = []
@@ -154,15 +325,15 @@ class MainWindow(QMainWindow):
         self.actionDialogLumensPUR.triggered.connect(self.handlerDialogLumensPUR)
         
         # QUES menu
-        # self.actionDialogLumensQUES.triggered.connect(self.handlerDialogLumensQUES)
+        self.actionDialogLumensQUES.triggered.connect(self.handlerDialogLumensQUES)
         
         # TA menu
-        # self.actionDialogLumensTA.triggered.connect(self.handlerDialogLumensTA)
+        self.actionDialogLumensTA.triggered.connect(self.handlerDialogLumensTA)
         # self.actionDialogLumensTAOpportunityCost.triggered.connect(self.handlerDialogLumensTAOpportunityCost)
         # self.actionDialogLumensTARegionalEconomy.triggered.connect(self.handlerDialogLumensTARegionalEconomy)
         
         # SCIENDO menu
-        # self.actionDialogLumensSCIENDO.triggered.connect(self.handlerDialogLumensSCIENDO)
+        self.actionDialogLumensSCIENDO.triggered.connect(self.handlerDialogLumensSCIENDO)
 
     def setupUi(self):
         """Method for building the LUMENS main window UI.

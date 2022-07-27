@@ -1,12 +1,14 @@
 #!/usr/bin/env python
 #-*- coding:utf-8 -*-
 
+from msilib.schema import Dialog
 import os, logging, tempfile, csv
 from qgis.core import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-# from processing.tools import *
+
+from tools import general
 
 from dialog_lumens_base import DialogLumensBase
 from dialog_lumens_viewer import DialogLumensViewer
@@ -37,6 +39,8 @@ class DialogLumensCreateDatabase(QDialog): # DialogLumensBase
             self.logger.addHandler(fh)
             self.logger.setLevel(logging.DEBUG)
         
+        self.base = DialogLumensBase(parent)
+
         self.setupUi(self)
         
         self.buttonSelectOutputFolder.clicked.connect(self.handlerSelectOutputFolder)
@@ -279,8 +283,8 @@ class DialogLumensCreateDatabase(QDialog): # DialogLumensBase
         """Slot method for a file select dialog to select a .shp file and load the attributes in the shapefile attribute combobox.
         """
         shapefile = str(QFileDialog.getOpenFileName(
-            self, MenuFactory.getLabel(MenuFactory.MSG_DB_SELECT_SHAPEFILE), QDir.homePath(), 'Shapefile (*{0})'.format(self.main.appSettings['selectShapefileExt'])))
-        
+            self, MenuFactory.getLabel(MenuFactory.MSG_DB_SELECT_SHAPEFILE), QDir.homePath(), 'Shapefile (*{0})'.format(self.main.appSettings['selectShapefileExt']))[0])
+
         if shapefile:
             self.lineEditShapefile.setText(shapefile)
             
@@ -294,7 +298,7 @@ class DialogLumensCreateDatabase(QDialog): # DialogLumensBase
             attributes = []
             for field in provider.fields():
                 attributes.append(field.name())
-            
+
             self.comboBoxShapefileAttr.clear()
             self.comboBoxShapefileAttr.addItems(sorted(attributes))
             self.comboBoxShapefileAttr.setEnabled(True)
@@ -329,7 +333,7 @@ class DialogLumensCreateDatabase(QDialog): # DialogLumensBase
         self.main.appSettings[type(self).__name__]['projectProvince'] = str(self.lineEditProjectProvince.text())
         self.main.appSettings[type(self).__name__]['projectCountry'] = str(self.lineEditProjectCountry.text())
         self.main.appSettings[type(self).__name__]['projectSpatialRes'] = self.spinBoxProjectSpatialRes.value()
-    
+
     
     def getDissolvedTableCsv(self, forwardDirSeparator=False):
         """Method for writing the dissolved table to a temp csv file. Inspired from DialogLumensViewer.
@@ -385,21 +389,22 @@ class DialogLumensCreateDatabase(QDialog): # DialogLumensBase
         """
         self.setAppSettings()
         
-        if self.validForm():
+        if self.base.validForm:
             logging.getLogger(type(self).__name__).info('start: %s' % 'LUMENS Dissolve')
             
             self.buttonProcessDissolve.setDisabled(True)
             
-            algName = 'r:dbdissolve'
+            algName = 'r:db_dissolve'
             
             # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
             # self.main.setWindowState(QtCore.Qt.WindowMinimized)
             
-            outputs = general.runalg(
-                algName,
-                self.main.appSettings[type(self).__name__]['shapefile'],
-                self.main.appSettings[type(self).__name__]['shapefileAttr'],
-                None,
+            outputs = general.run(
+                algName, {
+                    'admin_data': self.main.appSettings[type(self).__name__]['shapefile'],
+                    'field_attribute': self.main.appSettings[type(self).__name__]['shapefileAttr'],
+                    'admin_output': 'TEMPORARY_OUTPUT'
+                }
             )
             
             # Display ROut file in debug mode
@@ -411,7 +416,7 @@ class DialogLumensCreateDatabase(QDialog): # DialogLumensBase
                 self.dissolvedShapefile = outputs['admin_output'] # To be processed in setAppSettings()
                 
                 registry = QgsProviderRegistry.instance()
-                provider = registry.createProvider('ogr', outputs['admin_output'])
+                provider = registry.createProvider('ogr', outputs['admin_output'], QgsDataProvider.ProviderOptions())
                 
                 if not provider.isValid():
                     logging.getLogger(type(self).__name__).error('LUMENS Dissolve: invalid shapefile')
@@ -435,10 +440,10 @@ class DialogLumensCreateDatabase(QDialog): # DialogLumensBase
                     for feature in features:
                         tableColumn = 0
                         for attribute in attributes:
-                            attributeValue = bytes(feature.attribute(attribute))
+                            attributeValue = str(feature.attribute(attribute))
                             attributeValueTableItem = QTableWidgetItem(attributeValue)
                             self.tableDissolved.setItem(tableRow, tableColumn, attributeValueTableItem)
-                            self.tableDissolved.horizontalHeader().setResizeMode(tableColumn, QHeaderView.ResizeToContents)
+                            self.tableDissolved.horizontalHeader().setSectionResizeMode(tableColumn, QHeaderView.ResizeToContents)
                             tableColumn += 1
                         tableRow += 1
                     

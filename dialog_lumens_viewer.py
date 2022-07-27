@@ -4,7 +4,7 @@
 import os, tempfile, csv
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
-from PyQt5.QtWidgets import QDialog
+from PyQt5.QtWidgets import *
 from PyQt5.QtWebKitWidgets import QWebView
 
 from menu_factory import MenuFactory
@@ -44,7 +44,7 @@ class DialogLumensViewer(QDialog):
         Args:
             parent: the dialog's parent instance.
         """
-        self.dialogLayout = QtGui.QVBoxLayout()
+        self.dialogLayout = QVBoxLayout()
         
         self.setLayout(self.dialogLayout)
         
@@ -113,29 +113,29 @@ class DialogLumensViewer(QDialog):
         can be showned in an editable table widget.
         """
         if len(self.contentMessage):
-            self.labelContentMessage = QtGui.QLabel()
+            self.labelContentMessage = QLabel()
             self.labelContentMessage.setText(self.contentMessage)
             self.dialogLayout.addWidget(self.labelContentMessage)
         
         if self.contentType == 'csv':
-            self.tableModel = QtGui.QStandardItemModel()
+            self.tableModel = QStandardItemModel()
         
-            self.tableContent = QtGui.QTableView()
+            self.tableContent = QTableView()
             self.tableContent.setModel(self.tableModel)
             
             # Disable table editing
             if not self.editableTable:
-                self.tableContent.setSelectionMode(QtGui.QAbstractItemView.NoSelection)
-                self.tableContent.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
+                self.tableContent.setSelectionMode(QAbstractItemView.NoSelection)
+                self.tableContent.setEditTriggers(QAbstractItemView.NoEditTriggers)
             
             self.tableContent.verticalHeader().setVisible(False)
-            self.tableContent.horizontalHeader().setResizeMode(QtGui.QHeaderView.Interactive)
+            self.tableContent.horizontalHeader().setResizeMode(QHeaderView.Interactive)
             
             self.dialogLayout.addWidget(self.tableContent)
             
             with open(self.contentSource, 'rb') as csvFile:
                 for row in csv.reader(csvFile):
-                    items = [QtGui.QStandardItem(field) for field in row]
+                    items = [QStandardItem(field) for field in row]
                     self.tableContent.model().appendRow(items)
             
             self.tableContent.horizontalHeader().resizeSections()
@@ -143,10 +143,10 @@ class DialogLumensViewer(QDialog):
             self.webContent = QWebView()
             self.dialogLayout.addWidget(self.webContent)
             
-            self.webContent.load(QtCore.QUrl.fromLocalFile(self.contentSource))
+            self.webContent.load(QUrl.fromLocalFile(self.contentSource))
             self.setMinimumSize(800, 600)
         elif self.contentType == 'text':
-            self.textContent = QtGui.QPlainTextEdit()
+            self.textContent = QPlainTextEdit()
             self.textContent.setReadOnly(True)
             
             self.dialogLayout.addWidget(self.textContent)
