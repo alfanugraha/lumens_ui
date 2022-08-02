@@ -3,8 +3,10 @@
 
 import os, logging, csv, datetime, glob
 from qgis.core import *
-from processing.tools import *
-from PyQt4 import QtCore, QtGui
+# from processing.tools import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 
 from utils import QPlainTextEditLogger
 from dialog_lumens_base import DialogLumensBase
@@ -13,7 +15,7 @@ import resource
 
 from menu_factory import MenuFactory
 
-class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
+class DialogLumensQUES(QDialog): #DialogLumensBase
     """ LUMENS "QUES" module dialog class.
     """
     
@@ -329,229 +331,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             
             settings.endGroup()
             # /tab
-        elif tabName == 'Hydrological Response Unit Definition':
-            dialogsToLoad = (
-                'DialogLumensQUESHDominantHRU',
-                'DialogLumensQUESHDominantLUSSL',
-                'DialogLumensQUESHMultipleHRU',
-            )
-            
-            # start tab
-            settings.beginGroup(tabName)
-            
-            # 'Hydrological Response Unit Definition' tab widgets
-            # start dialog
-            settings.beginGroup('DialogLumensQUESHDominantHRU')
-            
-            templateSettings['DialogLumensQUESHDominantHRU'] = {}
-            templateSettings['DialogLumensQUESHDominantHRU']['landUseMap'] = landUseMap = settings.value('landUseMap')
-            templateSettings['DialogLumensQUESHDominantHRU']['soilMap'] = soilMap = settings.value('soilMap')
-            templateSettings['DialogLumensQUESHDominantHRU']['slopeMap'] = slopeMap = settings.value('slopeMap')
-            templateSettings['DialogLumensQUESHDominantHRU']['subcatchmentMap'] = subcatchmentMap = settings.value('subcatchmentMap')
-            templateSettings['DialogLumensQUESHDominantHRU']['landUseClassification'] = landUseClassification = settings.value('landUseClassification')
-            templateSettings['DialogLumensQUESHDominantHRU']['soilClassification'] = soilClassification = settings.value('soilClassification')
-            templateSettings['DialogLumensQUESHDominantHRU']['slopeClassification'] = slopeClassification = settings.value('slopeClassification')
-            templateSettings['DialogLumensQUESHDominantHRU']['areaName'] = areaName = settings.value('areaName')
-            templateSettings['DialogLumensQUESHDominantHRU']['period'] = period = settings.value('period')
-            
-            if not returnTemplateSettings:
-                if landUseMap and os.path.exists(landUseMap):
-                    self.lineEditHRULandUseMap.setText(landUseMap)
-                else:
-                    self.lineEditHRULandUseMap.setText('')
-                if soilMap and os.path.exists(soilMap):
-                    self.lineEditHRUSoilMap.setText(soilMap)
-                else:
-                    self.lineEditHRUSoilMap.setText('')
-                if subcatchmentMap and os.path.exists(subcatchmentMap):
-                    self.lineEditHRUSubcatchmentMap.setText(subcatchmentMap)
-                else:
-                    self.lineEditHRUSubcatchmentMap.setText('')
-                if landUseClassification and os.path.exists(landUseClassification):
-                    self.lineEditHRULandUseClassification.setText(landUseClassification)
-                else:
-                    self.lineEditHRULandUseClassification.setText('')
-                if soilClassification and os.path.exists(soilClassification):
-                    self.lineEditHRUSoilClassification.setText(soilClassification)
-                else:
-                    self.lineEditHRUSoilClassification.setText('')
-                if slopeClassification and os.path.exists(slopeClassification):
-                    self.lineEditHRUSlopeClassification.setText(slopeClassification)
-                else:
-                    self.lineEditHRUSlopeClassification.setText('')
-                if areaName:
-                    self.lineEditHRUAreaName.setText(areaName)
-                else:
-                    self.lineEditHRUAreaName.setText('')
-                if period:
-                    self.spinBoxHRUPeriod.setValue(int(period))
-                else:
-                    self.spinBoxHRUPeriod.setValue(td.year)
-            
-            settings.endGroup()
-            # /dialog
-            
-            # NOTE: DialogLumensQUESHDominantLUSSL has same fields as DialogLumensQUESHDominantHRU
-            
-            # start dialog
-            settings.beginGroup('DialogLumensQUESHMultipleHRU')
-            
-            templateSettings['DialogLumensQUESHMultipleHRU'] = {}
-            templateSettings['DialogLumensQUESHMultipleHRU']['landUseThreshold'] = landUseThreshold = settings.value('landUseThreshold')
-            templateSettings['DialogLumensQUESHMultipleHRU']['soilThreshold'] = soilThreshold = settings.value('soilThreshold')
-            templateSettings['DialogLumensQUESHMultipleHRU']['slopeThreshold'] = slopeThreshold = settings.value('slopeThreshold')
-            
-            if not returnTemplateSettings:
-                if landUseThreshold:
-                    self.spinBoxMultipleHRULandUseThreshold.setValue(int(landUseThreshold))
-                else:
-                    self.spinBoxMultipleHRULandUseThreshold.setValue(0)
-                if soilThreshold:
-                    self.spinBoxMultipleHRUSoilThreshold.setValue(int(soilThreshold))
-                else:
-                    self.spinBoxMultipleHRUSoilThreshold.setValue(0)
-                if slopeThreshold:
-                    self.spinBoxMultipleHRUSlopeThreshold.setValue(int(slopeThreshold))
-                else:
-                    self.spinBoxMultipleHRUSlopeThreshold.setValue(0)
                 
-            if not returnTemplateSettings:
-                self.currentHRUDefinitionTemplate = templateFile
-                self.loadedHRUDefinitionTemplate.setText(templateFile)
-                self.comboBoxHRUDefinitionTemplate.setCurrentIndex(self.comboBoxHRUDefinitionTemplate.findText(templateFile))
-                self.buttonSaveHRUDefinitionTemplate.setEnabled(True)
-            
-            settings.endGroup()
-            # /dialog
-            
-            settings.endGroup()
-            # /tab
-        elif tabName == 'Watershed Model Evaluation':
-            dialogsToLoad = (
-                'DialogLumensQUESHWatershedModelEvaluation',
-            )
-            
-            # start tab
-            settings.beginGroup(tabName)
-            
-            # 'Watershed Model Evaluation' tab widgets
-            # start dialog
-            settings.beginGroup('DialogLumensQUESHWatershedModelEvaluation')
-            
-            templateSettings['DialogLumensQUESHWatershedModelEvaluation'] = {}
-            templateSettings['DialogLumensQUESHWatershedModelEvaluation']['dateInitial'] = dateInitial = settings.value('dateInitial')
-            templateSettings['DialogLumensQUESHWatershedModelEvaluation']['dateFinal'] = dateFinal = settings.value('dateFinal')
-            templateSettings['DialogLumensQUESHWatershedModelEvaluation']['SWATModel'] = SWATModel = settings.value('SWATModel')
-            templateSettings['DialogLumensQUESHWatershedModelEvaluation']['location'] = location = settings.value('location')
-            templateSettings['DialogLumensQUESHWatershedModelEvaluation']['outletReachSubBasinID'] = outletReachSubBasinID = settings.value('outletReachSubBasinID')
-            templateSettings['DialogLumensQUESHWatershedModelEvaluation']['observedDebitFile'] = observedDebitFile = settings.value('observedDebitFile')
-            templateSettings['DialogLumensQUESHWatershedModelEvaluation']['outputWatershedModelEvaluation'] = outputWatershedModelEvaluation = settings.value('outputWatershedModelEvaluation')
-            
-            if not returnTemplateSettings:
-                if dateInitial:
-                    self.dateWatershedModelEvaluationDateInitial.setDate(QtCore.QDate.fromString(dateInitial), 'dd/MM/yyyy')
-                else:
-                    self.dateWatershedModelEvaluationDateInitial.setDate(QtCore.QDate.currentDate())
-                if dateFinal:
-                    self.dateWatershedModelEvaluationDateFinal.setDate(QtCore.QDate.fromString(dateFinal), 'dd/MM/yyyy')
-                else:
-                    self.dateWatershedModelEvaluationDateFinal.setDate(QtCore.QDate.currentDate())
-                if SWATModel:
-                    self.comboBoxWatershedModelEvaluationSWATModel.setCurrentIndex(self.comboBoxWatershedModelEvaluationSWATModel.findData(int(SWATModel)))
-                if location:
-                    self.lineEditWatershedModelEvaluationLocation.setText(location)
-                else:
-                    self.lineEditWatershedModelEvaluationLocation.setText('')
-                if outletReachSubBasinID:
-                    self.spinBoxWatershedModelEvaluationOutletReachSubBasinID.setValue(int(outletReachSubBasinID))
-                else:
-                    self.spinBoxWatershedModelEvaluationOutletReachSubBasinID.setValue(10)
-                if observedDebitFile and os.path.exists(observedDebitFile):
-                    self.lineEditWatershedModelEvaluationObservedDebitFile.setText(observedDebitFile)
-                else:
-                    self.lineEditWatershedModelEvaluationObservedDebitFile.setText('')
-                if outputWatershedModelEvaluation:
-                    self.lineEditOutputWatershedModelEvaluation.setText(outputWatershedModelEvaluation)
-                else:
-                    self.lineEditOutputWatershedModelEvaluation.setText('')
-                
-                self.currentWatershedModelEvaluationTemplate = templateFile
-                self.loadedWatershedModelEvaluationTemplate.setText(templateFile)
-                self.comboBoxWatershedModelEvaluationTemplate.setCurrentIndex(self.comboBoxWatershedModelEvaluationTemplate.findText(templateFile))
-                self.buttonSaveWatershedModelEvaluationTemplate.setEnabled(True)
-            
-            settings.endGroup()
-            # /dialog
-            
-            settings.endGroup()
-            # /tab
-        elif tabName == 'Watershed Indicators':
-            dialogsToLoad = (
-                'DialogLumensQUESHWatershedIndicators',
-            )
-            
-            # start tab
-            settings.beginGroup(tabName)
-            
-            # 'Watershed Model Evaluation' tab widgets
-            # start dialog
-            settings.beginGroup('DialogLumensQUESHWatershedIndicators')
-            
-            templateSettings['DialogLumensQUESHWatershedIndicators'] = {}
-            templateSettings['DialogLumensQUESHWatershedIndicators']['SWATTXTINOUTDir'] = SWATTXTINOUTDir = settings.value('SWATTXTINOUTDir')
-            templateSettings['DialogLumensQUESHWatershedIndicators']['dateInitial'] = dateInitial = settings.value('dateInitial')
-            templateSettings['DialogLumensQUESHWatershedIndicators']['dateFinal'] = dateFinal = settings.value('dateFinal')
-            templateSettings['DialogLumensQUESHWatershedIndicators']['subWatershedPolygon'] = subWatershedPolygon = settings.value('subWatershedPolygon')
-            templateSettings['DialogLumensQUESHWatershedIndicators']['location'] = location = settings.value('location')
-            templateSettings['DialogLumensQUESHWatershedIndicators']['subWatershedOutput'] = subWatershedOutput = settings.value('subWatershedOutput')
-            templateSettings['DialogLumensQUESHWatershedIndicators']['outputInitialYearSubWatershedLevelIndicators'] = outputInitialYearSubWatershedLevelIndicators = settings.value('outputInitialYearSubWatershedLevelIndicators')
-            templateSettings['DialogLumensQUESHWatershedIndicators']['outputFinalYearSubWatershedLevelIndicators'] = outputFinalYearSubWatershedLevelIndicators = settings.value('outputFinalYearSubWatershedLevelIndicators')
-            
-            if not returnTemplateSettings:
-                if SWATTXTINOUTDir and os.path.isdir(SWATTXTINOUTDir):
-                    self.lineEditWatershedIndicatorsSWATTXTINOUTDir.setText(SWATTXTINOUTDir)
-                else:
-                    self.lineEditWatershedIndicatorsSWATTXTINOUTDir.setText('')
-                if dateInitial:
-                    self.dateWatershedIndicatorsDateInitial.setDate(QtCore.QDate.fromString(dateInitial), 'dd/MM/yyyy')
-                else:
-                    self.dateWatershedIndicatorsDateInitial.setDate(QtCore.QDate.currentDate())
-                if dateFinal:
-                    self.dateWatershedIndicatorsDateFinal.setDate(QtCore.QDate.fromString(dateFinal), 'dd/MM/yyyy')
-                else:
-                    self.dateWatershedIndicatorsDateFinal.setDate(QtCore.QDate.currentDate())
-                if subWatershedPolygon and os.path.exists(subWatershedPolygon):
-                    self.lineEditWatershedIndicatorsSubWatershedPolygon.setText(subWatershedPolygon)
-                else:
-                    self.lineEditWatershedIndicatorsSubWatershedPolygon.setText('')
-                if location:
-                    self.lineEditWatershedIndicatorsLocation.setText(location)
-                else:
-                    self.lineEditWatershedIndicatorsLocation.setText('')
-                if subWatershedOutput:
-                    self.spinBoxWatershedIndicatorsSubWatershedOutputsetValue(int(subWatershedOutput))
-                else:
-                    self.spinBoxWatershedIndicatorsSubWatershedOutputsetValue.setValue(10)
-                if outputInitialYearSubWatershedLevelIndicators:
-                    self.lineEditWatershedIndicatorsOutputInitialYearSubWatershedLevelIndicators.setText(outputInitialYearSubWatershedLevelIndicators)
-                else:
-                    self.lineEditWatershedIndicatorsOutputInitialYearSubWatershedLevelIndicators.setText('')
-                if outputFinalYearSubWatershedLevelIndicators:
-                    self.lineEditWatershedIndicatorsOutputFinalYearSubWatershedLevelIndicators.setText(outputFinalYearSubWatershedLevelIndicators)
-                else:
-                    self.lineEditWatershedIndicatorsOutputFinalYearSubWatershedLevelIndicators.setText('')
-                
-                self.currentWatershedIndicatorsTemplate = templateFile
-                self.loadedWatershedIndicatorsTemplate.setText(templateFile)
-                self.comboBoxWatershedIndicatorsTemplate.setCurrentIndex(self.comboBoxWatershedIndicatorsTemplate.findText(templateFile))
-                self.buttonSaveWatershedIndicatorsTemplate.setEnabled(True)
-            
-            settings.endGroup()
-            # /dialog
-            
-            settings.endGroup()
-            # /tab
-        
         if returnTemplateSettings:
             return templateSettings
         else:
@@ -582,21 +362,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             dialogsToLoad = (
                 'DialogLumensQUESBAnalysis',
             )
-        elif tabName == 'Hydrological Response Unit Definition':
-            dialogsToLoad = (
-                'DialogLumensQUESHDominantHRU',
-                'DialogLumensQUESHDominantLUSSL',
-                'DialogLumensQUESHMultipleHRU',
-            )
-        elif tabName == 'Watershed Model Evaluation':
-            dialogsToLoad = (
-                'DialogLumensQUESHWatershedModelEvaluation',
-            )
-        elif tabName == 'Watershed Indicators':
-            dialogsToLoad = (
-                'DialogLumensQUESHWatershedIndicators',
-            )
-        
+                
         for templateFile in templateFiles:
             if templateFile == templateToSkip:
                 continue
@@ -604,8 +370,8 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             duplicateTemplate = templateFile
             templateSettings = self.loadTemplate(tabName, templateFile, True)
             
-            print 'DEBUG'
-            print templateFile, templateSettings
+            print('DEBUG')
+            print(templateFile, templateSettings)
             
             # Loop thru all dialogs in a tab
             for dialog in dialogsToLoad:
@@ -615,8 +381,8 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                         # A setting doesn't match! This is not a matching template file, move along
                         duplicateTemplate = None
                     else:
-                        print 'DEBUG equal settings'
-                        print templateSettings[dialog][key], val
+                        print('DEBUG equal settings')
+                        print(templateSettings[dialog][key], val)
         
         # Found a duplicate template, offer to load it?
         if duplicateTemplate:
@@ -635,13 +401,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                     self.handlerLoadQUESCTemplate(duplicateTemplate)
                 elif tabName == 'QUES-B':
                     self.handlerLoadQUESBTemplate(duplicateTemplate)
-                elif tabName == 'Hydrological Response Unit Definition':
-                    self.handlerLoadHRUDefinitionTemplate(duplicateTemplate)
-                elif tabName == 'Watershed Model Evaluation':
-                    self.handlerLoadWatershedModelEvaluationTemplate(duplicateTemplate)
-                elif tabName == 'Watershed Indicators':
-                    self.handlerLoadWatershedIndicatorsTemplate(duplicateTemplate)
-                
+                                
                 return True
         
         return False
@@ -676,20 +436,6 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                 dialogsToSave = (
                     'DialogLumensQUESBAnalysis',
                 )
-            elif tabName == 'Hydrological Response Unit Definition':
-                dialogsToSave = (
-                    'DialogLumensQUESHDominantHRU',
-                    'DialogLumensQUESHDominantLUSSL',
-                    'DialogLumensQUESHMultipleHRU',
-                )
-            elif tabName == 'Watershed Model Evaluation':
-                dialogsToSave = (
-                    'DialogLumensQUESHWatershedModelEvaluation',
-                )
-            elif tabName == 'Watershed Indicators':
-                dialogsToSave = (
-                    'DialogLumensQUESHWatershedIndicators',
-                )
             
             settings.beginGroup(tabName)
             for dialog in dialogsToSave:
@@ -704,7 +450,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
     
     
     def __init__(self, parent):
-        super(DialogLumensQUES, self).__init__(parent)
+        super().__init__()
         
         self.main = parent
         self.dialogTitle = 'QUES'
@@ -722,7 +468,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         
         if self.main.appSettings['debug']:
-            print 'DEBUG: DialogLumensQUES init'
+            print('DEBUG: DialogLumensQUES init')
             self.logger = logging.getLogger(type(self).__name__)
             ch = logging.StreamHandler()
             ch.setFormatter(formatter)
@@ -735,19 +481,19 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.setupUi(self)
         
         # History log
-        self.historyLog = '{0}{1}'.format('history', type(self).__name__)
-        self.historyLogPath = os.path.join(self.settingsPath, self.historyLog + '.log')
-        self.historyLogger = logging.getLogger(self.historyLog)
-        fh = logging.FileHandler(self.historyLogPath)
-        fh.setFormatter(formatter)
-        self.log_box.setFormatter(formatter)
-        self.historyLogger.addHandler(fh)
-        self.historyLogger.addHandler(self.log_box)
-        self.historyLogger.setLevel(logging.INFO)
+        # self.historyLog = '{0}{1}'.format('history', type(self).__name__)
+        # self.historyLogPath = os.path.join(self.settingsPath, self.historyLog + '.log')
+        # self.historyLogger = logging.getLogger(self.historyLog)
+        # fh = logging.FileHandler(self.historyLogPath)
+        # fh.setFormatter(formatter)
+        # self.log_box.setFormatter(formatter)
+        # self.historyLogger.addHandler(fh)
+        # self.historyLogger.addHandler(self.log_box)
+        # self.historyLogger.setLevel(logging.INFO)
         
-        self.loadHistoryLog()
+        # self.loadHistoryLog()
         
-        self.loadTemplateFiles()
+        # self.loadTemplateFiles()
         
         self.tabWidget.currentChanged.connect(self.handlerTabWidgetChanged)
         
@@ -778,44 +524,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.buttonLoadQUESBTemplate.clicked.connect(self.handlerLoadQUESBTemplate)
         self.buttonSaveQUESBTemplate.clicked.connect(self.handlerSaveQUESBTemplate)
         self.buttonSaveAsQUESBTemplate.clicked.connect(self.handlerSaveAsQUESBTemplate)
-        
-        # 'QUES-H' tab checkboxes
-        self.checkBoxMultipleHRU.toggled.connect(self.toggleMultipleHRU)
-        
-        # 'QUES-H' HRU tab buttons
-        self.buttonSelectHRULandUseMap.clicked.connect(self.handlerSelectHRULandUseMap)
-        self.buttonSelectHRUSoilMap.clicked.connect(self.handlerSelectHRUSoilMap)
-        self.buttonSelectHRUSlopeMap.clicked.connect(self.handlerSelectHRUSlopeMap)
-        self.buttonSelectHRUSubcatchmentMap.clicked.connect(self.handlerSelectHRUSubcatchmentMap)
-        self.buttonSelectHRULandUseClassification.clicked.connect(self.handlerSelectHRULandUseClassification)
-        self.buttonSelectHRUSoilClassification.clicked.connect(self.handlerSelectHRUSoilClassification)
-        self.buttonSelectHRUSlopeClassification.clicked.connect(self.handlerSelectHRUSlopeClassification)
-        self.buttonProcessHRUDefinition.clicked.connect(self.handlerProcessQUESHHRUDefinition)
-        self.buttonHelpQUESHHRUDefinition.clicked.connect(lambda:self.handlerDialogHelp('QUES'))
-        self.buttonLoadHRUDefinitionTemplate.clicked.connect(self.handlerLoadHRUDefinitionTemplate)
-        self.buttonSaveHRUDefinitionTemplate.clicked.connect(self.handlerSaveHRUDefinitionTemplate)
-        self.buttonSaveAsHRUDefinitionTemplate.clicked.connect(self.handlerSaveAsHRUDefinitionTemplate)
-        
-        # 'QUES-H' Watershed Model Evaluation tab buttons
-        self.buttonSelectWatershedModelEvaluationObservedDebitFile.clicked.connect(self.handlerSelectWatershedModelEvaluationObservedDebitFile)
-        self.buttonSelectOutputWatershedModelEvaluation.clicked.connect(self.handlerSelectOutputWatershedModelEvaluation)
-        self.buttonProcessWatershedModelEvaluation.clicked.connect(self.handlerProcessQUESHWatershedModelEvaluation)
-        self.buttonHelpQUESHWatershedModelEvaluation.clicked.connect(lambda:self.handlerDialogHelp('QUES'))
-        self.buttonLoadWatershedModelEvaluationTemplate.clicked.connect(self.handlerLoadWatershedModelEvaluationTemplate)
-        self.buttonSaveWatershedModelEvaluationTemplate.clicked.connect(self.handlerSaveWatershedModelEvaluationTemplate)
-        self.buttonSaveAsWatershedModelEvaluationTemplate.clicked.connect(self.handlerSaveAsWatershedModelEvaluationTemplate)
-        
-        # 'QUES-H' Watershed Indicators tab buttons
-        self.buttonSelectWatershedIndicatorsSWATTXTINOUTDir.clicked.connect(self.handlerSelectWatershedIndicatorsSWATTXTINOUTDir)
-        self.buttonSelectWatershedIndicatorsSubWatershedPolygon.clicked.connect(self.handlerSelectWatershedIndicatorsSubWatershedPolygon)
-        self.buttonSelectWatershedIndicatorsOutputInitialYearSubWatershedLevelIndicators.clicked.connect(self.handlerSelectWatershedIndicatorsOutputInitialYearSubWatershedLevelIndicators)
-        self.buttonSelectWatershedIndicatorsOutputFinalYearSubWatershedLevelIndicators.clicked.connect(self.handlerSelectWatershedIndicatorsOutputFinalYearSubWatershedLevelIndicators)
-        self.buttonProcessWatershedIndicators.clicked.connect(self.handlerProcessQUESHWatershedIndicators)
-        self.buttonHelpQUESHWatershedIndicators.clicked.connect(lambda:self.handlerDialogHelp('QUES'))
-        self.buttonLoadWatershedIndicatorsTemplate.clicked.connect(self.handlerLoadWatershedIndicatorsTemplate)
-        self.buttonSaveWatershedIndicatorsTemplate.clicked.connect(self.handlerSaveWatershedIndicatorsTemplate)
-        self.buttonSaveAsWatershedIndicatorsTemplate.clicked.connect(self.handlerSaveAsWatershedIndicatorsTemplate)
-        
+                
     
     def setupUi(self, parent):
         """Method for building the dialog UI.
@@ -824,18 +533,18 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             parent: the dialog's parent instance.
         """
         self.setStyleSheet('QDialog { background-color: rgb(225, 229, 237); } QMessageBox QLabel { color: #fff; }')
-        self.dialogLayout = QtGui.QVBoxLayout()
+        self.dialogLayout = QVBoxLayout()
 
-        self.groupBoxQUESDialog = QtGui.QGroupBox(MenuFactory.getDescription(MenuFactory.QUES_TITLE))
-        self.layoutGroupBoxQUESDialog = QtGui.QVBoxLayout()
-        self.layoutGroupBoxQUESDialog.setAlignment(QtCore.Qt.AlignTop)
+        self.groupBoxQUESDialog = QGroupBox(MenuFactory.getDescription(MenuFactory.QUES_TITLE))
+        self.layoutGroupBoxQUESDialog = QVBoxLayout()
+        self.layoutGroupBoxQUESDialog.setAlignment(Qt.AlignTop)
         self.groupBoxQUESDialog.setLayout(self.layoutGroupBoxQUESDialog)
-        self.labelQUESDialogInfo = QtGui.QLabel()
+        self.labelQUESDialogInfo = QLabel()
         self.labelQUESDialogInfo.setText('\n')
         self.labelQUESDialogInfo.setWordWrap(True)
         self.layoutGroupBoxQUESDialog.addWidget(self.labelQUESDialogInfo)
 
-        self.tabWidget = QtGui.QTabWidget()
+        self.tabWidget = QTabWidget()
         tabWidgetStylesheet = """
         QTabWidget::pane {
             border: none;
@@ -858,34 +567,34 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         """
         self.tabWidget.setStyleSheet(tabWidgetStylesheet)
         
-        self.tabPreQUES = QtGui.QWidget()
-        self.tabQUESC = QtGui.QWidget()
-        self.tabQUESB = QtGui.QWidget()
-        self.tabQUESH = QtGui.QWidget()
-        self.tabReclassification = QtGui.QWidget()
-        self.tabLog = QtGui.QWidget()
+        self.tabPreQUES = QWidget()
+        self.tabQUESC = QWidget()
+        self.tabQUESB = QWidget()
+        # self.tabQUESH = QWidget()
+        self.tabReclassification = QWidget()
+        self.tabLog = QWidget()
         
         self.tabWidget.addTab(self.tabPreQUES, 'Pre-QUES')
         self.tabWidget.addTab(self.tabQUESC, 'QUES-C')
         self.tabWidget.addTab(self.tabQUESB, 'QUES-B')
-        self.tabWidget.addTab(self.tabQUESH, 'QUES-H')
+        # self.tabWidget.addTab(self.tabQUESH, 'QUES-H')
         ##self.tabWidget.addTab(self.tabReclassification, 'Reclassification')
         self.tabWidget.addTab(self.tabLog, 'Log')
         
         ##self.layoutTabPreQUES = QtGui.QVBoxLayout()
-        self.layoutTabPreQUES = QtGui.QGridLayout()
+        self.layoutTabPreQUES = QGridLayout()
         ##self.layoutTabQUESC = QtGui.QVBoxLayout()
-        self.layoutTabQUESC = QtGui.QGridLayout()
+        self.layoutTabQUESC = QGridLayout()
         ##self.layoutTabQUESB = QtGui.QVBoxLayout()
-        self.layoutTabQUESB = QtGui.QGridLayout()
-        self.layoutTabQUESH = QtGui.QVBoxLayout()
-        self.layoutTabReclassification = QtGui.QVBoxLayout()
-        self.layoutTabLog = QtGui.QVBoxLayout()
+        self.layoutTabQUESB = QGridLayout()
+        # self.layoutTabQUESH = QVBoxLayout()
+        self.layoutTabReclassification = QVBoxLayout()
+        self.layoutTabLog = QVBoxLayout()
         
         self.tabPreQUES.setLayout(self.layoutTabPreQUES)
         self.tabQUESC.setLayout(self.layoutTabQUESC)
         self.tabQUESB.setLayout(self.layoutTabQUESB)
-        self.tabQUESH.setLayout(self.layoutTabQUESH)
+        # self.tabQUESH.setLayout(self.layoutTabQUESH)
         self.tabReclassification.setLayout(self.layoutTabReclassification)
         self.tabLog.setLayout(self.layoutTabLog)
 
@@ -896,61 +605,65 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         # Setup 'Pre-QUES' tab
         #***********************************************************
         # 'Land cover' GroupBox
-        self.groupBoxLandCover = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.PREQUES_PARAMETERIZATION))
-        self.layoutGroupBoxLandCover = QtGui.QVBoxLayout()
-        self.layoutGroupBoxLandCover.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.groupBoxLandCover = QGroupBox(MenuFactory.getLabel(MenuFactory.PREQUES_PARAMETERIZATION))
+        self.layoutGroupBoxLandCover = QVBoxLayout()
+        self.layoutGroupBoxLandCover.setAlignment(Qt.AlignLeft|Qt.AlignTop)
         self.groupBoxLandCover.setLayout(self.layoutGroupBoxLandCover)
         
-        self.layoutLandCoverInfo = QtGui.QVBoxLayout()
-        self.labelLandCoverInfo = QtGui.QLabel()
+        self.layoutLandCoverInfo = QVBoxLayout()
+        self.labelLandCoverInfo = QLabel()
         self.labelLandCoverInfo.setText('\n')
         self.labelLandCoverInfo.setWordWrap(True)
         self.layoutLandCoverInfo.addWidget(self.labelLandCoverInfo)
         
-        self.layoutLandCoverOptions = QtGui.QGridLayout()
+        self.layoutLandCoverOptions = QGridLayout()
         self.layoutLandCoverOptions.setContentsMargins(0, 0, 0, 0)
         
-        self.labelPreQUESLandCoverLandUse1 = QtGui.QLabel()
+        self.labelPreQUESLandCoverLandUse1 = QLabel()
         self.labelPreQUESLandCoverLandUse1.setText(MenuFactory.getLabel(MenuFactory.PREQUES_EARLIER_LAND_USE_COVER) + ':')
         self.layoutLandCoverOptions.addWidget(self.labelPreQUESLandCoverLandUse1, 0, 0)
         
-        self.comboBoxPreQUESLandCoverLandUse1 = QtGui.QComboBox()
+        self.comboBoxPreQUESLandCoverLandUse1 = QComboBox()
         self.comboBoxPreQUESLandCoverLandUse1.setDisabled(True)
         self.layoutLandCoverOptions.addWidget(self.comboBoxPreQUESLandCoverLandUse1, 0, 1)
         
-        self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxPreQUESLandCoverLandUse1)
+        # self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxPreQUESLandCoverLandUse1)
+        DialogLumensBase.handlerPopulateNameFromLookupData(parent, self.main.dataLandUseCover, self.comboBoxPreQUESLandCoverLandUse1)
         
-        self.labelPreQUESLandCoverLandUse2 = QtGui.QLabel()
+        self.labelPreQUESLandCoverLandUse2 = QLabel()
         self.labelPreQUESLandCoverLandUse2.setText(MenuFactory.getLabel(MenuFactory.PREQUES_LATER_LAND_USE_COVER) + ':')
         self.layoutLandCoverOptions.addWidget(self.labelPreQUESLandCoverLandUse2, 1, 0)
         
-        self.comboBoxPreQUESLandCoverLandUse2 = QtGui.QComboBox()
+        self.comboBoxPreQUESLandCoverLandUse2 = QComboBox()
         self.comboBoxPreQUESLandCoverLandUse2.setDisabled(True)
         self.layoutLandCoverOptions.addWidget(self.comboBoxPreQUESLandCoverLandUse2, 1, 1)
         
-        self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxPreQUESLandCoverLandUse2)
+        # self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxPreQUESLandCoverLandUse2)
+        DialogLumensBase.handlerPopulateNameFromLookupData(parent, self.main.dataLandUseCover, self.comboBoxPreQUESLandCoverLandUse2)
         
-        self.labelPreQUESLandCoverPlanningUnit = QtGui.QLabel()
+        self.labelPreQUESLandCoverPlanningUnit = QLabel()
         self.labelPreQUESLandCoverPlanningUnit.setText(MenuFactory.getLabel(MenuFactory.PREQUES_PLANNING_UNIT) + ':')
         self.layoutLandCoverOptions.addWidget(self.labelPreQUESLandCoverPlanningUnit, 2, 0)
         
-        self.comboBoxPreQUESLandCoverPlanningUnit = QtGui.QComboBox()
+        self.comboBoxPreQUESLandCoverPlanningUnit = QComboBox()
         self.comboBoxPreQUESLandCoverPlanningUnit.setDisabled(True)
         self.layoutLandCoverOptions.addWidget(self.comboBoxPreQUESLandCoverPlanningUnit, 2, 1)
         
-        self.handlerPopulateNameFromLookupData(self.main.dataPlanningUnit, self.comboBoxPreQUESLandCoverPlanningUnit)        
+        # self.handlerPopulateNameFromLookupData(self.main.dataPlanningUnit, self.comboBoxPreQUESLandCoverPlanningUnit)  
+        DialogLumensBase.handlerPopulateNameFromLookupData(parent, self.main.dataPlanningUnit, self.comboBoxPreQUESLandCoverPlanningUnit)      
         
-        self.labelPreQUESLandCoverTable = QtGui.QLabel()
+        self.labelPreQUESLandCoverTable = QLabel()
         self.labelPreQUESLandCoverTable.setText(MenuFactory.getLabel(MenuFactory.PREQUES_LAND_USE_COVER_LOOKUP_TABLE) + ':')
         self.layoutLandCoverOptions.addWidget(self.labelPreQUESLandCoverTable, 3, 0)
         
-        self.comboBoxPreQUESLandCoverTable = QtGui.QComboBox()
+        self.comboBoxPreQUESLandCoverTable = QComboBox()
         self.comboBoxPreQUESLandCoverTable.setDisabled(True)
         self.layoutLandCoverOptions.addWidget(self.comboBoxPreQUESLandCoverTable, 3, 1)
         
-        self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxPreQUESLandCoverTable) 
+        # self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxPreQUESLandCoverTable) 
+        DialogLumensBase.handlerPopulateNameFromLookupData(parent, self.main.dataTable, self.comboBoxPreQUESLandCoverTable)
         
-        self.labelLandCoverAnalysisOption = QtGui.QLabel()
+        self.labelLandCoverAnalysisOption = QLabel()
         self.labelLandCoverAnalysisOption.setText(MenuFactory.getLabel(MenuFactory.PREQUES_ANALYSIS_OPTION) + ':')
         self.layoutLandCoverOptions.addWidget(self.labelLandCoverAnalysisOption, 4, 0)
         
@@ -960,15 +673,15 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             MenuFactory.getLabel(MenuFactory.PREQUES_ANALYSIS_OPTION_THREE),
             MenuFactory.getLabel(MenuFactory.PREQUES_ANALYSIS_OPTION_FOUR),
         ]
-        self.comboBoxLandCoverAnalysisOption = QtGui.QComboBox()
+        self.comboBoxLandCoverAnalysisOption = QComboBox()
         self.comboBoxLandCoverAnalysisOption.addItems(analysisOptions)
         self.layoutLandCoverOptions.addWidget(self.comboBoxLandCoverAnalysisOption, 4, 1)
         
-        self.labelPreQUESNodata = QtGui.QLabel()
+        self.labelPreQUESNodata = QLabel()
         self.labelPreQUESNodata.setText('&' + MenuFactory.getLabel(MenuFactory.PREQUES_NO_DATA_VALUE) + ':')
         self.layoutLandCoverOptions.addWidget(self.labelPreQUESNodata, 5, 0)
         
-        self.spinBoxPreQUESNodata = QtGui.QSpinBox()
+        self.spinBoxPreQUESNodata = QSpinBox()
         self.spinBoxPreQUESNodata.setRange(-9999, 9999)
         self.spinBoxPreQUESNodata.setValue(0)
         self.layoutLandCoverOptions.addWidget(self.spinBoxPreQUESNodata, 5, 1)
@@ -978,56 +691,56 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxLandCover.addLayout(self.layoutLandCoverOptions)
         
         # Process tab button
-        self.layoutButtonPreQUES = QtGui.QHBoxLayout()
-        self.buttonProcessPreQUES = QtGui.QPushButton()
+        self.layoutButtonPreQUES = QHBoxLayout()
+        self.buttonProcessPreQUES = QPushButton()
         self.buttonProcessPreQUES.setText('&' + MenuFactory.getLabel(MenuFactory.PREQUES_PROCESS))
-        icon = QtGui.QIcon(':/ui/icons/iconActionHelp.png')
-        self.buttonHelpPreQUES = QtGui.QPushButton()
+        icon = QIcon(':/ui/icons/iconActionHelp.png')
+        self.buttonHelpPreQUES = QPushButton()
         self.buttonHelpPreQUES.setIcon(icon)
-        self.layoutButtonPreQUES.setAlignment(QtCore.Qt.AlignRight)
+        self.layoutButtonPreQUES.setAlignment(Qt.AlignRight)
         self.layoutButtonPreQUES.addWidget(self.buttonProcessPreQUES)
         self.layoutButtonPreQUES.addWidget(self.buttonHelpPreQUES)
         
         # Template GroupBox
-        self.groupBoxPreQUESTemplate = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.CONF_TITLE))
-        self.layoutGroupBoxPreQUESTemplate = QtGui.QVBoxLayout()
-        self.layoutGroupBoxPreQUESTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.groupBoxPreQUESTemplate = QGroupBox(MenuFactory.getLabel(MenuFactory.CONF_TITLE))
+        self.layoutGroupBoxPreQUESTemplate = QVBoxLayout()
+        self.layoutGroupBoxPreQUESTemplate.setAlignment(Qt.AlignLeft|Qt.AlignTop)
         self.groupBoxPreQUESTemplate.setLayout(self.layoutGroupBoxPreQUESTemplate)
-        self.layoutPreQUESTemplateInfo = QtGui.QVBoxLayout()
-        self.layoutPreQUESTemplate = QtGui.QGridLayout()
+        self.layoutPreQUESTemplateInfo = QVBoxLayout()
+        self.layoutPreQUESTemplate = QGridLayout()
         self.layoutGroupBoxPreQUESTemplate.addLayout(self.layoutPreQUESTemplateInfo)
         self.layoutGroupBoxPreQUESTemplate.addLayout(self.layoutPreQUESTemplate)
         
-        self.labelLoadedPreQUESTemplate = QtGui.QLabel()
+        self.labelLoadedPreQUESTemplate = QLabel()
         self.labelLoadedPreQUESTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOADED_CONFIGURATION) + ':')
         self.layoutPreQUESTemplate.addWidget(self.labelLoadedPreQUESTemplate, 0, 0)
         
-        self.loadedPreQUESTemplate = QtGui.QLabel()
+        self.loadedPreQUESTemplate = QLabel()
         self.loadedPreQUESTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NONE))
         self.layoutPreQUESTemplate.addWidget(self.loadedPreQUESTemplate, 0, 1)
         
-        self.labelPreQUESTemplate = QtGui.QLabel()
+        self.labelPreQUESTemplate = QLabel()
         self.labelPreQUESTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NAME) + ':')
         self.layoutPreQUESTemplate.addWidget(self.labelPreQUESTemplate, 1, 0)
         
-        self.comboBoxPreQUESTemplate = QtGui.QComboBox()
-        self.comboBoxPreQUESTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
+        self.comboBoxPreQUESTemplate = QComboBox()
+        self.comboBoxPreQUESTemplate.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Maximum)
         self.comboBoxPreQUESTemplate.setDisabled(True)
         self.comboBoxPreQUESTemplate.addItem(MenuFactory.getLabel(MenuFactory.CONF_NO_FOUND))
         self.layoutPreQUESTemplate.addWidget(self.comboBoxPreQUESTemplate, 1, 1)
         
-        self.layoutButtonPreQUESTemplate = QtGui.QHBoxLayout()
-        self.layoutButtonPreQUESTemplate.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTop)
-        self.buttonLoadPreQUESTemplate = QtGui.QPushButton()
+        self.layoutButtonPreQUESTemplate = QHBoxLayout()
+        self.layoutButtonPreQUESTemplate.setAlignment(Qt.AlignRight|Qt.AlignTop)
+        self.buttonLoadPreQUESTemplate = QPushButton()
         self.buttonLoadPreQUESTemplate.setDisabled(True)
-        self.buttonLoadPreQUESTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonLoadPreQUESTemplate.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         self.buttonLoadPreQUESTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOAD))
-        self.buttonSavePreQUESTemplate = QtGui.QPushButton()
+        self.buttonSavePreQUESTemplate = QPushButton()
         self.buttonSavePreQUESTemplate.setDisabled(True)
-        self.buttonSavePreQUESTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonSavePreQUESTemplate.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         self.buttonSavePreQUESTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE))
-        self.buttonSaveAsPreQUESTemplate = QtGui.QPushButton()
-        self.buttonSaveAsPreQUESTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonSaveAsPreQUESTemplate = QPushButton()
+        self.buttonSaveAsPreQUESTemplate.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         self.buttonSaveAsPreQUESTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS))
         self.layoutButtonPreQUESTemplate.addWidget(self.buttonLoadPreQUESTemplate)
         self.layoutButtonPreQUESTemplate.addWidget(self.buttonSavePreQUESTemplate)
@@ -1036,7 +749,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         
         # Place the GroupBoxes
         self.layoutTabPreQUES.addWidget(self.groupBoxLandCover, 0, 0)
-        self.layoutTabPreQUES.addLayout(self.layoutButtonPreQUES, 1, 0, 1, 2, QtCore.Qt.AlignRight)
+        self.layoutTabPreQUES.addLayout(self.layoutButtonPreQUES, 1, 0, 1, 2, Qt.AlignRight)
         self.layoutTabPreQUES.addWidget(self.groupBoxPreQUESTemplate, 0, 1, 1, 1)
         self.layoutTabPreQUES.setColumnStretch(0, 3)
         self.layoutTabPreQUES.setColumnStretch(1, 1) # Smaller template column
@@ -1045,146 +758,152 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         # Setup 'QUES-C' tab
         #***********************************************************
         # 'Carbon accounting' GroupBox
-        self.groupBoxCarbonAccounting = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.QUESC_CARBON_ACCOUNTING))
-        self.layoutGroupBoxCarbonAccounting = QtGui.QHBoxLayout()
+        self.groupBoxCarbonAccounting = QGroupBox(MenuFactory.getLabel(MenuFactory.QUESC_CARBON_ACCOUNTING))
+        self.layoutGroupBoxCarbonAccounting = QHBoxLayout()
         self.groupBoxCarbonAccounting.setLayout(self.layoutGroupBoxCarbonAccounting)
-        self.layoutOptionsCarbonAccounting = QtGui.QVBoxLayout()
+        self.layoutOptionsCarbonAccounting = QVBoxLayout()
         self.layoutOptionsCarbonAccounting.setContentsMargins(5, 0, 5, 0)
-        self.contentOptionsCarbonAccounting = QtGui.QWidget()
+        self.contentOptionsCarbonAccounting = QWidget()
         self.contentOptionsCarbonAccounting.setLayout(self.layoutOptionsCarbonAccounting)
-        self.layoutOptionsCarbonAccounting.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
-        self.checkBoxCarbonAccounting = QtGui.QCheckBox()
+        self.layoutOptionsCarbonAccounting.setAlignment(Qt.AlignLeft|Qt.AlignTop)
+        self.checkBoxCarbonAccounting = QCheckBox()
         self.checkBoxCarbonAccounting.setChecked(False)
         self.contentOptionsCarbonAccounting.setDisabled(True)
         self.layoutGroupBoxCarbonAccounting.addWidget(self.checkBoxCarbonAccounting)
         self.layoutGroupBoxCarbonAccounting.addWidget(self.contentOptionsCarbonAccounting)
         self.layoutGroupBoxCarbonAccounting.insertStretch(2,1)
-        self.layoutGroupBoxCarbonAccounting.setAlignment(self.checkBoxCarbonAccounting, QtCore.Qt.AlignTop)
-        self.layoutCarbonAccountingInfo = QtGui.QVBoxLayout()
-        self.layoutCarbonAccounting = QtGui.QGridLayout()
+        self.layoutGroupBoxCarbonAccounting.setAlignment(self.checkBoxCarbonAccounting, Qt.AlignTop)
+        self.layoutCarbonAccountingInfo = QVBoxLayout()
+        self.layoutCarbonAccounting = QGridLayout()
         self.layoutOptionsCarbonAccounting.addLayout(self.layoutCarbonAccountingInfo)
         self.layoutOptionsCarbonAccounting.addLayout(self.layoutCarbonAccounting)
         
-        self.labelCarbonAccountingInfo = QtGui.QLabel()
+        self.labelCarbonAccountingInfo = QLabel()
         self.labelCarbonAccountingInfo.setText(MenuFactory.getLabel(MenuFactory.QUESC_EMISSION_FROM_LAND_USE_CHANGE))
         self.labelCarbonAccountingInfo.setWordWrap(True)
         self.layoutCarbonAccountingInfo.addWidget(self.labelCarbonAccountingInfo)
 
-        self.labelCALandCoverLandUse1 = QtGui.QLabel()
+        self.labelCALandCoverLandUse1 = QLabel()
         self.labelCALandCoverLandUse1.setText(MenuFactory.getLabel(MenuFactory.QUESC_EARLIER_LAND_USE_COVER) + ':')
         self.layoutCarbonAccounting.addWidget(self.labelCALandCoverLandUse1, 0, 0)
         
-        self.comboBoxCALandCoverLandUse1 = QtGui.QComboBox()
+        self.comboBoxCALandCoverLandUse1 = QComboBox()
         self.comboBoxCALandCoverLandUse1.setDisabled(True)
         self.layoutCarbonAccounting.addWidget(self.comboBoxCALandCoverLandUse1, 0, 1)
         
-        self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxCALandCoverLandUse1)
+        # self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxCALandCoverLandUse1)
+        DialogLumensBase.handlerPopulateNameFromLookupData(parent, self.main.dataLandUseCover, self.comboBoxCALandCoverLandUse1)
         
-        self.labelCALandCoverLandUse2 = QtGui.QLabel()
+        self.labelCALandCoverLandUse2 = QLabel()
         self.labelCALandCoverLandUse2.setText(MenuFactory.getLabel(MenuFactory.QUESC_LATER_LAND_USE_COVER) + ':')
         self.layoutCarbonAccounting.addWidget(self.labelCALandCoverLandUse2, 1, 0)
         
-        self.comboBoxCALandCoverLandUse2 = QtGui.QComboBox()
+        self.comboBoxCALandCoverLandUse2 = QComboBox()
         self.comboBoxCALandCoverLandUse2.setDisabled(True)
         self.layoutCarbonAccounting.addWidget(self.comboBoxCALandCoverLandUse2, 1, 1)
         
-        self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxCALandCoverLandUse2)
+        # self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxCALandCoverLandUse2)
+        DialogLumensBase.handlerPopulateNameFromLookupData(parent, self.main.dataLandUseCover, self.comboBoxCALandCoverLandUse2)
         
-        self.labelCALandCoverPlanningUnit = QtGui.QLabel()
+        self.labelCALandCoverPlanningUnit = QLabel()
         self.labelCALandCoverPlanningUnit.setText(MenuFactory.getLabel(MenuFactory.QUESC_PLANNING_UNIT) + ':')
         self.layoutCarbonAccounting.addWidget(self.labelCALandCoverPlanningUnit, 2, 0)
         
-        self.comboBoxCALandCoverPlanningUnit = QtGui.QComboBox()
+        self.comboBoxCALandCoverPlanningUnit = QComboBox()
         self.comboBoxCALandCoverPlanningUnit.setDisabled(True)
         self.layoutCarbonAccounting.addWidget(self.comboBoxCALandCoverPlanningUnit, 2, 1)
         
-        self.handlerPopulateNameFromLookupData(self.main.dataPlanningUnit, self.comboBoxCALandCoverPlanningUnit)        
+        # self.handlerPopulateNameFromLookupData(self.main.dataPlanningUnit, self.comboBoxCALandCoverPlanningUnit) 
+        DialogLumensBase.handlerPopulateNameFromLookupData(parent, self.main.dataPlanningUnit, self.comboBoxCALandCoverPlanningUnit)       
         
-        self.labelCACarbonTable = QtGui.QLabel()
+        self.labelCACarbonTable = QLabel()
         self.labelCACarbonTable.setText(MenuFactory.getLabel(MenuFactory.QUESC_CARBON_STOCK_LOOKUP_TABLE) + ':')
         self.layoutCarbonAccounting.addWidget(self.labelCACarbonTable, 3, 0)
         
-        self.comboBoxCACarbonTable = QtGui.QComboBox()
+        self.comboBoxCACarbonTable = QComboBox()
         self.comboBoxCACarbonTable.setDisabled(True)
         self.layoutCarbonAccounting.addWidget(self.comboBoxCACarbonTable, 3, 1)
         
-        self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxCACarbonTable) 
+        # self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxCACarbonTable) 
+        DialogLumensBase.handlerPopulateNameFromLookupData(parent, self.main.dataTable, self.comboBoxCACarbonTable)    
         
-        self.labelCANoDataValue = QtGui.QLabel()
+        self.labelCANoDataValue = QLabel()
         self.labelCANoDataValue.setText('&' + MenuFactory.getLabel(MenuFactory.QUESC_NO_DATA_VALUE) + ':')
         self.layoutCarbonAccounting.addWidget(self.labelCANoDataValue, 4, 0)
         
-        self.spinBoxCANoDataValue = QtGui.QSpinBox()
+        self.spinBoxCANoDataValue = QSpinBox()
         self.spinBoxCANoDataValue.setRange(-9999, 9999)
         self.spinBoxCANoDataValue.setValue(0)
         self.layoutCarbonAccounting.addWidget(self.spinBoxCANoDataValue, 4, 1)
         self.labelCANoDataValue.setBuddy(self.spinBoxCANoDataValue)
         
         # Peatland carbon accounting
-        self.labelSpace = QtGui.QLabel()
+        self.labelSpace = QLabel()
         self.labelSpace.setText(' ')
         self.layoutCarbonAccounting.addWidget(self.labelSpace, 5, 0)
         
-        self.labelcheckBoxPeatlandCarbonAccounting = QtGui.QLabel()
+        self.labelcheckBoxPeatlandCarbonAccounting = QLabel()
         self.labelcheckBoxPeatlandCarbonAccounting.setText(MenuFactory.getLabel(MenuFactory.QUESC_INCLUDE_PEAT_EMISSION) + ':')
         self.layoutCarbonAccounting.addWidget(self.labelcheckBoxPeatlandCarbonAccounting, 6, 0)
         
-        self.checkBoxPeatlandCarbonAccounting = QtGui.QCheckBox()
+        self.checkBoxPeatlandCarbonAccounting = QCheckBox()
         self.checkBoxPeatlandCarbonAccounting.setChecked(False)
         self.layoutCarbonAccounting.addWidget(self.checkBoxPeatlandCarbonAccounting, 6, 1)
         
-        self.labelPCACsvfile = QtGui.QLabel()
+        self.labelPCACsvfile = QLabel()
         self.labelPCACsvfile.setText(MenuFactory.getLabel(MenuFactory.QUESC_PEAT_EMISSION_LOOKUP_TABLE) + ':')
         self.layoutCarbonAccounting.addWidget(self.labelPCACsvfile, 7, 0)
         
-        self.comboBoxPCACsvfile = QtGui.QComboBox()
+        self.comboBoxPCACsvfile = QComboBox()
         self.comboBoxPCACsvfile.setDisabled(True)
         self.layoutCarbonAccounting.addWidget(self.comboBoxPCACsvfile, 7, 1)        
         
-        self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxPCACsvfile)
+        # self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxPCACsvfile)
+        DialogLumensBase.handlerPopulateNameFromLookupData(parent, self.main.dataTable, self.comboBoxPCACsvfile)  
         
-        self.labelPeatlandMap = QtGui.QLabel()
+        self.labelPeatlandMap = QLabel()
         self.labelPeatlandMap.setText(MenuFactory.getLabel(MenuFactory.QUESC_PEAT_MAP) + ':')
         self.layoutCarbonAccounting.addWidget(self.labelPeatlandMap, 8, 0)
         
-        self.comboBoxPeatlandMap = QtGui.QComboBox()
+        self.comboBoxPeatlandMap = QComboBox()
         self.comboBoxPeatlandMap.setDisabled(True)
         self.layoutCarbonAccounting.addWidget(self.comboBoxPeatlandMap, 8, 1)
         
-        self.handlerPopulateNameFromLookupData(self.main.dataPlanningUnit, self.comboBoxPeatlandMap)
+        # self.handlerPopulateNameFromLookupData(self.main.dataPlanningUnit, self.comboBoxPeatlandMap)
+        DialogLumensBase.handlerPopulateNameFromLookupData(parent, self.main.dataPlanningUnit, self.comboBoxPeatlandMap)  
         
-        self.buttonLoadLookupTablePeat = QtGui.QPushButton()
+        self.buttonLoadLookupTablePeat = QPushButton()
         self.buttonLoadLookupTablePeat.setText(MenuFactory.getLabel(MenuFactory.QUESC_LOAD))
         self.layoutCarbonAccounting.addWidget(self.buttonLoadLookupTablePeat, 8, 2)        
         
-        self.tablePeat = QtGui.QTableWidget()
+        self.tablePeat = QTableWidget()
         self.tablePeat.setDisabled(True)
         self.tablePeat.verticalHeader().setVisible(False)
         self.layoutCarbonAccounting.addWidget(self.tablePeat, 9, 0, 1, 3)        
         
         
         # 'Summarize multiple period' GroupBox
-        self.groupBoxSummarizeMultiplePeriod = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.QUESC_SUMMARIZE_MULTIPLE_PERIOD))
-        self.layoutGroupBoxSummarizeMultiplePeriod = QtGui.QHBoxLayout()
+        self.groupBoxSummarizeMultiplePeriod = QGroupBox(MenuFactory.getLabel(MenuFactory.QUESC_SUMMARIZE_MULTIPLE_PERIOD))
+        self.layoutGroupBoxSummarizeMultiplePeriod = QHBoxLayout()
         self.groupBoxSummarizeMultiplePeriod.setLayout(self.layoutGroupBoxSummarizeMultiplePeriod)
-        self.layoutOptionsSummarizeMultiplePeriod = QtGui.QVBoxLayout()
+        self.layoutOptionsSummarizeMultiplePeriod = QVBoxLayout()
         self.layoutOptionsSummarizeMultiplePeriod.setContentsMargins(5, 0, 5, 0)
-        self.contentOptionsSummarizeMultiplePeriod = QtGui.QWidget()
+        self.contentOptionsSummarizeMultiplePeriod = QWidget()
         self.contentOptionsSummarizeMultiplePeriod.setLayout(self.layoutOptionsSummarizeMultiplePeriod)
-        self.layoutOptionsSummarizeMultiplePeriod.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
-        self.checkBoxSummarizeMultiplePeriod = QtGui.QCheckBox()
+        self.layoutOptionsSummarizeMultiplePeriod.setAlignment(Qt.AlignLeft|Qt.AlignTop)
+        self.checkBoxSummarizeMultiplePeriod = QCheckBox()
         self.checkBoxSummarizeMultiplePeriod.setChecked(False)
         self.contentOptionsSummarizeMultiplePeriod.setDisabled(True)
         self.layoutGroupBoxSummarizeMultiplePeriod.addWidget(self.checkBoxSummarizeMultiplePeriod)
         self.layoutGroupBoxSummarizeMultiplePeriod.addWidget(self.contentOptionsSummarizeMultiplePeriod)
         self.layoutGroupBoxSummarizeMultiplePeriod.insertStretch(2, 1)
-        self.layoutGroupBoxSummarizeMultiplePeriod.setAlignment(self.checkBoxSummarizeMultiplePeriod, QtCore.Qt.AlignTop)
-        self.layoutSummarizeMultiplePeriodInfo = QtGui.QVBoxLayout()
-        self.layoutSummarizeMultiplePeriod = QtGui.QGridLayout()
+        self.layoutGroupBoxSummarizeMultiplePeriod.setAlignment(self.checkBoxSummarizeMultiplePeriod, Qt.AlignTop)
+        self.layoutSummarizeMultiplePeriodInfo = QVBoxLayout()
+        self.layoutSummarizeMultiplePeriod = QGridLayout()
         self.layoutOptionsSummarizeMultiplePeriod.addLayout(self.layoutSummarizeMultiplePeriodInfo)
         self.layoutOptionsSummarizeMultiplePeriod.addLayout(self.layoutSummarizeMultiplePeriod)
         
-        self.labelSummarizeMultiplePeriodInfo = QtGui.QLabel()
+        self.labelSummarizeMultiplePeriodInfo = QLabel()
         self.labelSummarizeMultiplePeriodInfo.setText(MenuFactory.getLabel(MenuFactory.QUESC_CALCULATE_SUMMARIZE_MULTIPLE_PERIOD))
         self.labelSummarizeMultiplePeriodInfo.setWordWrap(True)
         self.layoutSummarizeMultiplePeriodInfo.addWidget(self.labelSummarizeMultiplePeriodInfo)
@@ -1192,55 +911,55 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.populateQUESCDatabase()
         
         # Process tab button
-        self.layoutButtonQUESC = QtGui.QHBoxLayout()
-        self.buttonProcessQUESC = QtGui.QPushButton()
+        self.layoutButtonQUESC = QHBoxLayout()
+        self.buttonProcessQUESC = QPushButton()
         self.buttonProcessQUESC.setText('&' + MenuFactory.getLabel(MenuFactory.QUESC_PROCESS))
-        self.buttonHelpQUESC = QtGui.QPushButton()
+        self.buttonHelpQUESC = QPushButton()
         self.buttonHelpQUESC.setIcon(icon)
-        self.layoutButtonQUESC.setAlignment(QtCore.Qt.AlignRight)
+        self.layoutButtonQUESC.setAlignment(Qt.AlignRight)
         self.layoutButtonQUESC.addWidget(self.buttonProcessQUESC)
         self.layoutButtonQUESC.addWidget(self.buttonHelpQUESC)
         
         # Template GroupBox
-        self.groupBoxQUESCTemplate = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.CONF_TITLE))
-        self.layoutGroupBoxQUESCTemplate = QtGui.QVBoxLayout()
-        self.layoutGroupBoxQUESCTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.groupBoxQUESCTemplate = QGroupBox(MenuFactory.getLabel(MenuFactory.CONF_TITLE))
+        self.layoutGroupBoxQUESCTemplate = QVBoxLayout()
+        self.layoutGroupBoxQUESCTemplate.setAlignment(Qt.AlignLeft|Qt.AlignTop)
         self.groupBoxQUESCTemplate.setLayout(self.layoutGroupBoxQUESCTemplate)
-        self.layoutQUESCTemplateInfo = QtGui.QVBoxLayout()
-        self.layoutQUESCTemplate = QtGui.QGridLayout()
+        self.layoutQUESCTemplateInfo = QVBoxLayout()
+        self.layoutQUESCTemplate = QGridLayout()
         self.layoutGroupBoxQUESCTemplate.addLayout(self.layoutQUESCTemplateInfo)
         self.layoutGroupBoxQUESCTemplate.addLayout(self.layoutQUESCTemplate)
         
-        self.labelLoadedQUESCTemplate = QtGui.QLabel()
+        self.labelLoadedQUESCTemplate = QLabel()
         self.labelLoadedQUESCTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOADED_CONFIGURATION) + ':')
         self.layoutQUESCTemplate.addWidget(self.labelLoadedQUESCTemplate, 0, 0)
         
-        self.loadedQUESCTemplate = QtGui.QLabel()
+        self.loadedQUESCTemplate = QLabel()
         self.loadedQUESCTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NONE))
         self.layoutQUESCTemplate.addWidget(self.loadedQUESCTemplate, 0, 1)
         
-        self.labelQUESCTemplate = QtGui.QLabel()
+        self.labelQUESCTemplate = QLabel()
         self.labelQUESCTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NAME) + ':')
         self.layoutQUESCTemplate.addWidget(self.labelQUESCTemplate, 1, 0)
         
-        self.comboBoxQUESCTemplate = QtGui.QComboBox()
-        self.comboBoxQUESCTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
+        self.comboBoxQUESCTemplate = QComboBox()
+        self.comboBoxQUESCTemplate.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Maximum)
         self.comboBoxQUESCTemplate.setDisabled(True)
         self.comboBoxQUESCTemplate.addItem(MenuFactory.getLabel(MenuFactory.CONF_NO_FOUND))
         self.layoutQUESCTemplate.addWidget(self.comboBoxQUESCTemplate, 1, 1)
         
-        self.layoutButtonQUESCTemplate = QtGui.QHBoxLayout()
-        self.layoutButtonQUESCTemplate.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTop)
-        self.buttonLoadQUESCTemplate = QtGui.QPushButton()
+        self.layoutButtonQUESCTemplate = QHBoxLayout()
+        self.layoutButtonQUESCTemplate.setAlignment(Qt.AlignRight|Qt.AlignTop)
+        self.buttonLoadQUESCTemplate = QPushButton()
         self.buttonLoadQUESCTemplate.setDisabled(True)
-        self.buttonLoadQUESCTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonLoadQUESCTemplate.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         self.buttonLoadQUESCTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOAD))
-        self.buttonSaveQUESCTemplate = QtGui.QPushButton()
+        self.buttonSaveQUESCTemplate = QPushButton()
         self.buttonSaveQUESCTemplate.setDisabled(True)
-        self.buttonSaveQUESCTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonSaveQUESCTemplate.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         self.buttonSaveQUESCTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE))
-        self.buttonSaveAsQUESCTemplate = QtGui.QPushButton()
-        self.buttonSaveAsQUESCTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonSaveAsQUESCTemplate = QPushButton()
+        self.buttonSaveAsQUESCTemplate.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         self.buttonSaveAsQUESCTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS))
         self.layoutButtonQUESCTemplate.addWidget(self.buttonLoadQUESCTemplate)
         self.layoutButtonQUESCTemplate.addWidget(self.buttonSaveQUESCTemplate)
@@ -1250,7 +969,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         # Place the GroupBoxes
         self.layoutTabQUESC.addWidget(self.groupBoxCarbonAccounting, 0, 0)
         self.layoutTabQUESC.addWidget(self.groupBoxSummarizeMultiplePeriod, 1, 0)
-        self.layoutTabQUESC.addLayout(self.layoutButtonQUESC, 2, 0, 1, 2, QtCore.Qt.AlignRight)
+        self.layoutTabQUESC.addLayout(self.layoutButtonQUESC, 2, 0, 1, 2, Qt.AlignRight)
         self.layoutTabQUESC.addWidget(self.groupBoxQUESCTemplate, 0, 1, 2, 1)
         self.layoutTabQUESC.setColumnStretch(0, 3)
         self.layoutTabQUESC.setColumnStretch(1, 1) # Smaller template column
@@ -1259,104 +978,110 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         # Setup 'QUES-B' tab
         #***********************************************************
         # 'Parameters' GroupBox
-        self.groupBoxQUESBParameters = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.QUESB_PARAMETERIZATION))
-        self.layoutGroupBoxQUESBParameters = QtGui.QVBoxLayout()
-        self.layoutGroupBoxQUESBParameters.setAlignment(QtCore.Qt.AlignTop)
+        self.groupBoxQUESBParameters = QGroupBox(MenuFactory.getLabel(MenuFactory.QUESB_PARAMETERIZATION))
+        self.layoutGroupBoxQUESBParameters = QVBoxLayout()
+        self.layoutGroupBoxQUESBParameters.setAlignment(Qt.AlignTop)
         self.groupBoxQUESBParameters.setLayout(self.layoutGroupBoxQUESBParameters)
-        self.layoutQUESBParametersInfo = QtGui.QVBoxLayout()
-        self.layoutQUESBParameters = QtGui.QGridLayout()
+        self.layoutQUESBParametersInfo = QVBoxLayout()
+        self.layoutQUESBParameters = QGridLayout()
         self.layoutGroupBoxQUESBParameters.addLayout(self.layoutQUESBParametersInfo)
         self.layoutGroupBoxQUESBParameters.addLayout(self.layoutQUESBParameters)
         
-        self.labelQUESBParametersInfo = QtGui.QLabel()
+        self.labelQUESBParametersInfo = QLabel()
         self.labelQUESBParametersInfo.setText('\n')
         self.labelQUESBParametersInfo.setWordWrap(True)
         self.layoutQUESBParametersInfo.addWidget(self.labelQUESBParametersInfo)
 
-        self.labelQUESBLandCoverLandUse1 = QtGui.QLabel()
+        self.labelQUESBLandCoverLandUse1 = QLabel()
         self.labelQUESBLandCoverLandUse1.setText(MenuFactory.getLabel(MenuFactory.QUESB_EARLIER_LAND_USE_COVER) + ':')
         self.layoutQUESBParameters.addWidget(self.labelQUESBLandCoverLandUse1, 0, 0)
 
-        self.comboBoxQUESBLandCoverLandUse1 = QtGui.QComboBox()
+        self.comboBoxQUESBLandCoverLandUse1 = QComboBox()
         self.comboBoxQUESBLandCoverLandUse1.setDisabled(True)
         self.layoutQUESBParameters.addWidget(self.comboBoxQUESBLandCoverLandUse1, 0, 1)
         
-        self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxQUESBLandCoverLandUse1)
+        # self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxQUESBLandCoverLandUse1)
+        DialogLumensBase.handlerPopulateNameFromLookupData(parent, self.main.dataLandUseCover, self.comboBoxQUESBLandCoverLandUse1)  
 
-        self.labelQUESBLandCoverLandUse2 = QtGui.QLabel()
+        self.labelQUESBLandCoverLandUse2 = QLabel()
         self.labelQUESBLandCoverLandUse2.setText(MenuFactory.getLabel(MenuFactory.QUESB_LATER_LAND_USE_COVER) + ':')
         self.layoutQUESBParameters.addWidget(self.labelQUESBLandCoverLandUse2, 1, 0)
 
-        self.comboBoxQUESBLandCoverLandUse2 = QtGui.QComboBox()
+        self.comboBoxQUESBLandCoverLandUse2 = QComboBox()
         self.comboBoxQUESBLandCoverLandUse2.setDisabled(True)
         self.layoutQUESBParameters.addWidget(self.comboBoxQUESBLandCoverLandUse2, 1, 1)
         
-        self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxQUESBLandCoverLandUse2)
+        # self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxQUESBLandCoverLandUse2)
+        DialogLumensBase.handlerPopulateNameFromLookupData(parent, self.main.dataLandUseCover, self.comboBoxQUESBLandCoverLandUse2)  
 
-        self.labelQUESBLandCoverLandUse3 = QtGui.QLabel()
+        self.labelQUESBLandCoverLandUse3 = QLabel()
         self.labelQUESBLandCoverLandUse3.setText(MenuFactory.getLabel(MenuFactory.QUESB_INTACT_FOCAL_AREA) + ':')
         self.layoutQUESBParameters.addWidget(self.labelQUESBLandCoverLandUse3, 2, 0)
 
-        self.comboBoxQUESBLandCoverLandUse3 = QtGui.QComboBox()
+        self.comboBoxQUESBLandCoverLandUse3 = QComboBox()
         self.comboBoxQUESBLandCoverLandUse3.setDisabled(True)
         self.layoutQUESBParameters.addWidget(self.comboBoxQUESBLandCoverLandUse3, 2, 1)
         
-        self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxQUESBLandCoverLandUse3)
+        # self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxQUESBLandCoverLandUse3)
+        DialogLumensBase.handlerPopulateNameFromLookupData(parent, self.main.dataLandUseCover, self.comboBoxQUESBLandCoverLandUse3)  
 
-        self.labelQUESBPlanningUnit = QtGui.QLabel()
+        self.labelQUESBPlanningUnit = QLabel()
         self.labelQUESBPlanningUnit.setText(MenuFactory.getLabel(MenuFactory.QUESB_PLANNING_UNIT) + ':')
         self.layoutQUESBParameters.addWidget(self.labelQUESBPlanningUnit, 3, 0)
         
-        self.comboBoxQUESBPlanningUnit = QtGui.QComboBox()
+        self.comboBoxQUESBPlanningUnit = QComboBox()
         self.comboBoxQUESBPlanningUnit.setDisabled(True)
         self.layoutQUESBParameters.addWidget(self.comboBoxQUESBPlanningUnit, 3, 1)
         
-        self.handlerPopulateNameFromLookupData(self.main.dataPlanningUnit, self.comboBoxQUESBPlanningUnit)
+        # self.handlerPopulateNameFromLookupData(self.main.dataPlanningUnit, self.comboBoxQUESBPlanningUnit)
+        DialogLumensBase.handlerPopulateNameFromLookupData(parent, self.main.dataPlanningUnit, self.comboBoxQUESBPlanningUnit)  
         
-        self.labelQUESBNodata = QtGui.QLabel()
+        self.labelQUESBNodata = QLabel()
         self.labelQUESBNodata.setText(MenuFactory.getLabel(MenuFactory.QUESB_NO_DATA_VALUE) + ':')
         self.layoutQUESBParameters.addWidget(self.labelQUESBNodata, 4, 0)
         
-        self.spinBoxQUESBNodata = QtGui.QSpinBox()
+        self.spinBoxQUESBNodata = QSpinBox()
         self.spinBoxQUESBNodata.setRange(0, 999)
         self.spinBoxQUESBNodata.setValue(0)
         self.layoutQUESBParameters.addWidget(self.spinBoxQUESBNodata, 4, 1)
         
-        self.labelQUESBEdgeContrast = QtGui.QLabel()
+        self.labelQUESBEdgeContrast = QLabel()
         self.labelQUESBEdgeContrast.setText(MenuFactory.getLabel(MenuFactory.QUESB_EDGE_CONTRAST_WEIGHT) + ':')
         self.layoutQUESBParameters.addWidget(self.labelQUESBEdgeContrast, 5, 0)        
         
-        self.comboBoxQUESBEdgeContrast = QtGui.QComboBox()
+        self.comboBoxQUESBEdgeContrast = QComboBox()
         self.comboBoxQUESBEdgeContrast.setDisabled(True)
         self.layoutQUESBParameters.addWidget(self.comboBoxQUESBEdgeContrast, 5, 1)
         
-        self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxQUESBEdgeContrast)
+        # self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxQUESBEdgeContrast)
+        DialogLumensBase.handlerPopulateNameFromLookupData(parent, self.main.dataTable, self.comboBoxQUESBEdgeContrast)  
         
-        self.labelQUESBHabitat = QtGui.QLabel()
+        self.labelQUESBHabitat = QLabel()
         self.labelQUESBHabitat.setText(MenuFactory.getLabel(MenuFactory.QUESB_FOCAL_AREA_CLASS) + ':')
         self.layoutQUESBParameters.addWidget(self.labelQUESBHabitat, 6, 0)
       
-        self.comboBoxTableHabitat = QtGui.QComboBox()
+        self.comboBoxTableHabitat = QComboBox()
         self.comboBoxTableHabitat.setDisabled(True)
         self.layoutQUESBParameters.addWidget(self.comboBoxTableHabitat, 6, 1)
         
-        self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxTableHabitat)
+        # self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxTableHabitat)
+        DialogLumensBase.handlerPopulateNameFromLookupData(parent, self.main.dataTable, self.comboBoxTableHabitat)  
         
-        self.buttonLoadLookupTableHabitat = QtGui.QPushButton()
+        self.buttonLoadLookupTableHabitat = QPushButton()
         self.buttonLoadLookupTableHabitat.setText(MenuFactory.getLabel(MenuFactory.QUESB_LOAD))
         self.layoutQUESBParameters.addWidget(self.buttonLoadLookupTableHabitat, 6, 2)
       
-        self.tableHabitat = QtGui.QTableWidget()
+        self.tableHabitat = QTableWidget()
         self.tableHabitat.setDisabled(True)
         self.tableHabitat.verticalHeader().setVisible(False)
         self.layoutQUESBParameters.addWidget(self.tableHabitat, 7, 0, 1, 3)
         
-        self.groupBoxQUESBMovingWindow = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.QUESB_MOVING_WINDOW))
-        self.layoutGroupBoxMovingWindow = QtGui.QGridLayout()
-        self.layoutGroupBoxMovingWindow.setAlignment(QtCore.Qt.AlignTop)
+        self.groupBoxQUESBMovingWindow = QGroupBox(MenuFactory.getLabel(MenuFactory.QUESB_MOVING_WINDOW))
+        self.layoutGroupBoxMovingWindow = QGridLayout()
+        self.layoutGroupBoxMovingWindow.setAlignment(Qt.AlignTop)
         self.groupBoxQUESBMovingWindow.setLayout(self.layoutGroupBoxMovingWindow)
         
-        self.labelQUESBWindowShape = QtGui.QLabel()
+        self.labelQUESBWindowShape = QLabel()
         self.labelQUESBWindowShape.setText(MenuFactory.getLabel(MenuFactory.QUESB_SHAPE) + ':')
         self.layoutGroupBoxMovingWindow.addWidget(self.labelQUESBWindowShape, 0, 0)
         
@@ -1364,22 +1089,22 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             MenuFactory.getLabel(MenuFactory.QUESB_SHAPE_SQUARE),
             MenuFactory.getLabel(MenuFactory.QUESB_SHAPE_CIRCLE),
         ]
-        self.comboBoxQUESBWindowShapeOptions = QtGui.QComboBox()
+        self.comboBoxQUESBWindowShapeOptions = QComboBox()
         self.comboBoxQUESBWindowShapeOptions.addItems(WindowShapeOptions)
         self.layoutGroupBoxMovingWindow.addWidget(self.comboBoxQUESBWindowShapeOptions, 0, 1)
         
-        self.labelQUESBSamplingWindowSize = QtGui.QLabel()
+        self.labelQUESBSamplingWindowSize = QLabel()
         self.labelQUESBSamplingWindowSize.setText(MenuFactory.getLabel(MenuFactory.QUESB_SIZE) + ':')
         self.layoutGroupBoxMovingWindow.addWidget(self.labelQUESBSamplingWindowSize, 1, 0)
         
-        self.spinBoxQUESBSamplingWindowSize = QtGui.QSpinBox()
+        self.spinBoxQUESBSamplingWindowSize = QSpinBox()
         self.spinBoxQUESBSamplingWindowSize.setRange(1, 9999)
         self.spinBoxQUESBSamplingWindowSize.setValue(1000)
         self.layoutGroupBoxMovingWindow.addWidget(self.spinBoxQUESBSamplingWindowSize, 1, 1)
         
         self.layoutQUESBParameters.addWidget(self.groupBoxQUESBMovingWindow, 8, 0, 1, 2)
         
-        self.labelQUESBAdjacentOnly = QtGui.QLabel()
+        self.labelQUESBAdjacentOnly = QLabel()
         self.labelQUESBAdjacentOnly.setText(MenuFactory.getLabel(MenuFactory.QUESB_ADJACENT_ONLY) + ':')
         self.layoutQUESBParameters.addWidget(self.labelQUESBAdjacentOnly, 9, 0)    
         
@@ -1387,69 +1112,69 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             MenuFactory.getLabel(MenuFactory.QUESB_TRUE),
             MenuFactory.getLabel(MenuFactory.QUESB_FALSE),
         ]
-        self.comboBoxQUESBAdjacentOnly = QtGui.QComboBox()
+        self.comboBoxQUESBAdjacentOnly = QComboBox()
         self.comboBoxQUESBAdjacentOnly.addItems(adjacentOnlyOptions)
         self.layoutQUESBParameters.addWidget(self.comboBoxQUESBAdjacentOnly, 9, 1)        
         
-        self.labelQUESBSamplingGridRes = QtGui.QLabel()
+        self.labelQUESBSamplingGridRes = QLabel()
         self.labelQUESBSamplingGridRes.setText(MenuFactory.getLabel(MenuFactory.QUESB_SAMPLING_GRID_SIZE) + ':')
         self.layoutQUESBParameters.addWidget(self.labelQUESBSamplingGridRes, 10, 0)
         
-        self.spinBoxQUESBSamplingGridRes = QtGui.QSpinBox()
+        self.spinBoxQUESBSamplingGridRes = QSpinBox()
         self.spinBoxQUESBSamplingGridRes.setRange(1, 9999999)
         self.spinBoxQUESBSamplingGridRes.setValue(10000)
         self.layoutQUESBParameters.addWidget(self.spinBoxQUESBSamplingGridRes, 10, 1)
         
         # Process tab button
-        self.layoutButtonQUESB = QtGui.QHBoxLayout()
-        self.buttonProcessQUESB = QtGui.QPushButton()
+        self.layoutButtonQUESB = QHBoxLayout()
+        self.buttonProcessQUESB = QPushButton()
         self.buttonProcessQUESB.setText('&' + MenuFactory.getLabel(MenuFactory.QUESB_PROCESS))
-        self.buttonHelpQUESB = QtGui.QPushButton()
+        self.buttonHelpQUESB = QPushButton()
         self.buttonHelpQUESB.setIcon(icon)
-        self.layoutButtonQUESB.setAlignment(QtCore.Qt.AlignRight)
+        self.layoutButtonQUESB.setAlignment(Qt.AlignRight)
         self.layoutButtonQUESB.addWidget(self.buttonProcessQUESB)
         self.layoutButtonQUESB.addWidget(self.buttonHelpQUESB)
         
         # Template GroupBox
-        self.groupBoxQUESBTemplate = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.CONF_TITLE))
-        self.layoutGroupBoxQUESBTemplate = QtGui.QVBoxLayout()
-        self.layoutGroupBoxQUESBTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.groupBoxQUESBTemplate = QGroupBox(MenuFactory.getLabel(MenuFactory.CONF_TITLE))
+        self.layoutGroupBoxQUESBTemplate = QVBoxLayout()
+        self.layoutGroupBoxQUESBTemplate.setAlignment(Qt.AlignLeft|Qt.AlignTop)
         self.groupBoxQUESBTemplate.setLayout(self.layoutGroupBoxQUESBTemplate)
-        self.layoutQUESBTemplateInfo = QtGui.QVBoxLayout()
-        self.layoutQUESBTemplate = QtGui.QGridLayout()
+        self.layoutQUESBTemplateInfo = QVBoxLayout()
+        self.layoutQUESBTemplate = QGridLayout()
         self.layoutGroupBoxQUESBTemplate.addLayout(self.layoutQUESBTemplateInfo)
         self.layoutGroupBoxQUESBTemplate.addLayout(self.layoutQUESBTemplate)
         
-        self.labelLoadedQUESBTemplate = QtGui.QLabel()
+        self.labelLoadedQUESBTemplate = QLabel()
         self.labelLoadedQUESBTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOADED_CONFIGURATION) + ':')
         self.layoutQUESBTemplate.addWidget(self.labelLoadedQUESBTemplate, 0, 0)
         
-        self.loadedQUESBTemplate = QtGui.QLabel()
+        self.loadedQUESBTemplate = QLabel()
         self.loadedQUESBTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NO_FOUND))
         self.layoutQUESBTemplate.addWidget(self.loadedQUESBTemplate, 0, 1)
         
-        self.labelQUESBTemplate = QtGui.QLabel()
+        self.labelQUESBTemplate = QLabel()
         self.labelQUESBTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NAME) + ':')
         self.layoutQUESBTemplate.addWidget(self.labelQUESBTemplate, 1, 0)
         
-        self.comboBoxQUESBTemplate = QtGui.QComboBox()
-        self.comboBoxQUESBTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
+        self.comboBoxQUESBTemplate = QComboBox()
+        self.comboBoxQUESBTemplate.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Maximum)
         self.comboBoxQUESBTemplate.setDisabled(True)
         self.comboBoxQUESBTemplate.addItem(MenuFactory.getLabel(MenuFactory.CONF_NO_FOUND))
         self.layoutQUESBTemplate.addWidget(self.comboBoxQUESBTemplate, 1, 1)
         
-        self.layoutButtonQUESBTemplate = QtGui.QHBoxLayout()
-        self.layoutButtonQUESBTemplate.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTop)
-        self.buttonLoadQUESBTemplate = QtGui.QPushButton()
+        self.layoutButtonQUESBTemplate = QHBoxLayout()
+        self.layoutButtonQUESBTemplate.setAlignment(Qt.AlignRight|Qt.AlignTop)
+        self.buttonLoadQUESBTemplate = QPushButton()
         self.buttonLoadQUESBTemplate.setDisabled(True)
-        self.buttonLoadQUESBTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonLoadQUESBTemplate.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         self.buttonLoadQUESBTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOAD))
-        self.buttonSaveQUESBTemplate = QtGui.QPushButton()
+        self.buttonSaveQUESBTemplate = QPushButton()
         self.buttonSaveQUESBTemplate.setDisabled(True)
-        self.buttonSaveQUESBTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonSaveQUESBTemplate.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         self.buttonSaveQUESBTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE))
-        self.buttonSaveAsQUESBTemplate = QtGui.QPushButton()
-        self.buttonSaveAsQUESBTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonSaveAsQUESBTemplate = QPushButton()
+        self.buttonSaveAsQUESBTemplate.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         self.buttonSaveAsQUESBTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS))
         self.layoutButtonQUESBTemplate.addWidget(self.buttonLoadQUESBTemplate)
         self.layoutButtonQUESBTemplate.addWidget(self.buttonSaveQUESBTemplate)
@@ -1458,7 +1183,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         
         # Place the GroupBoxes
         self.layoutTabQUESB.addWidget(self.groupBoxQUESBParameters, 0, 0)
-        self.layoutTabQUESB.addLayout(self.layoutButtonQUESB, 1, 0, 1, 2, QtCore.Qt.AlignRight)
+        self.layoutTabQUESB.addLayout(self.layoutButtonQUESB, 1, 0, 1, 2, Qt.AlignRight)
         self.layoutTabQUESB.addWidget(self.groupBoxQUESBTemplate, 0, 1, 1, 1)
         self.layoutTabQUESB.setColumnStretch(0, 3)
         self.layoutTabQUESB.setColumnStretch(1, 1) # Smaller template column
@@ -1466,51 +1191,51 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         #***********************************************************
         # Setup 'QUES-H' tab
         #***********************************************************
-        self.tabWidgetQUESH = QtGui.QTabWidget()
-        QUESHTabWidgetStylesheet = """
-        QTabWidget::tab-bar{
-            alignment: right;
-        }
-        QTabWidget QWidget {
-            background-color: rgb(249, 237, 243);
-            color: rgb(95, 98, 102);
-        }
-        QTabBar::tab {
-            background-color: rgb(244, 248, 252);
-            height: 35px;
-            width: 200px;
-        }
-        QTabBar::tab:selected, QTabBar::tab:hover {
-            background-color: rgb(249, 237, 243);
-            font: bold;
-        }
-        """
-        self.tabWidgetQUESH.setStyleSheet(QUESHTabWidgetStylesheet)
+        # self.tabWidgetQUESH = QtGui.QTabWidget()
+        # QUESHTabWidgetStylesheet = """
+        # QTabWidget::tab-bar{
+        #     alignment: right;
+        # }
+        # QTabWidget QWidget {
+        #     background-color: rgb(249, 237, 243);
+        #     color: rgb(95, 98, 102);
+        # }
+        # QTabBar::tab {
+        #     background-color: rgb(244, 248, 252);
+        #     height: 35px;
+        #     width: 200px;
+        # }
+        # QTabBar::tab:selected, QTabBar::tab:hover {
+        #     background-color: rgb(249, 237, 243);
+        #     font: bold;
+        # }
+        # """
+        # self.tabWidgetQUESH.setStyleSheet(QUESHTabWidgetStylesheet)
         
-        self.tabWatershedDelineation = QtGui.QWidget()
-        self.tabHRUDefinition = QtGui.QWidget()
-        self.tabWatershedModelEvaluation = QtGui.QWidget()
-        self.tabWatershedIndicators = QtGui.QWidget()
+        # self.tabWatershedDelineation = QtGui.QWidget()
+        # self.tabHRUDefinition = QtGui.QWidget()
+        # self.tabWatershedModelEvaluation = QtGui.QWidget()
+        # self.tabWatershedIndicators = QtGui.QWidget()
         
-        ###self.tabWidgetQUESH.addTab(self.tabWatershedDelineation, 'Watershed Delineation')
-        self.tabWidgetQUESH.addTab(self.tabHRUDefinition, 'HRU Definition')
-        self.tabWidgetQUESH.addTab(self.tabWatershedModelEvaluation, 'Watershed Model Evaluation')
-        self.tabWidgetQUESH.addTab(self.tabWatershedIndicators, 'Watershed Indicators')
+        # ###self.tabWidgetQUESH.addTab(self.tabWatershedDelineation, 'Watershed Delineation')
+        # self.tabWidgetQUESH.addTab(self.tabHRUDefinition, 'HRU Definition')
+        # self.tabWidgetQUESH.addTab(self.tabWatershedModelEvaluation, 'Watershed Model Evaluation')
+        # self.tabWidgetQUESH.addTab(self.tabWatershedIndicators, 'Watershed Indicators')
         
-        self.layoutTabQUESH.addWidget(self.tabWidgetQUESH)
+        # self.layoutTabQUESH.addWidget(self.tabWidgetQUESH)
         
-        self.layoutTabWatershedDelineation = QtGui.QVBoxLayout()
-        ##self.layoutTabHRUDefinition = QtGui.QVBoxLayout()
-        self.layoutTabHRUDefinition = QtGui.QGridLayout()
-        ##self.layoutTabWatershedModelEvaluation = QtGui.QVBoxLayout()
-        self.layoutTabWatershedModelEvaluation = QtGui.QGridLayout()
-        ##self.layoutTabWatershedIndicators = QtGui.QVBoxLayout()
-        self.layoutTabWatershedIndicators = QtGui.QGridLayout()
+        # self.layoutTabWatershedDelineation = QtGui.QVBoxLayout()
+        # ##self.layoutTabHRUDefinition = QtGui.QVBoxLayout()
+        # self.layoutTabHRUDefinition = QtGui.QGridLayout()
+        # ##self.layoutTabWatershedModelEvaluation = QtGui.QVBoxLayout()
+        # self.layoutTabWatershedModelEvaluation = QtGui.QGridLayout()
+        # ##self.layoutTabWatershedIndicators = QtGui.QVBoxLayout()
+        # self.layoutTabWatershedIndicators = QtGui.QGridLayout()
         
-        self.tabWatershedDelineation.setLayout(self.layoutTabWatershedDelineation)
-        self.tabHRUDefinition.setLayout(self.layoutTabHRUDefinition)
-        self.tabWatershedModelEvaluation.setLayout(self.layoutTabWatershedModelEvaluation)
-        self.tabWatershedIndicators.setLayout(self.layoutTabWatershedIndicators)
+        # self.tabWatershedDelineation.setLayout(self.layoutTabWatershedDelineation)
+        # self.tabHRUDefinition.setLayout(self.layoutTabHRUDefinition)
+        # self.tabWatershedModelEvaluation.setLayout(self.layoutTabWatershedModelEvaluation)
+        # self.tabWatershedIndicators.setLayout(self.layoutTabWatershedIndicators)
         
         #***********************************************************
         # 'Watershed Delineation' sub tab
@@ -1522,597 +1247,597 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         # 'Hydrological Response Unit Definition' sub tab
         #***********************************************************
         # 'Functions' GroupBox
-        self.groupBoxHRUFunctions = QtGui.QGroupBox('Functions')
-        self.layoutGroupBoxHRUFunctions = QtGui.QVBoxLayout()
-        self.layoutGroupBoxHRUFunctions.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
-        self.groupBoxHRUFunctions.setLayout(self.layoutGroupBoxHRUFunctions)
-        self.layoutHRUFunctionsInfo = QtGui.QVBoxLayout()
-        self.layoutHRUFunctions = QtGui.QGridLayout()
-        self.layoutGroupBoxHRUFunctions.addLayout(self.layoutHRUFunctionsInfo)
-        self.layoutGroupBoxHRUFunctions.addLayout(self.layoutHRUFunctions)
+        # self.groupBoxHRUFunctions = QtGui.QGroupBox('Functions')
+        # self.layoutGroupBoxHRUFunctions = QtGui.QVBoxLayout()
+        # self.layoutGroupBoxHRUFunctions.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        # self.groupBoxHRUFunctions.setLayout(self.layoutGroupBoxHRUFunctions)
+        # self.layoutHRUFunctionsInfo = QtGui.QVBoxLayout()
+        # self.layoutHRUFunctions = QtGui.QGridLayout()
+        # self.layoutGroupBoxHRUFunctions.addLayout(self.layoutHRUFunctionsInfo)
+        # self.layoutGroupBoxHRUFunctions.addLayout(self.layoutHRUFunctions)
         
-        self.labelHRUFunctionsInfo = QtGui.QLabel()
-        self.labelHRUFunctionsInfo.setText('Lorem ipsum dolor sit amet...\n')
-        self.layoutHRUFunctionsInfo.addWidget(self.labelHRUFunctionsInfo)
+        # self.labelHRUFunctionsInfo = QtGui.QLabel()
+        # self.labelHRUFunctionsInfo.setText('Lorem ipsum dolor sit amet...\n')
+        # self.layoutHRUFunctionsInfo.addWidget(self.labelHRUFunctionsInfo)
         
-        self.checkBoxDominantHRU = QtGui.QCheckBox('Dominant HRU')
-        self.checkBoxDominantLUSSL = QtGui.QCheckBox('Dominant Land Use, Soil, and Slope')
-        self.checkBoxMultipleHRU = QtGui.QCheckBox('Multiple HRU')
+        # self.checkBoxDominantHRU = QtGui.QCheckBox('Dominant HRU')
+        # self.checkBoxDominantLUSSL = QtGui.QCheckBox('Dominant Land Use, Soil, and Slope')
+        # self.checkBoxMultipleHRU = QtGui.QCheckBox('Multiple HRU')
         
-        self.layoutHRUFunctions.addWidget(self.checkBoxDominantHRU)
-        self.layoutHRUFunctions.addWidget(self.checkBoxDominantLUSSL)
-        self.layoutHRUFunctions.addWidget(self.checkBoxMultipleHRU)
+        # self.layoutHRUFunctions.addWidget(self.checkBoxDominantHRU)
+        # self.layoutHRUFunctions.addWidget(self.checkBoxDominantLUSSL)
+        # self.layoutHRUFunctions.addWidget(self.checkBoxMultipleHRU)
         
         # 'Parameters' GroupBox
-        self.groupBoxHRUParameters = QtGui.QGroupBox('Parameters')
-        self.layoutGroupBoxHRUParameters = QtGui.QVBoxLayout()
-        self.layoutGroupBoxHRUParameters.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
-        self.groupBoxHRUParameters.setLayout(self.layoutGroupBoxHRUParameters)
-        self.layoutHRUParametersInfo = QtGui.QVBoxLayout()
-        self.layoutHRUParameters = QtGui.QGridLayout()
-        self.layoutGroupBoxHRUParameters.addLayout(self.layoutHRUParametersInfo)
-        self.layoutGroupBoxHRUParameters.addLayout(self.layoutHRUParameters)
+        # self.groupBoxHRUParameters = QtGui.QGroupBox('Parameters')
+        # self.layoutGroupBoxHRUParameters = QtGui.QVBoxLayout()
+        # self.layoutGroupBoxHRUParameters.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        # self.groupBoxHRUParameters.setLayout(self.layoutGroupBoxHRUParameters)
+        # self.layoutHRUParametersInfo = QtGui.QVBoxLayout()
+        # self.layoutHRUParameters = QtGui.QGridLayout()
+        # self.layoutGroupBoxHRUParameters.addLayout(self.layoutHRUParametersInfo)
+        # self.layoutGroupBoxHRUParameters.addLayout(self.layoutHRUParameters)
         
-        self.labelHRUParametersInfo = QtGui.QLabel()
-        self.labelHRUParametersInfo.setText('Lorem ipsum dolor sit amet...\n')
-        self.layoutHRUParametersInfo.addWidget(self.labelHRUParametersInfo)
+        # self.labelHRUParametersInfo = QtGui.QLabel()
+        # self.labelHRUParametersInfo.setText('Lorem ipsum dolor sit amet...\n')
+        # self.layoutHRUParametersInfo.addWidget(self.labelHRUParametersInfo)
         
-        self.labelHRULandUseMap = QtGui.QLabel()
-        self.labelHRULandUseMap.setText('Land use map:')
-        self.layoutHRUParameters.addWidget(self.labelHRULandUseMap, 0, 0)
+        # self.labelHRULandUseMap = QtGui.QLabel()
+        # self.labelHRULandUseMap.setText('Land use map:')
+        # self.layoutHRUParameters.addWidget(self.labelHRULandUseMap, 0, 0)
         
-        self.lineEditHRULandUseMap = QtGui.QLineEdit()
-        self.lineEditHRULandUseMap.setReadOnly(True)
-        self.layoutHRUParameters.addWidget(self.lineEditHRULandUseMap, 0, 1)
+        # self.lineEditHRULandUseMap = QtGui.QLineEdit()
+        # self.lineEditHRULandUseMap.setReadOnly(True)
+        # self.layoutHRUParameters.addWidget(self.lineEditHRULandUseMap, 0, 1)
         
-        self.buttonSelectHRULandUseMap = QtGui.QPushButton()
-        self.buttonSelectHRULandUseMap.setText('&Browse')
-        self.layoutHRUParameters.addWidget(self.buttonSelectHRULandUseMap, 0, 2)
+        # self.buttonSelectHRULandUseMap = QtGui.QPushButton()
+        # self.buttonSelectHRULandUseMap.setText('&Browse')
+        # self.layoutHRUParameters.addWidget(self.buttonSelectHRULandUseMap, 0, 2)
         
-        self.labelHRUSoilMap = QtGui.QLabel()
-        self.labelHRUSoilMap.setText('Soil map:')
-        self.layoutHRUParameters.addWidget(self.labelHRUSoilMap, 1, 0)
+        # self.labelHRUSoilMap = QtGui.QLabel()
+        # self.labelHRUSoilMap.setText('Soil map:')
+        # self.layoutHRUParameters.addWidget(self.labelHRUSoilMap, 1, 0)
         
-        self.lineEditHRUSoilMap = QtGui.QLineEdit()
-        self.lineEditHRUSoilMap.setReadOnly(True)
-        self.layoutHRUParameters.addWidget(self.lineEditHRUSoilMap, 1, 1)
+        # self.lineEditHRUSoilMap = QtGui.QLineEdit()
+        # self.lineEditHRUSoilMap.setReadOnly(True)
+        # self.layoutHRUParameters.addWidget(self.lineEditHRUSoilMap, 1, 1)
         
-        self.buttonSelectHRUSoilMap = QtGui.QPushButton()
-        self.buttonSelectHRUSoilMap.setText('&Browse')
-        self.layoutHRUParameters.addWidget(self.buttonSelectHRUSoilMap, 1, 2)
+        # self.buttonSelectHRUSoilMap = QtGui.QPushButton()
+        # self.buttonSelectHRUSoilMap.setText('&Browse')
+        # self.layoutHRUParameters.addWidget(self.buttonSelectHRUSoilMap, 1, 2)
         
-        self.labelHRUSlopeMap = QtGui.QLabel()
-        self.labelHRUSlopeMap.setText('Slope map:')
-        self.layoutHRUParameters.addWidget(self.labelHRUSlopeMap, 2, 0)
+        # self.labelHRUSlopeMap = QtGui.QLabel()
+        # self.labelHRUSlopeMap.setText('Slope map:')
+        # self.layoutHRUParameters.addWidget(self.labelHRUSlopeMap, 2, 0)
         
-        self.lineEditHRUSlopeMap = QtGui.QLineEdit()
-        self.lineEditHRUSlopeMap.setReadOnly(True)
-        self.layoutHRUParameters.addWidget(self.lineEditHRUSlopeMap, 2, 1)
+        # self.lineEditHRUSlopeMap = QtGui.QLineEdit()
+        # self.lineEditHRUSlopeMap.setReadOnly(True)
+        # self.layoutHRUParameters.addWidget(self.lineEditHRUSlopeMap, 2, 1)
         
-        self.buttonSelectHRUSlopeMap = QtGui.QPushButton()
-        self.buttonSelectHRUSlopeMap.setText('&Browse')
-        self.layoutHRUParameters.addWidget(self.buttonSelectHRUSlopeMap, 2, 2)
+        # self.buttonSelectHRUSlopeMap = QtGui.QPushButton()
+        # self.buttonSelectHRUSlopeMap.setText('&Browse')
+        # self.layoutHRUParameters.addWidget(self.buttonSelectHRUSlopeMap, 2, 2)
         
-        self.labelHRUSubcatchmentMap = QtGui.QLabel()
-        self.labelHRUSubcatchmentMap.setText('Subcatchment map:')
-        self.layoutHRUParameters.addWidget(self.labelHRUSubcatchmentMap, 3, 0)
+        # self.labelHRUSubcatchmentMap = QtGui.QLabel()
+        # self.labelHRUSubcatchmentMap.setText('Subcatchment map:')
+        # self.layoutHRUParameters.addWidget(self.labelHRUSubcatchmentMap, 3, 0)
         
-        self.lineEditHRUSubcatchmentMap = QtGui.QLineEdit()
-        self.lineEditHRUSubcatchmentMap.setReadOnly(True)
-        self.layoutHRUParameters.addWidget(self.lineEditHRUSubcatchmentMap, 3, 1)
+        # self.lineEditHRUSubcatchmentMap = QtGui.QLineEdit()
+        # self.lineEditHRUSubcatchmentMap.setReadOnly(True)
+        # self.layoutHRUParameters.addWidget(self.lineEditHRUSubcatchmentMap, 3, 1)
         
-        self.buttonSelectHRUSubcatchmentMap = QtGui.QPushButton()
-        self.buttonSelectHRUSubcatchmentMap.setText('&Browse')
-        self.layoutHRUParameters.addWidget(self.buttonSelectHRUSubcatchmentMap, 3, 2)
+        # self.buttonSelectHRUSubcatchmentMap = QtGui.QPushButton()
+        # self.buttonSelectHRUSubcatchmentMap.setText('&Browse')
+        # self.layoutHRUParameters.addWidget(self.buttonSelectHRUSubcatchmentMap, 3, 2)
         
-        self.labelHRULandUseClassification = QtGui.QLabel()
-        self.labelHRULandUseClassification.setText('Land use classification:')
-        self.layoutHRUParameters.addWidget(self.labelHRULandUseClassification, 4, 0)
+        # self.labelHRULandUseClassification = QtGui.QLabel()
+        # self.labelHRULandUseClassification.setText('Land use classification:')
+        # self.layoutHRUParameters.addWidget(self.labelHRULandUseClassification, 4, 0)
         
-        self.lineEditHRULandUseClassification = QtGui.QLineEdit()
-        self.lineEditHRULandUseClassification.setReadOnly(True)
-        self.layoutHRUParameters.addWidget(self.lineEditHRULandUseClassification, 4, 1)
+        # self.lineEditHRULandUseClassification = QtGui.QLineEdit()
+        # self.lineEditHRULandUseClassification.setReadOnly(True)
+        # self.layoutHRUParameters.addWidget(self.lineEditHRULandUseClassification, 4, 1)
         
-        self.buttonSelectHRULandUseClassification = QtGui.QPushButton()
-        self.buttonSelectHRULandUseClassification.setText('&Browse')
-        self.layoutHRUParameters.addWidget(self.buttonSelectHRULandUseClassification, 4, 2)
+        # self.buttonSelectHRULandUseClassification = QtGui.QPushButton()
+        # self.buttonSelectHRULandUseClassification.setText('&Browse')
+        # self.layoutHRUParameters.addWidget(self.buttonSelectHRULandUseClassification, 4, 2)
         
-        self.labelHRUSoilClassification = QtGui.QLabel()
-        self.labelHRUSoilClassification.setText('Soil classification:')
-        self.layoutHRUParameters.addWidget(self.labelHRUSoilClassification, 5, 0)
+        # self.labelHRUSoilClassification = QtGui.QLabel()
+        # self.labelHRUSoilClassification.setText('Soil classification:')
+        # self.layoutHRUParameters.addWidget(self.labelHRUSoilClassification, 5, 0)
         
-        self.lineEditHRUSoilClassification = QtGui.QLineEdit()
-        self.lineEditHRUSoilClassification.setReadOnly(True)
-        self.layoutHRUParameters.addWidget(self.lineEditHRUSoilClassification, 5, 1)
+        # self.lineEditHRUSoilClassification = QtGui.QLineEdit()
+        # self.lineEditHRUSoilClassification.setReadOnly(True)
+        # self.layoutHRUParameters.addWidget(self.lineEditHRUSoilClassification, 5, 1)
         
-        self.buttonSelectHRUSoilClassification = QtGui.QPushButton()
-        self.buttonSelectHRUSoilClassification.setText('&Browse')
-        self.layoutHRUParameters.addWidget(self.buttonSelectHRUSoilClassification, 5, 2)
+        # self.buttonSelectHRUSoilClassification = QtGui.QPushButton()
+        # self.buttonSelectHRUSoilClassification.setText('&Browse')
+        # self.layoutHRUParameters.addWidget(self.buttonSelectHRUSoilClassification, 5, 2)
         
-        self.labelHRUSlopeClassification = QtGui.QLabel()
-        self.labelHRUSlopeClassification.setText('Slope classification:')
-        self.layoutHRUParameters.addWidget(self.labelHRUSlopeClassification, 6, 0)
+        # self.labelHRUSlopeClassification = QtGui.QLabel()
+        # self.labelHRUSlopeClassification.setText('Slope classification:')
+        # self.layoutHRUParameters.addWidget(self.labelHRUSlopeClassification, 6, 0)
         
-        self.lineEditHRUSlopeClassification = QtGui.QLineEdit()
-        self.lineEditHRUSlopeClassification.setReadOnly(True)
-        self.layoutHRUParameters.addWidget(self.lineEditHRUSlopeClassification, 6, 1)
+        # self.lineEditHRUSlopeClassification = QtGui.QLineEdit()
+        # self.lineEditHRUSlopeClassification.setReadOnly(True)
+        # self.layoutHRUParameters.addWidget(self.lineEditHRUSlopeClassification, 6, 1)
         
-        self.buttonSelectHRUSlopeClassification = QtGui.QPushButton()
-        self.buttonSelectHRUSlopeClassification.setText('&Browse')
-        self.layoutHRUParameters.addWidget(self.buttonSelectHRUSlopeClassification, 6, 2)
+        # self.buttonSelectHRUSlopeClassification = QtGui.QPushButton()
+        # self.buttonSelectHRUSlopeClassification.setText('&Browse')
+        # self.layoutHRUParameters.addWidget(self.buttonSelectHRUSlopeClassification, 6, 2)
         
-        self.labelHRUAreaName = QtGui.QLabel()
-        self.labelHRUAreaName.setText('&Area name:')
-        self.layoutHRUParameters.addWidget(self.labelHRUAreaName, 7, 0)
+        # self.labelHRUAreaName = QtGui.QLabel()
+        # self.labelHRUAreaName.setText('&Area name:')
+        # self.layoutHRUParameters.addWidget(self.labelHRUAreaName, 7, 0)
         
-        self.lineEditHRUAreaName = QtGui.QLineEdit()
-        self.lineEditHRUAreaName.setText('areaname')
-        self.layoutHRUParameters.addWidget(self.lineEditHRUAreaName, 7, 1)
-        self.labelHRUAreaName.setBuddy(self.lineEditHRUAreaName)
+        # self.lineEditHRUAreaName = QtGui.QLineEdit()
+        # self.lineEditHRUAreaName.setText('areaname')
+        # self.layoutHRUParameters.addWidget(self.lineEditHRUAreaName, 7, 1)
+        # self.labelHRUAreaName.setBuddy(self.lineEditHRUAreaName)
         
-        self.labelHRUPeriod = QtGui.QLabel()
-        self.labelHRUPeriod.setText('Pe&riod:')
-        self.layoutHRUParameters.addWidget(self.labelHRUPeriod, 8, 0)
+        # self.labelHRUPeriod = QtGui.QLabel()
+        # self.labelHRUPeriod.setText('Pe&riod:')
+        # self.layoutHRUParameters.addWidget(self.labelHRUPeriod, 8, 0)
         
-        self.spinBoxHRUPeriod = QtGui.QSpinBox()
-        self.spinBoxHRUPeriod.setRange(1, 9999)
-        td = datetime.date.today()
-        self.spinBoxHRUPeriod.setValue(td.year)
-        self.layoutHRUParameters.addWidget(self.spinBoxHRUPeriod, 8, 1)
-        self.labelHRUPeriod.setBuddy(self.spinBoxHRUPeriod)
+        # self.spinBoxHRUPeriod = QtGui.QSpinBox()
+        # self.spinBoxHRUPeriod.setRange(1, 9999)
+        # td = datetime.date.today()
+        # self.spinBoxHRUPeriod.setValue(td.year)
+        # self.layoutHRUParameters.addWidget(self.spinBoxHRUPeriod, 8, 1)
+        # self.labelHRUPeriod.setBuddy(self.spinBoxHRUPeriod)
         
-        self.labelMultipleHRULandUseThreshold = QtGui.QLabel()
-        self.labelMultipleHRULandUseThreshold.setDisabled(True)
-        self.labelMultipleHRULandUseThreshold.setText('Land use &threshold:')
-        self.layoutHRUParameters.addWidget(self.labelMultipleHRULandUseThreshold, 9, 0)
+        # self.labelMultipleHRULandUseThreshold = QtGui.QLabel()
+        # self.labelMultipleHRULandUseThreshold.setDisabled(True)
+        # self.labelMultipleHRULandUseThreshold.setText('Land use &threshold:')
+        # self.layoutHRUParameters.addWidget(self.labelMultipleHRULandUseThreshold, 9, 0)
         
-        self.spinBoxMultipleHRULandUseThreshold = QtGui.QSpinBox()
-        self.spinBoxMultipleHRULandUseThreshold.setDisabled(True)
-        self.spinBoxMultipleHRULandUseThreshold.setRange(0, 99999)
-        self.spinBoxMultipleHRULandUseThreshold.setValue(0)
-        self.layoutHRUParameters.addWidget(self.spinBoxMultipleHRULandUseThreshold, 9, 1)
-        self.labelMultipleHRULandUseThreshold.setBuddy(self.spinBoxMultipleHRULandUseThreshold)
+        # self.spinBoxMultipleHRULandUseThreshold = QtGui.QSpinBox()
+        # self.spinBoxMultipleHRULandUseThreshold.setDisabled(True)
+        # self.spinBoxMultipleHRULandUseThreshold.setRange(0, 99999)
+        # self.spinBoxMultipleHRULandUseThreshold.setValue(0)
+        # self.layoutHRUParameters.addWidget(self.spinBoxMultipleHRULandUseThreshold, 9, 1)
+        # self.labelMultipleHRULandUseThreshold.setBuddy(self.spinBoxMultipleHRULandUseThreshold)
         
-        self.labelMultipleHRUSoilThreshold = QtGui.QLabel()
-        self.labelMultipleHRUSoilThreshold.setDisabled(True)
-        self.labelMultipleHRUSoilThreshold.setText('Soil t&hreshold:')
-        self.layoutHRUParameters.addWidget(self.labelMultipleHRUSoilThreshold, 10, 0)
+        # self.labelMultipleHRUSoilThreshold = QtGui.QLabel()
+        # self.labelMultipleHRUSoilThreshold.setDisabled(True)
+        # self.labelMultipleHRUSoilThreshold.setText('Soil t&hreshold:')
+        # self.layoutHRUParameters.addWidget(self.labelMultipleHRUSoilThreshold, 10, 0)
         
-        self.spinBoxMultipleHRUSoilThreshold = QtGui.QSpinBox()
-        self.spinBoxMultipleHRUSoilThreshold.setDisabled(True)
-        self.spinBoxMultipleHRUSoilThreshold.setRange(0, 99999)
-        self.spinBoxMultipleHRUSoilThreshold.setValue(0)
-        self.layoutHRUParameters.addWidget(self.spinBoxMultipleHRUSoilThreshold, 10, 1)
-        self.labelMultipleHRUSoilThreshold.setBuddy(self.spinBoxMultipleHRUSoilThreshold)
+        # self.spinBoxMultipleHRUSoilThreshold = QtGui.QSpinBox()
+        # self.spinBoxMultipleHRUSoilThreshold.setDisabled(True)
+        # self.spinBoxMultipleHRUSoilThreshold.setRange(0, 99999)
+        # self.spinBoxMultipleHRUSoilThreshold.setValue(0)
+        # self.layoutHRUParameters.addWidget(self.spinBoxMultipleHRUSoilThreshold, 10, 1)
+        # self.labelMultipleHRUSoilThreshold.setBuddy(self.spinBoxMultipleHRUSoilThreshold)
         
-        self.labelMultipleHRUSlopeThreshold = QtGui.QLabel()
-        self.labelMultipleHRUSlopeThreshold.setDisabled(True)
-        self.labelMultipleHRUSlopeThreshold.setText('Slope th&reshold:')
-        self.layoutHRUParameters.addWidget(self.labelMultipleHRUSlopeThreshold, 11, 0)
+        # self.labelMultipleHRUSlopeThreshold = QtGui.QLabel()
+        # self.labelMultipleHRUSlopeThreshold.setDisabled(True)
+        # self.labelMultipleHRUSlopeThreshold.setText('Slope th&reshold:')
+        # self.layoutHRUParameters.addWidget(self.labelMultipleHRUSlopeThreshold, 11, 0)
         
-        self.spinBoxMultipleHRUSlopeThreshold = QtGui.QSpinBox()
-        self.spinBoxMultipleHRUSlopeThreshold.setDisabled(True)
-        self.spinBoxMultipleHRUSlopeThreshold.setRange(0, 99999)
-        self.spinBoxMultipleHRUSlopeThreshold.setValue(0)
-        self.layoutHRUParameters.addWidget(self.spinBoxMultipleHRUSlopeThreshold, 11, 1)
-        self.labelMultipleHRUSlopeThreshold.setBuddy(self.spinBoxMultipleHRUSlopeThreshold)
+        # self.spinBoxMultipleHRUSlopeThreshold = QtGui.QSpinBox()
+        # self.spinBoxMultipleHRUSlopeThreshold.setDisabled(True)
+        # self.spinBoxMultipleHRUSlopeThreshold.setRange(0, 99999)
+        # self.spinBoxMultipleHRUSlopeThreshold.setValue(0)
+        # self.layoutHRUParameters.addWidget(self.spinBoxMultipleHRUSlopeThreshold, 11, 1)
+        # self.labelMultipleHRUSlopeThreshold.setBuddy(self.spinBoxMultipleHRUSlopeThreshold)
         
-        # Process tab button
-        self.layoutButtonHRUDefinition = QtGui.QHBoxLayout()
-        self.buttonProcessHRUDefinition = QtGui.QPushButton()
-        self.buttonProcessHRUDefinition.setText('&Process')
-        self.buttonHelpQUESHHRUDefinition = QtGui.QPushButton()
-        self.buttonHelpQUESHHRUDefinition.setIcon(icon)
-        self.layoutButtonHRUDefinition.setAlignment(QtCore.Qt.AlignRight)
-        self.layoutButtonHRUDefinition.addWidget(self.buttonProcessHRUDefinition)
-        self.layoutButtonHRUDefinition.addWidget(self.buttonHelpQUESHHRUDefinition)
+        # # Process tab button
+        # self.layoutButtonHRUDefinition = QtGui.QHBoxLayout()
+        # self.buttonProcessHRUDefinition = QtGui.QPushButton()
+        # self.buttonProcessHRUDefinition.setText('&Process')
+        # self.buttonHelpQUESHHRUDefinition = QtGui.QPushButton()
+        # self.buttonHelpQUESHHRUDefinition.setIcon(icon)
+        # self.layoutButtonHRUDefinition.setAlignment(QtCore.Qt.AlignRight)
+        # self.layoutButtonHRUDefinition.addWidget(self.buttonProcessHRUDefinition)
+        # self.layoutButtonHRUDefinition.addWidget(self.buttonHelpQUESHHRUDefinition)
         
-        # Template GroupBox
-        self.groupBoxHRUDefinitionTemplate = QtGui.QGroupBox('Template')
-        self.layoutGroupBoxHRUDefinitionTemplate = QtGui.QVBoxLayout()
-        self.layoutGroupBoxHRUDefinitionTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
-        self.groupBoxHRUDefinitionTemplate.setLayout(self.layoutGroupBoxHRUDefinitionTemplate)
-        self.layoutHRUDefinitionTemplateInfo = QtGui.QVBoxLayout()
-        self.layoutHRUDefinitionTemplate = QtGui.QGridLayout()
-        self.layoutGroupBoxHRUDefinitionTemplate.addLayout(self.layoutHRUDefinitionTemplateInfo)
-        self.layoutGroupBoxHRUDefinitionTemplate.addLayout(self.layoutHRUDefinitionTemplate)
+        # # Template GroupBox
+        # self.groupBoxHRUDefinitionTemplate = QtGui.QGroupBox('Template')
+        # self.layoutGroupBoxHRUDefinitionTemplate = QtGui.QVBoxLayout()
+        # self.layoutGroupBoxHRUDefinitionTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        # self.groupBoxHRUDefinitionTemplate.setLayout(self.layoutGroupBoxHRUDefinitionTemplate)
+        # self.layoutHRUDefinitionTemplateInfo = QtGui.QVBoxLayout()
+        # self.layoutHRUDefinitionTemplate = QtGui.QGridLayout()
+        # self.layoutGroupBoxHRUDefinitionTemplate.addLayout(self.layoutHRUDefinitionTemplateInfo)
+        # self.layoutGroupBoxHRUDefinitionTemplate.addLayout(self.layoutHRUDefinitionTemplate)
         
-        self.labelLoadedHRUDefinitionTemplate = QtGui.QLabel()
-        self.labelLoadedHRUDefinitionTemplate.setText('Loaded template:')
-        self.layoutHRUDefinitionTemplate.addWidget(self.labelLoadedHRUDefinitionTemplate, 0, 0)
+        # self.labelLoadedHRUDefinitionTemplate = QtGui.QLabel()
+        # self.labelLoadedHRUDefinitionTemplate.setText('Loaded template:')
+        # self.layoutHRUDefinitionTemplate.addWidget(self.labelLoadedHRUDefinitionTemplate, 0, 0)
         
-        self.loadedHRUDefinitionTemplate = QtGui.QLabel()
-        self.loadedHRUDefinitionTemplate.setText('<None>')
-        self.layoutHRUDefinitionTemplate.addWidget(self.loadedHRUDefinitionTemplate, 0, 1)
+        # self.loadedHRUDefinitionTemplate = QtGui.QLabel()
+        # self.loadedHRUDefinitionTemplate.setText('<None>')
+        # self.layoutHRUDefinitionTemplate.addWidget(self.loadedHRUDefinitionTemplate, 0, 1)
         
-        self.labelHRUDefinitionTemplate = QtGui.QLabel()
-        self.labelHRUDefinitionTemplate.setText('Template name:')
-        self.layoutHRUDefinitionTemplate.addWidget(self.labelHRUDefinitionTemplate, 1, 0)
+        # self.labelHRUDefinitionTemplate = QtGui.QLabel()
+        # self.labelHRUDefinitionTemplate.setText('Template name:')
+        # self.layoutHRUDefinitionTemplate.addWidget(self.labelHRUDefinitionTemplate, 1, 0)
         
-        self.comboBoxHRUDefinitionTemplate = QtGui.QComboBox()
-        self.comboBoxHRUDefinitionTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
-        self.comboBoxHRUDefinitionTemplate.setDisabled(True)
-        self.comboBoxHRUDefinitionTemplate.addItem('No template found')
-        self.layoutHRUDefinitionTemplate.addWidget(self.comboBoxHRUDefinitionTemplate, 1, 1)
+        # self.comboBoxHRUDefinitionTemplate = QtGui.QComboBox()
+        # self.comboBoxHRUDefinitionTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
+        # self.comboBoxHRUDefinitionTemplate.setDisabled(True)
+        # self.comboBoxHRUDefinitionTemplate.addItem('No template found')
+        # self.layoutHRUDefinitionTemplate.addWidget(self.comboBoxHRUDefinitionTemplate, 1, 1)
         
-        self.layoutButtonHRUDefinitionTemplate = QtGui.QHBoxLayout()
-        self.layoutButtonHRUDefinitionTemplate.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTop)
-        self.buttonLoadHRUDefinitionTemplate = QtGui.QPushButton()
-        self.buttonLoadHRUDefinitionTemplate.setDisabled(True)
-        self.buttonLoadHRUDefinitionTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonLoadHRUDefinitionTemplate.setText('Load')
-        self.buttonSaveHRUDefinitionTemplate = QtGui.QPushButton()
-        self.buttonSaveHRUDefinitionTemplate.setDisabled(True)
-        self.buttonSaveHRUDefinitionTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveHRUDefinitionTemplate.setText('Save')
-        self.buttonSaveAsHRUDefinitionTemplate = QtGui.QPushButton()
-        self.buttonSaveAsHRUDefinitionTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveAsHRUDefinitionTemplate.setText('Save As')
-        self.layoutButtonHRUDefinitionTemplate.addWidget(self.buttonLoadHRUDefinitionTemplate)
-        self.layoutButtonHRUDefinitionTemplate.addWidget(self.buttonSaveHRUDefinitionTemplate)
-        self.layoutButtonHRUDefinitionTemplate.addWidget(self.buttonSaveAsHRUDefinitionTemplate)
-        self.layoutGroupBoxHRUDefinitionTemplate.addLayout(self.layoutButtonHRUDefinitionTemplate)
+        # self.layoutButtonHRUDefinitionTemplate = QtGui.QHBoxLayout()
+        # self.layoutButtonHRUDefinitionTemplate.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTop)
+        # self.buttonLoadHRUDefinitionTemplate = QtGui.QPushButton()
+        # self.buttonLoadHRUDefinitionTemplate.setDisabled(True)
+        # self.buttonLoadHRUDefinitionTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        # self.buttonLoadHRUDefinitionTemplate.setText('Load')
+        # self.buttonSaveHRUDefinitionTemplate = QtGui.QPushButton()
+        # self.buttonSaveHRUDefinitionTemplate.setDisabled(True)
+        # self.buttonSaveHRUDefinitionTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        # self.buttonSaveHRUDefinitionTemplate.setText('Save')
+        # self.buttonSaveAsHRUDefinitionTemplate = QtGui.QPushButton()
+        # self.buttonSaveAsHRUDefinitionTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        # self.buttonSaveAsHRUDefinitionTemplate.setText('Save As')
+        # self.layoutButtonHRUDefinitionTemplate.addWidget(self.buttonLoadHRUDefinitionTemplate)
+        # self.layoutButtonHRUDefinitionTemplate.addWidget(self.buttonSaveHRUDefinitionTemplate)
+        # self.layoutButtonHRUDefinitionTemplate.addWidget(self.buttonSaveAsHRUDefinitionTemplate)
+        # self.layoutGroupBoxHRUDefinitionTemplate.addLayout(self.layoutButtonHRUDefinitionTemplate)
         
-        # Place the GroupBoxes
-        self.layoutTabHRUDefinition.addWidget(self.groupBoxHRUFunctions, 0, 0)
-        self.layoutTabHRUDefinition.addWidget(self.groupBoxHRUParameters, 1, 0)
-        self.layoutTabHRUDefinition.addLayout(self.layoutButtonHRUDefinition, 2, 0, 1, 2, QtCore.Qt.AlignRight)
-        self.layoutTabHRUDefinition.addWidget(self.groupBoxHRUDefinitionTemplate, 0, 1, 2, 1)
-        self.layoutTabHRUDefinition.setColumnStretch(0, 3)
-        self.layoutTabHRUDefinition.setColumnStretch(1, 1) # Smaller template column
+        # # Place the GroupBoxes
+        # self.layoutTabHRUDefinition.addWidget(self.groupBoxHRUFunctions, 0, 0)
+        # self.layoutTabHRUDefinition.addWidget(self.groupBoxHRUParameters, 1, 0)
+        # self.layoutTabHRUDefinition.addLayout(self.layoutButtonHRUDefinition, 2, 0, 1, 2, QtCore.Qt.AlignRight)
+        # self.layoutTabHRUDefinition.addWidget(self.groupBoxHRUDefinitionTemplate, 0, 1, 2, 1)
+        # self.layoutTabHRUDefinition.setColumnStretch(0, 3)
+        # self.layoutTabHRUDefinition.setColumnStretch(1, 1) # Smaller template column
         
         #***********************************************************
         # 'Watershed Model Evaluation' sub tab
         #***********************************************************
         # 'Parameters' GroupBox
-        self.groupBoxWatershedModelEvaluationParameters = QtGui.QGroupBox('Parameters')
-        self.layoutGroupBoxWatershedModelEvaluationParameters = QtGui.QVBoxLayout()
-        self.layoutGroupBoxWatershedModelEvaluationParameters.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
-        self.groupBoxWatershedModelEvaluationParameters.setLayout(self.layoutGroupBoxWatershedModelEvaluationParameters)
-        self.layoutWatershedModelEvaluationParametersInfo = QtGui.QVBoxLayout()
-        self.layoutWatershedModelEvaluationParameters = QtGui.QGridLayout()
-        self.layoutGroupBoxWatershedModelEvaluationParameters.addLayout(self.layoutWatershedModelEvaluationParametersInfo)
-        self.layoutGroupBoxWatershedModelEvaluationParameters.addLayout(self.layoutWatershedModelEvaluationParameters)
+        # self.groupBoxWatershedModelEvaluationParameters = QtGui.QGroupBox('Parameters')
+        # self.layoutGroupBoxWatershedModelEvaluationParameters = QtGui.QVBoxLayout()
+        # self.layoutGroupBoxWatershedModelEvaluationParameters.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        # self.groupBoxWatershedModelEvaluationParameters.setLayout(self.layoutGroupBoxWatershedModelEvaluationParameters)
+        # self.layoutWatershedModelEvaluationParametersInfo = QtGui.QVBoxLayout()
+        # self.layoutWatershedModelEvaluationParameters = QtGui.QGridLayout()
+        # self.layoutGroupBoxWatershedModelEvaluationParameters.addLayout(self.layoutWatershedModelEvaluationParametersInfo)
+        # self.layoutGroupBoxWatershedModelEvaluationParameters.addLayout(self.layoutWatershedModelEvaluationParameters)
         
-        self.labelWatershedModelEvaluationParametersInfo = QtGui.QLabel()
-        self.labelWatershedModelEvaluationParametersInfo.setText('Lorem ipsum dolor sit amet...\n')
-        self.layoutWatershedModelEvaluationParametersInfo.addWidget(self.labelWatershedModelEvaluationParametersInfo)
+        # self.labelWatershedModelEvaluationParametersInfo = QtGui.QLabel()
+        # self.labelWatershedModelEvaluationParametersInfo.setText('Lorem ipsum dolor sit amet...\n')
+        # self.layoutWatershedModelEvaluationParametersInfo.addWidget(self.labelWatershedModelEvaluationParametersInfo)
         
-        self.labelWatershedModelEvaluationDateInitial = QtGui.QLabel()
-        self.labelWatershedModelEvaluationDateInitial.setText('Initial date:')
-        self.layoutWatershedModelEvaluationParameters.addWidget(self.labelWatershedModelEvaluationDateInitial, 0, 0)
+        # self.labelWatershedModelEvaluationDateInitial = QtGui.QLabel()
+        # self.labelWatershedModelEvaluationDateInitial.setText('Initial date:')
+        # self.layoutWatershedModelEvaluationParameters.addWidget(self.labelWatershedModelEvaluationDateInitial, 0, 0)
         
-        self.dateWatershedModelEvaluationDateInitial = QtGui.QDateEdit(QtCore.QDate.currentDate())
-        self.dateWatershedModelEvaluationDateInitial.setCalendarPopup(True)
-        self.dateWatershedModelEvaluationDateInitial.setDisplayFormat('dd/MM/yyyy')
-        self.layoutWatershedModelEvaluationParameters.addWidget(self.dateWatershedModelEvaluationDateInitial, 0, 1)
+        # self.dateWatershedModelEvaluationDateInitial = QtGui.QDateEdit(QtCore.QDate.currentDate())
+        # self.dateWatershedModelEvaluationDateInitial.setCalendarPopup(True)
+        # self.dateWatershedModelEvaluationDateInitial.setDisplayFormat('dd/MM/yyyy')
+        # self.layoutWatershedModelEvaluationParameters.addWidget(self.dateWatershedModelEvaluationDateInitial, 0, 1)
         
-        self.labelWatershedModelEvaluationDateFinal = QtGui.QLabel()
-        self.labelWatershedModelEvaluationDateFinal.setText('Final date:')
-        self.layoutWatershedModelEvaluationParameters.addWidget(self.labelWatershedModelEvaluationDateFinal, 1, 0)
+        # self.labelWatershedModelEvaluationDateFinal = QtGui.QLabel()
+        # self.labelWatershedModelEvaluationDateFinal.setText('Final date:')
+        # self.layoutWatershedModelEvaluationParameters.addWidget(self.labelWatershedModelEvaluationDateFinal, 1, 0)
         
-        self.dateWatershedModelEvaluationDateFinal = QtGui.QDateEdit(QtCore.QDate.currentDate())
-        self.dateWatershedModelEvaluationDateFinal.setCalendarPopup(True)
-        self.dateWatershedModelEvaluationDateFinal.setDisplayFormat('dd/MM/yyyy')
-        self.layoutWatershedModelEvaluationParameters.addWidget(self.dateWatershedModelEvaluationDateFinal, 1, 1)
+        # self.dateWatershedModelEvaluationDateFinal = QtGui.QDateEdit(QtCore.QDate.currentDate())
+        # self.dateWatershedModelEvaluationDateFinal.setCalendarPopup(True)
+        # self.dateWatershedModelEvaluationDateFinal.setDisplayFormat('dd/MM/yyyy')
+        # self.layoutWatershedModelEvaluationParameters.addWidget(self.dateWatershedModelEvaluationDateFinal, 1, 1)
         
-        self.labelWatershedModelEvaluationSWATModel = QtGui.QLabel()
-        self.labelWatershedModelEvaluationSWATModel.setText('SWAT &model:')
-        self.layoutWatershedModelEvaluationParameters.addWidget(self.labelWatershedModelEvaluationSWATModel, 2, 0)
+        # self.labelWatershedModelEvaluationSWATModel = QtGui.QLabel()
+        # self.labelWatershedModelEvaluationSWATModel.setText('SWAT &model:')
+        # self.layoutWatershedModelEvaluationParameters.addWidget(self.labelWatershedModelEvaluationSWATModel, 2, 0)
         
-        SWATModel = {
-            1: 'Skip',
-            2: 'Run',
-        }
+        # SWATModel = {
+        #     1: 'Skip',
+        #     2: 'Run',
+        # }
         
-        self.comboBoxWatershedModelEvaluationSWATModel = QtGui.QComboBox()
+        # self.comboBoxWatershedModelEvaluationSWATModel = QtGui.QComboBox()
         
-        for key, val in SWATModel.iteritems():
-            self.comboBoxWatershedModelEvaluationSWATModel.addItem(val, key)
+        # for key, val in SWATModel.iteritems():
+        #     self.comboBoxWatershedModelEvaluationSWATModel.addItem(val, key)
         
-        self.layoutWatershedModelEvaluationParameters.addWidget(self.comboBoxWatershedModelEvaluationSWATModel, 2, 1)
-        self.labelWatershedModelEvaluationSWATModel.setBuddy(self.comboBoxWatershedModelEvaluationSWATModel)
+        # self.layoutWatershedModelEvaluationParameters.addWidget(self.comboBoxWatershedModelEvaluationSWATModel, 2, 1)
+        # self.labelWatershedModelEvaluationSWATModel.setBuddy(self.comboBoxWatershedModelEvaluationSWATModel)
         
-        self.labelWatershedModelEvaluationLocation = QtGui.QLabel()
-        self.labelWatershedModelEvaluationLocation.setText('&Location:')
-        self.layoutWatershedModelEvaluationParameters.addWidget(self.labelWatershedModelEvaluationLocation, 3, 0)
+        # self.labelWatershedModelEvaluationLocation = QtGui.QLabel()
+        # self.labelWatershedModelEvaluationLocation.setText('&Location:')
+        # self.layoutWatershedModelEvaluationParameters.addWidget(self.labelWatershedModelEvaluationLocation, 3, 0)
         
-        self.lineEditWatershedModelEvaluationLocation = QtGui.QLineEdit()
-        self.lineEditWatershedModelEvaluationLocation.setText('location')
-        self.layoutWatershedModelEvaluationParameters.addWidget(self.lineEditWatershedModelEvaluationLocation, 3, 1)
-        self.labelWatershedModelEvaluationLocation.setBuddy(self.lineEditWatershedModelEvaluationLocation)
+        # self.lineEditWatershedModelEvaluationLocation = QtGui.QLineEdit()
+        # self.lineEditWatershedModelEvaluationLocation.setText('location')
+        # self.layoutWatershedModelEvaluationParameters.addWidget(self.lineEditWatershedModelEvaluationLocation, 3, 1)
+        # self.labelWatershedModelEvaluationLocation.setBuddy(self.lineEditWatershedModelEvaluationLocation)
         
-        self.labelWatershedModelEvaluationOutletReachSubBasinID = QtGui.QLabel()
-        self.labelWatershedModelEvaluationOutletReachSubBasinID.setText('Outlet reach/sub-basin ID:')
-        self.layoutWatershedModelEvaluationParameters.addWidget(self.labelWatershedModelEvaluationOutletReachSubBasinID, 4, 0)
+        # self.labelWatershedModelEvaluationOutletReachSubBasinID = QtGui.QLabel()
+        # self.labelWatershedModelEvaluationOutletReachSubBasinID.setText('Outlet reach/sub-basin ID:')
+        # self.layoutWatershedModelEvaluationParameters.addWidget(self.labelWatershedModelEvaluationOutletReachSubBasinID, 4, 0)
         
-        self.spinBoxWatershedModelEvaluationOutletReachSubBasinID = QtGui.QSpinBox()
-        self.spinBoxWatershedModelEvaluationOutletReachSubBasinID.setRange(1, 99999)
-        self.spinBoxWatershedModelEvaluationOutletReachSubBasinID.setValue(10)
-        self.layoutWatershedModelEvaluationParameters.addWidget(self.spinBoxWatershedModelEvaluationOutletReachSubBasinID, 4, 1)
-        self.labelWatershedModelEvaluationOutletReachSubBasinID.setBuddy(self.spinBoxWatershedModelEvaluationOutletReachSubBasinID)
+        # self.spinBoxWatershedModelEvaluationOutletReachSubBasinID = QtGui.QSpinBox()
+        # self.spinBoxWatershedModelEvaluationOutletReachSubBasinID.setRange(1, 99999)
+        # self.spinBoxWatershedModelEvaluationOutletReachSubBasinID.setValue(10)
+        # self.layoutWatershedModelEvaluationParameters.addWidget(self.spinBoxWatershedModelEvaluationOutletReachSubBasinID, 4, 1)
+        # self.labelWatershedModelEvaluationOutletReachSubBasinID.setBuddy(self.spinBoxWatershedModelEvaluationOutletReachSubBasinID)
         
-        self.labelWatershedModelEvaluationObservedDebitFile = QtGui.QLabel()
-        self.labelWatershedModelEvaluationObservedDebitFile.setText('Observed debit file:')
-        self.layoutWatershedModelEvaluationParameters.addWidget(self.labelWatershedModelEvaluationObservedDebitFile, 5, 0)
+        # self.labelWatershedModelEvaluationObservedDebitFile = QtGui.QLabel()
+        # self.labelWatershedModelEvaluationObservedDebitFile.setText('Observed debit file:')
+        # self.layoutWatershedModelEvaluationParameters.addWidget(self.labelWatershedModelEvaluationObservedDebitFile, 5, 0)
         
-        self.lineEditWatershedModelEvaluationObservedDebitFile = QtGui.QLineEdit()
-        self.lineEditWatershedModelEvaluationObservedDebitFile.setReadOnly(True)
-        self.layoutWatershedModelEvaluationParameters.addWidget(self.lineEditWatershedModelEvaluationObservedDebitFile, 5, 1)
+        # self.lineEditWatershedModelEvaluationObservedDebitFile = QtGui.QLineEdit()
+        # self.lineEditWatershedModelEvaluationObservedDebitFile.setReadOnly(True)
+        # self.layoutWatershedModelEvaluationParameters.addWidget(self.lineEditWatershedModelEvaluationObservedDebitFile, 5, 1)
         
-        self.buttonSelectWatershedModelEvaluationObservedDebitFile = QtGui.QPushButton()
-        self.buttonSelectWatershedModelEvaluationObservedDebitFile.setText('&Browse')
-        self.layoutWatershedModelEvaluationParameters.addWidget(self.buttonSelectWatershedModelEvaluationObservedDebitFile, 5, 2)
+        # self.buttonSelectWatershedModelEvaluationObservedDebitFile = QtGui.QPushButton()
+        # self.buttonSelectWatershedModelEvaluationObservedDebitFile.setText('&Browse')
+        # self.layoutWatershedModelEvaluationParameters.addWidget(self.buttonSelectWatershedModelEvaluationObservedDebitFile, 5, 2)
         
-        # 'Output' GroupBox
-        self.groupBoxWatershedModelEvaluationOutput = QtGui.QGroupBox('Output')
-        self.layoutGroupBoxWatershedModelEvaluationOutput = QtGui.QVBoxLayout()
-        self.layoutGroupBoxWatershedModelEvaluationOutput.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
-        self.groupBoxWatershedModelEvaluationOutput.setLayout(self.layoutGroupBoxWatershedModelEvaluationOutput)
-        self.layoutWatershedModelEvaluationOutputInfo = QtGui.QVBoxLayout()
-        self.layoutWatershedModelEvaluationOutput = QtGui.QGridLayout()
-        self.layoutGroupBoxWatershedModelEvaluationOutput.addLayout(self.layoutWatershedModelEvaluationOutputInfo)
-        self.layoutGroupBoxWatershedModelEvaluationOutput.addLayout(self.layoutWatershedModelEvaluationOutput)
+        # # 'Output' GroupBox
+        # self.groupBoxWatershedModelEvaluationOutput = QtGui.QGroupBox('Output')
+        # self.layoutGroupBoxWatershedModelEvaluationOutput = QtGui.QVBoxLayout()
+        # self.layoutGroupBoxWatershedModelEvaluationOutput.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        # self.groupBoxWatershedModelEvaluationOutput.setLayout(self.layoutGroupBoxWatershedModelEvaluationOutput)
+        # self.layoutWatershedModelEvaluationOutputInfo = QtGui.QVBoxLayout()
+        # self.layoutWatershedModelEvaluationOutput = QtGui.QGridLayout()
+        # self.layoutGroupBoxWatershedModelEvaluationOutput.addLayout(self.layoutWatershedModelEvaluationOutputInfo)
+        # self.layoutGroupBoxWatershedModelEvaluationOutput.addLayout(self.layoutWatershedModelEvaluationOutput)
         
-        self.labelWatershedModelEvaluationOutputInfo = QtGui.QLabel()
-        self.labelWatershedModelEvaluationOutputInfo.setText('Lorem ipsum dolor sit amet...\n')
-        self.layoutWatershedModelEvaluationOutputInfo.addWidget(self.labelWatershedModelEvaluationOutputInfo)
+        # self.labelWatershedModelEvaluationOutputInfo = QtGui.QLabel()
+        # self.labelWatershedModelEvaluationOutputInfo.setText('Lorem ipsum dolor sit amet...\n')
+        # self.layoutWatershedModelEvaluationOutputInfo.addWidget(self.labelWatershedModelEvaluationOutputInfo)
         
-        self.labelOutputWatershedModelEvaluation = QtGui.QLabel()
-        self.labelOutputWatershedModelEvaluation.setText('[Output] Watershed model evaluation:')
-        self.layoutWatershedModelEvaluationOutput.addWidget(self.labelOutputWatershedModelEvaluation, 0, 0)
+        # self.labelOutputWatershedModelEvaluation = QtGui.QLabel()
+        # self.labelOutputWatershedModelEvaluation.setText('[Output] Watershed model evaluation:')
+        # self.layoutWatershedModelEvaluationOutput.addWidget(self.labelOutputWatershedModelEvaluation, 0, 0)
         
-        self.lineEditOutputWatershedModelEvaluation = QtGui.QLineEdit()
-        self.lineEditOutputWatershedModelEvaluation.setReadOnly(True)
-        self.layoutWatershedModelEvaluationOutput.addWidget(self.lineEditOutputWatershedModelEvaluation, 0, 1)
+        # self.lineEditOutputWatershedModelEvaluation = QtGui.QLineEdit()
+        # self.lineEditOutputWatershedModelEvaluation.setReadOnly(True)
+        # self.layoutWatershedModelEvaluationOutput.addWidget(self.lineEditOutputWatershedModelEvaluation, 0, 1)
         
-        self.buttonSelectOutputWatershedModelEvaluation = QtGui.QPushButton()
-        self.buttonSelectOutputWatershedModelEvaluation.setText('&Browse')
-        self.layoutWatershedModelEvaluationOutput.addWidget(self.buttonSelectOutputWatershedModelEvaluation, 0, 2)
+        # self.buttonSelectOutputWatershedModelEvaluation = QtGui.QPushButton()
+        # self.buttonSelectOutputWatershedModelEvaluation.setText('&Browse')
+        # self.layoutWatershedModelEvaluationOutput.addWidget(self.buttonSelectOutputWatershedModelEvaluation, 0, 2)
         
-        # Process tab button
-        self.layoutButtonWatershedModelEvaluation = QtGui.QHBoxLayout()
-        self.buttonProcessWatershedModelEvaluation = QtGui.QPushButton()
-        self.buttonProcessWatershedModelEvaluation.setText('&Process')
-        self.buttonHelpQUESHWatershedModelEvaluation = QtGui.QPushButton()
-        self.buttonHelpQUESHWatershedModelEvaluation.setIcon(icon)
-        self.layoutButtonWatershedModelEvaluation.setAlignment(QtCore.Qt.AlignRight)
-        self.layoutButtonWatershedModelEvaluation.addWidget(self.buttonProcessWatershedModelEvaluation)
-        self.layoutButtonWatershedModelEvaluation.addWidget(self.buttonHelpQUESHWatershedModelEvaluation)
+        # # Process tab button
+        # self.layoutButtonWatershedModelEvaluation = QtGui.QHBoxLayout()
+        # self.buttonProcessWatershedModelEvaluation = QtGui.QPushButton()
+        # self.buttonProcessWatershedModelEvaluation.setText('&Process')
+        # self.buttonHelpQUESHWatershedModelEvaluation = QtGui.QPushButton()
+        # self.buttonHelpQUESHWatershedModelEvaluation.setIcon(icon)
+        # self.layoutButtonWatershedModelEvaluation.setAlignment(QtCore.Qt.AlignRight)
+        # self.layoutButtonWatershedModelEvaluation.addWidget(self.buttonProcessWatershedModelEvaluation)
+        # self.layoutButtonWatershedModelEvaluation.addWidget(self.buttonHelpQUESHWatershedModelEvaluation)
         
-        # Template GroupBox
-        self.groupBoxWatershedModelEvaluationTemplate = QtGui.QGroupBox('Template')
-        self.layoutGroupBoxWatershedModelEvaluationTemplate = QtGui.QVBoxLayout()
-        self.layoutGroupBoxWatershedModelEvaluationTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
-        self.groupBoxWatershedModelEvaluationTemplate.setLayout(self.layoutGroupBoxWatershedModelEvaluationTemplate)
-        self.layoutWatershedModelEvaluationTemplateInfo = QtGui.QVBoxLayout()
-        self.layoutWatershedModelEvaluationTemplate = QtGui.QGridLayout()
-        self.layoutGroupBoxWatershedModelEvaluationTemplate.addLayout(self.layoutWatershedModelEvaluationTemplateInfo)
-        self.layoutGroupBoxWatershedModelEvaluationTemplate.addLayout(self.layoutWatershedModelEvaluationTemplate)
+        # # Template GroupBox
+        # self.groupBoxWatershedModelEvaluationTemplate = QtGui.QGroupBox('Template')
+        # self.layoutGroupBoxWatershedModelEvaluationTemplate = QtGui.QVBoxLayout()
+        # self.layoutGroupBoxWatershedModelEvaluationTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        # self.groupBoxWatershedModelEvaluationTemplate.setLayout(self.layoutGroupBoxWatershedModelEvaluationTemplate)
+        # self.layoutWatershedModelEvaluationTemplateInfo = QtGui.QVBoxLayout()
+        # self.layoutWatershedModelEvaluationTemplate = QtGui.QGridLayout()
+        # self.layoutGroupBoxWatershedModelEvaluationTemplate.addLayout(self.layoutWatershedModelEvaluationTemplateInfo)
+        # self.layoutGroupBoxWatershedModelEvaluationTemplate.addLayout(self.layoutWatershedModelEvaluationTemplate)
         
-        self.labelLoadedWatershedModelEvaluationTemplate = QtGui.QLabel()
-        self.labelLoadedWatershedModelEvaluationTemplate.setText('Loaded template:')
-        self.layoutWatershedModelEvaluationTemplate.addWidget(self.labelLoadedWatershedModelEvaluationTemplate, 0, 0)
+        # self.labelLoadedWatershedModelEvaluationTemplate = QtGui.QLabel()
+        # self.labelLoadedWatershedModelEvaluationTemplate.setText('Loaded template:')
+        # self.layoutWatershedModelEvaluationTemplate.addWidget(self.labelLoadedWatershedModelEvaluationTemplate, 0, 0)
         
-        self.loadedWatershedModelEvaluationTemplate = QtGui.QLabel()
-        self.loadedWatershedModelEvaluationTemplate.setText('<None>')
-        self.layoutWatershedModelEvaluationTemplate.addWidget(self.loadedWatershedModelEvaluationTemplate, 0, 1)
+        # self.loadedWatershedModelEvaluationTemplate = QtGui.QLabel()
+        # self.loadedWatershedModelEvaluationTemplate.setText('<None>')
+        # self.layoutWatershedModelEvaluationTemplate.addWidget(self.loadedWatershedModelEvaluationTemplate, 0, 1)
         
-        self.labelWatershedModelEvaluationTemplate = QtGui.QLabel()
-        self.labelWatershedModelEvaluationTemplate.setText('Template name:')
-        self.layoutWatershedModelEvaluationTemplate.addWidget(self.labelWatershedModelEvaluationTemplate, 1, 0)
+        # self.labelWatershedModelEvaluationTemplate = QtGui.QLabel()
+        # self.labelWatershedModelEvaluationTemplate.setText('Template name:')
+        # self.layoutWatershedModelEvaluationTemplate.addWidget(self.labelWatershedModelEvaluationTemplate, 1, 0)
         
-        self.comboBoxWatershedModelEvaluationTemplate = QtGui.QComboBox()
-        self.comboBoxWatershedModelEvaluationTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
-        self.comboBoxWatershedModelEvaluationTemplate.setDisabled(True)
-        self.comboBoxWatershedModelEvaluationTemplate.addItem('No template found')
-        self.layoutWatershedModelEvaluationTemplate.addWidget(self.comboBoxWatershedModelEvaluationTemplate, 1, 1)
+        # self.comboBoxWatershedModelEvaluationTemplate = QtGui.QComboBox()
+        # self.comboBoxWatershedModelEvaluationTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
+        # self.comboBoxWatershedModelEvaluationTemplate.setDisabled(True)
+        # self.comboBoxWatershedModelEvaluationTemplate.addItem('No template found')
+        # self.layoutWatershedModelEvaluationTemplate.addWidget(self.comboBoxWatershedModelEvaluationTemplate, 1, 1)
         
-        self.layoutButtonWatershedModelEvaluationTemplate = QtGui.QHBoxLayout()
-        self.layoutButtonWatershedModelEvaluationTemplate.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTop)
-        self.buttonLoadWatershedModelEvaluationTemplate = QtGui.QPushButton()
-        self.buttonLoadWatershedModelEvaluationTemplate.setDisabled(True)
-        self.buttonLoadWatershedModelEvaluationTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonLoadWatershedModelEvaluationTemplate.setText('Load')
-        self.buttonSaveWatershedModelEvaluationTemplate = QtGui.QPushButton()
-        self.buttonSaveWatershedModelEvaluationTemplate.setDisabled(True)
-        self.buttonSaveWatershedModelEvaluationTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveWatershedModelEvaluationTemplate.setText('Save')
-        self.buttonSaveAsWatershedModelEvaluationTemplate = QtGui.QPushButton()
-        self.buttonSaveAsWatershedModelEvaluationTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveAsWatershedModelEvaluationTemplate.setText('Save As')
-        self.layoutButtonWatershedModelEvaluationTemplate.addWidget(self.buttonLoadWatershedModelEvaluationTemplate)
-        self.layoutButtonWatershedModelEvaluationTemplate.addWidget(self.buttonSaveWatershedModelEvaluationTemplate)
-        self.layoutButtonWatershedModelEvaluationTemplate.addWidget(self.buttonSaveAsWatershedModelEvaluationTemplate)
-        self.layoutGroupBoxWatershedModelEvaluationTemplate.addLayout(self.layoutButtonWatershedModelEvaluationTemplate)
+        # self.layoutButtonWatershedModelEvaluationTemplate = QtGui.QHBoxLayout()
+        # self.layoutButtonWatershedModelEvaluationTemplate.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTop)
+        # self.buttonLoadWatershedModelEvaluationTemplate = QtGui.QPushButton()
+        # self.buttonLoadWatershedModelEvaluationTemplate.setDisabled(True)
+        # self.buttonLoadWatershedModelEvaluationTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        # self.buttonLoadWatershedModelEvaluationTemplate.setText('Load')
+        # self.buttonSaveWatershedModelEvaluationTemplate = QtGui.QPushButton()
+        # self.buttonSaveWatershedModelEvaluationTemplate.setDisabled(True)
+        # self.buttonSaveWatershedModelEvaluationTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        # self.buttonSaveWatershedModelEvaluationTemplate.setText('Save')
+        # self.buttonSaveAsWatershedModelEvaluationTemplate = QtGui.QPushButton()
+        # self.buttonSaveAsWatershedModelEvaluationTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        # self.buttonSaveAsWatershedModelEvaluationTemplate.setText('Save As')
+        # self.layoutButtonWatershedModelEvaluationTemplate.addWidget(self.buttonLoadWatershedModelEvaluationTemplate)
+        # self.layoutButtonWatershedModelEvaluationTemplate.addWidget(self.buttonSaveWatershedModelEvaluationTemplate)
+        # self.layoutButtonWatershedModelEvaluationTemplate.addWidget(self.buttonSaveAsWatershedModelEvaluationTemplate)
+        # self.layoutGroupBoxWatershedModelEvaluationTemplate.addLayout(self.layoutButtonWatershedModelEvaluationTemplate)
         
-        # Place the GroupBoxes
-        self.layoutTabWatershedModelEvaluation.addWidget(self.groupBoxWatershedModelEvaluationParameters, 0, 0)
-        self.layoutTabWatershedModelEvaluation.addWidget(self.groupBoxWatershedModelEvaluationOutput, 1, 0)
-        self.layoutTabWatershedModelEvaluation.addLayout(self.layoutButtonWatershedModelEvaluation, 2, 0, 1, 2, QtCore.Qt.AlignRight)
-        self.layoutTabWatershedModelEvaluation.addWidget(self.groupBoxWatershedModelEvaluationTemplate, 0, 1, 2, 1)
-        self.layoutTabWatershedModelEvaluation.setColumnStretch(0, 3)
-        self.layoutTabWatershedModelEvaluation.setColumnStretch(1, 1) # Smaller template column
+        # # Place the GroupBoxes
+        # self.layoutTabWatershedModelEvaluation.addWidget(self.groupBoxWatershedModelEvaluationParameters, 0, 0)
+        # self.layoutTabWatershedModelEvaluation.addWidget(self.groupBoxWatershedModelEvaluationOutput, 1, 0)
+        # self.layoutTabWatershedModelEvaluation.addLayout(self.layoutButtonWatershedModelEvaluation, 2, 0, 1, 2, QtCore.Qt.AlignRight)
+        # self.layoutTabWatershedModelEvaluation.addWidget(self.groupBoxWatershedModelEvaluationTemplate, 0, 1, 2, 1)
+        # self.layoutTabWatershedModelEvaluation.setColumnStretch(0, 3)
+        # self.layoutTabWatershedModelEvaluation.setColumnStretch(1, 1) # Smaller template column
         
         #***********************************************************
         # 'Watershed Indicators' sub tab
         #***********************************************************
         # 'Parameters' GroupBox
-        self.groupBoxWatershedIndicatorsParameters = QtGui.QGroupBox('Parameters')
-        self.layoutGroupBoxWatershedIndicatorsParameters = QtGui.QVBoxLayout()
-        self.layoutGroupBoxWatershedIndicatorsParameters.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
-        self.groupBoxWatershedIndicatorsParameters.setLayout(self.layoutGroupBoxWatershedIndicatorsParameters)
-        self.layoutWatershedIndicatorsParametersInfo = QtGui.QVBoxLayout()
-        self.layoutWatershedIndicatorsParameters = QtGui.QGridLayout()
-        self.layoutGroupBoxWatershedIndicatorsParameters.addLayout(self.layoutWatershedIndicatorsParametersInfo)
-        self.layoutGroupBoxWatershedIndicatorsParameters.addLayout(self.layoutWatershedIndicatorsParameters)
+        # self.groupBoxWatershedIndicatorsParameters = QtGui.QGroupBox('Parameters')
+        # self.layoutGroupBoxWatershedIndicatorsParameters = QtGui.QVBoxLayout()
+        # self.layoutGroupBoxWatershedIndicatorsParameters.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        # self.groupBoxWatershedIndicatorsParameters.setLayout(self.layoutGroupBoxWatershedIndicatorsParameters)
+        # self.layoutWatershedIndicatorsParametersInfo = QtGui.QVBoxLayout()
+        # self.layoutWatershedIndicatorsParameters = QtGui.QGridLayout()
+        # self.layoutGroupBoxWatershedIndicatorsParameters.addLayout(self.layoutWatershedIndicatorsParametersInfo)
+        # self.layoutGroupBoxWatershedIndicatorsParameters.addLayout(self.layoutWatershedIndicatorsParameters)
         
-        self.labelWatershedIndicatorsParametersInfo = QtGui.QLabel()
-        self.labelWatershedIndicatorsParametersInfo.setText('Lorem ipsum dolor sit amet...\n')
-        self.layoutWatershedIndicatorsParametersInfo.addWidget(self.labelWatershedIndicatorsParametersInfo)
+        # self.labelWatershedIndicatorsParametersInfo = QtGui.QLabel()
+        # self.labelWatershedIndicatorsParametersInfo.setText('Lorem ipsum dolor sit amet...\n')
+        # self.layoutWatershedIndicatorsParametersInfo.addWidget(self.labelWatershedIndicatorsParametersInfo)
         
-        self.labelWatershedIndicatorsSWATTXTINOUTDir = QtGui.QLabel()
-        self.labelWatershedIndicatorsSWATTXTINOUTDir.setText('SWAT TXTINOUT directory:')
-        self.layoutWatershedIndicatorsParameters.addWidget(self.labelWatershedIndicatorsSWATTXTINOUTDir, 0, 0)
+        # self.labelWatershedIndicatorsSWATTXTINOUTDir = QtGui.QLabel()
+        # self.labelWatershedIndicatorsSWATTXTINOUTDir.setText('SWAT TXTINOUT directory:')
+        # self.layoutWatershedIndicatorsParameters.addWidget(self.labelWatershedIndicatorsSWATTXTINOUTDir, 0, 0)
         
-        self.lineEditWatershedIndicatorsSWATTXTINOUTDir = QtGui.QLineEdit()
-        self.lineEditWatershedIndicatorsSWATTXTINOUTDir.setReadOnly(True)
-        self.layoutWatershedIndicatorsParameters.addWidget(self.lineEditWatershedIndicatorsSWATTXTINOUTDir, 0, 1)
+        # self.lineEditWatershedIndicatorsSWATTXTINOUTDir = QtGui.QLineEdit()
+        # self.lineEditWatershedIndicatorsSWATTXTINOUTDir.setReadOnly(True)
+        # self.layoutWatershedIndicatorsParameters.addWidget(self.lineEditWatershedIndicatorsSWATTXTINOUTDir, 0, 1)
         
-        self.buttonSelectWatershedIndicatorsSWATTXTINOUTDir = QtGui.QPushButton()
-        self.buttonSelectWatershedIndicatorsSWATTXTINOUTDir.setText('&Browse')
-        self.layoutWatershedIndicatorsParameters.addWidget(self.buttonSelectWatershedIndicatorsSWATTXTINOUTDir, 0, 2)
+        # self.buttonSelectWatershedIndicatorsSWATTXTINOUTDir = QtGui.QPushButton()
+        # self.buttonSelectWatershedIndicatorsSWATTXTINOUTDir.setText('&Browse')
+        # self.layoutWatershedIndicatorsParameters.addWidget(self.buttonSelectWatershedIndicatorsSWATTXTINOUTDir, 0, 2)
         
-        self.labelWatershedIndicatorsDateInitial = QtGui.QLabel()
-        self.labelWatershedIndicatorsDateInitial.setText('Initial date:')
-        self.layoutWatershedIndicatorsParameters.addWidget(self.labelWatershedIndicatorsDateInitial, 1, 0)
+        # self.labelWatershedIndicatorsDateInitial = QtGui.QLabel()
+        # self.labelWatershedIndicatorsDateInitial.setText('Initial date:')
+        # self.layoutWatershedIndicatorsParameters.addWidget(self.labelWatershedIndicatorsDateInitial, 1, 0)
         
-        self.dateWatershedIndicatorsDateInitial = QtGui.QDateEdit(QtCore.QDate.currentDate())
-        self.dateWatershedIndicatorsDateInitial.setCalendarPopup(True)
-        self.dateWatershedIndicatorsDateInitial.setDisplayFormat('dd/MM/yyyy')
-        self.layoutWatershedIndicatorsParameters.addWidget(self.dateWatershedIndicatorsDateInitial, 1, 1)
+        # self.dateWatershedIndicatorsDateInitial = QtGui.QDateEdit(QtCore.QDate.currentDate())
+        # self.dateWatershedIndicatorsDateInitial.setCalendarPopup(True)
+        # self.dateWatershedIndicatorsDateInitial.setDisplayFormat('dd/MM/yyyy')
+        # self.layoutWatershedIndicatorsParameters.addWidget(self.dateWatershedIndicatorsDateInitial, 1, 1)
         
-        self.labelWatershedIndicatorsDateFinal = QtGui.QLabel()
-        self.labelWatershedIndicatorsDateFinal.setText('Final date:')
-        self.layoutWatershedIndicatorsParameters.addWidget(self.labelWatershedIndicatorsDateFinal, 2, 0)
+        # self.labelWatershedIndicatorsDateFinal = QtGui.QLabel()
+        # self.labelWatershedIndicatorsDateFinal.setText('Final date:')
+        # self.layoutWatershedIndicatorsParameters.addWidget(self.labelWatershedIndicatorsDateFinal, 2, 0)
         
-        self.dateWatershedIndicatorsDateFinal = QtGui.QDateEdit(QtCore.QDate.currentDate())
-        self.dateWatershedIndicatorsDateFinal.setCalendarPopup(True)
-        self.dateWatershedIndicatorsDateFinal.setDisplayFormat('dd/MM/yyyy')
-        self.layoutWatershedIndicatorsParameters.addWidget(self.dateWatershedIndicatorsDateFinal, 2, 1)
+        # self.dateWatershedIndicatorsDateFinal = QtGui.QDateEdit(QtCore.QDate.currentDate())
+        # self.dateWatershedIndicatorsDateFinal.setCalendarPopup(True)
+        # self.dateWatershedIndicatorsDateFinal.setDisplayFormat('dd/MM/yyyy')
+        # self.layoutWatershedIndicatorsParameters.addWidget(self.dateWatershedIndicatorsDateFinal, 2, 1)
         
-        self.labelWatershedIndicatorsSubWatershedPolygon = QtGui.QLabel()
-        self.labelWatershedIndicatorsSubWatershedPolygon.setText('Sub watershed polygon:')
-        self.layoutWatershedIndicatorsParameters.addWidget(self.labelWatershedIndicatorsSubWatershedPolygon, 3, 0)
+        # self.labelWatershedIndicatorsSubWatershedPolygon = QtGui.QLabel()
+        # self.labelWatershedIndicatorsSubWatershedPolygon.setText('Sub watershed polygon:')
+        # self.layoutWatershedIndicatorsParameters.addWidget(self.labelWatershedIndicatorsSubWatershedPolygon, 3, 0)
         
-        self.lineEditWatershedIndicatorsSubWatershedPolygon = QtGui.QLineEdit()
-        self.lineEditWatershedIndicatorsSubWatershedPolygon.setReadOnly(True)
-        self.layoutWatershedIndicatorsParameters.addWidget(self.lineEditWatershedIndicatorsSubWatershedPolygon, 3, 1)
+        # self.lineEditWatershedIndicatorsSubWatershedPolygon = QtGui.QLineEdit()
+        # self.lineEditWatershedIndicatorsSubWatershedPolygon.setReadOnly(True)
+        # self.layoutWatershedIndicatorsParameters.addWidget(self.lineEditWatershedIndicatorsSubWatershedPolygon, 3, 1)
         
-        self.buttonSelectWatershedIndicatorsSubWatershedPolygon = QtGui.QPushButton()
-        self.buttonSelectWatershedIndicatorsSubWatershedPolygon.setText('&Browse')
-        self.layoutWatershedIndicatorsParameters.addWidget(self.buttonSelectWatershedIndicatorsSubWatershedPolygon, 3, 2)
+        # self.buttonSelectWatershedIndicatorsSubWatershedPolygon = QtGui.QPushButton()
+        # self.buttonSelectWatershedIndicatorsSubWatershedPolygon.setText('&Browse')
+        # self.layoutWatershedIndicatorsParameters.addWidget(self.buttonSelectWatershedIndicatorsSubWatershedPolygon, 3, 2)
         
-        self.labelWatershedIndicatorsLocation = QtGui.QLabel()
-        self.labelWatershedIndicatorsLocation.setText('&Location:')
-        self.layoutWatershedIndicatorsParameters.addWidget(self.labelWatershedIndicatorsLocation, 4, 0)
+        # self.labelWatershedIndicatorsLocation = QtGui.QLabel()
+        # self.labelWatershedIndicatorsLocation.setText('&Location:')
+        # self.layoutWatershedIndicatorsParameters.addWidget(self.labelWatershedIndicatorsLocation, 4, 0)
         
-        self.lineEditWatershedIndicatorsLocation = QtGui.QLineEdit()
-        self.lineEditWatershedIndicatorsLocation.setText('location')
-        self.layoutWatershedIndicatorsParameters.addWidget(self.lineEditWatershedIndicatorsLocation, 4, 1)
-        self.labelWatershedIndicatorsLocation.setBuddy(self.lineEditWatershedIndicatorsLocation)
+        # self.lineEditWatershedIndicatorsLocation = QtGui.QLineEdit()
+        # self.lineEditWatershedIndicatorsLocation.setText('location')
+        # self.layoutWatershedIndicatorsParameters.addWidget(self.lineEditWatershedIndicatorsLocation, 4, 1)
+        # self.labelWatershedIndicatorsLocation.setBuddy(self.lineEditWatershedIndicatorsLocation)
         
-        self.labelWatershedIndicatorsSubWatershedOutput = QtGui.QLabel()
-        self.labelWatershedIndicatorsSubWatershedOutput.setText('&Sub watershed output:')
-        self.layoutWatershedIndicatorsParameters.addWidget(self.labelWatershedIndicatorsSubWatershedOutput, 5, 0)
+        # self.labelWatershedIndicatorsSubWatershedOutput = QtGui.QLabel()
+        # self.labelWatershedIndicatorsSubWatershedOutput.setText('&Sub watershed output:')
+        # self.layoutWatershedIndicatorsParameters.addWidget(self.labelWatershedIndicatorsSubWatershedOutput, 5, 0)
         
-        self.spinBoxWatershedIndicatorsSubWatershedOutput = QtGui.QSpinBox()
-        self.spinBoxWatershedIndicatorsSubWatershedOutput.setRange(1, 99999)
-        self.spinBoxWatershedIndicatorsSubWatershedOutput.setValue(10)
-        self.layoutWatershedIndicatorsParameters.addWidget(self.spinBoxWatershedIndicatorsSubWatershedOutput, 5, 1)
-        self.labelWatershedIndicatorsSubWatershedOutput.setBuddy(self.spinBoxWatershedIndicatorsSubWatershedOutput)
+        # self.spinBoxWatershedIndicatorsSubWatershedOutput = QtGui.QSpinBox()
+        # self.spinBoxWatershedIndicatorsSubWatershedOutput.setRange(1, 99999)
+        # self.spinBoxWatershedIndicatorsSubWatershedOutput.setValue(10)
+        # self.layoutWatershedIndicatorsParameters.addWidget(self.spinBoxWatershedIndicatorsSubWatershedOutput, 5, 1)
+        # self.labelWatershedIndicatorsSubWatershedOutput.setBuddy(self.spinBoxWatershedIndicatorsSubWatershedOutput)
         
-        # 'Output' GroupBox
-        self.groupBoxWatershedIndicatorsOutput = QtGui.QGroupBox('Output')
-        self.layoutGroupBoxWatershedIndicatorsOutput = QtGui.QVBoxLayout()
-        self.layoutGroupBoxWatershedIndicatorsOutput.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
-        self.groupBoxWatershedIndicatorsOutput.setLayout(self.layoutGroupBoxWatershedIndicatorsOutput)
-        self.layoutWatershedIndicatorsOutputInfo = QtGui.QVBoxLayout()
-        self.layoutWatershedIndicatorsOutput = QtGui.QGridLayout()
-        self.layoutGroupBoxWatershedIndicatorsOutput.addLayout(self.layoutWatershedIndicatorsOutputInfo)
-        self.layoutGroupBoxWatershedIndicatorsOutput.addLayout(self.layoutWatershedIndicatorsOutput)
+        # # 'Output' GroupBox
+        # self.groupBoxWatershedIndicatorsOutput = QtGui.QGroupBox('Output')
+        # self.layoutGroupBoxWatershedIndicatorsOutput = QtGui.QVBoxLayout()
+        # self.layoutGroupBoxWatershedIndicatorsOutput.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        # self.groupBoxWatershedIndicatorsOutput.setLayout(self.layoutGroupBoxWatershedIndicatorsOutput)
+        # self.layoutWatershedIndicatorsOutputInfo = QtGui.QVBoxLayout()
+        # self.layoutWatershedIndicatorsOutput = QtGui.QGridLayout()
+        # self.layoutGroupBoxWatershedIndicatorsOutput.addLayout(self.layoutWatershedIndicatorsOutputInfo)
+        # self.layoutGroupBoxWatershedIndicatorsOutput.addLayout(self.layoutWatershedIndicatorsOutput)
         
-        self.labelWatershedIndicatorsOutputInfo = QtGui.QLabel()
-        self.labelWatershedIndicatorsOutputInfo.setText('Lorem ipsum dolor sit amet...\n')
-        self.layoutWatershedIndicatorsOutputInfo.addWidget(self.labelWatershedIndicatorsOutputInfo)
+        # self.labelWatershedIndicatorsOutputInfo = QtGui.QLabel()
+        # self.labelWatershedIndicatorsOutputInfo.setText('Lorem ipsum dolor sit amet...\n')
+        # self.layoutWatershedIndicatorsOutputInfo.addWidget(self.labelWatershedIndicatorsOutputInfo)
         
-        self.labelWatershedIndicatorsOutputInitialYearSubWatershedLevelIndicators = QtGui.QLabel()
-        self.labelWatershedIndicatorsOutputInitialYearSubWatershedLevelIndicators.setText('[Output] Initial year sub watershed level indicators:')
-        self.layoutWatershedIndicatorsOutput.addWidget(self.labelWatershedIndicatorsOutputInitialYearSubWatershedLevelIndicators, 0, 0)
+        # self.labelWatershedIndicatorsOutputInitialYearSubWatershedLevelIndicators = QtGui.QLabel()
+        # self.labelWatershedIndicatorsOutputInitialYearSubWatershedLevelIndicators.setText('[Output] Initial year sub watershed level indicators:')
+        # self.layoutWatershedIndicatorsOutput.addWidget(self.labelWatershedIndicatorsOutputInitialYearSubWatershedLevelIndicators, 0, 0)
         
-        self.lineEditWatershedIndicatorsOutputInitialYearSubWatershedLevelIndicators = QtGui.QLineEdit()
-        self.lineEditWatershedIndicatorsOutputInitialYearSubWatershedLevelIndicators.setReadOnly(True)
-        self.layoutWatershedIndicatorsOutput.addWidget(self.lineEditWatershedIndicatorsOutputInitialYearSubWatershedLevelIndicators, 0, 1)
+        # self.lineEditWatershedIndicatorsOutputInitialYearSubWatershedLevelIndicators = QtGui.QLineEdit()
+        # self.lineEditWatershedIndicatorsOutputInitialYearSubWatershedLevelIndicators.setReadOnly(True)
+        # self.layoutWatershedIndicatorsOutput.addWidget(self.lineEditWatershedIndicatorsOutputInitialYearSubWatershedLevelIndicators, 0, 1)
         
-        self.buttonSelectWatershedIndicatorsOutputInitialYearSubWatershedLevelIndicators = QtGui.QPushButton()
-        self.buttonSelectWatershedIndicatorsOutputInitialYearSubWatershedLevelIndicators.setText('&Browse')
-        self.layoutWatershedIndicatorsOutput.addWidget(self.buttonSelectWatershedIndicatorsOutputInitialYearSubWatershedLevelIndicators, 0, 2)
+        # self.buttonSelectWatershedIndicatorsOutputInitialYearSubWatershedLevelIndicators = QtGui.QPushButton()
+        # self.buttonSelectWatershedIndicatorsOutputInitialYearSubWatershedLevelIndicators.setText('&Browse')
+        # self.layoutWatershedIndicatorsOutput.addWidget(self.buttonSelectWatershedIndicatorsOutputInitialYearSubWatershedLevelIndicators, 0, 2)
         
-        self.labelWatershedIndicatorsOutputFinalYearSubWatershedLevelIndicators = QtGui.QLabel()
-        self.labelWatershedIndicatorsOutputFinalYearSubWatershedLevelIndicators.setText('[Output] Final year sub watershed level indicators:')
-        self.layoutWatershedIndicatorsOutput.addWidget(self.labelWatershedIndicatorsOutputFinalYearSubWatershedLevelIndicators, 1, 0)
+        # self.labelWatershedIndicatorsOutputFinalYearSubWatershedLevelIndicators = QtGui.QLabel()
+        # self.labelWatershedIndicatorsOutputFinalYearSubWatershedLevelIndicators.setText('[Output] Final year sub watershed level indicators:')
+        # self.layoutWatershedIndicatorsOutput.addWidget(self.labelWatershedIndicatorsOutputFinalYearSubWatershedLevelIndicators, 1, 0)
         
-        self.lineEditWatershedIndicatorsOutputFinalYearSubWatershedLevelIndicators = QtGui.QLineEdit()
-        self.lineEditWatershedIndicatorsOutputFinalYearSubWatershedLevelIndicators.setReadOnly(True)
-        self.layoutWatershedIndicatorsOutput.addWidget(self.lineEditWatershedIndicatorsOutputFinalYearSubWatershedLevelIndicators, 1, 1)
+        # self.lineEditWatershedIndicatorsOutputFinalYearSubWatershedLevelIndicators = QtGui.QLineEdit()
+        # self.lineEditWatershedIndicatorsOutputFinalYearSubWatershedLevelIndicators.setReadOnly(True)
+        # self.layoutWatershedIndicatorsOutput.addWidget(self.lineEditWatershedIndicatorsOutputFinalYearSubWatershedLevelIndicators, 1, 1)
         
-        self.buttonSelectWatershedIndicatorsOutputFinalYearSubWatershedLevelIndicators = QtGui.QPushButton()
-        self.buttonSelectWatershedIndicatorsOutputFinalYearSubWatershedLevelIndicators.setText('&Browse')
-        self.layoutWatershedIndicatorsOutput.addWidget(self.buttonSelectWatershedIndicatorsOutputFinalYearSubWatershedLevelIndicators, 1, 2)
+        # self.buttonSelectWatershedIndicatorsOutputFinalYearSubWatershedLevelIndicators = QtGui.QPushButton()
+        # self.buttonSelectWatershedIndicatorsOutputFinalYearSubWatershedLevelIndicators.setText('&Browse')
+        # self.layoutWatershedIndicatorsOutput.addWidget(self.buttonSelectWatershedIndicatorsOutputFinalYearSubWatershedLevelIndicators, 1, 2)
         
-        # Process tab button
-        self.layoutButtonWatershedIndicators = QtGui.QHBoxLayout()
-        self.buttonProcessWatershedIndicators = QtGui.QPushButton()
-        self.buttonProcessWatershedIndicators.setText('&Process')
-        self.buttonHelpQUESHWatershedIndicators = QtGui.QPushButton()
-        self.buttonHelpQUESHWatershedIndicators.setIcon(icon)
-        self.layoutButtonWatershedIndicators.setAlignment(QtCore.Qt.AlignRight)
-        self.layoutButtonWatershedIndicators.addWidget(self.buttonProcessWatershedIndicators)
-        self.layoutButtonWatershedIndicators.addWidget(self.buttonHelpQUESHWatershedIndicators)
+        # # Process tab button
+        # self.layoutButtonWatershedIndicators = QtGui.QHBoxLayout()
+        # self.buttonProcessWatershedIndicators = QtGui.QPushButton()
+        # self.buttonProcessWatershedIndicators.setText('&Process')
+        # self.buttonHelpQUESHWatershedIndicators = QtGui.QPushButton()
+        # self.buttonHelpQUESHWatershedIndicators.setIcon(icon)
+        # self.layoutButtonWatershedIndicators.setAlignment(QtCore.Qt.AlignRight)
+        # self.layoutButtonWatershedIndicators.addWidget(self.buttonProcessWatershedIndicators)
+        # self.layoutButtonWatershedIndicators.addWidget(self.buttonHelpQUESHWatershedIndicators)
         
-        # Template GroupBox
-        self.groupBoxWatershedIndicatorsTemplate = QtGui.QGroupBox('Template')
-        self.layoutGroupBoxWatershedIndicatorsTemplate = QtGui.QVBoxLayout()
-        self.layoutGroupBoxWatershedIndicatorsTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
-        self.groupBoxWatershedIndicatorsTemplate.setLayout(self.layoutGroupBoxWatershedIndicatorsTemplate)
-        self.layoutWatershedIndicatorsTemplateInfo = QtGui.QVBoxLayout()
-        self.layoutWatershedIndicatorsTemplate = QtGui.QGridLayout()
-        self.layoutGroupBoxWatershedIndicatorsTemplate.addLayout(self.layoutWatershedIndicatorsTemplateInfo)
-        self.layoutGroupBoxWatershedIndicatorsTemplate.addLayout(self.layoutWatershedIndicatorsTemplate)
+        # # Template GroupBox
+        # self.groupBoxWatershedIndicatorsTemplate = QtGui.QGroupBox('Template')
+        # self.layoutGroupBoxWatershedIndicatorsTemplate = QtGui.QVBoxLayout()
+        # self.layoutGroupBoxWatershedIndicatorsTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        # self.groupBoxWatershedIndicatorsTemplate.setLayout(self.layoutGroupBoxWatershedIndicatorsTemplate)
+        # self.layoutWatershedIndicatorsTemplateInfo = QtGui.QVBoxLayout()
+        # self.layoutWatershedIndicatorsTemplate = QtGui.QGridLayout()
+        # self.layoutGroupBoxWatershedIndicatorsTemplate.addLayout(self.layoutWatershedIndicatorsTemplateInfo)
+        # self.layoutGroupBoxWatershedIndicatorsTemplate.addLayout(self.layoutWatershedIndicatorsTemplate)
         
-        self.labelLoadedWatershedIndicatorsTemplate = QtGui.QLabel()
-        self.labelLoadedWatershedIndicatorsTemplate.setText('Loaded template:')
-        self.layoutWatershedIndicatorsTemplate.addWidget(self.labelLoadedWatershedIndicatorsTemplate, 0, 0)
+        # self.labelLoadedWatershedIndicatorsTemplate = QtGui.QLabel()
+        # self.labelLoadedWatershedIndicatorsTemplate.setText('Loaded template:')
+        # self.layoutWatershedIndicatorsTemplate.addWidget(self.labelLoadedWatershedIndicatorsTemplate, 0, 0)
         
-        self.loadedWatershedIndicatorsTemplate = QtGui.QLabel()
-        self.loadedWatershedIndicatorsTemplate.setText('<None>')
-        self.layoutWatershedIndicatorsTemplate.addWidget(self.loadedWatershedIndicatorsTemplate, 0, 1)
+        # self.loadedWatershedIndicatorsTemplate = QtGui.QLabel()
+        # self.loadedWatershedIndicatorsTemplate.setText('<None>')
+        # self.layoutWatershedIndicatorsTemplate.addWidget(self.loadedWatershedIndicatorsTemplate, 0, 1)
         
-        self.labelWatershedIndicatorsTemplate = QtGui.QLabel()
-        self.labelWatershedIndicatorsTemplate.setText('Template name:')
-        self.layoutWatershedIndicatorsTemplate.addWidget(self.labelWatershedIndicatorsTemplate, 1, 0)
+        # self.labelWatershedIndicatorsTemplate = QtGui.QLabel()
+        # self.labelWatershedIndicatorsTemplate.setText('Template name:')
+        # self.layoutWatershedIndicatorsTemplate.addWidget(self.labelWatershedIndicatorsTemplate, 1, 0)
         
-        self.comboBoxWatershedIndicatorsTemplate = QtGui.QComboBox()
-        self.comboBoxWatershedIndicatorsTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
-        self.comboBoxWatershedIndicatorsTemplate.setDisabled(True)
-        self.comboBoxWatershedIndicatorsTemplate.addItem('No template found')
-        self.layoutWatershedIndicatorsTemplate.addWidget(self.comboBoxWatershedIndicatorsTemplate, 1, 1)
+        # self.comboBoxWatershedIndicatorsTemplate = QtGui.QComboBox()
+        # self.comboBoxWatershedIndicatorsTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
+        # self.comboBoxWatershedIndicatorsTemplate.setDisabled(True)
+        # self.comboBoxWatershedIndicatorsTemplate.addItem('No template found')
+        # self.layoutWatershedIndicatorsTemplate.addWidget(self.comboBoxWatershedIndicatorsTemplate, 1, 1)
         
-        self.layoutButtonWatershedIndicatorsTemplate = QtGui.QHBoxLayout()
-        self.layoutButtonWatershedIndicatorsTemplate.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTop)
-        self.buttonLoadWatershedIndicatorsTemplate = QtGui.QPushButton()
-        self.buttonLoadWatershedIndicatorsTemplate.setDisabled(True)
-        self.buttonLoadWatershedIndicatorsTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonLoadWatershedIndicatorsTemplate.setText('Load')
-        self.buttonSaveWatershedIndicatorsTemplate = QtGui.QPushButton()
-        self.buttonSaveWatershedIndicatorsTemplate.setDisabled(True)
-        self.buttonSaveWatershedIndicatorsTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveWatershedIndicatorsTemplate.setText('Save')
-        self.buttonSaveAsWatershedIndicatorsTemplate = QtGui.QPushButton()
-        self.buttonSaveAsWatershedIndicatorsTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
-        self.buttonSaveAsWatershedIndicatorsTemplate.setText('Save As')
-        self.layoutButtonWatershedIndicatorsTemplate.addWidget(self.buttonLoadWatershedIndicatorsTemplate)
-        self.layoutButtonWatershedIndicatorsTemplate.addWidget(self.buttonSaveWatershedIndicatorsTemplate)
-        self.layoutButtonWatershedIndicatorsTemplate.addWidget(self.buttonSaveAsWatershedIndicatorsTemplate)
-        self.layoutGroupBoxWatershedIndicatorsTemplate.addLayout(self.layoutButtonWatershedIndicatorsTemplate)
+        # self.layoutButtonWatershedIndicatorsTemplate = QtGui.QHBoxLayout()
+        # self.layoutButtonWatershedIndicatorsTemplate.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTop)
+        # self.buttonLoadWatershedIndicatorsTemplate = QtGui.QPushButton()
+        # self.buttonLoadWatershedIndicatorsTemplate.setDisabled(True)
+        # self.buttonLoadWatershedIndicatorsTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        # self.buttonLoadWatershedIndicatorsTemplate.setText('Load')
+        # self.buttonSaveWatershedIndicatorsTemplate = QtGui.QPushButton()
+        # self.buttonSaveWatershedIndicatorsTemplate.setDisabled(True)
+        # self.buttonSaveWatershedIndicatorsTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        # self.buttonSaveWatershedIndicatorsTemplate.setText('Save')
+        # self.buttonSaveAsWatershedIndicatorsTemplate = QtGui.QPushButton()
+        # self.buttonSaveAsWatershedIndicatorsTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        # self.buttonSaveAsWatershedIndicatorsTemplate.setText('Save As')
+        # self.layoutButtonWatershedIndicatorsTemplate.addWidget(self.buttonLoadWatershedIndicatorsTemplate)
+        # self.layoutButtonWatershedIndicatorsTemplate.addWidget(self.buttonSaveWatershedIndicatorsTemplate)
+        # self.layoutButtonWatershedIndicatorsTemplate.addWidget(self.buttonSaveAsWatershedIndicatorsTemplate)
+        # self.layoutGroupBoxWatershedIndicatorsTemplate.addLayout(self.layoutButtonWatershedIndicatorsTemplate)
         
-        # Place the GroupBoxes
-        self.layoutTabWatershedIndicators.addWidget(self.groupBoxWatershedIndicatorsParameters, 0, 0)
-        self.layoutTabWatershedIndicators.addWidget(self.groupBoxWatershedIndicatorsOutput, 1, 0)
-        self.layoutTabWatershedIndicators.addLayout(self.layoutButtonWatershedIndicators, 2, 0, 1, 2, QtCore.Qt.AlignRight)
-        self.layoutTabWatershedIndicators.addWidget(self.groupBoxWatershedIndicatorsTemplate, 0, 1, 2, 1)
-        self.layoutTabWatershedIndicators.setColumnStretch(0, 3)
-        self.layoutTabWatershedIndicators.setColumnStretch(1, 1) # Smaller template column
+        # # Place the GroupBoxes
+        # self.layoutTabWatershedIndicators.addWidget(self.groupBoxWatershedIndicatorsParameters, 0, 0)
+        # self.layoutTabWatershedIndicators.addWidget(self.groupBoxWatershedIndicatorsOutput, 1, 0)
+        # self.layoutTabWatershedIndicators.addLayout(self.layoutButtonWatershedIndicators, 2, 0, 1, 2, QtCore.Qt.AlignRight)
+        # self.layoutTabWatershedIndicators.addWidget(self.groupBoxWatershedIndicatorsTemplate, 0, 1, 2, 1)
+        # self.layoutTabWatershedIndicators.setColumnStretch(0, 3)
+        # self.layoutTabWatershedIndicators.setColumnStretch(1, 1) # Smaller template column
         
         
         #***********************************************************
@@ -2124,16 +1849,16 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         # Setup 'Log' tab
         #***********************************************************
         # 'History Log' GroupBox
-        self.groupBoxHistoryLog = QtGui.QGroupBox('{0} {1}'.format(self.dialogTitle, 'history log'))
-        self.layoutGroupBoxHistoryLog = QtGui.QVBoxLayout()
-        self.layoutGroupBoxHistoryLog.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.groupBoxHistoryLog = QGroupBox('{0} {1}'.format(self.dialogTitle, 'history log'))
+        self.layoutGroupBoxHistoryLog = QVBoxLayout()
+        self.layoutGroupBoxHistoryLog.setAlignment(Qt.AlignLeft|Qt.AlignTop)
         self.groupBoxHistoryLog.setLayout(self.layoutGroupBoxHistoryLog)
-        self.layoutHistoryLogInfo = QtGui.QVBoxLayout()
-        self.layoutHistoryLog = QtGui.QVBoxLayout()
+        self.layoutHistoryLogInfo = QVBoxLayout()
+        self.layoutHistoryLog = QVBoxLayout()
         self.layoutGroupBoxHistoryLog.addLayout(self.layoutHistoryLogInfo)
         self.layoutGroupBoxHistoryLog.addLayout(self.layoutHistoryLog)
         
-        self.labelHistoryLogInfo = QtGui.QLabel()
+        self.labelHistoryLogInfo = QLabel()
         self.labelHistoryLogInfo.setText('Lorem ipsum dolor sit amet...\n')
         self.layoutHistoryLogInfo.addWidget(self.labelHistoryLogInfo)
         
@@ -2182,11 +1907,11 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             index (int): the current tab index.
         """
         if self.tabWidget.widget(index) == self.tabLog:
-            self.log_box.widget.verticalScrollBar().triggerAction(QtGui.QAbstractSlider.SliderToMaximum)
+            self.log_box.widget.verticalScrollBar().triggerAction(QAbstractSlider.SliderToMaximum)
     
     
     def populateQUESCDatabase(self):
-        layoutCheckBoxQUESCDatabase = QtGui.QVBoxLayout()
+        layoutCheckBoxQUESCDatabase = QVBoxLayout()
         self.checkBoxQUESCDatabaseCount = 0
         if len(self.main.dataTable):
             dataTable = self.main.dataTable
@@ -2197,13 +1922,13 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                     dataQUESCDatabase.append(dataTableName)
             for name in dataQUESCDatabase:
                 self.checkBoxQUESCDatabaseCount = self.checkBoxQUESCDatabaseCount + 1
-                checkBoxSummarizeMultiplePeriodQUESCDatabase = QtGui.QCheckBox()
+                checkBoxSummarizeMultiplePeriodQUESCDatabase = QCheckBox()
                 checkBoxSummarizeMultiplePeriodQUESCDatabase.setObjectName('checkBoxSummarizeMultiplePeriodQUESCDatabase_{0}'.format(str(self.checkBoxQUESCDatabaseCount)))
                 checkBoxSummarizeMultiplePeriodQUESCDatabase.setText(name)
                 layoutCheckBoxQUESCDatabase.addWidget(checkBoxSummarizeMultiplePeriodQUESCDatabase)
                 checkBoxSummarizeMultiplePeriodQUESCDatabase.toggled.connect(self.toggleSummarizeMultiplePeriodQUESCDatabase)
         else:
-            labelQUESCDatabaseSummarizeMultiplePeriod = QtGui.QLabel()
+            labelQUESCDatabaseSummarizeMultiplePeriod = QLabel()
             labelQUESCDatabaseSummarizeMultiplePeriod.setText(MenuFactory.getLabel(MenuFactory.MSG_SCIENDO_NO_QUESC_DB))
             layoutCheckBoxQUESCDatabase.addWidget(labelQUESCDatabaseSummarizeMultiplePeriod)
 
@@ -2261,7 +1986,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         objectName = checkBoxSender.objectName()
         checkBoxIndex = objectName.split('_')[1]
 
-        checkBoxQUESCDatabase = self.contentOptionsSummarizeMultiplePeriod.findChild(QtGui.QCheckBox, 'checkBoxSummarizeMultiplePeriodQUESCDatabase_' + checkBoxIndex)
+        checkBoxQUESCDatabase = self.contentOptionsSummarizeMultiplePeriod.findChild(QCheckBox, 'checkBoxSummarizeMultiplePeriodQUESCDatabase_' + checkBoxIndex)
         checkBoxName = checkBoxQUESCDatabase.text()
 
         if checked:
@@ -2553,7 +2278,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                     lookupTable = []
 
                     for row in reader:
-                        dataRow = [QtGui.QTableWidgetItem(field) for field in row]
+                        dataRow = [QTableWidgetItem(field) for field in row]
                         lookupTable.append(dataRow)
                         
                     self.tablePeat.setRowCount(len(lookupTable))
@@ -2562,18 +2287,18 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                     for dataRow in lookupTable:
                         tableColumn = 0
                         for fieldTableItem in dataRow:
-                            fieldTableItem.setFlags(fieldTableItem.flags() & ~QtCore.Qt.ItemIsEnabled)
+                            fieldTableItem.setFlags(fieldTableItem.flags() & ~Qt.ItemIsEnabled)
                             self.tablePeat.setItem(tableRow, tableColumn, fieldTableItem)
-                            self.tablePeat.horizontalHeader().setResizeMode(tableColumn, QtGui.QHeaderView.ResizeToContents)
+                            self.tablePeat.horizontalHeader().setResizeMode(tableColumn, QHeaderView.ResizeToContents)
                             tableColumn += 1
                             
                         # Additional columns ('Enabled')
-                        fieldEnabled = QtGui.QTableWidgetItem('Select')
-                        fieldEnabled.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
-                        fieldEnabled.setCheckState(QtCore.Qt.Unchecked)
+                        fieldEnabled = QTableWidgetItem('Select')
+                        fieldEnabled.setFlags(Qt.ItemIsUserCheckable|Qt.ItemIsEnabled)
+                        fieldEnabled.setCheckState(Qt.Unchecked)
                         columnEnabled = tableColumn
                         self.tablePeat.setItem(tableRow, tableColumn, fieldEnabled)
-                        self.tablePeat.horizontalHeader().setResizeMode(columnEnabled, QtGui.QHeaderView.ResizeToContents)                            
+                        self.tablePeat.horizontalHeader().setResizeMode(columnEnabled, QHeaderView.ResizeToContents)                            
                             
                         tableRow += 1
 
@@ -2611,7 +2336,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                     tableHabitat = []
     
                     for row in reader:
-                        dataRow = [QtGui.QTableWidgetItem(field) for field in row]
+                        dataRow = [QTableWidgetItem(field) for field in row]
                         tableHabitat.append(dataRow)
                         
                     self.tableHabitat.setRowCount(len(tableHabitat))
@@ -2622,18 +2347,18 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                     for dataRow in tableHabitat:
                         tableColumn = 0
                         for fieldTableItem in dataRow:
-                            fieldTableItem.setFlags(fieldTableItem.flags() & ~QtCore.Qt.ItemIsEnabled)
+                            fieldTableItem.setFlags(fieldTableItem.flags() & ~Qt.ItemIsEnabled)
                             self.tableHabitat.setItem(tableRow, tableColumn, fieldTableItem)
-                            self.tableHabitat.horizontalHeader().setResizeMode(tableColumn, QtGui.QHeaderView.ResizeToContents)
+                            self.tableHabitat.horizontalHeader().setResizeMode(tableColumn, QHeaderView.ResizeToContents)
                             tableColumn += 1
                             
                         # Additional columns ('Enabled')
-                        fieldEnabled = QtGui.QTableWidgetItem('Select')
-                        fieldEnabled.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
-                        fieldEnabled.setCheckState(QtCore.Qt.Unchecked)
+                        fieldEnabled = QTableWidgetItem('Select')
+                        fieldEnabled.setFlags(QtCore.Qt.ItemIsUserCheckable|Qt.ItemIsEnabled)
+                        fieldEnabled.setCheckState(Qt.Unchecked)
                         columnEnabled = tableColumn
                         self.tableHabitat.setItem(tableRow, tableColumn, fieldEnabled)
-                        self.tableHabitat.horizontalHeader().setResizeMode(columnEnabled, QtGui.QHeaderView.ResizeToContents)
+                        self.tableHabitat.horizontalHeader().setResizeMode(columnEnabled, QHeaderView.ResizeToContents)
                         
                         tableRow += 1
                     
@@ -2719,7 +2444,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
     def handlerSelectHRULandUseMap(self):
         """Slot method for a file select dialog.
         """
-        file = unicode(QtGui.QFileDialog.getOpenFileName(
+        file = str(QtGui.QFileDialog.getOpenFileName(
             self, 'Select Land Use Map', QtCore.QDir.homePath(), 'Land Use Map (*{0})'.format(self.main.appSettings['selectRasterfileExt'])))
         
         if file:
@@ -2730,7 +2455,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
     def handlerSelectHRUSoilMap(self):
         """Slot method for a file select dialog.
         """
-        file = unicode(QtGui.QFileDialog.getOpenFileName(
+        file = str(QtGui.QFileDialog.getOpenFileName(
             self, 'Select Soil Map', QtCore.QDir.homePath(), 'Soil Map (*{0})'.format(self.main.appSettings['selectRasterfileExt'])))
         
         if file:
@@ -2741,7 +2466,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
     def handlerSelectHRUSlopeMap(self):
         """Slot method for a file select dialog.
         """
-        file = unicode(QtGui.QFileDialog.getOpenFileName(
+        file = str(QtGui.QFileDialog.getOpenFileName(
             self, 'Select Slope Map', QtCore.QDir.homePath(), 'Slope Map (*{0})'.format(self.main.appSettings['selectRasterfileExt'])))
         
         if file:
@@ -2752,7 +2477,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
     def handlerSelectHRUSubcatchmentMap(self):
         """Slot method for a file select dialog.
         """
-        file = unicode(QtGui.QFileDialog.getOpenFileName(
+        file = str(QtGui.QFileDialog.getOpenFileName(
             self, 'Select Subcatchment Map', QtCore.QDir.homePath(), 'Subcatchment Map (*{0})'.format(self.main.appSettings['selectRasterfileExt'])))
         
         if file:
@@ -2763,7 +2488,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
     def handlerSelectHRULandUseClassification(self):
         """Slot method for a file select dialog.
         """
-        file = unicode(QtGui.QFileDialog.getOpenFileName(
+        file = str(QtGui.QFileDialog.getOpenFileName(
             self, 'Select Land Use Classification', QtCore.QDir.homePath(), 'Land Use Classification (*{0})'.format(self.main.appSettings['selectCsvfileExt'])))
         
         if file:
@@ -2774,7 +2499,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
     def handlerSelectHRUSoilClassification(self):
         """Slot method for a file select dialog.
         """
-        file = unicode(QtGui.QFileDialog.getOpenFileName(
+        file = str(QtGui.QFileDialog.getOpenFileName(
             self, 'Select Soil Classification', QtCore.QDir.homePath(), 'Soil Classification (*{0})'.format(self.main.appSettings['selectCsvfileExt'])))
         
         if file:
@@ -2785,7 +2510,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
     def handlerSelectHRUSlopeClassification(self):
         """Slot method for a file select dialog.
         """
-        file = unicode(QtGui.QFileDialog.getOpenFileName(
+        file = str(QtGui.QFileDialog.getOpenFileName(
             self, 'Select Slope Classification', QtCore.QDir.homePath(), 'Slope Classification (*{0})'.format(self.main.appSettings['selectCsvfileExt'])))
         
         if file:
@@ -2872,7 +2597,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
     def handlerSelectWatershedModelEvaluationObservedDebitFile(self):
         """Slot method for a file select dialog.
         """
-        file = unicode(QtGui.QFileDialog.getOpenFileName(
+        file = str(QtGui.QFileDialog.getOpenFileName(
             self, 'Select Observed Debit File', QtCore.QDir.homePath(), 'Observed Debit File (*{0})'.format(self.main.appSettings['selectDatabasefileExt'])))
         
         if file:
@@ -2883,7 +2608,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
     def handlerSelectOutputWatershedModelEvaluation(self):
         """Slot method for a file select dialog.
         """
-        outputfile = unicode(QtGui.QFileDialog.getSaveFileName(
+        outputfile = str(QtGui.QFileDialog.getSaveFileName(
             self, 'Create/Select Watershed Model Evaluation Output', QtCore.QDir.homePath(), 'Watershed Model Evaluation (*{0})'.format(self.main.appSettings['selectDatabasefileExt'])))
         
         if outputfile:
@@ -2970,7 +2695,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
     def handlerSelectWatershedIndicatorsSWATTXTINOUTDir(self):
         """Slot method for a directory select dialog.
         """
-        dir = unicode(QtGui.QFileDialog.getExistingDirectory(self, 'Select SWAT TXTINOUT Directory'))
+        dir = str(QtGui.QFileDialog.getExistingDirectory(self, 'Select SWAT TXTINOUT Directory'))
         
         if dir:
             self.lineEditWatershedIndicatorsSWATTXTINOUTDir.setText(dir)
@@ -2980,7 +2705,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
     def handlerSelectWatershedIndicatorsSubWatershedPolygon(self):
         """Slot method for a file select dialog.
         """
-        file = unicode(QtGui.QFileDialog.getOpenFileName(
+        file = str(QtGui.QFileDialog.getOpenFileName(
             self, 'Select Sub Watershed Polygon', QtCore.QDir.homePath(), 'Sub Watershed Polygon (*{0})'.format(self.main.appSettings['selectShapefileExt'])))
         
         if file:
@@ -2991,7 +2716,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
     def handlerSelectWatershedIndicatorsOutputInitialYearSubWatershedLevelIndicators(self):
         """Slot method for a file select dialog.
         """
-        outputfile = unicode(QtGui.QFileDialog.getSaveFileName(
+        outputfile = str(QtGui.QFileDialog.getSaveFileName(
             self, 'Create/Select Initial Year Sub Watershed Level Indicators Output', QtCore.QDir.homePath(), 'Initial Year Sub Watershed Level Indicators (*{0})'.format(self.main.appSettings['selectDatabasefileExt'])))
         
         if outputfile:
@@ -3002,7 +2727,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
     def handlerSelectWatershedIndicatorsOutputFinalYearSubWatershedLevelIndicators(self):
         """Slot method for a file select dialog.
         """
-        outputfile = unicode(QtGui.QFileDialog.getSaveFileName(
+        outputfile = str(QtGui.QFileDialog.getSaveFileName(
             self, 'Create/Select Final Year Sub Watershed Level Indicators Output', QtCore.QDir.homePath(), 'Final Year Sub Watershed Level Indicators (*{0})'.format(self.main.appSettings['selectDatabasefileExt'])))
         
         if outputfile:
@@ -3018,14 +2743,14 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         """
         # 'Pre-QUES' tab fields
         self.main.appSettings['DialogLumensPreQUESLandcoverTrajectoriesAnalysis']['landUse1'] \
-            = unicode(self.comboBoxPreQUESLandCoverLandUse1.currentText())
+            = str(self.comboBoxPreQUESLandCoverLandUse1.currentText())
         self.main.appSettings['DialogLumensPreQUESLandcoverTrajectoriesAnalysis']['landUse2'] \
-            = unicode(self.comboBoxPreQUESLandCoverLandUse2.currentText())
+            = str(self.comboBoxPreQUESLandCoverLandUse2.currentText())
         self.main.appSettings['DialogLumensPreQUESLandcoverTrajectoriesAnalysis']['landUseTable'] \
-            = unicode(self.comboBoxPreQUESLandCoverTable.currentText())
+            = str(self.comboBoxPreQUESLandCoverTable.currentText())
         self.main.appSettings['DialogLumensPreQUESLandcoverTrajectoriesAnalysis']['planningUnit'] \
-            = unicode(self.comboBoxPreQUESLandCoverPlanningUnit.currentText())
-        analysisOption = unicode(self.comboBoxLandCoverAnalysisOption.currentText())
+            = str(self.comboBoxPreQUESLandCoverPlanningUnit.currentText())
+        analysisOption = str(self.comboBoxLandCoverAnalysisOption.currentText())
         if analysisOption == MenuFactory.getLabel(MenuFactory.PREQUES_ANALYSIS_OPTION_ONE):
             analysisOption = 0
         elif analysisOption == MenuFactory.getLabel(MenuFactory.PREQUES_ANALYSIS_OPTION_TWO):
@@ -3043,16 +2768,16 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         # 'QUES-C' Peatland Carbon Accounting groupbox fields
         self.main.appSettings['DialogLumensQUESCCarbonAccounting']['landUse1'] \
             = self.main.appSettings['DialogLumensQUESCPeatlandCarbonAccounting']['landUse1'] \
-            = unicode(self.comboBoxCALandCoverLandUse1.currentText())
+            = str(self.comboBoxCALandCoverLandUse1.currentText())
         self.main.appSettings['DialogLumensQUESCCarbonAccounting']['landUse2'] \
             = self.main.appSettings['DialogLumensQUESCPeatlandCarbonAccounting']['landUse2'] \
-            = unicode(self.comboBoxCALandCoverLandUse2.currentText())
+            = str(self.comboBoxCALandCoverLandUse2.currentText())
         self.main.appSettings['DialogLumensQUESCCarbonAccounting']['carbonTable'] \
             = self.main.appSettings['DialogLumensQUESCPeatlandCarbonAccounting']['carbonTable'] \
-            = unicode(self.comboBoxCACarbonTable.currentText())
+            = str(self.comboBoxCACarbonTable.currentText())
         self.main.appSettings['DialogLumensQUESCCarbonAccounting']['planningUnit'] \
             = self.main.appSettings['DialogLumensQUESCPeatlandCarbonAccounting']['planningUnit'] \
-            = unicode(self.comboBoxCALandCoverPlanningUnit.currentText())
+            = str(self.comboBoxCALandCoverPlanningUnit.currentText())
         self.main.appSettings['DialogLumensQUESCCarbonAccounting']['nodata'] \
             = self.main.appSettings['DialogLumensQUESCPeatlandCarbonAccounting']['nodata'] \
             = self.spinBoxCANoDataValue.value()
@@ -3070,20 +2795,20 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         
         # 'QUES-B' tab fields
         self.main.appSettings['DialogLumensQUESBAnalysis']['landUse1'] \
-            = unicode(self.comboBoxQUESBLandCoverLandUse1.currentText())
+            = str(self.comboBoxQUESBLandCoverLandUse1.currentText())
         self.main.appSettings['DialogLumensQUESBAnalysis']['landUse2'] \
-            = unicode(self.comboBoxQUESBLandCoverLandUse2.currentText())
+            = str(self.comboBoxQUESBLandCoverLandUse2.currentText())
         self.main.appSettings['DialogLumensQUESBAnalysis']['landUse3'] \
-            = unicode(self.comboBoxQUESBLandCoverLandUse3.currentText())
+            = str(self.comboBoxQUESBLandCoverLandUse3.currentText())
         self.main.appSettings['DialogLumensQUESBAnalysis']['planningUnit'] \
-            = unicode(self.comboBoxQUESBPlanningUnit.currentText())
+            = str(self.comboBoxQUESBPlanningUnit.currentText())
         self.main.appSettings['DialogLumensQUESBAnalysis']['nodata'] \
             = self.spinBoxQUESBNodata.value()
         self.main.appSettings['DialogLumensQUESBAnalysis']['edgeContrast'] \
-            = unicode(self.comboBoxQUESBEdgeContrast.currentText())
+            = str(self.comboBoxQUESBEdgeContrast.currentText())
         # self.main.appSettings['DialogLumensQUESBAnalysis']['habitatLookup'] \
-        #     = unicode(self.comboBoxQUESBHabitat.currentText())            
-        WindowShapeOptions = unicode(self.comboBoxQUESBWindowShapeOptions.currentText())
+        #     = str(self.comboBoxQUESBHabitat.currentText())            
+        WindowShapeOptions = str(self.comboBoxQUESBWindowShapeOptions.currentText())
         if WindowShapeOptions == 'Square':
             WindowShapeOptions = 0
         else:
@@ -3092,7 +2817,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             = WindowShapeOptions
         self.main.appSettings['DialogLumensQUESBAnalysis']['samplingWindowSize'] \
             = self.spinBoxQUESBSamplingWindowSize.value()     
-        adjacentOnlyOptions = unicode(self.comboBoxQUESBAdjacentOnly.currentText())
+        adjacentOnlyOptions = str(self.comboBoxQUESBAdjacentOnly.currentText())
         if adjacentOnlyOptions == 'False':
             adjacentOnlyOptions = 0
         else:
@@ -3106,35 +2831,35 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.main.appSettings['DialogLumensQUESHDominantHRU']['landUseMap'] \
             = self.main.appSettings['DialogLumensQUESHDominantLUSSL']['LandUseMap'] \
             = self.main.appSettings['DialogLumensQUESHMultipleHRU']['landUseMap'] \
-            = unicode(self.lineEditHRULandUseMap.text())
+            = str(self.lineEditHRULandUseMap.text())
         self.main.appSettings['DialogLumensQUESHDominantHRU']['soilMap'] \
             = self.main.appSettings['DialogLumensQUESHDominantLUSSL']['soilMap'] \
             = self.main.appSettings['DialogLumensQUESHMultipleHRU']['soilMap'] \
-            = unicode(self.lineEditHRUSoilMap.text())
+            = str(self.lineEditHRUSoilMap.text())
         self.main.appSettings['DialogLumensQUESHDominantHRU']['slopeMap'] \
             = self.main.appSettings['DialogLumensQUESHDominantLUSSL']['slopeMap'] \
             = self.main.appSettings['DialogLumensQUESHMultipleHRU']['slopeMap'] \
-            = unicode(self.lineEditHRUSlopeMap.text())
+            = str(self.lineEditHRUSlopeMap.text())
         self.main.appSettings['DialogLumensQUESHDominantHRU']['subcatchmentMap'] \
             = self.main.appSettings['DialogLumensQUESHDominantLUSSL']['subcatchmentMap'] \
             = self.main.appSettings['DialogLumensQUESHMultipleHRU']['subcatchmentMap'] \
-            = unicode(self.lineEditHRUSubcatchmentMap.text())
+            = str(self.lineEditHRUSubcatchmentMap.text())
         self.main.appSettings['DialogLumensQUESHDominantHRU']['landUseClassification'] \
             = self.main.appSettings['DialogLumensQUESHDominantLUSSL']['landUseClassification'] \
             = self.main.appSettings['DialogLumensQUESHMultipleHRU']['landUseClassification'] \
-            = unicode(self.lineEditHRULandUseClassification.text())
+            = str(self.lineEditHRULandUseClassification.text())
         self.main.appSettings['DialogLumensQUESHDominantHRU']['soilClassification'] \
             = self.main.appSettings['DialogLumensQUESHDominantLUSSL']['soilClassification'] \
             = self.main.appSettings['DialogLumensQUESHMultipleHRU']['soilClassification'] \
-            = unicode(self.lineEditHRUSoilClassification.text())
+            = str(self.lineEditHRUSoilClassification.text())
         self.main.appSettings['DialogLumensQUESHDominantHRU']['slopeClassification'] \
             = self.main.appSettings['DialogLumensQUESHDominantLUSSL']['slopeClassification'] \
             = self.main.appSettings['DialogLumensQUESHMultipleHRU']['slopeClassification'] \
-            = unicode(self.lineEditHRUSlopeClassification.text())
+            = str(self.lineEditHRUSlopeClassification.text())
         self.main.appSettings['DialogLumensQUESHDominantHRU']['areaName'] \
             = self.main.appSettings['DialogLumensQUESHDominantLUSSL']['areaName'] \
             = self.main.appSettings['DialogLumensQUESHMultipleHRU']['areaName'] \
-            = unicode(self.lineEditHRUAreaName.text())
+            = str(self.lineEditHRUAreaName.text())
         self.main.appSettings['DialogLumensQUESHDominantHRU']['period'] \
             = self.main.appSettings['DialogLumensQUESHDominantLUSSL']['period'] \
             = self.main.appSettings['DialogLumensQUESHMultipleHRU']['period'] \
@@ -3150,11 +2875,11 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.main.appSettings['DialogLumensQUESHWatershedModelEvaluation']['dateInitial'] = self.dateWatershedIndicatorsDateInitial.date().toString('dd/MM/yyyy')
         self.main.appSettings['DialogLumensQUESHWatershedModelEvaluation']['dateFinal'] = self.dateWatershedModelEvaluationDateFinal.date().toString('dd/MM/yyyy')
         self.main.appSettings['DialogLumensQUESHWatershedModelEvaluation']['SWATModel'] = self.comboBoxWatershedModelEvaluationSWATModel.itemData(self.comboBoxWatershedModelEvaluationSWATModel.currentIndex())
-        self.main.appSettings['DialogLumensQUESHWatershedModelEvaluation']['location'] = unicode(self.lineEditWatershedModelEvaluationLocation.text())
+        self.main.appSettings['DialogLumensQUESHWatershedModelEvaluation']['location'] = str(self.lineEditWatershedModelEvaluationLocation.text())
         self.main.appSettings['DialogLumensQUESHWatershedModelEvaluation']['outletReachSubBasinID'] = self.spinBoxWatershedModelEvaluationOutletReachSubBasinID.value()
-        self.main.appSettings['DialogLumensQUESHWatershedModelEvaluation']['observedDebitFile'] = unicode(self.lineEditWatershedModelEvaluationObservedDebitFile.text())
+        self.main.appSettings['DialogLumensQUESHWatershedModelEvaluation']['observedDebitFile'] = str(self.lineEditWatershedModelEvaluationObservedDebitFile.text())
         
-        outputWatershedModelEvaluation = unicode(self.lineEditOutputWatershedModelEvaluation.text())
+        outputWatershedModelEvaluation = str(self.lineEditOutputWatershedModelEvaluation.text())
         
         if not outputWatershedModelEvaluation:
             outputWatershedModelEvaluation = '__UNSET__'
@@ -3162,15 +2887,15 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
         self.main.appSettings['DialogLumensQUESHWatershedModelEvaluation']['outputWatershedModelEvaluation'] = outputWatershedModelEvaluation
         
         # 'QUES-H' Watershed Indicators sub tab fields
-        self.main.appSettings['DialogLumensQUESHWatershedIndicators']['SWATTXTINOUTDir'] = unicode(self.lineEditWatershedIndicatorsSWATTXTINOUTDir.text()).replace(os.path.sep, '/')
+        self.main.appSettings['DialogLumensQUESHWatershedIndicators']['SWATTXTINOUTDir'] = str(self.lineEditWatershedIndicatorsSWATTXTINOUTDir.text()).replace(os.path.sep, '/')
         self.main.appSettings['DialogLumensQUESHWatershedIndicators']['dateInitial'] = self.dateWatershedIndicatorsDateInitial.date().toString('dd/MM/yyyy')
         self.main.appSettings['DialogLumensQUESHWatershedIndicators']['dateFinal'] = self.dateWatershedIndicatorsDateFinal.date().toString('dd/MM/yyyy')
-        self.main.appSettings['DialogLumensQUESHWatershedIndicators']['subWatershedPolygon'] = unicode(self.lineEditWatershedIndicatorsSubWatershedPolygon.text())
-        self.main.appSettings['DialogLumensQUESHWatershedIndicators']['location'] = unicode(self.lineEditWatershedIndicatorsLocation.text())
+        self.main.appSettings['DialogLumensQUESHWatershedIndicators']['subWatershedPolygon'] = str(self.lineEditWatershedIndicatorsSubWatershedPolygon.text())
+        self.main.appSettings['DialogLumensQUESHWatershedIndicators']['location'] = str(self.lineEditWatershedIndicatorsLocation.text())
         self.main.appSettings['DialogLumensQUESHWatershedIndicators']['subWatershedOutput'] = self.spinBoxWatershedIndicatorsSubWatershedOutput.value()
         
-        outputInitialYearSubWatershedLevelIndicators = unicode(self.lineEditWatershedIndicatorsOutputInitialYearSubWatershedLevelIndicators.text())
-        outputFinalYearSubWatershedLevelIndicators = unicode(self.lineEditWatershedIndicatorsOutputFinalYearSubWatershedLevelIndicators.text())
+        outputInitialYearSubWatershedLevelIndicators = str(self.lineEditWatershedIndicatorsOutputInitialYearSubWatershedLevelIndicators.text())
+        outputFinalYearSubWatershedLevelIndicators = str(self.lineEditWatershedIndicatorsOutputFinalYearSubWatershedLevelIndicators.text())
         
         if not outputInitialYearSubWatershedLevelIndicators:
             outputInitialYearSubWatershedLevelIndicators = '__UNSET__'
@@ -3289,7 +3014,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                                 reader = csv.reader(f)
                                 next(reader)
                                 for path in reader:
-                                    print path[0]
+                                    print(path[0])
                                     self.main.addLayer(path[0])
 
                 self.buttonProcessQUESC.setEnabled(True)
@@ -3305,7 +3030,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             numOfRow = self.tablePeat.rowCount()
             numOfCol = self.tablePeat.columnCount()
             for i in range(numOfRow):
-                if self.tablePeat.item(i, numOfCol - 1).checkState() == QtCore.Qt.Checked:
+                if self.tablePeat.item(i, numOfCol - 1).checkState() == Qt.Checked:
                     checkedPeat.append(self.tablePeat.item(i, 0).text())
             
             if len(checkedPeat) > 0:
@@ -3469,7 +3194,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                                 reader = csv.reader(f)
                                 next(reader)
                                 for path in reader:
-                                    print path[0]
+                                    print(path[0])
                                     self.main.addLayer(path[0])
                 
                 self.buttonProcessQUESB.setEnabled(True)
@@ -3523,7 +3248,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                 ##print outputs
                 
                 # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
-                self.main.setWindowState(QtCore.Qt.WindowActive)
+                self.main.setWindowState(Qt.WindowActive)
                 
                 algSuccess = self.outputsMessageBox(algName, outputs, '', '')
 
@@ -3567,7 +3292,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                 ##print outputs
                 
                 # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
-                self.main.setWindowState(QtCore.Qt.WindowActive)
+                self.main.setWindowState(Qt.WindowActive)
                 
                 algSuccess = self.outputsMessageBox(algName, outputs, '', '')
 
@@ -3614,7 +3339,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
                 ##print outputs
                 
                 # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
-                self.main.setWindowState(QtCore.Qt.WindowActive)
+                self.main.setWindowState(Qt.WindowActive)
                 
                 algSuccess = self.outputsMessageBox(algName, outputs, '', '')
 
@@ -3669,7 +3394,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             ##print outputs
             
             # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
-            self.main.setWindowState(QtCore.Qt.WindowActive)
+            self.main.setWindowState(Qt.WindowActive)
             
             algSuccess = self.outputsMessageBox(algName, outputs, '', '')
 
@@ -3729,7 +3454,7 @@ class DialogLumensQUES(QtGui.QDialog, DialogLumensBase):
             ##print outputs
             
             # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
-            self.main.setWindowState(QtCore.Qt.WindowActive)
+            self.main.setWindowState(Qt.WindowActive)
             
             algSuccess = self.outputsMessageBox(algName, outputs, '', '')
 
