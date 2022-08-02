@@ -1,12 +1,14 @@
-set OSGEO4W_ROOT=C:\Program Files (x86)\LUMENS
+set OSGEO4W_ROOT=C:\Program Files\QGIS 3.16
 set GDAL_DATA=%OSGEO4W_ROOT%\share\epsg_csv
-set QGIS_PREFIX=%OSGEO4W_ROOT%\apps\qgis
-set RPATH=C:\Program Files\R\R-3.2.0
-set PATH=%OSGEO4W_ROOT%\bin;%QGIS_PREFIX%\bin;%RPATH%\bin;%PATH%
-set PYTHONHOME=%OSGEO4W_ROOT%\apps\Python27
-set PYTHONPATH=%QGIS_PREFIX%\python;%QGIS_PREFIX%\python\plugins;%OSGEO4W_ROOT%\apps\Python27;%PYTHONPATH%
-set RLIBS=C:\Users\ANugraha\Documents\R\win-library\3.2
-set RSCRIPTS=%QGIS_PREFIX%\python\plugins\processing\r\scripts
+set QGIS_PREFIX_PATH=%OSGEO4W_ROOT%\apps\qgis-ltr
+set RPATH=C:\Program Files\R\R-4.2.1
+set R_USE64=True
+set PATH=%OSGEO4W_ROOT%\bin;%QGIS_PREFIX_PATH%\bin;%OSGEO4W_ROOT%\apps\Qt5\bin;%RPATH%\bin;%PATH%
+set PYTHONHOME=%OSGEO4W_ROOT%\apps\Python37
+set PYTHONPATH=%QGIS_PREFIX_PATH%\python;%QGIS_PREFIX_PATH%\python\plugins;%OSGEO4W_ROOT%\apps\Python37;%PYTHONPATH%
+set RLIBS=C:\Users\anugraha\OneDrive - CGIAR\Documents\R\win-library\4.0
+set RSCRIPTS=D:\My_Development\Python\LUMENS\Software\lumens_scripts
+set QT_QPA_PLATFORM_PLUGIN_PATH=%OSGEO4W_ROOT%\apps\Qt5\plugins
 
-python mainwindow.py
+python new_mainwindow.py 
 PAUSE
