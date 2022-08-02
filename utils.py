@@ -2,7 +2,7 @@
 #-*- coding:utf-8 -*-
 
 import logging
-from PyQt4 import QtGui
+from PyQt5 import QtGui, QtWidgets
 
 
 def is_number(s):
@@ -25,7 +25,7 @@ class QPlainTextEditLogger(logging.Handler):
     def __init__(self, parent):
         super(QPlainTextEditLogger, self).__init__()
         
-        self.widget = QtGui.QPlainTextEdit(parent)
+        self.widget = QtWidgets.QPlainTextEdit(parent)
         self.widget.setReadOnly(True)
     
     
@@ -44,7 +44,7 @@ class QPlainTextEditLogger(logging.Handler):
 #############################################################################
 
 
-class DetailedMessageBox(QtGui.QMessageBox):
+class DetailedMessageBox(QtWidgets.QMessageBox):
     """A custom detail info message box where the show detail button is already clicked.
     """
     
