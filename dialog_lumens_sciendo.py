@@ -3,8 +3,10 @@
 
 import os, logging, datetime, glob, tempfile, csv
 from qgis.core import *
-from processing.tools import *
-from PyQt4 import QtCore, QtGui
+# from processing.tools import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 
 from utils import QPlainTextEditLogger
 from dialog_lumens_base import DialogLumensBase
@@ -13,7 +15,7 @@ import resource
 
 from menu_factory import MenuFactory
 
-class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
+class DialogLumensSCIENDO(QDialog): # DialogLumensBase
     """LUMENS "SCIENDO" module dialog class.
     """
     
@@ -69,7 +71,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
             returnTemplateSettings (bool): if true return a dict of the settings in the template file.
         """
         templateFilePath = os.path.join(self.settingsPath, fileName)
-        settings = QtCore.QSettings(templateFilePath, QtCore.QSettings.IniFormat)
+        settings = QSettings(templateFilePath, QSettings.IniFormat)
         settings.setFallbacksEnabled(True) # only use ini files
         
         templateSettings = {}
@@ -255,8 +257,8 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
             duplicateTemplate = templateFile
             templateSettings = self.loadTemplate(tabName, templateFile, True)
             
-            print 'DEBUG'
-            print templateFile, templateSettings
+            print('DEBUG')
+            print(templateFile, templateSettings)
             
             # Loop thru all dialogs in a tab
             for dialog in dialogsToLoad:
@@ -266,20 +268,20 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
                         # A setting doesn't match! This is not a matching template file, move along
                         duplicateTemplate = None
                     else:
-                        print 'DEBUG equal settings'
-                        print templateSettings[dialog][key], val
+                        print('DEBUG equal settings')
+                        print(templateSettings[dialog][key], val)
         
         # Found a duplicate template, offer to load it?
         if duplicateTemplate:
-            reply = QtGui.QMessageBox.question(
+            reply = QMessageBox.question(
                 self,
                 MenuFactory.getLabel(MenuFactory.CONF_LOAD_TEMPLATE),
                 MenuFactory.getDescription(MenuFactory.CONF_LOAD_TEMPLATE) + ' \'{0}\'?'.format(templateFile),
-                QtGui.QMessageBox.Yes|QtGui.QMessageBox.No,
-                QtGui.QMessageBox.No
+                QMessageBox.Yes|QMessageBox.No,
+                QMessageBox.No
             )
             
-            if reply == QtGui.QMessageBox.Yes:
+            if reply == QMessageBox.Yes:
                 if tabName == MenuFactory.getLabel(MenuFactory.SCIENDO_LED):
                     self.handlerLoadLowEmissionDevelopmentAnalysisTemplate(duplicateTemplate)
                 elif tabName == MenuFactory.getLabel(MenuFactory.SCIENDO_LUCM):
@@ -302,7 +304,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         # Check if current form values duplicate an existing template
         if not self.checkForDuplicateTemplates(tabName, fileName):
             templateFilePath = os.path.join(self.main.appSettings['DialogLumensOpenDatabase']['projectFolder'], self.main.appSettings['folderSCIENDO'], fileName)
-            settings = QtCore.QSettings(templateFilePath, QtCore.QSettings.IniFormat)
+            settings = QSettings(templateFilePath, QSettings.IniFormat)
             settings.setFallbacksEnabled(True) # only use ini files
             
             dialogsToSave = None
@@ -348,7 +350,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         
         if self.main.appSettings['debug']:
-            print 'DEBUG: DialogLumensSCIENDO init'
+            print('DEBUG: DialogLumensSCIENDO init')
             self.logger = logging.getLogger(type(self).__name__)
             ch = logging.StreamHandler()
             ch.setFormatter(formatter)
@@ -361,19 +363,19 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.setupUi(self)
         
         # History log
-        self.historyLog = '{0}{1}'.format('history', type(self).__name__)
-        self.historyLogPath = os.path.join(self.settingsPath, self.historyLog + '.log')
-        self.historyLogger = logging.getLogger(self.historyLog)
-        fh = logging.FileHandler(self.historyLogPath)
-        fh.setFormatter(formatter)
-        self.log_box.setFormatter(formatter)
-        self.historyLogger.addHandler(fh)
-        self.historyLogger.addHandler(self.log_box)
-        self.historyLogger.setLevel(logging.INFO)
+        # self.historyLog = '{0}{1}'.format('history', type(self).__name__)
+        # self.historyLogPath = os.path.join(self.settingsPath, self.historyLog + '.log')
+        # self.historyLogger = logging.getLogger(self.historyLog)
+        # fh = logging.FileHandler(self.historyLogPath)
+        # fh.setFormatter(formatter)
+        # self.log_box.setFormatter(formatter)
+        # self.historyLogger.addHandler(fh)
+        # self.historyLogger.addHandler(self.log_box)
+        # self.historyLogger.setLevel(logging.INFO)
         
-        self.loadHistoryLog()
+        # self.loadHistoryLog()
         
-        self.loadTemplateFiles()
+        # self.loadTemplateFiles()
         
         self.tabWidget.currentChanged.connect(self.handlerTabWidgetChanged)
         
@@ -420,18 +422,18 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
             parent: the dialog's parent instance.
         """
         self.setStyleSheet('QDialog { background-color: rgb(225, 229, 237); } QMessageBox QLabel{ color: #fff; }')
-        self.dialogLayout = QtGui.QVBoxLayout()
+        self.dialogLayout = QVBoxLayout()
 
-        self.groupBoxSCIENDODialog = QtGui.QGroupBox(MenuFactory.getDescription(MenuFactory.SCIENDO_TITLE))
-        self.layoutGroupBoxSCIENDODialog = QtGui.QVBoxLayout()
-        self.layoutGroupBoxSCIENDODialog.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.groupBoxSCIENDODialog = QGroupBox(MenuFactory.getDescription(MenuFactory.SCIENDO_TITLE))
+        self.layoutGroupBoxSCIENDODialog = QVBoxLayout()
+        self.layoutGroupBoxSCIENDODialog.setAlignment(Qt.AlignLeft|Qt.AlignTop)
         self.groupBoxSCIENDODialog.setLayout(self.layoutGroupBoxSCIENDODialog)
-        self.labelSCIENDODialogInfo = QtGui.QLabel()
+        self.labelSCIENDODialogInfo = QLabel()
         self.labelSCIENDODialogInfo.setText('\n')
         self.labelSCIENDODialogInfo.setWordWrap(True)
         self.layoutGroupBoxSCIENDODialog.addWidget(self.labelSCIENDODialogInfo)
 
-        self.tabWidget = QtGui.QTabWidget()
+        self.tabWidget = QTabWidget()
         tabWidgetStylesheet = """
         QTabWidget::pane {
             border: none;
@@ -454,19 +456,19 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         """
         self.tabWidget.setStyleSheet(tabWidgetStylesheet)
         
-        self.tabLowEmissionDevelopmentAnalysis = QtGui.QWidget()
-        self.tabLandUseChangeModeling = QtGui.QWidget()
-        self.tabLog = QtGui.QWidget()
+        self.tabLowEmissionDevelopmentAnalysis = QWidget()
+        self.tabLandUseChangeModeling = QWidget()
+        self.tabLog = QWidget()
         
         self.tabWidget.addTab(self.tabLowEmissionDevelopmentAnalysis, MenuFactory.getLabel(MenuFactory.SCIENDO_HISTORICAL_BASELINE_ANALYSIS))
         self.tabWidget.addTab(self.tabLandUseChangeModeling, MenuFactory.getLabel(MenuFactory.SCIENDO_LAND_USE_SIMULATION))
         self.tabWidget.addTab(self.tabLog, MenuFactory.getLabel(MenuFactory.SCIENDO_LOG))
         
-        # self.layoutTabLowEmissionDevelopmentAnalysis = QtGui.QVBoxLayout()
-        self.layoutTabLowEmissionDevelopmentAnalysis = QtGui.QGridLayout()
-        self.layoutTabLandUseChangeModeling = QtGui.QVBoxLayout()
-        # self.layoutTabLandUseChangeModeling = QtGui.QGridLayout()
-        self.layoutTabLog = QtGui.QVBoxLayout()
+        # self.layoutTabLowEmissionDevelopmentAnalysis = QVBoxLayout()
+        self.layoutTabLowEmissionDevelopmentAnalysis = QGridLayout()
+        self.layoutTabLandUseChangeModeling = QVBoxLayout()
+        # self.layoutTabLandUseChangeModeling = QGridLayout()
+        self.layoutTabLog = QVBoxLayout()
         
         self.tabLowEmissionDevelopmentAnalysis.setLayout(self.layoutTabLowEmissionDevelopmentAnalysis)
         self.tabLandUseChangeModeling.setLayout(self.layoutTabLandUseChangeModeling)
@@ -479,80 +481,81 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         # Setup 'Low Emission Development Analysis' tab
         #***********************************************************
         # 'Historical baseline projection' GroupBox
-        self.groupBoxHistoricalBaselineProjection = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.SCIENDO_PERIODIC_PROJECTION_PARAMETER))
-        self.layoutGroupBoxHistoricalBaselineProjection = QtGui.QHBoxLayout()
+        self.groupBoxHistoricalBaselineProjection = QGroupBox(MenuFactory.getLabel(MenuFactory.SCIENDO_PERIODIC_PROJECTION_PARAMETER))
+        self.layoutGroupBoxHistoricalBaselineProjection = QHBoxLayout()
         self.groupBoxHistoricalBaselineProjection.setLayout(self.layoutGroupBoxHistoricalBaselineProjection)
-        self.layoutOptionsHistoricalBaselineProjection = QtGui.QVBoxLayout()
+        self.layoutOptionsHistoricalBaselineProjection = QVBoxLayout()
         self.layoutOptionsHistoricalBaselineProjection.setContentsMargins(5, 0, 5, 0)
-        self.contentOptionsHistoricalBaselineProjection = QtGui.QWidget()
+        self.contentOptionsHistoricalBaselineProjection = QWidget()
         self.contentOptionsHistoricalBaselineProjection.setLayout(self.layoutOptionsHistoricalBaselineProjection)
-        self.layoutOptionsHistoricalBaselineProjection.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
-        self.checkBoxHistoricalBaselineProjection = QtGui.QCheckBox()
+        self.layoutOptionsHistoricalBaselineProjection.setAlignment(Qt.AlignLeft|Qt.AlignTop)
+        self.checkBoxHistoricalBaselineProjection = QCheckBox()
         self.checkBoxHistoricalBaselineProjection.setChecked(False)
         self.contentOptionsHistoricalBaselineProjection.setDisabled(True)
         self.layoutGroupBoxHistoricalBaselineProjection.addWidget(self.checkBoxHistoricalBaselineProjection)
         self.layoutGroupBoxHistoricalBaselineProjection.addWidget(self.contentOptionsHistoricalBaselineProjection)
         self.layoutGroupBoxHistoricalBaselineProjection.insertStretch(2, 1)
-        self.layoutGroupBoxHistoricalBaselineProjection.setAlignment(self.checkBoxHistoricalBaselineProjection, QtCore.Qt.AlignTop)
-        self.layoutHistoricalBaselineProjectionInfo = QtGui.QVBoxLayout()
-        self.layoutHistoricalBaselineProjection = QtGui.QGridLayout()
+        self.layoutGroupBoxHistoricalBaselineProjection.setAlignment(self.checkBoxHistoricalBaselineProjection, Qt.AlignTop)
+        self.layoutHistoricalBaselineProjectionInfo = QVBoxLayout()
+        self.layoutHistoricalBaselineProjection = QGridLayout()
         self.layoutOptionsHistoricalBaselineProjection.addLayout(self.layoutHistoricalBaselineProjectionInfo)
         self.layoutOptionsHistoricalBaselineProjection.addLayout(self.layoutHistoricalBaselineProjection)
         
-        self.labelHistoricalBaselineProjectionInfo = QtGui.QLabel()
+        self.labelHistoricalBaselineProjectionInfo = QLabel()
         self.labelHistoricalBaselineProjectionInfo.setText(MenuFactory.getLabel(MenuFactory.SCIENDO_CONDUCT_PERIODIC_PROJECTION))
         self.layoutHistoricalBaselineProjectionInfo.addWidget(self.labelHistoricalBaselineProjectionInfo)
         
-        self.labelHistoricalBaselineProjectionQUESCDatabase = QtGui.QLabel()
+        self.labelHistoricalBaselineProjectionQUESCDatabase = QLabel()
         self.labelHistoricalBaselineProjectionQUESCDatabase.setText(MenuFactory.getLabel(MenuFactory.SCIENDO_QUESC_DATABASE) + ':')
         self.layoutHistoricalBaselineProjection.addWidget(self.labelHistoricalBaselineProjectionQUESCDatabase, 0, 0)
         
-        self.comboBoxHistoricalBaselineProjectionQUESCDatabase = QtGui.QComboBox()
+        self.comboBoxHistoricalBaselineProjectionQUESCDatabase = QComboBox()
         self.comboBoxHistoricalBaselineProjectionQUESCDatabase.setDisabled(True)
         self.layoutHistoricalBaselineProjection.addWidget(self.comboBoxHistoricalBaselineProjectionQUESCDatabase, 0, 1)
         
-        self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxHistoricalBaselineProjectionQUESCDatabase)
+        # self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxHistoricalBaselineProjectionQUESCDatabase)
+        DialogLumensBase.handlerPopulateNameFromLookupData(parent, self.main.dataTable, self.comboBoxHistoricalBaselineProjectionQUESCDatabase)
         
-        self.labelHistoricalBaselineProjectionIteration = QtGui.QLabel()
+        self.labelHistoricalBaselineProjectionIteration = QLabel()
         self.labelHistoricalBaselineProjectionIteration.setText(MenuFactory.getLabel(MenuFactory.SCIENDO_ITERATION) + ':')
         self.layoutHistoricalBaselineProjection.addWidget(self.labelHistoricalBaselineProjectionIteration, 1, 0)
         
-        self.spinBoxHistoricalBaselineProjectionIteration = QtGui.QSpinBox()
+        self.spinBoxHistoricalBaselineProjectionIteration = QSpinBox()
         self.spinBoxHistoricalBaselineProjectionIteration.setRange(1, 99)
         self.spinBoxHistoricalBaselineProjectionIteration.setValue(3)
         self.layoutHistoricalBaselineProjection.addWidget(self.spinBoxHistoricalBaselineProjectionIteration, 1, 1)
         self.labelHistoricalBaselineProjectionIteration.setBuddy(self.spinBoxHistoricalBaselineProjectionIteration) 
         
         # 'Historical baseline annual projection' GroupBox
-        self.groupBoxHistoricalBaselineAnnualProjection = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.SCIENDO_ANNUAL_PROJECTION_PARAMETER))
-        self.layoutGroupBoxHistoricalBaselineAnnualProjection = QtGui.QHBoxLayout()
+        self.groupBoxHistoricalBaselineAnnualProjection = QGroupBox(MenuFactory.getLabel(MenuFactory.SCIENDO_ANNUAL_PROJECTION_PARAMETER))
+        self.layoutGroupBoxHistoricalBaselineAnnualProjection = QHBoxLayout()
         self.groupBoxHistoricalBaselineAnnualProjection.setLayout(self.layoutGroupBoxHistoricalBaselineAnnualProjection)
-        self.layoutOptionsHistoricalBaselineAnnualProjection = QtGui.QVBoxLayout()
+        self.layoutOptionsHistoricalBaselineAnnualProjection = QVBoxLayout()
         self.layoutOptionsHistoricalBaselineAnnualProjection.setContentsMargins(5, 0, 5, 0)
-        self.contentOptionsHistoricalBaselineAnnualProjection = QtGui.QWidget()
+        self.contentOptionsHistoricalBaselineAnnualProjection = QWidget()
         self.contentOptionsHistoricalBaselineAnnualProjection.setLayout(self.layoutOptionsHistoricalBaselineAnnualProjection)
-        self.layoutOptionsHistoricalBaselineAnnualProjection.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
-        self.checkBoxHistoricalBaselineAnnualProjection = QtGui.QCheckBox()
+        self.layoutOptionsHistoricalBaselineAnnualProjection.setAlignment(Qt.AlignLeft|Qt.AlignTop)
+        self.checkBoxHistoricalBaselineAnnualProjection = QCheckBox()
         self.checkBoxHistoricalBaselineAnnualProjection.setChecked(False)
         self.contentOptionsHistoricalBaselineAnnualProjection.setDisabled(True)
         self.layoutGroupBoxHistoricalBaselineAnnualProjection.addWidget(self.checkBoxHistoricalBaselineAnnualProjection)
         self.layoutGroupBoxHistoricalBaselineAnnualProjection.addWidget(self.contentOptionsHistoricalBaselineAnnualProjection)
         self.layoutGroupBoxHistoricalBaselineAnnualProjection.insertStretch(2, 1)
-        self.layoutGroupBoxHistoricalBaselineAnnualProjection.setAlignment(self.checkBoxHistoricalBaselineAnnualProjection, QtCore.Qt.AlignTop)
-        self.layoutHistoricalBaselineAnnualProjectionInfo = QtGui.QVBoxLayout()
-        self.layoutHistoricalBaselineAnnualProjection = QtGui.QGridLayout()
+        self.layoutGroupBoxHistoricalBaselineAnnualProjection.setAlignment(self.checkBoxHistoricalBaselineAnnualProjection, Qt.AlignTop)
+        self.layoutHistoricalBaselineAnnualProjectionInfo = QVBoxLayout()
+        self.layoutHistoricalBaselineAnnualProjection = QGridLayout()
         self.layoutOptionsHistoricalBaselineAnnualProjection.addLayout(self.layoutHistoricalBaselineAnnualProjectionInfo)
         self.layoutOptionsHistoricalBaselineAnnualProjection.addLayout(self.layoutHistoricalBaselineAnnualProjection)
         
-        self.labelHistoricalBaselineAnnualProjectionInfo = QtGui.QLabel()
+        self.labelHistoricalBaselineAnnualProjectionInfo = QLabel()
         self.labelHistoricalBaselineAnnualProjectionInfo.setText(MenuFactory.getLabel(MenuFactory.SCIENDO_CONDUCT_ANNUAL_PROJECTION))
         self.layoutHistoricalBaselineAnnualProjectionInfo.addWidget(self.labelHistoricalBaselineAnnualProjectionInfo)
         
-        self.labelHistoricalBaselineAnnualProjectionIteration = QtGui.QLabel()
+        self.labelHistoricalBaselineAnnualProjectionIteration = QLabel()
         self.labelHistoricalBaselineAnnualProjectionIteration.setText(MenuFactory.getLabel(MenuFactory.SCIENDO_ITERATION))
         self.layoutHistoricalBaselineAnnualProjection.addWidget(self.labelHistoricalBaselineAnnualProjectionIteration, 0, 0)
         
-        self.spinBoxHistoricalBaselineAnnualProjectionIteration = QtGui.QSpinBox()
+        self.spinBoxHistoricalBaselineAnnualProjectionIteration = QSpinBox()
         self.spinBoxHistoricalBaselineAnnualProjectionIteration.setRange(1, 9999)
         self.spinBoxHistoricalBaselineAnnualProjectionIteration.setValue(5)
         self.layoutHistoricalBaselineAnnualProjection.addWidget(self.spinBoxHistoricalBaselineAnnualProjectionIteration, 0, 1)
@@ -561,138 +564,138 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.populateQUESCDatabase()
 
         # 'Drivers analysis' GroupBox
-        self.groupBoxDriversAnalysis = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.SCIENDO_DRIVERS_ANALYSIS_PARAMETER))
-        self.layoutGroupBoxDriversAnalysis = QtGui.QHBoxLayout()
+        self.groupBoxDriversAnalysis = QGroupBox(MenuFactory.getLabel(MenuFactory.SCIENDO_DRIVERS_ANALYSIS_PARAMETER))
+        self.layoutGroupBoxDriversAnalysis = QHBoxLayout()
         self.groupBoxDriversAnalysis.setLayout(self.layoutGroupBoxDriversAnalysis)
-        self.layoutOptionsDriversAnalysis = QtGui.QVBoxLayout()
+        self.layoutOptionsDriversAnalysis = QVBoxLayout()
         self.layoutOptionsDriversAnalysis.setContentsMargins(5, 0, 5, 0)
-        self.contentOptionsDriversAnalysis = QtGui.QWidget()
+        self.contentOptionsDriversAnalysis = QWidget()
         self.contentOptionsDriversAnalysis.setLayout(self.layoutOptionsDriversAnalysis)
-        self.layoutOptionsDriversAnalysis.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
-        self.checkBoxDriversAnalysis = QtGui.QCheckBox()
+        self.layoutOptionsDriversAnalysis.setAlignment(Qt.AlignLeft|Qt.AlignTop)
+        self.checkBoxDriversAnalysis = QCheckBox()
         self.checkBoxDriversAnalysis.setChecked(False)
         self.contentOptionsDriversAnalysis.setDisabled(True)
         self.layoutGroupBoxDriversAnalysis.addWidget(self.checkBoxDriversAnalysis)
         self.layoutGroupBoxDriversAnalysis.addWidget(self.contentOptionsDriversAnalysis)
-        self.layoutGroupBoxDriversAnalysis.setAlignment(self.checkBoxDriversAnalysis, QtCore.Qt.AlignTop)
-        self.layoutDriversAnalysisInfo = QtGui.QVBoxLayout()
-        self.layoutDriversAnalysis = QtGui.QGridLayout()
+        self.layoutGroupBoxDriversAnalysis.setAlignment(self.checkBoxDriversAnalysis, Qt.AlignTop)
+        self.layoutDriversAnalysisInfo = QVBoxLayout()
+        self.layoutDriversAnalysis = QGridLayout()
         self.layoutOptionsDriversAnalysis.addLayout(self.layoutDriversAnalysisInfo)
         self.layoutOptionsDriversAnalysis.addLayout(self.layoutDriversAnalysis)
         
-        self.labelDriversAnalysisInfo = QtGui.QLabel()
+        self.labelDriversAnalysisInfo = QLabel()
         self.labelDriversAnalysisInfo.setText(MenuFactory.getLabel(MenuFactory.SCIENDO_DRIVERS_ANALYSIS_PARAMETER))
         self.layoutDriversAnalysisInfo.addWidget(self.labelDriversAnalysisInfo)
         
-        self.labelDriversAnalysisLandUseCoverChangeDrivers = QtGui.QLabel()
+        self.labelDriversAnalysisLandUseCoverChangeDrivers = QLabel()
         self.labelDriversAnalysisLandUseCoverChangeDrivers.setText(MenuFactory.getLabel(MenuFactory.SCIENDO_DRIVERS_OF_LAND_USE_CHANGE) + ':')
         self.layoutDriversAnalysis.addWidget(self.labelDriversAnalysisLandUseCoverChangeDrivers, 0, 0)
         
-        self.lineEditDriversAnalysisLandUseCoverChangeDrivers = QtGui.QLineEdit()
+        self.lineEditDriversAnalysisLandUseCoverChangeDrivers = QLineEdit()
         self.lineEditDriversAnalysisLandUseCoverChangeDrivers.setReadOnly(True)
         self.layoutDriversAnalysis.addWidget(self.lineEditDriversAnalysisLandUseCoverChangeDrivers, 0, 1)
         
-        self.buttonSelectDriversAnalysisLandUseCoverChangeDrivers = QtGui.QPushButton()
+        self.buttonSelectDriversAnalysisLandUseCoverChangeDrivers = QPushButton()
         self.buttonSelectDriversAnalysisLandUseCoverChangeDrivers.setText(MenuFactory.getLabel(MenuFactory.SCIENDO_BROWSE))
         self.layoutDriversAnalysis.addWidget(self.buttonSelectDriversAnalysisLandUseCoverChangeDrivers, 0, 2)
         
-        self.labelDriversAnalysislandUseCoverChangeType = QtGui.QLabel()
+        self.labelDriversAnalysislandUseCoverChangeType = QLabel()
         self.labelDriversAnalysislandUseCoverChangeType.setText(MenuFactory.getLabel(MenuFactory.SCIENDO_LAND_USE_TRAJECTORY) + ':')
         self.layoutDriversAnalysis.addWidget(self.labelDriversAnalysislandUseCoverChangeType, 1, 0)
         
-        self.lineEditDriversAnalysisLandUseCoverChangeType = QtGui.QLineEdit()
+        self.lineEditDriversAnalysisLandUseCoverChangeType = QLineEdit()
         self.lineEditDriversAnalysisLandUseCoverChangeType.setText(MenuFactory.getLabel(MenuFactory.SCIENDO_PROVIDE_TRAJECTORY_NAME))
         self.layoutDriversAnalysis.addWidget(self.lineEditDriversAnalysisLandUseCoverChangeType, 1, 1)
         self.labelDriversAnalysislandUseCoverChangeType.setBuddy(self.lineEditDriversAnalysisLandUseCoverChangeType)
         
         # 'Build scenario' GroupBox
-        self.groupBoxBuildScenario = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.SCIENDO_SCENARIO_BUILDER))
-        self.layoutGroupBoxBuildScenario = QtGui.QHBoxLayout()
+        self.groupBoxBuildScenario = QGroupBox(MenuFactory.getLabel(MenuFactory.SCIENDO_SCENARIO_BUILDER))
+        self.layoutGroupBoxBuildScenario = QHBoxLayout()
         self.groupBoxBuildScenario.setLayout(self.layoutGroupBoxBuildScenario)
-        self.layoutOptionsBuildScenario = QtGui.QVBoxLayout()
+        self.layoutOptionsBuildScenario = QVBoxLayout()
         self.layoutOptionsBuildScenario.setContentsMargins(5, 0, 5, 0)
-        self.contentOptionsBuildScenario = QtGui.QWidget()
+        self.contentOptionsBuildScenario = QWidget()
         self.contentOptionsBuildScenario.setLayout(self.layoutOptionsBuildScenario)
-        self.layoutOptionsBuildScenario.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
-        self.checkBoxBuildScenario = QtGui.QCheckBox()
+        self.layoutOptionsBuildScenario.setAlignment(Qt.AlignLeft|Qt.AlignTop)
+        self.checkBoxBuildScenario = QCheckBox()
         self.checkBoxBuildScenario.setChecked(False)
         self.contentOptionsBuildScenario.setDisabled(True)
         self.layoutGroupBoxBuildScenario.addWidget(self.checkBoxBuildScenario)
         self.layoutGroupBoxBuildScenario.addWidget(self.contentOptionsBuildScenario)
-        self.layoutGroupBoxBuildScenario.setAlignment(self.checkBoxBuildScenario, QtCore.Qt.AlignTop)
-        self.layoutBuildScenarioInfo = QtGui.QVBoxLayout()
-        self.layoutBuildScenario = QtGui.QGridLayout()
+        self.layoutGroupBoxBuildScenario.setAlignment(self.checkBoxBuildScenario, Qt.AlignTop)
+        self.layoutBuildScenarioInfo = QVBoxLayout()
+        self.layoutBuildScenario = QGridLayout()
         self.layoutOptionsBuildScenario.addLayout(self.layoutBuildScenarioInfo)
         self.layoutOptionsBuildScenario.addLayout(self.layoutBuildScenario)
         
-        self.labelBuildScenarioInfo = QtGui.QLabel()
+        self.labelBuildScenarioInfo = QLabel()
         self.labelBuildScenarioInfo.setText(MenuFactory.getLabel(MenuFactory.SCIENDO_BUILD_SCENARIO))
         self.layoutBuildScenarioInfo.addWidget(self.labelBuildScenarioInfo)
         
-        self.labelBuildScenarioHistoricalBaselineCar = QtGui.QLabel()
+        self.labelBuildScenarioHistoricalBaselineCar = QLabel()
         self.labelBuildScenarioHistoricalBaselineCar.setText(MenuFactory.getLabel(MenuFactory.SCIENDO_HISTORICAL_BASELINE_DATA) + ':')
         self.layoutBuildScenario.addWidget(self.labelBuildScenarioHistoricalBaselineCar, 0, 0)
         
-        self.lineEditBuildScenarioHistoricalBaselineCar = QtGui.QLineEdit()
+        self.lineEditBuildScenarioHistoricalBaselineCar = QLineEdit()
         self.lineEditBuildScenarioHistoricalBaselineCar.setReadOnly(True)
         self.layoutBuildScenario.addWidget(self.lineEditBuildScenarioHistoricalBaselineCar, 0, 1)
         
-        self.buttonSelectBuildScenarioHistoricalBaselineCar = QtGui.QPushButton()
+        self.buttonSelectBuildScenarioHistoricalBaselineCar = QPushButton()
         self.buttonSelectBuildScenarioHistoricalBaselineCar.setText(MenuFactory.getLabel(MenuFactory.SCIENDO_BROWSE))
         self.layoutBuildScenario.addWidget(self.buttonSelectBuildScenarioHistoricalBaselineCar, 0, 2)
         
         # Process tab button
-        self.layoutButtonLowEmissionDevelopmentAnalysis = QtGui.QHBoxLayout()
-        self.buttonProcessLowEmissionDevelopmentAnalysis = QtGui.QPushButton()
-        self.buttonProcessLowEmissionDevelopmentAnalysis.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.layoutButtonLowEmissionDevelopmentAnalysis = QHBoxLayout()
+        self.buttonProcessLowEmissionDevelopmentAnalysis = QPushButton()
+        self.buttonProcessLowEmissionDevelopmentAnalysis.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         self.buttonProcessLowEmissionDevelopmentAnalysis.setText(MenuFactory.getLabel(MenuFactory.SCIENDO_PROCESS))
-        icon = QtGui.QIcon(':/ui/icons/iconActionHelp.png')
-        self.buttonHelpSCIENDOLowEmissionDevelopmentAnalysis = QtGui.QPushButton()
+        icon = QIcon(':/ui/icons/iconActionHelp.png')
+        self.buttonHelpSCIENDOLowEmissionDevelopmentAnalysis = QPushButton()
         self.buttonHelpSCIENDOLowEmissionDevelopmentAnalysis.setIcon(icon)
-        self.layoutButtonLowEmissionDevelopmentAnalysis.setAlignment(QtCore.Qt.AlignRight)
+        self.layoutButtonLowEmissionDevelopmentAnalysis.setAlignment(Qt.AlignRight)
         self.layoutButtonLowEmissionDevelopmentAnalysis.addWidget(self.buttonProcessLowEmissionDevelopmentAnalysis)
         self.layoutButtonLowEmissionDevelopmentAnalysis.addWidget(self.buttonHelpSCIENDOLowEmissionDevelopmentAnalysis)
         
         # Template GroupBox
-        self.groupBoxLowEmissionDevelopmentAnalysisTemplate = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.CONF_TITLE))
-        self.layoutGroupBoxLowEmissionDevelopmentAnalysisTemplate = QtGui.QVBoxLayout()
-        self.layoutGroupBoxLowEmissionDevelopmentAnalysisTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.groupBoxLowEmissionDevelopmentAnalysisTemplate = QGroupBox(MenuFactory.getLabel(MenuFactory.CONF_TITLE))
+        self.layoutGroupBoxLowEmissionDevelopmentAnalysisTemplate = QVBoxLayout()
+        self.layoutGroupBoxLowEmissionDevelopmentAnalysisTemplate.setAlignment(Qt.AlignLeft|Qt.AlignTop)
         self.groupBoxLowEmissionDevelopmentAnalysisTemplate.setLayout(self.layoutGroupBoxLowEmissionDevelopmentAnalysisTemplate)
-        self.layoutLowEmissionDevelopmentAnalysisTemplateInfo = QtGui.QVBoxLayout()
-        self.layoutLowEmissionDevelopmentAnalysisTemplate = QtGui.QGridLayout()
+        self.layoutLowEmissionDevelopmentAnalysisTemplateInfo = QVBoxLayout()
+        self.layoutLowEmissionDevelopmentAnalysisTemplate = QGridLayout()
         self.layoutGroupBoxLowEmissionDevelopmentAnalysisTemplate.addLayout(self.layoutLowEmissionDevelopmentAnalysisTemplateInfo)
         self.layoutGroupBoxLowEmissionDevelopmentAnalysisTemplate.addLayout(self.layoutLowEmissionDevelopmentAnalysisTemplate)
         
-        self.labelLoadedLowEmissionDevelopmentAnalysisTemplate = QtGui.QLabel()
+        self.labelLoadedLowEmissionDevelopmentAnalysisTemplate = QLabel()
         self.labelLoadedLowEmissionDevelopmentAnalysisTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOADED_CONFIGURATION) + ':')
         self.layoutLowEmissionDevelopmentAnalysisTemplate.addWidget(self.labelLoadedLowEmissionDevelopmentAnalysisTemplate, 0, 0)
         
-        self.loadedLowEmissionDevelopmentAnalysisTemplate = QtGui.QLabel()
+        self.loadedLowEmissionDevelopmentAnalysisTemplate = QLabel()
         self.loadedLowEmissionDevelopmentAnalysisTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NONE))
         self.layoutLowEmissionDevelopmentAnalysisTemplate.addWidget(self.loadedLowEmissionDevelopmentAnalysisTemplate, 0, 1)
         
-        self.labelLowEmissionDevelopmentAnalysisTemplate = QtGui.QLabel()
+        self.labelLowEmissionDevelopmentAnalysisTemplate = QLabel()
         self.labelLowEmissionDevelopmentAnalysisTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NAME) + ':')
         self.layoutLowEmissionDevelopmentAnalysisTemplate.addWidget(self.labelLowEmissionDevelopmentAnalysisTemplate, 1, 0)
         
-        self.comboBoxLowEmissionDevelopmentAnalysisTemplate = QtGui.QComboBox()
-        self.comboBoxLowEmissionDevelopmentAnalysisTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
+        self.comboBoxLowEmissionDevelopmentAnalysisTemplate = QComboBox()
+        self.comboBoxLowEmissionDevelopmentAnalysisTemplate.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Maximum)
         self.comboBoxLowEmissionDevelopmentAnalysisTemplate.setDisabled(True)
         self.comboBoxLowEmissionDevelopmentAnalysisTemplate.addItem(MenuFactory.getLabel(MenuFactory.CONF_NO_FOUND))
         self.layoutLowEmissionDevelopmentAnalysisTemplate.addWidget(self.comboBoxLowEmissionDevelopmentAnalysisTemplate, 1, 1)
         
-        self.layoutButtonLowEmissionDevelopmentAnalysisTemplate = QtGui.QHBoxLayout()
-        self.layoutButtonLowEmissionDevelopmentAnalysisTemplate.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTop)
-        self.buttonLoadLowEmissionDevelopmentAnalysisTemplate = QtGui.QPushButton()
+        self.layoutButtonLowEmissionDevelopmentAnalysisTemplate = QHBoxLayout()
+        self.layoutButtonLowEmissionDevelopmentAnalysisTemplate.setAlignment(Qt.AlignRight|Qt.AlignTop)
+        self.buttonLoadLowEmissionDevelopmentAnalysisTemplate = QPushButton()
         self.buttonLoadLowEmissionDevelopmentAnalysisTemplate.setDisabled(True)
-        self.buttonLoadLowEmissionDevelopmentAnalysisTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonLoadLowEmissionDevelopmentAnalysisTemplate.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         self.buttonLoadLowEmissionDevelopmentAnalysisTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NO_FOUND))
-        self.buttonSaveLowEmissionDevelopmentAnalysisTemplate = QtGui.QPushButton()
+        self.buttonSaveLowEmissionDevelopmentAnalysisTemplate = QPushButton()
         self.buttonSaveLowEmissionDevelopmentAnalysisTemplate.setDisabled(True)
-        self.buttonSaveLowEmissionDevelopmentAnalysisTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonSaveLowEmissionDevelopmentAnalysisTemplate.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         self.buttonSaveLowEmissionDevelopmentAnalysisTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE))
-        self.buttonSaveAsLowEmissionDevelopmentAnalysisTemplate = QtGui.QPushButton()
-        self.buttonSaveAsLowEmissionDevelopmentAnalysisTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonSaveAsLowEmissionDevelopmentAnalysisTemplate = QPushButton()
+        self.buttonSaveAsLowEmissionDevelopmentAnalysisTemplate.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         self.buttonSaveAsLowEmissionDevelopmentAnalysisTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS))
         self.layoutButtonLowEmissionDevelopmentAnalysisTemplate.addWidget(self.buttonLoadLowEmissionDevelopmentAnalysisTemplate)
         self.layoutButtonLowEmissionDevelopmentAnalysisTemplate.addWidget(self.buttonSaveLowEmissionDevelopmentAnalysisTemplate)
@@ -704,7 +707,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.layoutTabLowEmissionDevelopmentAnalysis.addWidget(self.groupBoxHistoricalBaselineAnnualProjection, 1, 0)
         self.layoutTabLowEmissionDevelopmentAnalysis.addWidget(self.groupBoxDriversAnalysis, 2, 0)
         self.layoutTabLowEmissionDevelopmentAnalysis.addWidget(self.groupBoxBuildScenario, 3, 0)
-        self.layoutTabLowEmissionDevelopmentAnalysis.addLayout(self.layoutButtonLowEmissionDevelopmentAnalysis, 4, 0, 1, 2, QtCore.Qt.AlignRight)
+        self.layoutTabLowEmissionDevelopmentAnalysis.addLayout(self.layoutButtonLowEmissionDevelopmentAnalysis, 4, 0, 1, 2, Qt.AlignRight)
         self.layoutTabLowEmissionDevelopmentAnalysis.addWidget(self.groupBoxLowEmissionDevelopmentAnalysisTemplate, 0, 1, 4, 1)
         self.layoutTabLowEmissionDevelopmentAnalysis.setColumnStretch(0, 3)
         self.layoutTabLowEmissionDevelopmentAnalysis.setColumnStretch(1, 1) # Smaller template column
@@ -713,7 +716,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         #***********************************************************
         # Setup 'Land Use Change Modeling' tab
         #***********************************************************
-        self.tabWidgetLandUseChangeModeling = QtGui.QTabWidget()
+        self.tabWidgetLandUseChangeModeling = QTabWidget()
         LandUseChangeModelingTabWidgetStylesheet = """
         QTabWidget::tab-bar{
             alignment: right;
@@ -734,10 +737,10 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         """
         self.tabWidgetLandUseChangeModeling.setStyleSheet(LandUseChangeModelingTabWidgetStylesheet)
         
-        self.tabCalculateTransitionMatrix = QtGui.QWidget()
-        self.tabCreateRasterCubeOfFactors = QtGui.QWidget()
-        self.tabCalculateWeightOfEvidence = QtGui.QWidget()
-        self.tabSimulateLandUseChangeModeling = QtGui.QWidget()
+        self.tabCalculateTransitionMatrix = QWidget()
+        self.tabCreateRasterCubeOfFactors = QWidget()
+        self.tabCalculateWeightOfEvidence = QWidget()
+        self.tabSimulateLandUseChangeModeling = QWidget()
         
         self.tabWidgetLandUseChangeModeling.addTab(self.tabCalculateTransitionMatrix, MenuFactory.getLabel(MenuFactory.SCIENDO_CALCULATE_TRANSITION_MATRIX))
         self.tabWidgetLandUseChangeModeling.addTab(self.tabCreateRasterCubeOfFactors, MenuFactory.getLabel(MenuFactory.SCIENDO_CREATE_FACTOR_RASTER_CUBE))
@@ -746,10 +749,10 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         
         self.layoutTabLandUseChangeModeling.addWidget(self.tabWidgetLandUseChangeModeling)
         
-        self.layoutTabCalculateTransitionMatrix = QtGui.QGridLayout()
-        self.layoutTabCreateRasterCubeOfFactors = QtGui.QGridLayout()
-        self.layoutTabCalculateWeightOfEvidence = QtGui.QGridLayout()
-        self.layoutTabSimulateLandUseChangeModeling = QtGui.QGridLayout()
+        self.layoutTabCalculateTransitionMatrix = QGridLayout()
+        self.layoutTabCreateRasterCubeOfFactors = QGridLayout()
+        self.layoutTabCalculateWeightOfEvidence = QGridLayout()
+        self.layoutTabSimulateLandUseChangeModeling = QGridLayout()
         
         self.tabCalculateTransitionMatrix.setLayout(self.layoutTabCalculateTransitionMatrix)
         self.tabCreateRasterCubeOfFactors.setLayout(self.layoutTabCreateRasterCubeOfFactors)
@@ -761,92 +764,95 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         # Setup 'Calculate Transition Matrix' sub tab
         #***********************************************************
         # 'Setup initial and final map' GroupBox
-        self.groupBoxSetupInitialAndFinalMap = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.SCIENDO_SETUP_INITIAL_AND_FINAL_MAP))
-        self.layoutSetupInitialAndFinalMap = QtGui.QVBoxLayout()
-        self.layoutSetupInitialAndFinalMap.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.groupBoxSetupInitialAndFinalMap = QGroupBox(MenuFactory.getLabel(MenuFactory.SCIENDO_SETUP_INITIAL_AND_FINAL_MAP))
+        self.layoutSetupInitialAndFinalMap = QVBoxLayout()
+        self.layoutSetupInitialAndFinalMap.setAlignment(Qt.AlignLeft|Qt.AlignTop)
         self.groupBoxSetupInitialAndFinalMap.setLayout(self.layoutSetupInitialAndFinalMap)
         
-        self.layoutSetupInitialAndFinalMapInfo = QtGui.QVBoxLayout()
-        self.labelSetupInitialAndFinalMapInfo = QtGui.QLabel()
+        self.layoutSetupInitialAndFinalMapInfo = QVBoxLayout()
+        self.labelSetupInitialAndFinalMapInfo = QLabel()
         self.labelSetupInitialAndFinalMapInfo.setText('\n')
         self.layoutSetupInitialAndFinalMapInfo.addWidget(self.labelSetupInitialAndFinalMapInfo)
                  
-        self.layoutTransitionMatrixPerRegions = QtGui.QGridLayout()
+        self.layoutTransitionMatrixPerRegions = QGridLayout()
         self.layoutTransitionMatrixPerRegions.setContentsMargins(0, 0, 0, 0)
         
-        self.labelTransitionMatrixInitialMap = QtGui.QLabel()
+        self.labelTransitionMatrixInitialMap = QLabel()
         self.labelTransitionMatrixInitialMap.setText(MenuFactory.getLabel(MenuFactory.SCIENDO_EARLIER_LAND_USE_COVER) + ':')
         self.layoutTransitionMatrixPerRegions.addWidget(self.labelTransitionMatrixInitialMap, 0, 0)
         
-        self.comboBoxTransitionMatrixInitialMap = QtGui.QComboBox()
+        self.comboBoxTransitionMatrixInitialMap = QComboBox()
         self.comboBoxTransitionMatrixInitialMap.setDisabled(True)
         self.layoutTransitionMatrixPerRegions.addWidget(self.comboBoxTransitionMatrixInitialMap, 0, 1)
         
-        self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxTransitionMatrixInitialMap)        
+        # self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxTransitionMatrixInitialMap) 
+        DialogLumensBase.handlerPopulateNameFromLookupData(parent, self.main.dataLandUseCover, self.comboBoxTransitionMatrixInitialMap)       
 
-        self.labelTransitionMatrixFinalMap = QtGui.QLabel()
+        self.labelTransitionMatrixFinalMap = QLabel()
         self.labelTransitionMatrixFinalMap.setText(MenuFactory.getLabel(MenuFactory.SCIENDO_LATER_LAND_USE_COVER) + ':')
         self.layoutTransitionMatrixPerRegions.addWidget(self.labelTransitionMatrixFinalMap, 1, 0)
         
-        self.comboBoxTransitionMatrixFinalMap = QtGui.QComboBox()
+        self.comboBoxTransitionMatrixFinalMap = QComboBox()
         self.comboBoxTransitionMatrixFinalMap.setDisabled(True)
         self.layoutTransitionMatrixPerRegions.addWidget(self.comboBoxTransitionMatrixFinalMap, 1, 1)
         
-        self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxTransitionMatrixFinalMap)
+        # self.handlerPopulateNameFromLookupData(self.main.dataLandUseCover, self.comboBoxTransitionMatrixFinalMap)
+        DialogLumensBase.handlerPopulateNameFromLookupData(parent, self.main.dataLandUseCover, self.comboBoxTransitionMatrixFinalMap)       
         
-        self.labelTransitionMatrixRegions = QtGui.QLabel()
+        self.labelTransitionMatrixRegions = QLabel()
         self.labelTransitionMatrixRegions.setText(MenuFactory.getLabel(MenuFactory.SCIENDO_PLANNING_UNIT) + ':')
         self.layoutTransitionMatrixPerRegions.addWidget(self.labelTransitionMatrixRegions, 2, 0)
         
-        self.comboBoxTransitionMatrixRegions = QtGui.QComboBox()
+        self.comboBoxTransitionMatrixRegions = QComboBox()
         self.comboBoxTransitionMatrixRegions.setDisabled(True)
         self.layoutTransitionMatrixPerRegions.addWidget(self.comboBoxTransitionMatrixRegions, 2, 1)
         
-        self.handlerPopulateNameFromLookupData(self.main.dataPlanningUnit, self.comboBoxTransitionMatrixRegions) 
+        # self.handlerPopulateNameFromLookupData(self.main.dataPlanningUnit, self.comboBoxTransitionMatrixRegions) 
+        DialogLumensBase.handlerPopulateNameFromLookupData(parent, self.main.dataPlanningUnit, self.comboBoxTransitionMatrixRegions)  
 
         self.layoutSetupInitialAndFinalMap.addLayout(self.layoutSetupInitialAndFinalMapInfo)
         self.layoutSetupInitialAndFinalMap.addLayout(self.layoutTransitionMatrixPerRegions)
 
         # Template GroupBox
-        self.groupBoxTransitionMatrixTemplate = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.CONF_TITLE))
-        self.layoutGroupBoxTransitionMatrixTemplate = QtGui.QVBoxLayout()
-        self.layoutGroupBoxTransitionMatrixTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.groupBoxTransitionMatrixTemplate = QGroupBox(MenuFactory.getLabel(MenuFactory.CONF_TITLE))
+        self.layoutGroupBoxTransitionMatrixTemplate = QVBoxLayout()
+        self.layoutGroupBoxTransitionMatrixTemplate.setAlignment(Qt.AlignLeft|Qt.AlignTop)
         self.groupBoxTransitionMatrixTemplate.setLayout(self.layoutGroupBoxTransitionMatrixTemplate)
-        self.layoutTransitionMatrixTemplateInfo = QtGui.QVBoxLayout()
-        self.layoutTransitionMatrixTemplate = QtGui.QGridLayout()
+        self.layoutTransitionMatrixTemplateInfo = QVBoxLayout()
+        self.layoutTransitionMatrixTemplate = QGridLayout()
         self.layoutGroupBoxTransitionMatrixTemplate.addLayout(self.layoutTransitionMatrixTemplateInfo)
         self.layoutGroupBoxTransitionMatrixTemplate.addLayout(self.layoutTransitionMatrixTemplate)
         
-        self.labelLoadedTransitionMatrixTemplate = QtGui.QLabel()
+        self.labelLoadedTransitionMatrixTemplate = QLabel()
         self.labelLoadedTransitionMatrixTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOADED_CONFIGURATION) + ':')
         self.layoutTransitionMatrixTemplate.addWidget(self.labelLoadedTransitionMatrixTemplate, 0, 0)
         
-        self.loadedTransitionMatrixTemplate = QtGui.QLabel()
+        self.loadedTransitionMatrixTemplate = QLabel()
         self.loadedTransitionMatrixTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NONE))
         self.layoutTransitionMatrixTemplate.addWidget(self.loadedTransitionMatrixTemplate, 0, 1)
         
-        self.labelTransitionMatrixTemplate = QtGui.QLabel()
+        self.labelTransitionMatrixTemplate = QLabel()
         self.labelTransitionMatrixTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NAME) + ':')
         self.layoutTransitionMatrixTemplate.addWidget(self.labelTransitionMatrixTemplate, 1, 0)
         
-        self.comboBoxTransitionMatrixTemplate = QtGui.QComboBox()
-        self.comboBoxTransitionMatrixTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
+        self.comboBoxTransitionMatrixTemplate = QComboBox()
+        self.comboBoxTransitionMatrixTemplate.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Maximum)
         self.comboBoxTransitionMatrixTemplate.setDisabled(True)
         self.comboBoxTransitionMatrixTemplate.addItem(MenuFactory.getLabel(MenuFactory.CONF_NO_FOUND))
         self.layoutTransitionMatrixTemplate.addWidget(self.comboBoxTransitionMatrixTemplate, 1, 1)
         
-        self.layoutButtonTransitionMatrixTemplate = QtGui.QHBoxLayout()
-        self.layoutButtonTransitionMatrixTemplate.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTop)
-        self.buttonLoadTransitionMatrixTemplate = QtGui.QPushButton()
+        self.layoutButtonTransitionMatrixTemplate = QHBoxLayout()
+        self.layoutButtonTransitionMatrixTemplate.setAlignment(Qt.AlignRight|Qt.AlignTop)
+        self.buttonLoadTransitionMatrixTemplate = QPushButton()
         self.buttonLoadTransitionMatrixTemplate.setDisabled(True)
-        self.buttonLoadTransitionMatrixTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonLoadTransitionMatrixTemplate.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         self.buttonLoadTransitionMatrixTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NO_FOUND))
-        self.buttonSaveTransitionMatrixTemplate = QtGui.QPushButton()
+        self.buttonSaveTransitionMatrixTemplate = QPushButton()
         self.buttonSaveTransitionMatrixTemplate.setDisabled(True)
-        self.buttonSaveTransitionMatrixTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonSaveTransitionMatrixTemplate.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         self.buttonSaveTransitionMatrixTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE))
-        self.buttonSaveAsTransitionMatrixTemplate = QtGui.QPushButton()
-        self.buttonSaveAsTransitionMatrixTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonSaveAsTransitionMatrixTemplate = QPushButton()
+        self.buttonSaveAsTransitionMatrixTemplate.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         self.buttonSaveAsTransitionMatrixTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS))
         self.layoutButtonTransitionMatrixTemplate.addWidget(self.buttonLoadTransitionMatrixTemplate)
         self.layoutButtonTransitionMatrixTemplate.addWidget(self.buttonSaveTransitionMatrixTemplate)
@@ -854,18 +860,18 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxTransitionMatrixTemplate.addLayout(self.layoutButtonTransitionMatrixTemplate)
 
         # Process tab button
-        self.layoutButtonTransitionMatrix = QtGui.QHBoxLayout()
-        self.buttonProcessTransitionMatrix = QtGui.QPushButton()
+        self.layoutButtonTransitionMatrix = QHBoxLayout()
+        self.buttonProcessTransitionMatrix = QPushButton()
         self.buttonProcessTransitionMatrix.setText(MenuFactory.getLabel(MenuFactory.SCIENDO_PROCESS))
-        self.buttonHelpSCIENDOTransitionMatrix = QtGui.QPushButton()
+        self.buttonHelpSCIENDOTransitionMatrix = QPushButton()
         self.buttonHelpSCIENDOTransitionMatrix.setIcon(icon)
-        self.layoutButtonTransitionMatrix.setAlignment(QtCore.Qt.AlignRight)
+        self.layoutButtonTransitionMatrix.setAlignment(Qt.AlignRight)
         self.layoutButtonTransitionMatrix.addWidget(self.buttonProcessTransitionMatrix)
         self.layoutButtonTransitionMatrix.addWidget(self.buttonHelpSCIENDOTransitionMatrix)
         
         # Place the GroupBoxes
         self.layoutTabCalculateTransitionMatrix.addWidget(self.groupBoxSetupInitialAndFinalMap, 0, 0)
-        self.layoutTabCalculateTransitionMatrix.addLayout(self.layoutButtonTransitionMatrix, 1, 0, 1, 2, QtCore.Qt.AlignRight)
+        self.layoutTabCalculateTransitionMatrix.addLayout(self.layoutButtonTransitionMatrix, 1, 0, 1, 2, Qt.AlignRight)
         self.layoutTabCalculateTransitionMatrix.addWidget(self.groupBoxTransitionMatrixTemplate, 0, 1, 1, 1)
         self.layoutTabCalculateTransitionMatrix.setColumnStretch(0, 3)
         self.layoutTabCalculateTransitionMatrix.setColumnStretch(1, 1) 
@@ -875,105 +881,105 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         # 'Create Raster Cube Of Factors' sub tab
         #***********************************************************
         # 'Raster Cube' GroupBox
-        self.groupBoxCreateRasterCubeOfFactors = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.SCIENDO_LIST_FACTORS))
-        self.layoutGroupBoxCreateRasterCubeOfFactors = QtGui.QVBoxLayout()
-        self.layoutGroupBoxCreateRasterCubeOfFactors.setAlignment(QtCore.Qt.AlignTop)
+        self.groupBoxCreateRasterCubeOfFactors = QGroupBox(MenuFactory.getLabel(MenuFactory.SCIENDO_LIST_FACTORS))
+        self.layoutGroupBoxCreateRasterCubeOfFactors = QVBoxLayout()
+        self.layoutGroupBoxCreateRasterCubeOfFactors.setAlignment(Qt.AlignTop)
         self.groupBoxCreateRasterCubeOfFactors.setLayout(self.layoutGroupBoxCreateRasterCubeOfFactors)
         
-        self.layoutCreateRasterCubeOfFactorsInfo = QtGui.QVBoxLayout()
-        self.labelCreateRasterCubeOfFactorsInfo = QtGui.QLabel()
+        self.layoutCreateRasterCubeOfFactorsInfo = QVBoxLayout()
+        self.labelCreateRasterCubeOfFactorsInfo = QLabel()
         self.labelCreateRasterCubeOfFactorsInfo.setText('\n')
         self.labelCreateRasterCubeOfFactorsInfo.setWordWrap(True)
         self.layoutCreateRasterCubeOfFactorsInfo.addWidget(self.labelCreateRasterCubeOfFactorsInfo)
         
-        self.layoutCreateRasterCubeOfFactorsParameters = QtGui.QGridLayout()
+        self.layoutCreateRasterCubeOfFactorsParameters = QGridLayout()
         self.layoutCreateRasterCubeOfFactorsParameters.setContentsMargins(0, 0, 0, 0)
         
-        self.labelCreateRasterCubeOfFactorsIndex = QtGui.QLabel()
+        self.labelCreateRasterCubeOfFactorsIndex = QLabel()
         self.labelCreateRasterCubeOfFactorsIndex.setText(MenuFactory.getLabel(MenuFactory.SCIENDO_SIMULATION_DIRECTORY_INDEX) + ':')
         self.layoutCreateRasterCubeOfFactorsParameters.addWidget(self.labelCreateRasterCubeOfFactorsIndex, 0, 0)
         
-        self.comboBoxCreateRasterCubeOfFactorsIndex = QtGui.QComboBox()
+        self.comboBoxCreateRasterCubeOfFactorsIndex = QComboBox()
         self.comboBoxCreateRasterCubeOfFactorsIndex.setDisabled(True)
         self.layoutCreateRasterCubeOfFactorsParameters.addWidget(self.comboBoxCreateRasterCubeOfFactorsIndex, 0, 1)
         
         self.loadAddedSimulationIndex(self.comboBoxCreateRasterCubeOfFactorsIndex)
         
-        self.labelCreateRasterCubeOfFactorsDirectory = QtGui.QLabel()
+        self.labelCreateRasterCubeOfFactorsDirectory = QLabel()
         self.labelCreateRasterCubeOfFactorsDirectory.setText(MenuFactory.getLabel(MenuFactory.SCIENDO_FACTOR_DIRECTORY) + ':')
         self.layoutCreateRasterCubeOfFactorsParameters.addWidget(self.labelCreateRasterCubeOfFactorsDirectory, 1, 0)
         
-        self.lineEditCreateRasterCubeOfFactorsDirectory = QtGui.QLineEdit()
+        self.lineEditCreateRasterCubeOfFactorsDirectory = QLineEdit()
         self.lineEditCreateRasterCubeOfFactorsDirectory.setReadOnly(True)
         self.layoutCreateRasterCubeOfFactorsParameters.addWidget(self.lineEditCreateRasterCubeOfFactorsDirectory, 1, 1)
         
-        self.buttonSelectCreateRasterCubeOfFactorsDirectory = QtGui.QPushButton()
+        self.buttonSelectCreateRasterCubeOfFactorsDirectory = QPushButton()
         self.buttonSelectCreateRasterCubeOfFactorsDirectory.setText(MenuFactory.getLabel(MenuFactory.SCIENDO_BROWSE))
         self.layoutCreateRasterCubeOfFactorsParameters.addWidget(self.buttonSelectCreateRasterCubeOfFactorsDirectory, 1, 2)
         
-        # self.layoutButtonCreateRasterCubeOfFactors = QtGui.QHBoxLayout()
+        # self.layoutButtonCreateRasterCubeOfFactors = QHBoxLayout()
         # self.layoutButtonCreateRasterCubeOfFactors.setContentsMargins(0, 0, 0, 0)
-        # self.layoutButtonCreateRasterCubeOfFactors.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
-        # self.buttonAddFactorRow = QtGui.QPushButton()
+        # self.layoutButtonCreateRasterCubeOfFactors.setAlignment(Qt.AlignLeft|Qt.AlignTop)
+        # self.buttonAddFactorRow = QPushButton()
         # self.buttonAddFactorRow.setText('Add Factor')
-        # self.buttonAddFactorRow.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        # self.buttonAddFactorRow.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         # self.layoutButtonCreateRasterCubeOfFactors.addWidget(self.buttonAddFactorRow)
         # 
-        # self.layoutContentCreateRasterCubeOfFactors = QtGui.QVBoxLayout()
+        # self.layoutContentCreateRasterCubeOfFactors = QVBoxLayout()
         # self.layoutContentCreateRasterCubeOfFactors.setContentsMargins(2, 2, 2, 2)
-        # self.contentCreateRasterCubeOfFactors = QtGui.QWidget()
+        # self.contentCreateRasterCubeOfFactors = QWidget()
         # self.contentCreateRasterCubeOfFactors.setLayout(self.layoutContentCreateRasterCubeOfFactors)
-        # self.scrollCreateRasterCubeOfFactors = QtGui.QScrollArea()
+        # self.scrollCreateRasterCubeOfFactors = QScrollArea()
         # self.scrollCreateRasterCubeOfFactors.setWidgetResizable(True)
         # self.scrollCreateRasterCubeOfFactors.setWidget(self.contentCreateRasterCubeOfFactors)
         # 
-        # self.layoutTableAddFactor = QtGui.QVBoxLayout()
-        # self.layoutTableAddFactor.setAlignment(QtCore.Qt.AlignTop)
+        # self.layoutTableAddFactor = QVBoxLayout()
+        # self.layoutTableAddFactor.setAlignment(Qt.AlignTop)
         # self.layoutContentCreateRasterCubeOfFactors.addLayout(self.layoutTableAddFactor)
         
         self.layoutGroupBoxCreateRasterCubeOfFactors.addLayout(self.layoutCreateRasterCubeOfFactorsInfo)
         self.layoutGroupBoxCreateRasterCubeOfFactors.addLayout(self.layoutCreateRasterCubeOfFactorsParameters)
 
         # Template GroupBox
-        self.groupBoxCreateRasterCubeTemplate = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.CONF_TITLE))
-        self.layoutGroupBoxCreateRasterCubeTemplate = QtGui.QVBoxLayout()
-        self.layoutGroupBoxCreateRasterCubeTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.groupBoxCreateRasterCubeTemplate = QGroupBox(MenuFactory.getLabel(MenuFactory.CONF_TITLE))
+        self.layoutGroupBoxCreateRasterCubeTemplate = QVBoxLayout()
+        self.layoutGroupBoxCreateRasterCubeTemplate.setAlignment(Qt.AlignLeft|Qt.AlignTop)
         self.groupBoxCreateRasterCubeTemplate.setLayout(self.layoutGroupBoxCreateRasterCubeTemplate)
-        self.layoutCreateRasterCubeTemplateInfo = QtGui.QVBoxLayout()
-        self.layoutCreateRasterCubeTemplate = QtGui.QGridLayout()
+        self.layoutCreateRasterCubeTemplateInfo = QVBoxLayout()
+        self.layoutCreateRasterCubeTemplate = QGridLayout()
         self.layoutGroupBoxCreateRasterCubeTemplate.addLayout(self.layoutCreateRasterCubeTemplateInfo)
         self.layoutGroupBoxCreateRasterCubeTemplate.addLayout(self.layoutCreateRasterCubeTemplate)
         
-        self.labelLoadedCreateRasterCubeTemplate = QtGui.QLabel()
+        self.labelLoadedCreateRasterCubeTemplate = QLabel()
         self.labelLoadedCreateRasterCubeTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOADED_CONFIGURATION) + ':')
         self.layoutCreateRasterCubeTemplate.addWidget(self.labelLoadedCreateRasterCubeTemplate, 0, 0)
         
-        self.loadedCreateRasterCubeTemplate = QtGui.QLabel()
+        self.loadedCreateRasterCubeTemplate = QLabel()
         self.loadedCreateRasterCubeTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NONE))
         self.layoutCreateRasterCubeTemplate.addWidget(self.loadedCreateRasterCubeTemplate, 0, 1)
         
-        self.labelCreateRasterCubeTemplate = QtGui.QLabel()
+        self.labelCreateRasterCubeTemplate = QLabel()
         self.labelCreateRasterCubeTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NAME) + ':')
         self.layoutCreateRasterCubeTemplate.addWidget(self.labelCreateRasterCubeTemplate, 1, 0)
         
-        self.comboBoxCreateRasterCubeTemplate = QtGui.QComboBox()
-        self.comboBoxCreateRasterCubeTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
+        self.comboBoxCreateRasterCubeTemplate = QComboBox()
+        self.comboBoxCreateRasterCubeTemplate.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Maximum)
         self.comboBoxCreateRasterCubeTemplate.setDisabled(True)
         self.comboBoxCreateRasterCubeTemplate.addItem(MenuFactory.getLabel(MenuFactory.CONF_NO_FOUND))
         self.layoutCreateRasterCubeTemplate.addWidget(self.comboBoxCreateRasterCubeTemplate, 1, 1)
         
-        self.layoutButtonCreateRasterCubeTemplate = QtGui.QHBoxLayout()
-        self.layoutButtonCreateRasterCubeTemplate.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTop)
-        self.buttonLoadCreateRasterCubeTemplate = QtGui.QPushButton()
+        self.layoutButtonCreateRasterCubeTemplate = QHBoxLayout()
+        self.layoutButtonCreateRasterCubeTemplate.setAlignment(Qt.AlignRight|Qt.AlignTop)
+        self.buttonLoadCreateRasterCubeTemplate = QPushButton()
         self.buttonLoadCreateRasterCubeTemplate.setDisabled(True)
-        self.buttonLoadCreateRasterCubeTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonLoadCreateRasterCubeTemplate.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         self.buttonLoadCreateRasterCubeTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NO_FOUND))
-        self.buttonSaveCreateRasterCubeTemplate = QtGui.QPushButton()
+        self.buttonSaveCreateRasterCubeTemplate = QPushButton()
         self.buttonSaveCreateRasterCubeTemplate.setDisabled(True)
-        self.buttonSaveCreateRasterCubeTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonSaveCreateRasterCubeTemplate.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         self.buttonSaveCreateRasterCubeTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE))
-        self.buttonSaveAsCreateRasterCubeTemplate = QtGui.QPushButton()
-        self.buttonSaveAsCreateRasterCubeTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonSaveAsCreateRasterCubeTemplate = QPushButton()
+        self.buttonSaveAsCreateRasterCubeTemplate.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         self.buttonSaveAsCreateRasterCubeTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS))
         self.layoutButtonCreateRasterCubeTemplate.addWidget(self.buttonLoadCreateRasterCubeTemplate)
         self.layoutButtonCreateRasterCubeTemplate.addWidget(self.buttonSaveCreateRasterCubeTemplate)
@@ -981,18 +987,18 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxCreateRasterCubeTemplate.addLayout(self.layoutButtonCreateRasterCubeTemplate)
         
         # Process tab button
-        self.layoutButtonCreateRasterCube = QtGui.QHBoxLayout()
-        self.buttonProcessCreateRasterCube = QtGui.QPushButton()
+        self.layoutButtonCreateRasterCube = QHBoxLayout()
+        self.buttonProcessCreateRasterCube = QPushButton()
         self.buttonProcessCreateRasterCube.setText(MenuFactory.getLabel(MenuFactory.SCIENDO_PROCESS))
-        self.buttonHelpSCIENDOCreateRasterCube = QtGui.QPushButton()
+        self.buttonHelpSCIENDOCreateRasterCube = QPushButton()
         self.buttonHelpSCIENDOCreateRasterCube.setIcon(icon)
-        self.layoutButtonCreateRasterCube.setAlignment(QtCore.Qt.AlignRight)
+        self.layoutButtonCreateRasterCube.setAlignment(Qt.AlignRight)
         self.layoutButtonCreateRasterCube.addWidget(self.buttonProcessCreateRasterCube)
         self.layoutButtonCreateRasterCube.addWidget(self.buttonHelpSCIENDOCreateRasterCube)
         
         # Place the GroupBoxes
         self.layoutTabCreateRasterCubeOfFactors.addWidget(self.groupBoxCreateRasterCubeOfFactors, 0, 0)
-        self.layoutTabCreateRasterCubeOfFactors.addLayout(self.layoutButtonCreateRasterCube, 1, 0, 1, 2, QtCore.Qt.AlignRight)
+        self.layoutTabCreateRasterCubeOfFactors.addLayout(self.layoutButtonCreateRasterCube, 1, 0, 1, 2, Qt.AlignRight)
         self.layoutTabCreateRasterCubeOfFactors.addWidget(self.groupBoxCreateRasterCubeTemplate, 0, 1, 1, 1)
         self.layoutTabCreateRasterCubeOfFactors.setColumnStretch(0, 3)
         self.layoutTabCreateRasterCubeOfFactors.setColumnStretch(1, 1) 
@@ -1002,83 +1008,84 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         # 'Calculate Weight of Evidence' sub tab
         #***********************************************************
         # 'WoE' GroupBox
-        self.groupBoxCalculateWeightOfEvidence = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.SCIENDO_PARAMETERIZATION))
-        self.layoutGroupBoxCalculateWeightOfEvidence = QtGui.QVBoxLayout()
-        self.layoutGroupBoxCalculateWeightOfEvidence.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.groupBoxCalculateWeightOfEvidence = QGroupBox(MenuFactory.getLabel(MenuFactory.SCIENDO_PARAMETERIZATION))
+        self.layoutGroupBoxCalculateWeightOfEvidence = QVBoxLayout()
+        self.layoutGroupBoxCalculateWeightOfEvidence.setAlignment(Qt.AlignLeft|Qt.AlignTop)
         self.groupBoxCalculateWeightOfEvidence.setLayout(self.layoutGroupBoxCalculateWeightOfEvidence)
         
-        self.layoutCalculateWeightOfEvidenceInfo = QtGui.QVBoxLayout()
-        self.labelCalculateWeightOfEvidenceInfo = QtGui.QLabel()
+        self.layoutCalculateWeightOfEvidenceInfo = QVBoxLayout()
+        self.labelCalculateWeightOfEvidenceInfo = QLabel()
         self.labelCalculateWeightOfEvidenceInfo.setText('\n')
         self.labelCalculateWeightOfEvidenceInfo.setWordWrap(True)
         self.layoutCalculateWeightOfEvidenceInfo.addWidget(self.labelCalculateWeightOfEvidenceInfo)
         
-        self.layoutCalculateWeightOfEvidenceParameters = QtGui.QGridLayout()
+        self.layoutCalculateWeightOfEvidenceParameters = QGridLayout()
         self.layoutCalculateWeightOfEvidenceParameters.setContentsMargins(0, 0, 0, 0)
         
-        self.labelCalculateWeightOfEvidenceIndex = QtGui.QLabel()
+        self.labelCalculateWeightOfEvidenceIndex = QLabel()
         self.labelCalculateWeightOfEvidenceIndex.setText(MenuFactory.getLabel(MenuFactory.SCIENDO_SIMULATION_DIRECTORY_INDEX) + ':')
         self.layoutCalculateWeightOfEvidenceParameters.addWidget(self.labelCalculateWeightOfEvidenceIndex, 0, 0)
         
-        self.comboBoxCalculateWeightOfEvidenceIndex = QtGui.QComboBox()
+        self.comboBoxCalculateWeightOfEvidenceIndex = QComboBox()
         self.comboBoxCalculateWeightOfEvidenceIndex.setDisabled(True)
         self.layoutCalculateWeightOfEvidenceParameters.addWidget(self.comboBoxCalculateWeightOfEvidenceIndex, 0, 1)
         
         self.loadAddedSimulationIndex(self.comboBoxCalculateWeightOfEvidenceIndex)
         
-        self.labelCalculateWeightOfEvidenceTable = QtGui.QLabel()
+        self.labelCalculateWeightOfEvidenceTable = QLabel()
         self.labelCalculateWeightOfEvidenceTable.setText(MenuFactory.getLabel(MenuFactory.SCIENDO_LAND_COVER_LOOKUP_TABLE) + ':')
         self.layoutCalculateWeightOfEvidenceParameters.addWidget(self.labelCalculateWeightOfEvidenceTable, 1, 0)
         
-        self.comboBoxCalculateWeightOfEvidenceTable = QtGui.QComboBox()
+        self.comboBoxCalculateWeightOfEvidenceTable = QComboBox()
         self.comboBoxCalculateWeightOfEvidenceTable.setDisabled(True)
         self.layoutCalculateWeightOfEvidenceParameters.addWidget(self.comboBoxCalculateWeightOfEvidenceTable, 1, 1)
         
-        self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxCalculateWeightOfEvidenceTable)      
+        # self.handlerPopulateNameFromLookupData(self.main.dataTable, self.comboBoxCalculateWeightOfEvidenceTable)      
+        DialogLumensBase.handlerPopulateNameFromLookupData(parent, self.main.dataTable, self.comboBoxCalculateWeightOfEvidenceTable)      
         
         self.layoutGroupBoxCalculateWeightOfEvidence.addLayout(self.layoutCalculateWeightOfEvidenceInfo)
         self.layoutGroupBoxCalculateWeightOfEvidence.addLayout(self.layoutCalculateWeightOfEvidenceParameters)        
 
         # Template GroupBox
-        self.groupBoxCalculateWeightOfEvidenceTemplate = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.CONF_TITLE))
-        self.layoutGroupBoxCalculateWeightOfEvidenceTemplate = QtGui.QVBoxLayout()
-        self.layoutGroupBoxCalculateWeightOfEvidenceTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.groupBoxCalculateWeightOfEvidenceTemplate = QGroupBox(MenuFactory.getLabel(MenuFactory.CONF_TITLE))
+        self.layoutGroupBoxCalculateWeightOfEvidenceTemplate = QVBoxLayout()
+        self.layoutGroupBoxCalculateWeightOfEvidenceTemplate.setAlignment(Qt.AlignLeft|Qt.AlignTop)
         self.groupBoxCalculateWeightOfEvidenceTemplate.setLayout(self.layoutGroupBoxCalculateWeightOfEvidenceTemplate)
-        self.layoutCalculateWeightOfEvidenceTemplateInfo = QtGui.QVBoxLayout()
-        self.layoutCalculateWeightOfEvidenceTemplate = QtGui.QGridLayout()
+        self.layoutCalculateWeightOfEvidenceTemplateInfo = QVBoxLayout()
+        self.layoutCalculateWeightOfEvidenceTemplate = QGridLayout()
         self.layoutGroupBoxCalculateWeightOfEvidenceTemplate.addLayout(self.layoutCalculateWeightOfEvidenceTemplateInfo)
         self.layoutGroupBoxCalculateWeightOfEvidenceTemplate.addLayout(self.layoutCalculateWeightOfEvidenceTemplate)
         
-        self.labelLoadedCalculateWeightOfEvidenceTemplate = QtGui.QLabel()
+        self.labelLoadedCalculateWeightOfEvidenceTemplate = QLabel()
         self.labelLoadedCalculateWeightOfEvidenceTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOADED_CONFIGURATION) + ':')
         self.layoutCalculateWeightOfEvidenceTemplate.addWidget(self.labelLoadedCalculateWeightOfEvidenceTemplate, 0, 0)
         
-        self.loadedCalculateWeightOfEvidenceTemplate = QtGui.QLabel()
+        self.loadedCalculateWeightOfEvidenceTemplate = QLabel()
         self.loadedCalculateWeightOfEvidenceTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NONE))
         self.layoutCalculateWeightOfEvidenceTemplate.addWidget(self.loadedCalculateWeightOfEvidenceTemplate, 0, 1)
         
-        self.labeCalculateWeightOfEvidenceTemplate = QtGui.QLabel()
+        self.labeCalculateWeightOfEvidenceTemplate = QLabel()
         self.labeCalculateWeightOfEvidenceTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NAME) + ':')
         self.layoutCalculateWeightOfEvidenceTemplate.addWidget(self.labeCalculateWeightOfEvidenceTemplate, 1, 0)
         
-        self.comboBoxCalculateWeightOfEvidenceTemplate = QtGui.QComboBox()
-        self.comboBoxCalculateWeightOfEvidenceTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
+        self.comboBoxCalculateWeightOfEvidenceTemplate = QComboBox()
+        self.comboBoxCalculateWeightOfEvidenceTemplate.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Maximum)
         self.comboBoxCalculateWeightOfEvidenceTemplate.setDisabled(True)
         self.comboBoxCalculateWeightOfEvidenceTemplate.addItem(MenuFactory.getLabel(MenuFactory.CONF_NO_FOUND))
         self.layoutCalculateWeightOfEvidenceTemplate.addWidget(self.comboBoxCalculateWeightOfEvidenceTemplate, 1, 1)
         
-        self.layoutButtonCalculateWeightOfEvidenceTemplate = QtGui.QHBoxLayout()
-        self.layoutButtonCalculateWeightOfEvidenceTemplate.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTop)
-        self.buttonLoadCalculateWeightOfEvidenceTemplate = QtGui.QPushButton()
+        self.layoutButtonCalculateWeightOfEvidenceTemplate = QHBoxLayout()
+        self.layoutButtonCalculateWeightOfEvidenceTemplate.setAlignment(Qt.AlignRight|Qt.AlignTop)
+        self.buttonLoadCalculateWeightOfEvidenceTemplate = QPushButton()
         self.buttonLoadCalculateWeightOfEvidenceTemplate.setDisabled(True)
-        self.buttonLoadCalculateWeightOfEvidenceTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonLoadCalculateWeightOfEvidenceTemplate.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         self.buttonLoadCalculateWeightOfEvidenceTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NO_FOUND))
-        self.buttonSaveCalculateWeightOfEvidenceTemplate = QtGui.QPushButton()
+        self.buttonSaveCalculateWeightOfEvidenceTemplate = QPushButton()
         self.buttonSaveCalculateWeightOfEvidenceTemplate.setDisabled(True)
-        self.buttonSaveCalculateWeightOfEvidenceTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonSaveCalculateWeightOfEvidenceTemplate.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         self.buttonSaveCalculateWeightOfEvidenceTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE))
-        self.buttonSaveAsCalculateWeightOfEvidenceTemplate = QtGui.QPushButton()
-        self.buttonSaveAsCalculateWeightOfEvidenceTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonSaveAsCalculateWeightOfEvidenceTemplate = QPushButton()
+        self.buttonSaveAsCalculateWeightOfEvidenceTemplate.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         self.buttonSaveAsCalculateWeightOfEvidenceTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS))
         self.layoutButtonCalculateWeightOfEvidenceTemplate.addWidget(self.buttonLoadCalculateWeightOfEvidenceTemplate)
         self.layoutButtonCalculateWeightOfEvidenceTemplate.addWidget(self.buttonSaveCalculateWeightOfEvidenceTemplate)
@@ -1086,18 +1093,18 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxCalculateWeightOfEvidenceTemplate.addLayout(self.layoutButtonCalculateWeightOfEvidenceTemplate)
         
         # Process tab button
-        self.layoutButtonCalculateWeightOfEvidence = QtGui.QHBoxLayout()
-        self.buttonProcessCalculateWeightOfEvidence = QtGui.QPushButton()
+        self.layoutButtonCalculateWeightOfEvidence = QHBoxLayout()
+        self.buttonProcessCalculateWeightOfEvidence = QPushButton()
         self.buttonProcessCalculateWeightOfEvidence.setText(MenuFactory.getLabel(MenuFactory.SCIENDO_PROCESS))
-        self.buttonHelpSCIENDOWeightOfEvidence = QtGui.QPushButton()
+        self.buttonHelpSCIENDOWeightOfEvidence = QPushButton()
         self.buttonHelpSCIENDOWeightOfEvidence.setIcon(icon)
-        self.layoutButtonCalculateWeightOfEvidence.setAlignment(QtCore.Qt.AlignRight)
+        self.layoutButtonCalculateWeightOfEvidence.setAlignment(Qt.AlignRight)
         self.layoutButtonCalculateWeightOfEvidence.addWidget(self.buttonProcessCalculateWeightOfEvidence)
         self.layoutButtonCalculateWeightOfEvidence.addWidget(self.buttonHelpSCIENDOWeightOfEvidence)
         
         # Place the GroupBoxes
         self.layoutTabCalculateWeightOfEvidence.addWidget(self.groupBoxCalculateWeightOfEvidence, 0, 0)
-        self.layoutTabCalculateWeightOfEvidence.addLayout(self.layoutButtonCalculateWeightOfEvidence, 1, 0, 1, 2, QtCore.Qt.AlignRight)
+        self.layoutTabCalculateWeightOfEvidence.addLayout(self.layoutButtonCalculateWeightOfEvidence, 1, 0, 1, 2, Qt.AlignRight)
         self.layoutTabCalculateWeightOfEvidence.addWidget(self.groupBoxCalculateWeightOfEvidenceTemplate, 0, 1, 1, 1)
         self.layoutTabCalculateWeightOfEvidence.setColumnStretch(0, 3)
         self.layoutTabCalculateWeightOfEvidence.setColumnStretch(1, 1) 
@@ -1107,40 +1114,40 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         # Setup 'Simulate Land Use Change Modeling' sub tab
         #***********************************************************
         # 'Simulate Land Use Change Modeling' GroupBox
-        self.groupBoxLandUseChangeSimulation = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.SCIENDO_PARAMETERIZATION))
-        self.layoutGroupBoxLandUseChangeSimulation = QtGui.QVBoxLayout()
-        self.layoutGroupBoxLandUseChangeSimulation.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.groupBoxLandUseChangeSimulation = QGroupBox(MenuFactory.getLabel(MenuFactory.SCIENDO_PARAMETERIZATION))
+        self.layoutGroupBoxLandUseChangeSimulation = QVBoxLayout()
+        self.layoutGroupBoxLandUseChangeSimulation.setAlignment(Qt.AlignLeft|Qt.AlignTop)
         self.groupBoxLandUseChangeSimulation.setLayout(self.layoutGroupBoxLandUseChangeSimulation)
         
-        self.layoutLandUseChangeSimulationInfo = QtGui.QVBoxLayout()
-        self.labelLandUseChangeSimulationInfo = QtGui.QLabel()
+        self.layoutLandUseChangeSimulationInfo = QVBoxLayout()
+        self.labelLandUseChangeSimulationInfo = QLabel()
         self.labelLandUseChangeSimulationInfo.setText('\n')
         self.labelLandUseChangeSimulationInfo.setWordWrap(True)
         self.layoutLandUseChangeSimulationInfo.addWidget(self.labelLandUseChangeSimulationInfo)        
         
-        self.layoutLandUseChangeSimulationParameters = QtGui.QGridLayout()
+        self.layoutLandUseChangeSimulationParameters = QGridLayout()
         self.layoutLandUseChangeSimulationParameters.setContentsMargins(0, 0, 0, 0)
         
-        self.labelLandUseChangeSimulationIndex = QtGui.QLabel()
+        self.labelLandUseChangeSimulationIndex = QLabel()
         self.labelLandUseChangeSimulationIndex.setText(MenuFactory.getLabel(MenuFactory.SCIENDO_SIMULATION_DIRECTORY_INDEX) + ':')
         self.layoutLandUseChangeSimulationParameters.addWidget(self.labelLandUseChangeSimulationIndex, 0, 0)
         
-        self.comboBoxLandUseChangeSimulationIndex = QtGui.QComboBox()
+        self.comboBoxLandUseChangeSimulationIndex = QComboBox()
         self.comboBoxLandUseChangeSimulationIndex.setDisabled(True)
         self.layoutLandUseChangeSimulationParameters.addWidget(self.comboBoxLandUseChangeSimulationIndex, 0, 1)
         
         self.loadAddedSimulationIndex(self.comboBoxLandUseChangeSimulationIndex)      
         
-        self.labelLandUseChangeSimulationIteration = QtGui.QLabel()
+        self.labelLandUseChangeSimulationIteration = QLabel()
         self.labelLandUseChangeSimulationIteration.setText(MenuFactory.getLabel(MenuFactory.SCIENDO_ITERATION) + ':')
         self.layoutLandUseChangeSimulationParameters.addWidget(self.labelLandUseChangeSimulationIteration, 1, 0)
         
-        self.spinBoxLandUseChangeSimulationIteration = QtGui.QSpinBox()
+        self.spinBoxLandUseChangeSimulationIteration = QSpinBox()
         self.spinBoxLandUseChangeSimulationIteration.setRange(1, 99)
         self.spinBoxLandUseChangeSimulationIteration.setValue(5)
         self.layoutLandUseChangeSimulationParameters.addWidget(self.spinBoxLandUseChangeSimulationIteration, 1, 1)
         
-        # self.tableListOfTransitions = QtGui.QTableWidget()
+        # self.tableListOfTransitions = QTableWidget()
         # self.tableListOfTransitions.setEnabled(True)
         # self.tableListOfTransitions.setRowCount(25)
         # self.tableListOfTransitions.setColumnCount(4)
@@ -1151,45 +1158,45 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxLandUseChangeSimulation.addLayout(self.layoutLandUseChangeSimulationParameters)
         
         # Template GroupBox
-        self.groupBoxLandUseChangeSimulationTemplate = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.CONF_TITLE))
-        self.layoutGroupBoxLandUseChangeSimulationTemplate = QtGui.QVBoxLayout()
-        self.layoutGroupBoxLandUseChangeSimulationTemplate.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.groupBoxLandUseChangeSimulationTemplate = QGroupBox(MenuFactory.getLabel(MenuFactory.CONF_TITLE))
+        self.layoutGroupBoxLandUseChangeSimulationTemplate = QVBoxLayout()
+        self.layoutGroupBoxLandUseChangeSimulationTemplate.setAlignment(Qt.AlignLeft|Qt.AlignTop)
         self.groupBoxLandUseChangeSimulationTemplate.setLayout(self.layoutGroupBoxLandUseChangeSimulationTemplate)
-        self.layoutLandUseChangeSimulationTemplateInfo = QtGui.QVBoxLayout()
-        self.layoutLandUseChangeSimulationTemplate = QtGui.QGridLayout()
+        self.layoutLandUseChangeSimulationTemplateInfo = QVBoxLayout()
+        self.layoutLandUseChangeSimulationTemplate = QGridLayout()
         self.layoutGroupBoxLandUseChangeSimulationTemplate.addLayout(self.layoutLandUseChangeSimulationTemplateInfo)
         self.layoutGroupBoxLandUseChangeSimulationTemplate.addLayout(self.layoutLandUseChangeSimulationTemplate)
         
-        self.labelLoadedLandUseChangeSimulationTemplate = QtGui.QLabel()
+        self.labelLoadedLandUseChangeSimulationTemplate = QLabel()
         self.labelLoadedLandUseChangeSimulationTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_LOADED_CONFIGURATION) + ':')
         self.layoutLandUseChangeSimulationTemplate.addWidget(self.labelLoadedLandUseChangeSimulationTemplate, 0, 0)
         
-        self.loadedLandUseChangeSimulationTemplate = QtGui.QLabel()
+        self.loadedLandUseChangeSimulationTemplate = QLabel()
         self.loadedLandUseChangeSimulationTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NONE))
         self.layoutLandUseChangeSimulationTemplate.addWidget(self.loadedLandUseChangeSimulationTemplate, 0, 1)
         
-        self.labelLandUseChangeSimulationTemplate = QtGui.QLabel()
+        self.labelLandUseChangeSimulationTemplate = QLabel()
         self.labelLandUseChangeSimulationTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NAME) + ':')
         self.layoutLandUseChangeSimulationTemplate.addWidget(self.labelLandUseChangeSimulationTemplate, 1, 0)
         
-        self.comboBoxLandUseChangeSimulationTemplate = QtGui.QComboBox()
-        self.comboBoxLandUseChangeSimulationTemplate.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Maximum)
+        self.comboBoxLandUseChangeSimulationTemplate = QComboBox()
+        self.comboBoxLandUseChangeSimulationTemplate.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Maximum)
         self.comboBoxLandUseChangeSimulationTemplate.setDisabled(True)
         self.comboBoxLandUseChangeSimulationTemplate.addItem(MenuFactory.getLabel(MenuFactory.CONF_NO_FOUND))
         self.layoutLandUseChangeSimulationTemplate.addWidget(self.comboBoxLandUseChangeSimulationTemplate, 1, 1)
         
-        self.layoutButtonLandUseChangeSimulationTemplate = QtGui.QHBoxLayout()
-        self.layoutButtonLandUseChangeSimulationTemplate.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTop)
-        self.buttonLoadLandUseChangeSimulationTemplate = QtGui.QPushButton()
+        self.layoutButtonLandUseChangeSimulationTemplate = QHBoxLayout()
+        self.layoutButtonLandUseChangeSimulationTemplate.setAlignment(Qt.AlignRight|Qt.AlignTop)
+        self.buttonLoadLandUseChangeSimulationTemplate = QPushButton()
         self.buttonLoadLandUseChangeSimulationTemplate.setDisabled(True)
-        self.buttonLoadLandUseChangeSimulationTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonLoadLandUseChangeSimulationTemplate.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         self.buttonLoadLandUseChangeSimulationTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_NO_FOUND))
-        self.buttonSaveLandUseChangeSimulationTemplate = QtGui.QPushButton()
+        self.buttonSaveLandUseChangeSimulationTemplate = QPushButton()
         self.buttonSaveLandUseChangeSimulationTemplate.setDisabled(True)
-        self.buttonSaveLandUseChangeSimulationTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonSaveLandUseChangeSimulationTemplate.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         self.buttonSaveLandUseChangeSimulationTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE))
-        self.buttonSaveAsLandUseChangeSimulationTemplate = QtGui.QPushButton()
-        self.buttonSaveAsLandUseChangeSimulationTemplate.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonSaveAsLandUseChangeSimulationTemplate = QPushButton()
+        self.buttonSaveAsLandUseChangeSimulationTemplate.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         self.buttonSaveAsLandUseChangeSimulationTemplate.setText(MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS))
         self.layoutButtonLandUseChangeSimulationTemplate.addWidget(self.buttonLoadLandUseChangeSimulationTemplate)
         self.layoutButtonLandUseChangeSimulationTemplate.addWidget(self.buttonSaveLandUseChangeSimulationTemplate)
@@ -1197,18 +1204,18 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         self.layoutGroupBoxLandUseChangeSimulationTemplate.addLayout(self.layoutButtonLandUseChangeSimulationTemplate)
         
         # Process tab button
-        self.layoutButtonLandUseChangeSimulation = QtGui.QHBoxLayout()
-        self.buttonProcessLandUseChangeSimulation = QtGui.QPushButton()
+        self.layoutButtonLandUseChangeSimulation = QHBoxLayout()
+        self.buttonProcessLandUseChangeSimulation = QPushButton()
         self.buttonProcessLandUseChangeSimulation.setText(MenuFactory.getLabel(MenuFactory.SCIENDO_PROCESS))
-        self.buttonHelpSCIENDOLandUseChangeSimulation = QtGui.QPushButton()
+        self.buttonHelpSCIENDOLandUseChangeSimulation = QPushButton()
         self.buttonHelpSCIENDOLandUseChangeSimulation.setIcon(icon)
-        self.layoutButtonLandUseChangeSimulation.setAlignment(QtCore.Qt.AlignRight)
+        self.layoutButtonLandUseChangeSimulation.setAlignment(Qt.AlignRight)
         self.layoutButtonLandUseChangeSimulation.addWidget(self.buttonProcessLandUseChangeSimulation)
         self.layoutButtonLandUseChangeSimulation.addWidget(self.buttonHelpSCIENDOLandUseChangeSimulation)        
         
         # Place the GroupBoxes
         self.layoutTabSimulateLandUseChangeModeling.addWidget(self.groupBoxLandUseChangeSimulation, 0, 0)
-        self.layoutTabSimulateLandUseChangeModeling.addLayout(self.layoutButtonLandUseChangeSimulation, 1, 0, 1, 2, QtCore.Qt.AlignRight)
+        self.layoutTabSimulateLandUseChangeModeling.addLayout(self.layoutButtonLandUseChangeSimulation, 1, 0, 1, 2, Qt.AlignRight)
         self.layoutTabSimulateLandUseChangeModeling.addWidget(self.groupBoxLandUseChangeSimulationTemplate, 0, 1, 1, 1)
         self.layoutTabSimulateLandUseChangeModeling.setColumnStretch(0, 3)
         self.layoutTabSimulateLandUseChangeModeling.setColumnStretch(1, 1) 
@@ -1218,16 +1225,16 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         # Setup 'Log' tab
         #***********************************************************
         # 'History Log' GroupBox
-        self.groupBoxHistoryLog = QtGui.QGroupBox('{0} {1}'.format(self.dialogTitle, 'history log'))
-        self.layoutGroupBoxHistoryLog = QtGui.QVBoxLayout()
-        self.layoutGroupBoxHistoryLog.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.groupBoxHistoryLog = QGroupBox('{0} {1}'.format(self.dialogTitle, 'history log'))
+        self.layoutGroupBoxHistoryLog = QVBoxLayout()
+        self.layoutGroupBoxHistoryLog.setAlignment(Qt.AlignLeft|Qt.AlignTop)
         self.groupBoxHistoryLog.setLayout(self.layoutGroupBoxHistoryLog)
-        self.layoutHistoryLogInfo = QtGui.QVBoxLayout()
-        self.layoutHistoryLog = QtGui.QVBoxLayout()
+        self.layoutHistoryLogInfo = QVBoxLayout()
+        self.layoutHistoryLog = QVBoxLayout()
         self.layoutGroupBoxHistoryLog.addLayout(self.layoutHistoryLogInfo)
         self.layoutGroupBoxHistoryLog.addLayout(self.layoutHistoryLog)
         
-        self.labelHistoryLogInfo = QtGui.QLabel()
+        self.labelHistoryLogInfo = QLabel()
         self.labelHistoryLogInfo.setText('\n')
         self.layoutHistoryLogInfo.addWidget(self.labelHistoryLogInfo)
         
@@ -1276,7 +1283,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
             index (int): the current tab index.
         """
         if self.tabWidget.widget(index) == self.tabLog:
-            self.log_box.widget.verticalScrollBar().triggerAction(QtGui.QAbstractSlider.SliderToMaximum)
+            self.log_box.widget.verticalScrollBar().triggerAction(QAbstractSlider.SliderToMaximum)
 
 
     def clearLayout(self, layout):
@@ -1288,9 +1295,9 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         for i in reversed(range(layout.count())):
             item = layout.itemAt(i)
 
-            if isinstance(item, QtGui.QWidgetItem):
+            if isinstance(item, QWidgetItem):
                 item.widget().deleteLater() # use this to properly delete the widget
-            elif isinstance(item, QtGui.QSpacerItem):
+            elif isinstance(item, QSpacerItem):
                 pass
             else:
                 self.clearLayout(item.layout())
@@ -1303,30 +1310,30 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         """
         self.tableAddFactorRowCount = self.tableAddFactorRowCount + 1
         
-        layoutFactorRow = QtGui.QHBoxLayout()
+        layoutFactorRow = QHBoxLayout()
         
-        buttonDeleteFactorRow = QtGui.QPushButton()
-        icon = QtGui.QIcon(':/ui/icons/iconActionClear.png')
+        buttonDeleteFactorRow = QPushButton()
+        icon = QIcon(':/ui/icons/iconActionClear.png')
         buttonDeleteFactorRow.setIcon(icon)
-        buttonDeleteFactorRow.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        buttonDeleteFactorRow.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         buttonDeleteFactorRow.setObjectName('buttonDeleteFactorRow_{0}'.format(str(self.tableAddFactorRowCount)))
         layoutFactorRow.addWidget(buttonDeleteFactorRow)
         
         buttonDeleteFactorRow.clicked.connect(self.handlerDeleteFactorRow)
         
-        comboBoxFactorData = QtGui.QComboBox()
+        comboBoxFactorData = QComboBox()
         comboBoxFactorData.setDisabled(True)
         comboBoxFactorData.setObjectName('comboBoxFactorData_{0}'.format(str(self.tableAddFactorRowCount)))
         layoutFactorRow.addWidget(comboBoxFactorData)
         
         comboBoxFactorData.currentIndexChanged.connect(self.handlerChangeFactorData)
 
-        lineEditFactorTitle = QtGui.QLineEdit()
+        lineEditFactorTitle = QLineEdit()
         lineEditFactorTitle.setDisabled(True)
         lineEditFactorTitle.setObjectName('lineEditFactorTitle_{0}'.format(str(self.tableAddFactorRowCount)))
         layoutFactorRow.addWidget(lineEditFactorTitle)
         
-        lineEditFactorPath = QtGui.QLineEdit()
+        lineEditFactorPath = QLineEdit()
         lineEditFactorPath.setVisible(False)
         lineEditFactorPath.setObjectName('lineEditFactorPath_{0}'.format(str(self.tableAddFactorRowCount)))
         layoutFactorRow.addWidget(lineEditFactorPath)
@@ -1336,7 +1343,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         
 
     def populateQUESCDatabase(self):
-        layoutCheckBoxQUESCDatabase = QtGui.QVBoxLayout()
+        layoutCheckBoxQUESCDatabase = QVBoxLayout()
         self.checkBoxQUESCDatabaseCount = 0
         if len(self.main.dataTable):
             dataTable = self.main.dataTable
@@ -1347,13 +1354,13 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
                     dataQUESCDatabase.append(dataTableName)
             for name in dataQUESCDatabase:
                 self.checkBoxQUESCDatabaseCount = self.checkBoxQUESCDatabaseCount + 1
-                checkBoxHistoricalBaselineAnnualProjectionQUESCDatabase = QtGui.QCheckBox()
+                checkBoxHistoricalBaselineAnnualProjectionQUESCDatabase = QCheckBox()
                 checkBoxHistoricalBaselineAnnualProjectionQUESCDatabase.setObjectName('checkBoxHistoricalBaselineAnnualProjectionQUESCDatabase_{0}'.format(str(self.checkBoxQUESCDatabaseCount)))
                 checkBoxHistoricalBaselineAnnualProjectionQUESCDatabase.setText(name)
                 layoutCheckBoxQUESCDatabase.addWidget(checkBoxHistoricalBaselineAnnualProjectionQUESCDatabase)
                 checkBoxHistoricalBaselineAnnualProjectionQUESCDatabase.toggled.connect(self.toggleHistoricalBaselineAnnualProjectionQUESCDatabase)
         else:
-            labelQUESCDatabaseHistoricalBaselineAnnualProjection = QtGui.QLabel()
+            labelQUESCDatabaseHistoricalBaselineAnnualProjection = QLabel()
             labelQUESCDatabaseHistoricalBaselineAnnualProjection.setText(MenuFactory.getLabel(MenuFactory.MSG_SCIENDO_NO_QUESC_DB))
             layoutCheckBoxQUESCDatabase.addWidget(labelQUESCDatabaseHistoricalBaselineAnnualProjection)
             
@@ -1416,7 +1423,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         objectName = checkBoxSender.objectName()
         checkBoxIndex = objectName.split('_')[1]
         
-        checkBoxQUESCDatabase = self.contentOptionsHistoricalBaselineAnnualProjection.findChild(QtGui.QCheckBox, 'checkBoxHistoricalBaselineAnnualProjectionQUESCDatabase_' + checkBoxIndex)
+        checkBoxQUESCDatabase = self.contentOptionsHistoricalBaselineAnnualProjection.findChild(QCheckBox, 'checkBoxHistoricalBaselineAnnualProjectionQUESCDatabase_' + checkBoxIndex)
         checkBoxName = checkBoxQUESCDatabase.text()
         
         if checked:
@@ -1464,15 +1471,15 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         if fileName:
             templateFile = fileName
         else:
-            reply = QtGui.QMessageBox.question(
+            reply = QMessageBox.question(
                 self,
                 MenuFactory.getLabel(MenuFactory.CONF_LOAD_TEMPLATE),
                 MenuFactory.getDescription(MenuFactory.CONF_LOAD_TEMPLATE) + ' \'{0}\'?'.format(templateFile),
-                QtGui.QMessageBox.Yes|QtGui.QMessageBox.No,
-                QtGui.QMessageBox.No
+                QMessageBox.Yes|QMessageBox.No,
+                QMessageBox.No
             )
             
-        if reply == QtGui.QMessageBox.Yes or fileName:
+        if reply == QMessageBox.Yes or fileName:
             self.loadTemplate(MenuFactory.getLabel(MenuFactory.SCIENDO_LED), templateFile)
     
     
@@ -1487,15 +1494,15 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         if fileName:
             templateFile = fileName
         
-        reply = QtGui.QMessageBox.question(
+        reply = QMessageBox.question(
             self,
             MenuFactory.getLabel(MenuFactory.CONF_SAVE_TEMPLATE),
             MenuFactory.getDescription(MenuFactory.CONF_SAVE_TEMPLATE),
-            QtGui.QMessageBox.Yes|QtGui.QMessageBox.No,
-            QtGui.QMessageBox.No
+            QMessageBox.Yes|QMessageBox.No,
+            QMessageBox.No
         )
             
-        if reply == QtGui.QMessageBox.Yes:
+        if reply == QMessageBox.Yes:
             self.saveTemplate(MenuFactory.getLabel(MenuFactory.SCIENDO_LED), templateFile)
             return True
         else:
@@ -1505,11 +1512,11 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
     def handlerSaveAsLowEmissionDevelopmentAnalysisTemplate(self):
         """Slot method for saving a module template to a new file.
         """
-        fileName, ok = QtGui.QInputDialog.getText(self, MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS), MenuFactory.getDescription(MenuFactory.CONF_SAVE_AS) + ';')
+        fileName, ok = QInputDialog.getText(self, MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS), MenuFactory.getDescription(MenuFactory.CONF_SAVE_AS) + ';')
         fileSaved = False
         
         if ok:
-            now = QtCore.QDateTime.currentDateTime().toString('yyyyMMdd-hhmmss')
+            now = QDateTime.currentDateTime().toString('yyyyMMdd-hhmmss')
             fileName = now + '__' + fileName + '.ini'
             
             if os.path.exists(os.path.join(self.settingsPath, fileName)):
@@ -1528,8 +1535,8 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
     def handlerSelectDriversAnalysisLandUseCoverChangeDrivers(self):
         """Slot method for a file select dialog.
         """
-        file = unicode(QtGui.QFileDialog.getOpenFileName(
-            self, MenuFactory.getLabel(MenuFactory.MSG_SCIENDO_SELECT_LAND_USE_DRIVERS), QtCore.QDir.homePath(), MenuFactory.getDescription(MenuFactory.MSG_SCIENDO_SELECT_LAND_USE_DRIVERS) + ' (*{0})'.format(self.main.appSettings['selectTextfileExt'])))
+        file = unicode(QFileDialog.getOpenFileName(
+            self, MenuFactory.getLabel(MenuFactory.MSG_SCIENDO_SELECT_LAND_USE_DRIVERS), QDir.homePath(), MenuFactory.getDescription(MenuFactory.MSG_SCIENDO_SELECT_LAND_USE_DRIVERS) + ' (*{0})'.format(self.main.appSettings['selectTextfileExt'])))
         
         if file:
             self.lineEditDriversAnalysisLandUseCoverChangeDrivers.setText(file)
@@ -1539,8 +1546,8 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
     def handlerSelectBuildScenarioHistoricalBaselineCar(self):
         """Slot method for a file select dialog.
         """
-        file = unicode(QtGui.QFileDialog.getOpenFileName(
-            self, MenuFactory.getLabel(MenuFactory.MSG_SCIENDO_SELECT_HISTORICAL_BASELINE_CAR), QtCore.QDir.homePath(), MenuFactory.getLabel(MenuFactory.MSG_SCIENDO_SELECT_HISTORICAL_BASELINE_CAR) + ' (*{0})'.format(self.main.appSettings['selectCarfileExt'])))
+        file = unicode(QFileDialog.getOpenFileName(
+            self, MenuFactory.getLabel(MenuFactory.MSG_SCIENDO_SELECT_HISTORICAL_BASELINE_CAR), QDir.homePath(), MenuFactory.getLabel(MenuFactory.MSG_SCIENDO_SELECT_HISTORICAL_BASELINE_CAR) + ' (*{0})'.format(self.main.appSettings['selectCarfileExt'])))
         
         if file:
             self.lineEditBuildScenarioHistoricalBaselineCar.setText(file)
@@ -1562,15 +1569,15 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         if fileName:
             templateFile = fileName
         else:
-            reply = QtGui.QMessageBox.question(
+            reply = QMessageBox.question(
                 self,
                 MenuFactory.getLabel(MenuFactory.CONF_LOAD_TEMPLATE),
                 MenuFactory.getDescription(MenuFactory.CONF_LOAD_TEMPLATE) + ' \'{0}\'?'.format(templateFile),
-                QtGui.QMessageBox.Yes|QtGui.QMessageBox.No,
-                QtGui.QMessageBox.No
+                QMessageBox.Yes|QMessageBox.No,
+                QMessageBox.No
             )
             
-        if reply == QtGui.QMessageBox.Yes or fileName:
+        if reply == QMessageBox.Yes or fileName:
             self.loadTemplate(MenuFactory.getLabel(MenuFactory.SCIENDO_LUCM), templateFile)
     
     
@@ -1585,15 +1592,15 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         if fileName:
             templateFile = fileName
         
-        reply = QtGui.QMessageBox.question(
+        reply = QMessageBox.question(
             self,
             MenuFactory.getLabel(MenuFactory.CONF_SAVE_TEMPLATE),
             MenuFactory.getDescription(MenuFactory.CONF_SAVE_TEMPLATE),
-            QtGui.QMessageBox.Yes|QtGui.QMessageBox.No,
-            QtGui.QMessageBox.No
+            QMessageBox.Yes|QMessageBox.No,
+            QMessageBox.No
         )
             
-        if reply == QtGui.QMessageBox.Yes:
+        if reply == QMessageBox.Yes:
             self.saveTemplate(MenuFactory.getLabel(MenuFactory.SCIENDO_LUCM), templateFile)
             return True
         else:
@@ -1603,11 +1610,11 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
     def handlerSaveAsLandUseChangeModelingTemplate(self):
         """Slot method for saving a module template to a new file.
         """
-        fileName, ok = QtGui.QInputDialog.getText(self, MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS), MenuFactory.getDescription(MenuFactory.CONF_SAVE_AS) + ';')
+        fileName, ok = QInputDialog.getText(self, MenuFactory.getLabel(MenuFactory.CONF_SAVE_AS), MenuFactory.getDescription(MenuFactory.CONF_SAVE_AS) + ';')
         fileSaved = False
         
         if ok:
-            now = QtCore.QDateTime.currentDateTime().toString('yyyyMMdd-hhmmss')
+            now = QDateTime.currentDateTime().toString('yyyyMMdd-hhmmss')
             fileName = now + '__' + fileName + '.ini'
             
             if os.path.exists(os.path.join(self.settingsPath, fileName)):
@@ -1645,14 +1652,14 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
         else:
             tableRow = str(rowNumber)
             
-        comboBoxFactorData = self.contentCreateRasterCubeOfFactors.findChild(QtGui.QComboBox, 'comboBoxFactorData_' + tableRow)
+        comboBoxFactorData = self.contentCreateRasterCubeOfFactors.findChild(QComboBox, 'comboBoxFactorData_' + tableRow)
         
         factorData = comboBoxFactorData.currentText()
         addedFactor = comboBoxFactorData.itemData(comboBoxFactorData.findText(factorData))
         
-        lineEditFactorTitle = self.contentCreateRasterCubeOfFactors.findChild(QtGui.QLineEdit, 'lineEditFactorTitle_' + tableRow)
+        lineEditFactorTitle = self.contentCreateRasterCubeOfFactors.findChild(QLineEdit, 'lineEditFactorTitle_' + tableRow)
         lineEditFactorTitle.setText(addedFactor['RST_NAME'])        
-        lineEditFactorPath = self.contentCreateRasterCubeOfFactors.findChild(QtGui.QLineEdit, 'lineEditFactorPath_' + tableRow)
+        lineEditFactorPath = self.contentCreateRasterCubeOfFactors.findChild(QLineEdit, 'lineEditFactorPath_' + tableRow)
         lineEditFactorPath.setText(addedFactor['RST_PATH'])
         
         
@@ -1669,7 +1676,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
     def handlerSelectLandUseChangeModelingFactorsDir(self):
         """Slot method for a directory select dialog.
         """
-        dir = unicode(QtGui.QFileDialog.getExistingDirectory(self, MenuFactory.getLabel(MenuFactory.MSG_SCIENDO_SELECT_FACTORS_DIR)))
+        dir = unicode(QFileDialog.getExistingDirectory(self, MenuFactory.getLabel(MenuFactory.MSG_SCIENDO_SELECT_FACTORS_DIR)))
         
         if dir:
             self.lineEditCreateRasterCubeOfFactorsDirectory.setText(dir)
@@ -1679,8 +1686,8 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
     def handlerSelectLandUseChangeModelingLandUseLookup(self):
         """Slot method for a file select dialog.
         """
-        file = unicode(QtGui.QFileDialog.getOpenFileName(
-            self, MenuFactory.getLabel(MenuFactory.MSG_SCIENDO_SELECT_LAND_USE_LOOKUP_TABLE), QtCore.QDir.homePath(), MenuFactory.getDescription(MenuFactory.MSG_SCIENDO_SELECT_LAND_USE_LOOKUP_TABLE) + ' (*{0})'.format(self.main.appSettings['selectCsvfileExt'])))
+        file = unicode(QFileDialog.getOpenFileName(
+            self, MenuFactory.getLabel(MenuFactory.MSG_SCIENDO_SELECT_LAND_USE_LOOKUP_TABLE), QDir.homePath(), MenuFactory.getDescription(MenuFactory.MSG_SCIENDO_SELECT_LAND_USE_LOOKUP_TABLE) + ' (*{0})'.format(self.main.appSettings['selectCsvfileExt'])))
         
         if file:
             self.lineEditLandUseChangeModelingLandUseLookup.setText(file)
@@ -1762,7 +1769,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
                 self.buttonProcessLowEmissionDevelopmentAnalysis.setDisabled(True)
                 
                 # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
-                self.main.setWindowState(QtCore.Qt.WindowMinimized)
+                self.main.setWindowState(Qt.WindowMinimized)
                 
                 outputs = general.runalg(
                     algName,
@@ -1778,7 +1785,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
                     dialog.exec_()
                 
                 # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
-                self.main.setWindowState(QtCore.Qt.WindowActive)
+                self.main.setWindowState(Qt.WindowActive)
                 
                 algSuccess = self.outputsMessageBox(algName, outputs, '', '')
                 
@@ -1803,7 +1810,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
                     self.buttonProcessLowEmissionDevelopmentAnalysis.setDisabled(True)
                     
                     # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
-                    self.main.setWindowState(QtCore.Qt.WindowMinimized)
+                    self.main.setWindowState(Qt.WindowMinimized)
                     
                     outputs = general.runalg(
                         algName,
@@ -1821,7 +1828,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
                     ##print outputs
                     
                     # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
-                    self.main.setWindowState(QtCore.Qt.WindowActive)
+                    self.main.setWindowState(Qt.WindowActive)
                     
                     algSuccess = self.outputsMessageBox(algName, outputs, '', '')
                     
@@ -1832,7 +1839,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
                     logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
                     logging.getLogger(self.historyLog).info('alg end: %s' % formName)
             else: 
-                QtGui.QMessageBox.information(self, MenuFactory.getLabel(MenuFactory.SCIENDO_HISTORICAL_BASELINE_ANNUAL_PROJECTION), MenuFactory.getLabel(MenuFactory.MSG_SCIENDO_CHOOSE_QUESC_DB))
+                QMessageBox.information(self, MenuFactory.getLabel(MenuFactory.SCIENDO_HISTORICAL_BASELINE_ANNUAL_PROJECTION), MenuFactory.getLabel(MenuFactory.MSG_SCIENDO_CHOOSE_QUESC_DB))
                 return 
         
         
@@ -1846,7 +1853,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
                 self.buttonProcessLowEmissionDevelopmentAnalysis.setDisabled(True)
                 
                 # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
-                self.main.setWindowState(QtCore.Qt.WindowMinimized)
+                self.main.setWindowState(Qt.WindowMinimized)
                 
                 outputs = general.runalg(
                     algName,
@@ -1862,7 +1869,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
                 ##print outputs
                 
                 # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
-                self.main.setWindowState(QtCore.Qt.WindowActive)
+                self.main.setWindowState(Qt.WindowActive)
                 
                 algSuccess = self.outputsMessageBox(algName, outputs, '', '')
                 
@@ -1884,7 +1891,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
                 self.buttonProcessLowEmissionDevelopmentAnalysis.setDisabled(True)
                 
                 # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
-                self.main.setWindowState(QtCore.Qt.WindowMinimized)
+                self.main.setWindowState(Qt.WindowMinimized)
                 
                 outputs = general.runalg(
                     algName,
@@ -1899,7 +1906,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
                 ##print outputs
                 
                 # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
-                self.main.setWindowState(QtCore.Qt.WindowActive)
+                self.main.setWindowState(Qt.WindowActive)
                 
                 self.outputsMessageBox(algName, outputs, '', '')
                 
@@ -1926,7 +1933,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
             self.buttonProcessTransitionMatrix.setDisabled(True)
             
             # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
-            self.main.setWindowState(QtCore.Qt.WindowMinimized)
+            self.main.setWindowState(Qt.WindowMinimized)
             
             outputs = general.runalg(
                 algName,
@@ -1943,7 +1950,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
                 dialog.exec_()
             
             # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
-            self.main.setWindowState(QtCore.Qt.WindowActive)
+            self.main.setWindowState(Qt.WindowActive)
             
             algSuccess = self.outputsMessageBox(algName, outputs, '', '')
             
@@ -1975,7 +1982,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
             self.buttonProcessCreateRasterCube.setDisabled(True)
             
             # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
-            self.main.setWindowState(QtCore.Qt.WindowMinimized)
+            self.main.setWindowState(Qt.WindowMinimized)
             
             outputs = general.runalg(
                 algName,
@@ -1993,7 +2000,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
             ##print outputs
             
             # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
-            self.main.setWindowState(QtCore.Qt.WindowActive)
+            self.main.setWindowState(Qt.WindowActive)
             
             self.outputsMessageBox(algName, outputs, '', '')
             
@@ -2020,7 +2027,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
             self.buttonProcessCalculateWeightOfEvidence.setDisabled(True)
             
             # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
-            self.main.setWindowState(QtCore.Qt.WindowMinimized)
+            self.main.setWindowState(Qt.WindowMinimized)
             
             outputs = general.runalg(
                 algName,
@@ -2038,7 +2045,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
             ##print outputs
             
             # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
-            self.main.setWindowState(QtCore.Qt.WindowActive)
+            self.main.setWindowState(Qt.WindowActive)
             
             self.outputsMessageBox(algName, outputs, '', '')
             
@@ -2065,7 +2072,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
             self.buttonProcessLandUseChangeSimulation.setDisabled(True)
             
             # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
-            self.main.setWindowState(QtCore.Qt.WindowMinimized)
+            self.main.setWindowState(Qt.WindowMinimized)
             
             outputs = general.runalg(
                 algName,
@@ -2083,7 +2090,7 @@ class DialogLumensSCIENDO(QtGui.QDialog, DialogLumensBase):
             ##print outputs
             
             # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
-            self.main.setWindowState(QtCore.Qt.WindowActive)
+            self.main.setWindowState(Qt.WindowActive)
             
             self.outputsMessageBox(algName, outputs, '', '')
             
