@@ -3,7 +3,7 @@
 
 import os, logging, datetime
 from qgis.core import *
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui
 
 from dialog_lumens_base import DialogLumensBase
 
