@@ -2207,7 +2207,7 @@ class DialogLumensTA(QDialog): # DialogLumensBase
         self.setAppSettings()
         
         formName = 'DialogLumensTAAbacusOpportunityCostCurve'
-        algName = 'r:taopcostabacus'
+        algName = 'r:ta_opcost_abacus'
         
         if self.validForm(formName):
             logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
@@ -2217,9 +2217,10 @@ class DialogLumensTA(QDialog): # DialogLumensBase
             # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
             self.main.setWindowState(Qt.WindowMinimized)
             
-            outputs = general.runalg(
-                algName,
-                self.main.appSettings[formName]['projectFile'],
+            outputs = general.run(
+                algName,{
+                    'Abacus_Project_File': self.main.appSettings[formName]['projectFile']
+                    }
             )
             
             # Display ROut file in debug mode
@@ -2248,7 +2249,7 @@ class DialogLumensTA(QDialog): # DialogLumensBase
         self.setAppSettings()
         
         formName = 'DialogLumensTAOpportunityCostCurve'
-        algName = 'r:taopcostcurve'
+        algName = 'r:ta_opcost_curve'
         activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
         
         if self.validForm(formName):
@@ -2259,13 +2260,14 @@ class DialogLumensTA(QDialog): # DialogLumensBase
             # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
             self.main.setWindowState(Qt.WindowMinimized)
             
-            outputs = general.runalg(
-                algName,
-                activeProject,
-                self.main.appSettings[formName]['csvNPVTable'],
-                self.main.appSettings[formName]['QUESCDatabase'],
+            outputs = general.run(
+                algName,{
+                'proj.file': activeProject,
+                'NPV': self.main.appSettings[formName]['csvNPVTable'],
+                'ques_c_db': self.main.appSettings[formName]['QUESCDatabase'],
                 self.main.appSettings[formName]['costThreshold'],
-                None,
+                'statusoutput': 'TEMPORARY_OUTPUT'
+                }
             )
             
             # Display ROut file in debug mode
@@ -2294,7 +2296,7 @@ class DialogLumensTA(QDialog): # DialogLumensBase
         self.setAppSettings()
         
         formName = 'DialogLumensTAOpportunityCostMap'
-        algName = 'r:taopcostmap'
+        algName = 'r:ta_opcost_map'
         activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
         
         if self.validForm(formName):
@@ -2305,16 +2307,17 @@ class DialogLumensTA(QDialog): # DialogLumensBase
             # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
             self.main.setWindowState(Qt.WindowMinimized)
             
-            outputs = general.runalg(
-                algName,
-                activeProject,
-                self.main.appSettings[formName]['landUse1'],
-                self.main.appSettings[formName]['landUse2'],
-                self.main.appSettings[formName]['plannigUnit'],
-                self.main.appSettings[formName]['carbon'],
-                self.main.appSettings[formName]['csvProfitability'],
-                self.main.appSettings[formName]['nodata'],
-                None,
+            outputs = general.run(
+                algName, {
+                'proj.file': activeProject,
+                'landuse_1': self.main.appSettings[formName]['landUse1'],
+                'landuse_2': self.main.appSettings[formName]['landUse2'],
+                'planning_unit': self.main.appSettings[formName]['plannigUnit'],
+                'lookup_c': self.main.appSettings[formName]['carbon'],
+                'lookup_npv': self.main.appSettings[formName]['csvProfitability'],
+                'raster.nodata': self.main.appSettings[formName]['nodata'],
+                'statusoutput': 'TEMPORARY_OUTPUT'
+                }
             )
             
             # Display ROut file in debug mode
@@ -2343,7 +2346,7 @@ class DialogLumensTA(QDialog): # DialogLumensBase
         self.setAppSettings()
         
         formName = 'DialogLumensTARegionalEconomySingleIODescriptiveAnalysis'
-        algName = 'r:taresingleiodescriptive'
+        algName = 'r:ta_re_singleio_descriptive'
         activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
         
         if self.validForm(formName):
@@ -2354,20 +2357,21 @@ class DialogLumensTA(QDialog): # DialogLumensBase
             # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
             self.main.setWindowState(Qt.WindowMinimized)
             
-            outputs = general.runalg(
-                algName,
-                activeProject,
-                self.main.appSettings[formName]['intermediateConsumptionMatrix'],
-                self.main.appSettings[formName]['valueAddedMatrix'],
-                self.main.appSettings[formName]['finalConsumptionMatrix'],
-                self.main.appSettings[formName]['valueAddedComponent'],
-                self.main.appSettings[formName]['finalConsumptionComponent'],
-                self.main.appSettings[formName]['listOfEconomicSector'],
-                self.main.appSettings[formName]['labourRequirement'],
-                self.main.appSettings[formName]['financialUnit'],
-                self.main.appSettings[formName]['areaName'],
-                self.main.appSettings[formName]['year'],
-                None,
+             outputs = general.run(
+                algName, {
+                'proj.file': activeProject,
+                'int_con_file': self.main.appSettings[formName]['intermediateConsumptionMatrix'],
+                'add_val_file': self.main.appSettings[formName]['valueAddedMatrix'],
+                'fin_dem_file': self.main.appSettings[formName]['finalConsumptionMatrix'],
+                'add_val_struc_file': self.main.appSettings[formName]['valueAddedComponent'],
+                'fin_dem_struc_file': self.main.appSettings[formName]['finalConsumptionComponent'],
+                'sector_file': self.main.appSettings[formName]['listOfEconomicSector'],
+                'labour_file': self.main.appSettings[formName]['labourRequirement'],
+                'unit': self.main.appSettings[formName]['financialUnit'],
+                'location': self.main.appSettings[formName]['areaName'],
+                'I_O_period': self.main.appSettings[formName]['year'],
+                'statusoutput': 'TEMPORARY_OUTPUT'
+                }
             )
             
             # Display ROut file in debug mode
@@ -2396,7 +2400,7 @@ class DialogLumensTA(QDialog): # DialogLumensBase
         self.setAppSettings()
         
         formName = 'DialogLumensTARegionalEconomyLandDistributionRequirementAnalysis'
-        algName = 'r:tareldlr'
+        algName = 'r:ta_re_ld_lr'
         activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
         
         if self.validForm(formName):
@@ -2407,13 +2411,15 @@ class DialogLumensTA(QDialog): # DialogLumensBase
             # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
             self.main.setWindowState(Qt.WindowMinimized)
             
-            outputs = general.runalg(
-                algName,
-                activeProject,
-                self.main.appSettings[formName]['landUseCover'],
-                self.main.appSettings[formName]['landRequirementTable'],
-                self.main.appSettings[formName]['descriptiveAnalysisOutput'],
-                None,
+            outputs = general.run(
+                algName, {
+                'proj.file': activeProject,
+                'proj.file': activeProject,
+                'land_use': self.main.appSettings[formName]['landUseCover'],
+                'land.distribution_file': self.main.appSettings[formName]['landRequirementTable'],
+                'desc_output': self.main.appSettings[formName]['descriptiveAnalysisOutput'],
+                'statusoutput': 'TEMPORARY_OUTPUT'
+                }
             )
             
             # Display ROut file in debug mode
@@ -2443,7 +2449,7 @@ class DialogLumensTA(QDialog): # DialogLumensBase
         
         if self.checkBoxRegionalEconomicScenarioImpactFinalDemand.isChecked():
             formName = 'DialogLumensTARegionalEconomyFinalDemandChangeMultiplierAnalysis'
-            algName = 'r:tarefinaldemand'
+            algName = 'r:ta_re_finaldemand'
             
             if self.validForm(formName):
                 logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
@@ -2453,11 +2459,12 @@ class DialogLumensTA(QDialog): # DialogLumensBase
                 # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
                 self.main.setWindowState(Qt.WindowMinimized)
                 
-                outputs = general.runalg(
-                    algName,
-                    self.main.appSettings[formName]['landRequirement'],
-                    self.main.appSettings[formName]['finalDemandChangeScenario'],
-                    None,
+                outputs = general.run(
+                    algName, {
+                    'land_req': self.main.appSettings[formName]['landRequirement'],
+                    'fin_demand_scenario_file': self.main.appSettings[formName]['finalDemandChangeScenario'],
+                    'statusoutput': 'TEMPORARY_OUTPUT'
+                    }
                 )
                 
                 # Display ROut file in debug mode
@@ -2478,7 +2485,7 @@ class DialogLumensTA(QDialog): # DialogLumensBase
         
         if self.checkBoxRegionalEconomicScenarioImpactGDP.isChecked():
             formName = 'DialogLumensTARegionalEconomyGDPChangeMultiplierAnalysis'
-            algName = 'r:taregdp'
+            algName = 'r:ta_re_gdp'
             
             if self.validForm(formName):
                 logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
@@ -2488,11 +2495,12 @@ class DialogLumensTA(QDialog): # DialogLumensBase
                 # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
                 self.main.setWindowState(Qt.WindowMinimized)
                 
-                outputs = general.runalg(
-                    algName,
-                    self.main.appSettings[formName]['areaName'],
-                    self.main.appSettings[formName]['gdpChangeScenario'],
-                    None,
+                outputs = general.run(
+                    algName, {
+                    'land_req': self.main.appSettings[formName]['areaName'],
+                    'GDP_scenario_file': self.main.appSettings[formName]['gdpChangeScenario'],
+                    'statusoutput': 'TEMPORARY_OUTPUT'
+                    }
                 )
                 
                 # Display ROut file in debug mode
@@ -2521,7 +2529,7 @@ class DialogLumensTA(QDialog): # DialogLumensBase
         self.setAppSettings()
         
         formName = 'DialogLumensTAImpactofLandUsetoRegionalEconomyIndicatorAnalysis'
-        algName = 'r:tarelucimpact'
+        algName = 'r:ta_re_luc_impact'
         
         if self.validForm(formName):
             logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
@@ -2531,11 +2539,12 @@ class DialogLumensTA(QDialog): # DialogLumensBase
             # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
             self.main.setWindowState(Qt.WindowMinimized)
             
-            outputs = general.runalg(
-                algName,
-                self.main.appSettings[formName]['landRequirement'],
-                self.main.appSettings[formName]['landUseCover'],
-                None,
+            outputs = general.run(
+                algName,{
+                'land_req': self.main.appSettings[formName]['landRequirement'],
+                'projected_land_use': self.main.appSettings[formName]['landUseCover'],
+                'statusoutput': 'TEMPORARY_OUTPUT'
+                }
             )
             
             # Display ROut file in debug mode
