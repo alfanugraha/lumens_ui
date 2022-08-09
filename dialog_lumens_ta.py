@@ -2265,7 +2265,7 @@ class DialogLumensTA(QDialog): # DialogLumensBase
                 'proj.file': activeProject,
                 'NPV': self.main.appSettings[formName]['csvNPVTable'],
                 'ques_c_db': self.main.appSettings[formName]['QUESCDatabase'],
-                self.main.appSettings[formName]['costThreshold'],
+                'cost_threshold': self.main.appSettings[formName]['costThreshold'],
                 'statusoutput': 'TEMPORARY_OUTPUT'
                 }
             )
@@ -2357,7 +2357,7 @@ class DialogLumensTA(QDialog): # DialogLumensBase
             # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
             self.main.setWindowState(Qt.WindowMinimized)
             
-             outputs = general.run(
+            outputs = general.run(
                 algName, {
                 'proj.file': activeProject,
                 'int_con_file': self.main.appSettings[formName]['intermediateConsumptionMatrix'],
