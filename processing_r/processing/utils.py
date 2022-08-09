@@ -245,6 +245,7 @@ class RUtils:  # pylint: disable=too-many-public-methods
 
         script_filename = RUtils.create_r_script_from_commands(script_lines)
 
+
         # run commands
         command = [
             RUtils.path_to_r_executable(script_executable=True),
@@ -272,7 +273,16 @@ class RUtils:  # pylint: disable=too-many-public-methods
                     feedback.pushConsoleInfo(line.strip())
                 console_results.append(line.strip())
         
+        RUtils.create_console_results(console_results)
         return console_results
+
+    @staticmethod
+    def create_console_results(commands):
+        rout_filename = userFolder() + os.sep + 'processing_script.r.Rout'
+        scriptfile = open(rout_filename, 'w')
+        for command in commands:
+            scriptfile.write(command + '\n')
+        scriptfile.close()
 
     @staticmethod
     def html_formatted_console_output(output):
