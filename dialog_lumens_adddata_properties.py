@@ -252,13 +252,14 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
         The raster loading process calls the following algorithm:
         1. r:lumensdatapropertiesraster
         """
-        algName = 'r:dbaddrasterprop'
-        
-        outputs = general.runalg(
-            algName,
-            self.dataFile,
-            None,
-        )
+        algName = 'r:db_add_raster_prop'
+
+        outputs = general.run(
+                algName, {
+                    'data_file': self.dataFile,
+                    'data_table': 'TEMPORARY_OUTPUT'
+                }
+            )
         
         outputsKey = 'data_table'
         
@@ -401,13 +402,14 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
             logging.getLogger(type(self).__name__).info('start: %s' % 'LUMENS Dissolve')
             self.buttonProcessDissolve.setDisabled(True)
                 
-            algName = 'r:dbdissolve'
+            algName = 'r:db_dissolve'
             
-            outputs = general.runalg(
-                algName,
-                self.dataFile,
-                self.dataFieldAttribute,
-                None,
+            outputs = general.run(
+                algName, {
+                    'admin_data': self.dataFile, #apakah data file yang dimaksud Admin Data?
+                    'field_attribute': self.dataFieldAttribute,
+                    'admin_output': 'TEMPORARY_OUTPUT'
+                }
             )
             
             # Display ROut file in debug mode

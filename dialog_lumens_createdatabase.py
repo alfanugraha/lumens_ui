@@ -472,24 +472,25 @@ class DialogLumensCreateDatabase(QDialog): # DialogLumensBase
             
             self.buttonProcessCreateDatabase.setDisabled(True)
             
-            algName = 'r:dbcreate'
+            algName = 'r:db_create'
             
             # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
             # self.main.setWindowState(QtCore.Qt.WindowMinimized)
             
-            outputs = general.runalg(
-                algName,
-                self.main.appSettings[type(self).__name__]['projectName'],
-                self.main.appSettings[type(self).__name__]['outputFolder'],
-                self.main.appSettings[type(self).__name__]['projectDescription'],
-                self.main.appSettings[type(self).__name__]['projectLocation'],
-                self.main.appSettings[type(self).__name__]['projectProvince'],
-                self.main.appSettings[type(self).__name__]['projectCountry'],
-                self.main.appSettings[type(self).__name__]['dissolvedShapefile'],
-                self.main.appSettings[type(self).__name__]['shapefileAttr'],
-                self.main.appSettings[type(self).__name__]['projectSpatialRes'],
-                dissolvedTableCsv,
-                None,
+            outputs = general.run(
+                algName, {
+                'project': self.main.appSettings[type(self).__name__]['projectName'],
+                'working_directory': self.main.appSettings[type(self).__name__]['outputFolder'],
+                'description': self.main.appSettings[type(self).__name__]['projectDescription'],
+                'location': self.main.appSettings[type(self).__name__]['projectLocation'],
+                'province': self.main.appSettings[type(self).__name__]['projectProvince'],
+                'country': self.main.appSettings[type(self).__name__]['projectCountry'],
+                'admin_attribute': self.main.appSettings[type(self).__name__]['dissolvedShapefile'],
+                'field_attribute': self.main.appSettings[type(self).__name__]['shapefileAttr'],
+                'spat_res': self.main.appSettings[type(self).__name__]['projectSpatialRes'],
+                'dissolve_table': dissolvedTableCsv,
+                'statusoutput': 'TEMPORARY_OUTPUT'
+                }
             )
             
             # Display ROut file in debug mode

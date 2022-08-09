@@ -441,46 +441,49 @@ class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
                 print tableRowData
                 
                 if tableRowData['dataFile'].lower().endswith(self.main.appSettings['selectRasterfileExt']):
-                    algName = 'r:dbaddraster'
+                    algName = 'r:db_add_raster'
                     
-                    outputs = general.runalg(
-                        algName,
-                        activeProject,
-                        tableRowData['dataType'],
-                        tableRowData['dataFile'].replace(os.path.sep, '/'),
-                        tableRowData['dataPeriod'],
-                        tableRowData['dataDescription'],
-                        tableRowData['dataTableCsv'],
-                        None,
+                    outputs = general.run(
+                        algName, {
+                            'proj.file': activeProject,
+                            'type': tableRowData['dataType'],
+                            'data': tableRowData['dataFile'].replace(os.path.sep, '/'),
+                            'period': tableRowData['dataPeriod'],
+                            'description': tableRowData['dataDescription'],
+                            'attribute_table': tableRowData['dataTableCsv'],
+                            'statusoutput': 'TEMPORARY_OUTPUT'
+                        }    
                     )
                 elif tableRowData['dataFile'].lower().endswith(self.main.appSettings['selectShapefileExt']):
-                    algName = 'r:dbaddvector'
+                    algName = 'r:db_add_vector'
                     
-                    outputs = general.runalg(
-                        algName,
-                        activeProject,
-                        tableRowData['dataType'],
-                        tableRowData['dataDissolvedShapefile'].replace(os.path.sep, '/'),
-                        tableRowData['dataFieldAttribute'],
-                        tableRowData['dataPeriod'],
-                        tableRowData['dataDescription'],
-                        tableRowData['dataTableCsv'],
-                        None,
+                    outputs = general.run(
+                        algName, {
+                            'proj.file': activeProject,
+                            'type': tableRowData['dataType'],
+                            'data': tableRowData['dataDissolvedShapefile'].replace(os.path.sep, '/'),
+                            'attribute_field_id': tableRowData['dataFieldAttribute'],
+                            'period': tableRowData['dataPeriod'],
+                            'description': tableRowData['dataDescription'],
+                            'attribute_table': tableRowData['dataTableCsv'],
+                            'statusoutput': 'TEMPORARY_OUTPUT'
+                        }
                     )
                 elif tableRowData['dataFile'].lower().endswith(self.main.appSettings['selectCsvfileExt']):
-                    algName = 'r:dbaddlut'
+                    algName = 'r:db_add_lut'
                     
                     tableRowDataFile = tableRowData['dataFile'].replace(os.path.sep, '/')
                     if 'habitat' in tableRowData['dataDescription']:
                         self.main.appSettings['defaultHabitatLookupTable'] = tableRowDataFile
                         print self.main.appSettings['defaultHabitatLookupTable']
                     
-                    outputs = general.runalg(
-                        algName,
-                        activeProject,
-                        tableRowData['dataDescription'],
-                        tableRowDataFile,
-                        None,
+                    outputs = general.run(
+                        algName, {
+                            'proj.file': activeProject,
+                            'description': tableRowData['dataDescription'],
+                            'attribute_table': tableRowDataFile,
+                            'statusoutput': 'TEMPORARY_OUTPUT'
+                        }     
                     )
                 
                 # Display ROut file in debug mode

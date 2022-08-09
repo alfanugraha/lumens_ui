@@ -2916,7 +2916,7 @@ class DialogLumensQUES(QDialog): #DialogLumensBase
         self.setAppSettings()
         
         formName = 'DialogLumensPreQUESLandcoverTrajectoriesAnalysis'
-        algName = 'r:quespre'
+        algName = 'r:ques_pre'
         activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
         
         if self.validForm(formName):
@@ -2927,16 +2927,17 @@ class DialogLumensQUES(QDialog): #DialogLumensBase
             # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
             # self.main.setWindowState(QtCore.Qt.WindowMinimized)
             
-            outputs = general.runalg(
-                algName,
-                activeProject,
-                self.main.appSettings[formName]['landUse1'],
-                self.main.appSettings[formName]['landUse2'],
-                self.main.appSettings[formName]['planningUnit'],
-                self.main.appSettings[formName]['landUseTable'],
-                self.main.appSettings[formName]['analysisOption'],
-                self.main.appSettings[formName]['nodata'],
-                None, # statusoutput
+            outputs = general.run(
+                algName, {
+                    'proj.file': activeProject,
+                    'landuse_1': self.main.appSettings[formName]['landUse1'],
+                    'landuse_2': self.main.appSettings[formName]['landUse2'],
+                    'planning_unit': self.main.appSettings[formName]['planningUnit'],
+                    'lookup_lc': self.main.appSettings[formName]['landUseTable'],
+                    'Analysis_option': self.main.appSettings[formName]['analysisOption'],
+                    'raster.nodata': self.main.appSettings[formName]['nodata'],
+                    'statusoutput': 'TEMPORARY_OUTPUT'
+                }
             )
             
             # Display ROut file in debug mode
@@ -2971,7 +2972,7 @@ class DialogLumensQUES(QDialog): #DialogLumensBase
         
         if self.checkBoxCarbonAccounting.isChecked():
             formName = 'DialogLumensQUESCCarbonAccounting'
-            algName = 'r:quescarbon'
+            algName = 'r:ques_carbon'
             
             if self.validForm(formName):
                 logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
@@ -2981,16 +2982,18 @@ class DialogLumensQUES(QDialog): #DialogLumensBase
                 # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
                 # self.main.setWindowState(QtCore.Qt.WindowMinimized)
                 
-                outputs = general.runalg(
-                    algName,
-                    activeProject,
-                    self.main.appSettings[formName]['landUse1'],
-                    self.main.appSettings[formName]['landUse2'],
-                    self.main.appSettings[formName]['planningUnit'],
-                    self.main.appSettings[formName]['carbonTable'],
-                    self.main.appSettings[formName]['nodata'],
-                    None,
-                    None,
+                outputs = general.run(
+                    algName,{
+                        'proj.file': activeProject,
+                        'landuse_1': self.main.appSettings[formName]['landUse1'],
+                        'landuse_2': self.main.appSettings[formName]['landUse2'],
+                        'planning_unit': self.main.appSettings[formName]['planningUnit'],
+                        'lookup_c': self.main.appSettings[formName]['carbonTable'],
+                        'raster.nodata': self.main.appSettings[formName]['nodata'],
+                        'resultoutput': 'TEMPORARY_OUTPUT',
+                        'statusoutput': 'TEMPORARY_OUTPUT'
+                    }
+                    
                 )
                 
                 # Display ROut file in debug mode
@@ -3024,7 +3027,7 @@ class DialogLumensQUES(QDialog): #DialogLumensBase
 
         if self.checkBoxPeatlandCarbonAccounting.isChecked():
             formName = 'DialogLumensQUESCPeatlandCarbonAccounting'
-            algName = 'r:quescarbonpeat'
+            algName = 'r:ques_carbon_peat'
             checkedPeat = []
         
             numOfRow = self.tablePeat.rowCount()
@@ -3045,18 +3048,20 @@ class DialogLumensQUES(QDialog): #DialogLumensBase
                 # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
                 # self.main.setWindowState(QtCore.Qt.WindowMinimized)
                 
-                outputs = general.runalg(
-                    algName,
-                    activeProject,
-                    self.main.appSettings[formName]['landUse1'],
-                    self.main.appSettings[formName]['landUse2'],
-                    self.main.appSettings[formName]['planningUnit'],
-                    self.main.appSettings[formName]['nodata'],
-                    self.main.appSettings[formName]['peat'],
-                    checkedPeatCsv,
-                    self.main.appSettings[formName]['peatTable'],
-                    None,
-                    None,
+                outputs = general.run(
+                    algName,{
+                        'proj.file': activeProject,
+                        'landuse_1': self.main.appSettings[formName]['landUse1'],
+                        'landuse_2': self.main.appSettings[formName]['landUse2'],
+                        'planning_unit': self.main.appSettings[formName]['planningUnit'],
+                        'raster.nodata': self.main.appSettings[formName]['nodata'],
+                        'peatmap': self.main.appSettings[formName]['peat'],
+                        'peat_cell': checkedPeatCsv,
+                        'lookup_c_peat': self.main.appSettings[formName]['peatTable'],
+                        'resultoutput': 'TEMPORARY_OUTPUT',
+                        'statusoutput': 'TEMPORARY_OUTPUT'
+                    }
+                    
                 )
                 
                 # Display ROut file in debug mode
@@ -3082,7 +3087,7 @@ class DialogLumensQUES(QDialog): #DialogLumensBase
         if self.checkBoxSummarizeMultiplePeriod.isChecked():
             if len(self.listOfQUESCDatabase) > 1:
                 formName = 'DialogLumensQUESCSummarizeMultiplePeriod'
-                algName = 'r:quessummarizeperiods'
+                algName = 'r:ques_summarize_periods'
 
                 self.listOfQUESCDatabase.sort()
                 QUESCDatabaseCsv = self.writeListCsv(self.listOfQUESCDatabase, True)
@@ -3094,11 +3099,13 @@ class DialogLumensQUES(QDialog): #DialogLumensBase
                 # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
                 # self.main.setWindowState(QtCore.Qt.WindowMinimized)
 
-                outputs = general.runalg(
-                    algName,
-                    activeProject,
-                    QUESCDatabaseCsv,
-                    None,
+                outputs = general.run(
+                    algName,{
+                        'proj.file': activeProject,
+                        'csv_ques_c_db': QUESCDatabaseCsv,
+                        'statusoutput': 'TEMPORARY_OUTPUT'
+                    }
+                    
                 )
 
                 # Display ROut file in debug mode
@@ -3133,7 +3140,7 @@ class DialogLumensQUES(QDialog): #DialogLumensBase
         self.setAppSettings()
         
         formName = 'DialogLumensQUESBAnalysis'
-        algName = 'r:quesbiodiv'
+        algName = 'r:ques_biodiv'
         activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
         checkedEnabled = []
         
@@ -3155,22 +3162,23 @@ class DialogLumensQUES(QDialog): #DialogLumensBase
                 # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
                 # self.main.setWindowState(QtCore.Qt.WindowMinimized)
                 
-                outputs = general.runalg(
-                    algName,
-                    activeProject,
-                    self.main.appSettings[formName]['landUse1'],
-                    self.main.appSettings[formName]['landUse2'],
-                    self.main.appSettings[formName]['landUse3'],
-                    self.main.appSettings[formName]['planningUnit'],
-                    self.main.appSettings[formName]['nodata'],
-                    checkedEnabledCsv,
-                    self.main.appSettings[formName]['edgeContrast'],
-                    self.main.appSettings[formName]['windowShape'],
-                    self.main.appSettings[formName]['adjacentOnly'],
-                    self.main.appSettings[formName]['samplingWindowSize'],
-                    self.main.appSettings[formName]['samplingGridRes'],
-                    None,
-                    None,
+                outputs = general.run(
+                    algName,{
+                        'proj.file': activeProject,
+                        'pd_1': self.main.appSettings[formName]['landUse1'],
+                        'pd_2': self.main.appSettings[formName]['landUse2'],
+                        'pristine_pd': self.main.appSettings[formName]['landUse3'],
+                        'planning_unit': self.main.appSettings[formName]['planningUnit'],
+                        'raster.nodata': self.main.appSettings[formName]['nodata'],
+                        'focal_coverage': checkedEnabledCsv,
+                        'edgecon': self.main.appSettings[formName]['edgeContrast'],
+                        'window.shape': self.main.appSettings[formName]['windowShape'],
+                        'adjacent_only': self.main.appSettings[formName]['adjacentOnly'],
+                        'windowsize': self.main.appSettings[formName]['samplingWindowSize'],
+                        'gridres': self.main.appSettings[formName]['samplingGridRes'],
+                        'resultoutput': 'TEMPORARY_OUTPUT',
+                        'statusoutput': 'TEMPORARY_OUTPUT'
+                    }                    
                 )
                 
                 # Display ROut file in debug mode

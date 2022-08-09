@@ -204,7 +204,7 @@ class DialogLumensDeleteData(QtGui.QDialog, DialogLumensBase):
         The "Delete Data" process calls the following algorithm:
         1. dbdelete
         """
-        algName = 'r:dbdelete'
+        algName = 'r:db_delete'
         
         checkedDelete = []
         for i in range(self.dataTable.rowCount()):
@@ -224,11 +224,12 @@ class DialogLumensDeleteData(QtGui.QDialog, DialogLumensBase):
             print 'DEBUG'
             print checkedDeleteCsv
 
-            outputs = general.runalg(
-                algName,
-                activeProject,
-                checkedDeleteCsv,
-                None
+            outputs = general.run(
+                algName, {
+                    'proj.file': activeProject,
+                    'csv_delete_data': checkedDeleteCsv,
+                    'statusoutput': 'TEMPORARY_OUTPUT'
+                }
             )
 
             # Display ROut file in debug mode
