@@ -3,10 +3,11 @@
 
 import os, logging, csv, datetime, glob
 from qgis.core import *
-# from processing.tools import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
+
+from tools import general
 
 from utils import QPlainTextEditLogger
 from dialog_lumens_base import DialogLumensBase
@@ -478,6 +479,8 @@ class DialogLumensQUES(QDialog): #DialogLumensBase
             self.logger.addHandler(fh)
             self.logger.setLevel(logging.DEBUG)
         
+        self.base = DialogLumensBase(parent)
+
         self.setupUi(self)
         
         # History log
@@ -2256,7 +2259,7 @@ class DialogLumensQUES(QDialog): #DialogLumensBase
         selectedTablePeat = self.comboBoxPeatlandMap.currentText()
         costumTable = 1
         
-        outputs = general.runalg(
+        outputs = general.run(
             'r:toolsgetlut',
             activeProject,
             costumTable,
@@ -2313,7 +2316,7 @@ class DialogLumensQUES(QDialog): #DialogLumensBase
         selectedTableHabitat = self.comboBoxTableHabitat.currentText()
         costumTable = 0
         
-        outputs = general.runalg(
+        outputs = general.run(
             'r:toolsgetlut',
             activeProject,
             costumTable,
@@ -2919,7 +2922,7 @@ class DialogLumensQUES(QDialog): #DialogLumensBase
         algName = 'r:ques_pre'
         activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
         
-        if self.validForm(formName):
+        if self.base.validForm(formName):
             logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
             logging.getLogger(self.historyLog).info('alg start: %s' % formName)
             self.buttonProcessPreQUES.setDisabled(True)
@@ -2950,7 +2953,7 @@ class DialogLumensQUES(QDialog): #DialogLumensBase
             # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
             # self.main.setWindowState(QtCore.Qt.WindowActive)
             
-            algSuccess = self.outputsMessageBox(algName, outputs, '', '')
+            algSuccess = self.base.outputsMessageBox(algName, outputs, '', '')
 
             if algSuccess:
                 self.main.loadAddedDataInfo()
@@ -2974,7 +2977,7 @@ class DialogLumensQUES(QDialog): #DialogLumensBase
             formName = 'DialogLumensQUESCCarbonAccounting'
             algName = 'r:ques_carbon'
             
-            if self.validForm(formName):
+            if self.base.validForm(formName):
                 logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
                 logging.getLogger(self.historyLog).info('alg start: %s' % formName)
                 self.buttonProcessQUESC.setDisabled(True)
@@ -3006,7 +3009,7 @@ class DialogLumensQUES(QDialog): #DialogLumensBase
                 # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
                 # self.main.setWindowState(QtCore.Qt.WindowActive)
                 
-                algSuccess = self.outputsMessageBox(algName, outputs, '', '')
+                algSuccess = self.base.outputsMessageBox(algName, outputs, '', '')
 
                 if algSuccess:
                     self.main.loadAddedDataInfo()
@@ -3074,7 +3077,7 @@ class DialogLumensQUES(QDialog): #DialogLumensBase
                 # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
                 # self.main.setWindowState(QtCore.Qt.WindowActive)
                 
-                algSuccess = self.outputsMessageBox(algName, outputs, '', '')
+                algSuccess = self.base.outputsMessageBox(algName, outputs, '', '')
 
                 if algSuccess:
                     self.main.loadAddedDataInfo()
@@ -3118,7 +3121,7 @@ class DialogLumensQUES(QDialog): #DialogLumensBase
                 # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
                 # self.main.setWindowState(QtCore.Qt.WindowActive)
 
-                algSuccess = self.outputsMessageBox(algName, outputs, '', '')
+                algSuccess = self.base.outputsMessageBox(algName, outputs, '', '')
 
                 if algSuccess:
                     self.main.loadAddedDataInfo()
@@ -3154,7 +3157,7 @@ class DialogLumensQUES(QDialog): #DialogLumensBase
             checkedEnabled.sort()
             checkedEnabledCsv = self.writeListCsv(checkedEnabled, True)
           
-            if self.validForm(formName):
+            if self.base.validForm(formName):
                 logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
                 logging.getLogger(self.historyLog).info('alg start: %s' % formName)
                 self.buttonProcessQUESB.setDisabled(True)
@@ -3191,7 +3194,7 @@ class DialogLumensQUES(QDialog): #DialogLumensBase
                 # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
                 # self.main.setWindowState(QtCore.Qt.WindowActive)
                 
-                algSuccess = self.outputsMessageBox(algName, outputs, '', '')
+                algSuccess = self.base.outputsMessageBox(algName, outputs, '', '')
     
                 if algSuccess:
                     self.main.loadAddedDataInfo()
@@ -3227,7 +3230,7 @@ class DialogLumensQUES(QDialog): #DialogLumensBase
             formName = 'DialogLumensQUESHDominantHRU'
             algName = 'modeler:ques-h_dhru'
             
-            if self.validForm(formName):
+            if self.base.validForm(formName):
                 logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
                 logging.getLogger(self.historyLog).info('alg start: %s' % formName)
                 self.buttonProcessHRUDefinition.setDisabled(True)
@@ -3235,7 +3238,7 @@ class DialogLumensQUES(QDialog): #DialogLumensBase
                 # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
                 self.main.setWindowState(QtCore.Qt.WindowMinimized)
                 
-                outputs = general.runalg(
+                outputs = general.run(
                     algName,
                     self.main.appSettings[formName]['landUseMap'],
                     self.main.appSettings[formName]['soilMap'],
@@ -3258,7 +3261,7 @@ class DialogLumensQUES(QDialog): #DialogLumensBase
                 # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
                 self.main.setWindowState(Qt.WindowActive)
                 
-                algSuccess = self.outputsMessageBox(algName, outputs, '', '')
+                algSuccess = self.base.outputsMessageBox(algName, outputs, '', '')
 
                 if algSuccess:
                     self.main.loadAddedDataInfo()
@@ -3271,7 +3274,7 @@ class DialogLumensQUES(QDialog): #DialogLumensBase
             formName = 'DialogLumensQUESHDominantLUSSL'
             algName = 'modeler:ques-h_dlussl'
             
-            if self.validForm(formName):
+            if self.base.validForm(formName):
                 logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
                 logging.getLogger(self.historyLog).info('alg start: %s' % formName)
                 self.buttonProcessHRUDefinition.setDisabled(True)
@@ -3279,7 +3282,7 @@ class DialogLumensQUES(QDialog): #DialogLumensBase
                 # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
                 self.main.setWindowState(QtCore.Qt.WindowMinimized)
                 
-                outputs = general.runalg(
+                outputs = general.run(
                     algName,
                     self.main.appSettings[formName]['landUseMap'],
                     self.main.appSettings[formName]['soilMap'],
@@ -3302,7 +3305,7 @@ class DialogLumensQUES(QDialog): #DialogLumensBase
                 # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
                 self.main.setWindowState(Qt.WindowActive)
                 
-                algSuccess = self.outputsMessageBox(algName, outputs, '', '')
+                algSuccess = self.base.outputsMessageBox(algName, outputs, '', '')
 
                 if algSuccess:
                     self.main.loadAddedDataInfo()
@@ -3315,7 +3318,7 @@ class DialogLumensQUES(QDialog): #DialogLumensBase
             formName = 'DialogLumensQUESHMultipleHRU'
             algName = 'modeler:ques-h_mhru'
             
-            if self.validForm(formName):
+            if self.base.validForm(formName):
                 logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
                 logging.getLogger(self.historyLog).info('alg start: %s' % formName)
                 self.buttonProcessHRUDefinition.setDisabled(True)
@@ -3323,7 +3326,7 @@ class DialogLumensQUES(QDialog): #DialogLumensBase
                 # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
                 self.main.setWindowState(QtCore.Qt.WindowMinimized)
                 
-                outputs = general.runalg(
+                outputs = general.run(
                     algName,
                     self.main.appSettings[formName]['landUseMap'],
                     self.main.appSettings[formName]['soilMap'],
@@ -3370,7 +3373,7 @@ class DialogLumensQUES(QDialog): #DialogLumensBase
         formName = 'DialogLumensQUESHWatershedModelEvaluation'
         algName = 'modeler:ques-h_watershed_model_evaluation'
         
-        if self.validForm(formName):
+        if self.base.validForm(formName):
             logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
             logging.getLogger(self.historyLog).info('alg start: %s' % formName)
             self.buttonProcessWatershedModelEvaluation.setDisabled(True)
@@ -3383,7 +3386,7 @@ class DialogLumensQUES(QDialog): #DialogLumensBase
             # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
             self.main.setWindowState(QtCore.Qt.WindowMinimized)
             
-            outputs = general.runalg(
+            outputs = general.run(
                 algName,
                 self.main.appSettings[formName]['period1'],
                 self.main.appSettings[formName]['period2'],
@@ -3404,7 +3407,7 @@ class DialogLumensQUES(QDialog): #DialogLumensBase
             # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
             self.main.setWindowState(Qt.WindowActive)
             
-            algSuccess = self.outputsMessageBox(algName, outputs, '', '')
+            algSuccess = self.base.outputsMessageBox(algName, outputs, '', '')
 
             if algSuccess:
                 self.main.loadAddedDataInfo()
@@ -3425,7 +3428,7 @@ class DialogLumensQUES(QDialog): #DialogLumensBase
         formName = 'DialogLumensQUESHWatershedIndicators'
         algName = 'modeler:ques-h_watershed_indicators'
         
-        if self.validForm(formName):
+        if self.base.validForm(formName):
             logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
             logging.getLogger(self.historyLog).info('alg start: %s' % formName)
             self.buttonProcessWatershedIndicators.setDisabled(True)
@@ -3442,7 +3445,7 @@ class DialogLumensQUES(QDialog): #DialogLumensBase
             # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
             self.main.setWindowState(QtCore.Qt.WindowMinimized)
             
-            outputs = general.runalg(
+            outputs = general.run(
                 algName,
                 self.main.appSettings[formName]['SWATTXTINOUTDir'],
                 self.main.appSettings[formName]['dateInitial'],
@@ -3464,7 +3467,7 @@ class DialogLumensQUES(QDialog): #DialogLumensBase
             # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
             self.main.setWindowState(Qt.WindowActive)
             
-            algSuccess = self.outputsMessageBox(algName, outputs, '', '')
+            algSuccess = self.base.outputsMessageBox(algName, outputs, '', '')
 
             if algSuccess:
                 self.main.loadAddedDataInfo()

@@ -3,10 +3,11 @@
 
 import os, logging, datetime, glob, tempfile, csv
 from qgis.core import *
-# from processing.tools import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
+
+from tools import general
 
 from utils import QPlainTextEditLogger
 from dialog_lumens_base import DialogLumensBase
@@ -360,6 +361,8 @@ class DialogLumensSCIENDO(QDialog): # DialogLumensBase
             self.logger.addHandler(fh)
             self.logger.setLevel(logging.DEBUG)
         
+        self.base = DialogLumensBase(parent)
+
         self.setupUi(self)
         
         # History log
@@ -1763,7 +1766,7 @@ class DialogLumensSCIENDO(QDialog): # DialogLumensBase
             formName = 'DialogLumensSCIENDOHistoricalBaselineProjection'
             algName = 'r:sciendo_period_projection'
             
-            if self.validForm(formName):
+            if self.base.validForm(formName):
                 logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
                 logging.getLogger(self.historyLog).info('alg start: %s' % formName)
                 self.buttonProcessLowEmissionDevelopmentAnalysis.setDisabled(True)
@@ -1788,7 +1791,7 @@ class DialogLumensSCIENDO(QDialog): # DialogLumensBase
                 # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
                 self.main.setWindowState(Qt.WindowActive)
                 
-                algSuccess = self.outputsMessageBox(algName, outputs, '', '')
+                algSuccess = self.base.outputsMessageBox(algName, outputs, '', '')
                 
                 if algSuccess:
                     self.main.loadAddedDataInfo()
@@ -1805,7 +1808,7 @@ class DialogLumensSCIENDO(QDialog): # DialogLumensBase
                 self.listOfQUESCDatabase.sort()
                 QUESCDatabaseCsv = self.writeListCsv(self.listOfQUESCDatabase, True)
                 
-                if self.validForm(formName):
+                if self.base.validForm(formName):
                     logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
                     logging.getLogger(self.historyLog).info('alg start: %s' % formName)
                     self.buttonProcessLowEmissionDevelopmentAnalysis.setDisabled(True)
@@ -1832,7 +1835,7 @@ class DialogLumensSCIENDO(QDialog): # DialogLumensBase
                     # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
                     self.main.setWindowState(Qt.WindowActive)
                     
-                    algSuccess = self.outputsMessageBox(algName, outputs, '', '')
+                    algSuccess = self.base.outputsMessageBox(algName, outputs, '', '')
                     
                     if algSuccess:
                         self.main.loadAddedDataInfo()
@@ -1849,7 +1852,7 @@ class DialogLumensSCIENDO(QDialog): # DialogLumensBase
             formName = 'DialogLumensSCIENDODriversAnalysis'
             algName = 'r:sciendo_drivers_analysis'
             
-            if self.validForm(formName):
+            if self.base.validForm(formName):
                 logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
                 logging.getLogger(self.historyLog).info('alg start: %s' % formName)
                 self.buttonProcessLowEmissionDevelopmentAnalysis.setDisabled(True)
@@ -1874,7 +1877,7 @@ class DialogLumensSCIENDO(QDialog): # DialogLumensBase
                 # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
                 self.main.setWindowState(Qt.WindowActive)
                 
-                algSuccess = self.outputsMessageBox(algName, outputs, '', '')
+                algSuccess = self.base.outputsMessageBox(algName, outputs, '', '')
                 
                 if algSuccess:
                     self.main.loadAddedDataInfo()                
@@ -1888,7 +1891,7 @@ class DialogLumensSCIENDO(QDialog): # DialogLumensBase
             formName = 'DialogLumensSCIENDOBuildScenario'
             algName = 'r:sciendo_build_scenario'
             
-            if self.validForm(formName):
+            if self.base.validForm(formName):
                 logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
                 logging.getLogger(self.historyLog).info('alg start: %s' % formName)
                 self.buttonProcessLowEmissionDevelopmentAnalysis.setDisabled(True)
@@ -1912,7 +1915,7 @@ class DialogLumensSCIENDO(QDialog): # DialogLumensBase
                 # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
                 self.main.setWindowState(Qt.WindowActive)
                 
-                self.outputsMessageBox(algName, outputs, '', '')
+                self.base.outputsMessageBox(algName, outputs, '', '')
                 
                 self.buttonProcessLowEmissionDevelopmentAnalysis.setEnabled(True)
                 logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
@@ -1931,7 +1934,7 @@ class DialogLumensSCIENDO(QDialog): # DialogLumensBase
         formName = 'DialogLumensSCIENDOCalculateTransitionMatrix'
         activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
         
-        if self.validForm(formName):
+        if self.base.validForm(formName):
             logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
             logging.getLogger(self.historyLog).info('alg start: %s' % formName)
             self.buttonProcessTransitionMatrix.setDisabled(False)
@@ -1956,7 +1959,7 @@ class DialogLumensSCIENDO(QDialog): # DialogLumensBase
             # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
             self.main.setWindowState(Qt.WindowActive)
             
-            algSuccess = self.outputsMessageBox(algName, outputs, '', '')
+            algSuccess = self.base.outputsMessageBox(algName, outputs, '', '')
             
             if algSuccess:
                 self.loadAddedSimulationIndex(self.comboBoxCreateRasterCubeOfFactorsIndex)
@@ -1980,7 +1983,7 @@ class DialogLumensSCIENDO(QDialog): # DialogLumensBase
         formName = 'DialogLumensSCIENDOCreateRasterCube'
         activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
         
-        if self.validForm(formName):
+        if self.base.validForm(formName):
             logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
             logging.getLogger(self.historyLog).info('alg start: %s' % formName)
             self.buttonProcessCreateRasterCube.setDisabled(True)
@@ -2007,7 +2010,7 @@ class DialogLumensSCIENDO(QDialog): # DialogLumensBase
             # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
             self.main.setWindowState(Qt.WindowActive)
             
-            self.outputsMessageBox(algName, outputs, '', '')
+            self.base.outputsMessageBox(algName, outputs, '', '')
             
             self.buttonProcessCreateRasterCube.setEnabled(True)
             logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
@@ -2026,7 +2029,7 @@ class DialogLumensSCIENDO(QDialog): # DialogLumensBase
         formName = 'DialogLumensSCIENDOCalculateWeightofEvidence'
         activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
         
-        if self.validForm(formName):
+        if self.base.validForm(formName):
             logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
             logging.getLogger(self.historyLog).info('alg start: %s' % formName)
             self.buttonProcessCalculateWeightOfEvidence.setDisabled(True)
@@ -2053,7 +2056,7 @@ class DialogLumensSCIENDO(QDialog): # DialogLumensBase
             # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
             self.main.setWindowState(Qt.WindowActive)
             
-            self.outputsMessageBox(algName, outputs, '', '')
+            self.base.outputsMessageBox(algName, outputs, '', '')
             
             self.buttonProcessCalculateWeightOfEvidence.setEnabled(True)
             logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
@@ -2072,7 +2075,7 @@ class DialogLumensSCIENDO(QDialog): # DialogLumensBase
         formName = 'DialogLumensSCIENDOSimulateLandUseChange'
         activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
         
-        if self.validForm(formName):
+        if self.base.validForm(formName):
             logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
             logging.getLogger(self.historyLog).info('alg start: %s' % formName)
             self.buttonProcessLandUseChangeSimulation.setDisabled(True)
@@ -2099,7 +2102,7 @@ class DialogLumensSCIENDO(QDialog): # DialogLumensBase
             # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
             self.main.setWindowState(Qt.WindowActive)
             
-            self.outputsMessageBox(algName, outputs, '', '')
+            self.base.outputsMessageBox(algName, outputs, '', '')
             
             self.buttonProcessLandUseChangeSimulation.setEnabled(True)
             logging.getLogger(type(self).__name__).info('alg end: %s' % formName)

@@ -3,15 +3,18 @@
 
 import os, logging, csv, tempfile, datetime
 from qgis.core import *
-from PyQt5 import QtCore, QtGui
-from processing.tools import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+
+from tools import general
 
 from dialog_lumens_base import DialogLumensBase
 from dialog_lumens_viewer import DialogLumensViewer
 
 from menu_factory import MenuFactory
 
-class DialogLumensAddDataProperties(QtGui.QDialog):
+class DialogLumensAddDataProperties(QDialog):
     """LUMENS dialog class for the "Add Data" data properties.
     
     Attributes:
@@ -79,6 +82,8 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
             self.logger.addHandler(fh)
             self.logger.setLevel(logging.DEBUG)
         
+        self.base = DialogLumensBase(parent)
+
         self.setupUi(self)
         
         # Raster data table is loaded only for 'Land use/cover' and 'Planning unit'
@@ -102,7 +107,7 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
         Args:
             parent: the dialog's parent instance.
         """
-        self.dialogLayout = QtGui.QVBoxLayout()
+        self.dialogLayout = QVBoxLayout()
         
         addFileType = None
         
@@ -113,31 +118,31 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
         elif self.isCsvFile:
             addFileType = MenuFactory.getLabel(MenuFactory.APP_ADD_TABULAR_DATA)
         
-        self.groupBoxDataProperties = QtGui.QGroupBox('{0}: {1}'.format(self.dataType, addFileType))
-        self.layoutGroupBoxDataProperties = QtGui.QVBoxLayout()
-        self.layoutGroupBoxDataProperties.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.groupBoxDataProperties = QGroupBox('{0}: {1}'.format(self.dataType, addFileType))
+        self.layoutGroupBoxDataProperties = QVBoxLayout()
+        self.layoutGroupBoxDataProperties.setAlignment(Qt.AlignLeft|Qt.AlignTop)
         self.groupBoxDataProperties.setLayout(self.layoutGroupBoxDataProperties)
-        self.layoutDataPropertiesInfo = QtGui.QVBoxLayout()
-        self.layoutDataProperties = QtGui.QGridLayout()
+        self.layoutDataPropertiesInfo = QVBoxLayout()
+        self.layoutDataProperties = QGridLayout()
         self.layoutGroupBoxDataProperties.addLayout(self.layoutDataPropertiesInfo)
         self.layoutGroupBoxDataProperties.addLayout(self.layoutDataProperties)
         
-        self.labelDataPropertiesInfo = QtGui.QLabel()
+        self.labelDataPropertiesInfo = QLabel()
         self.labelDataPropertiesInfo.setText('\n')
         self.layoutDataPropertiesInfo.addWidget(self.labelDataPropertiesInfo)
         
         rowCount = 0
         
-        self.labelDataDescription = QtGui.QLabel()
+        self.labelDataDescription = QLabel()
         self.labelDataDescription.setText('&' + MenuFactory.getLabel(MenuFactory.APP_PROP_DESCRIPTION) + ':')
-        self.lineEditDataDescription = QtGui.QLineEdit()
+        self.lineEditDataDescription = QLineEdit()
         self.lineEditDataDescription.setText(self.dataDescription)
         self.labelDataDescription.setBuddy(self.lineEditDataDescription)
         
         td = datetime.date.today()
-        self.labelDataSpinBoxPeriod = QtGui.QLabel()
+        self.labelDataSpinBoxPeriod = QLabel()
         self.labelDataSpinBoxPeriod.setText('&' + MenuFactory.getLabel(MenuFactory.APP_PROP_YEAR) + ':')
-        self.spinBoxDataPeriod = QtGui.QSpinBox()
+        self.spinBoxDataPeriod = QSpinBox()
         self.spinBoxDataPeriod.setRange(1, 9999)
         # self.spinBoxDataPeriod.setValue(td.year)
         self.labelDataSpinBoxPeriod.setBuddy(self.spinBoxDataPeriod)
@@ -154,9 +159,9 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
             self.layoutDataProperties.addWidget(self.labelDataDescription, rowCount, 0)
             self.layoutDataProperties.addWidget(self.lineEditDataDescription, rowCount, 1)
         
-        self.labeldataFieldAttribute = QtGui.QLabel()
+        self.labeldataFieldAttribute = QLabel()
         self.labeldataFieldAttribute.setText(MenuFactory.getLabel(MenuFactory.APP_PROP_FIELD_ATTRIBUTE) + ':')
-        self.comboBoxDataFieldAttribute = QtGui.QComboBox()
+        self.comboBoxDataFieldAttribute = QComboBox()
         self.comboBoxDataFieldAttribute.setDisabled(True)
         
         if self.isVectorFile:
@@ -165,15 +170,15 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
             self.layoutDataProperties.addWidget(self.labeldataFieldAttribute, rowCount, 0)
             self.layoutDataProperties.addWidget(self.comboBoxDataFieldAttribute, rowCount, 1)
         
-        self.dataTable = QtGui.QTableWidget()
+        self.dataTable = QTableWidget()
         self.dataTable.setDisabled(True)
         self.dataTable.verticalHeader().setVisible(False)
         
-        self.labelDataMapping = QtGui.QLabel()
+        self.labelDataMapping = QLabel()
         self.labelDataMapping.setText(MenuFactory.getLabel(MenuFactory.APP_PROP_CLASS_DEFINITION_FILE) + ':')
-        self.lineEditDataMapping = QtGui.QLineEdit()
+        self.lineEditDataMapping = QLineEdit()
         self.lineEditDataMapping.setReadOnly(True)
-        self.buttonSelectDataMapping = QtGui.QPushButton()
+        self.buttonSelectDataMapping = QPushButton()
         self.buttonSelectDataMapping.setText('&' + MenuFactory.getLabel(MenuFactory.APP_BROWSE) + ':')
         self.buttonSelectDataMapping.setDisabled(True)
         
@@ -193,13 +198,13 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
         
         ######################################################################
         
-        self.layoutButtonProcess = QtGui.QHBoxLayout()
-        self.buttonProcessDissolve = QtGui.QPushButton()
+        self.layoutButtonProcess = QHBoxLayout()
+        self.buttonProcessDissolve = QPushButton()
         self.buttonProcessDissolve.setText('&' + MenuFactory.getLabel(MenuFactory.APP_PROP_DISSOLVE))
         self.buttonProcessDissolve.setVisible(False)
-        self.buttonProcessSave = QtGui.QPushButton()
+        self.buttonProcessSave = QPushButton()
         self.buttonProcessSave.setText('&' + MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_PROPERTIES_SAVE))
-        self.layoutButtonProcess.setAlignment(QtCore.Qt.AlignRight)
+        self.layoutButtonProcess.setAlignment(Qt.AlignRight)
         self.layoutButtonProcess.addWidget(self.buttonProcessDissolve)
         self.layoutButtonProcess.addWidget(self.buttonProcessSave)
         
@@ -284,7 +289,7 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
                 dataTable = []
                 
                 for row in reader:
-                    dataRow = [QtGui.QTableWidgetItem(field) for field in row]
+                    dataRow = [QTableWidgetItem(field) for field in row]
                     dataTable.append(dataRow)
                 
                 self.dataTable.setRowCount(len(dataTable))
@@ -296,25 +301,25 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
                 for dataRow in dataTable:
                     tableColumn = 0
                     for fieldTableItem in dataRow:
-                        fieldTableItem.setFlags(fieldTableItem.flags() & ~QtCore.Qt.ItemIsEnabled)
+                        fieldTableItem.setFlags(fieldTableItem.flags() & ~Qt.ItemIsEnabled)
                         self.dataTable.setItem(tableRow, tableColumn, fieldTableItem)
-                        self.dataTable.horizontalHeader().setResizeMode(tableColumn, QtGui.QHeaderView.ResizeToContents)
+                        self.dataTable.horizontalHeader().setResizeMode(tableColumn, QHeaderView.ResizeToContents)
                         tableColumn += 1
                     
                     # Additional columns ('Classified' only for Land Use/Cover types)
-                    fieldLegend = QtGui.QTableWidgetItem('Unidentified Landuse {0}'.format(tableRow + 1))
+                    fieldLegend = QTableWidgetItem('Unidentified Landuse {0}'.format(tableRow + 1))
                     columnLegend = tableColumn
                     self.dataTable.setItem(tableRow, tableColumn, fieldLegend)
-                    self.dataTable.horizontalHeader().setResizeMode(columnLegend, QtGui.QHeaderView.ResizeToContents)
+                    self.dataTable.horizontalHeader().setResizeMode(columnLegend, QHeaderView.ResizeToContents)
                     
                     if self.dataType == MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_LAND_USE_COVER):
                         tableColumn += 1
                         columnClassified = tableColumn
-                        comboBoxClassified = QtGui.QComboBox()
+                        comboBoxClassified = QComboBox()
                         for key, val in self.classifiedOptions.iteritems():
                             comboBoxClassified.addItem(val, key)
                         self.dataTable.setCellWidget(tableRow, tableColumn, comboBoxClassified)
-                        self.dataTable.horizontalHeader().setResizeMode(columnClassified, QtGui.QHeaderView.ResizeToContents)
+                        self.dataTable.horizontalHeader().setResizeMode(columnClassified, QHeaderView.ResizeToContents)
                     
                     tableRow += 1
                 
@@ -353,7 +358,7 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
         elif self.dataType == MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_PLANNING_UNIT) and self.isVectorFile and self.dataDescription and self.dataFieldAttribute:
             valid = True
         else:
-            QtGui.QMessageBox.critical(self, MenuFactory.getLabel(MenuFactory.MSG_ERROR), MenuFactory.getDescription(MenuFactory.MSG_ERROR))
+            QMessageBox.critical(self, MenuFactory.getLabel(MenuFactory.MSG_ERROR), MenuFactory.getDescription(MenuFactory.MSG_ERROR))
         
         return valid
     
@@ -376,7 +381,7 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
         elif self.dataType == MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_TABLE) and self.isCsvFile and self.dataDescription:
             valid = True
         else:
-            QtGui.QMessageBox.critical(self, MenuFactory.getLabel(MenuFactory.MSG_ERROR), MenuFactory.getDescription(MenuFactory.MSG_ERROR))
+            QMessageBox.critical(self, MenuFactory.getLabel(MenuFactory.MSG_ERROR), MenuFactory.getDescription(MenuFactory.MSG_ERROR))
         
         return valid
     
@@ -455,29 +460,29 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
                             if attribute == 'Legend' or attribute == 'Classified': # Skip the additional column
                                 continue
                             attributeValue = str(feature.attribute(attribute))
-                            attributeValueTableItem = QtGui.QTableWidgetItem(attributeValue)
+                            attributeValueTableItem = QTableWidgetItem(attributeValue)
                             if tableColumn == 1 and self.dataType == MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_PLANNING_UNIT): # Editable second column for Vector Planning Units
                                 pass
                             else:
-                                attributeValueTableItem.setFlags(attributeValueTableItem.flags() & ~QtCore.Qt.ItemIsEnabled)
+                                attributeValueTableItem.setFlags(attributeValueTableItem.flags() & ~Qt.ItemIsEnabled)
                             self.dataTable.setItem(tableRow, tableColumn, attributeValueTableItem)
-                            self.dataTable.horizontalHeader().setResizeMode(tableColumn, QtGui.QHeaderView.ResizeToContents)
+                            self.dataTable.horizontalHeader().setResizeMode(tableColumn, QHeaderView.ResizeToContents)
                             tableColumn += 1
                         
                         # Additional columns ('Legend', 'Classified' only for Land Use/Cover types)
                         if self.dataType == MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_LAND_USE_COVER):
-                            fieldLegend = QtGui.QTableWidgetItem('Unidentified Landuse {0}'.format(tableRow + 1))
+                            fieldLegend = QTableWidgetItem('Unidentified Landuse {0}'.format(tableRow + 1))
                             columnLegend = tableColumn
                             self.dataTable.setItem(tableRow, tableColumn, fieldLegend)
-                            self.dataTable.horizontalHeader().setResizeMode(columnLegend, QtGui.QHeaderView.ResizeToContents)
+                            self.dataTable.horizontalHeader().setResizeMode(columnLegend, QHeaderView.ResizeToContents)
                             
                             tableColumn += 1
                             columnClassified = tableColumn
-                            comboBoxClassified = QtGui.QComboBox()
+                            comboBoxClassified = QComboBox()
                             for key, val in self.classifiedOptions.iteritems():
                                 comboBoxClassified.addItem(val, key)
                             self.dataTable.setCellWidget(tableRow, tableColumn, comboBoxClassified)
-                            self.dataTable.horizontalHeader().setResizeMode(columnClassified, QtGui.QHeaderView.ResizeToContents)
+                            self.dataTable.horizontalHeader().setResizeMode(columnClassified, QHeaderView.ResizeToContents)
                         
                         tableRow += 1
                     
@@ -501,8 +506,8 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
     def handlerSelectDataMapping(self):
         """Slot method for selecting a data mapping file in CSV format.
         """
-        dataMappingFile = unicode(QtGui.QFileDialog.getOpenFileName(
-            self, MenuFactory.getLabel(MenuFactory.MGS_APP_SELECT_DATA_MAPPING_FILE), QtCore.QDir.homePath(), MenuFactory.getDescription(MenuFactory.MGS_APP_SELECT_DATA_MAPPING_FILE) + ' (*{0})'.format(self.parent.main.appSettings['selectCsvfileExt'])))
+        dataMappingFile = unicode(QFileDialog.getOpenFileName(
+            self, MenuFactory.getLabel(MenuFactory.MGS_APP_SELECT_DATA_MAPPING_FILE), QDir.homePath(), MenuFactory.getDescription(MenuFactory.MGS_APP_SELECT_DATA_MAPPING_FILE) + ' (*{0})'.format(self.parent.main.appSettings['selectCsvfileExt'])))
         
         if dataMappingFile:
             logging.getLogger(type(self).__name__).info('select data mapping file: %s', dataMappingFile)
@@ -559,7 +564,7 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
                     
                     if fieldItemText in dataMappingZone:
                         legend = dataMappingZone[fieldItemText]
-                        newFieldLegend = QtGui.QTableWidgetItem(legend)
+                        newFieldLegend = QTableWidgetItem(legend)
                         self.dataTable.setItem(tableRow, zoneColumn, newFieldLegend)                  
             
             if self.dataType == MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_LAND_USE_COVER):
@@ -594,13 +599,13 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
                     
                     if fieldItemText in dataMappingClassified:
                         legend = dataMappingLegend[fieldItemText]
-                        newFieldLegend = QtGui.QTableWidgetItem(legend)
+                        newFieldLegend = QTableWidgetItem(legend)
                         self.dataTable.setItem(tableRow, legendColumn, newFieldLegend)
                         
                         classification = dataMappingClassified[fieldItemText]
                         
                         # Perform case insensitive search of the ComboBox
-                        classifiedOptionIndex = classifiedWidget.findText(classification, QtCore.Qt.MatchFixedString)
+                        classifiedOptionIndex = classifiedWidget.findText(classification, Qt.MatchFixedString)
                         # Found a data mapping match!
                         if classifiedOptionIndex >= 0:
                             classifiedWidget.setCurrentIndex(classifiedOptionIndex)
@@ -609,10 +614,10 @@ class DialogLumensAddDataProperties(QtGui.QDialog):
     def accept(self):
         """Overload method that is called when the dialog is accepted.
         """
-        QtGui.QDialog.accept(self)
+        QDialog.accept(self)
     
     
     def reject(self):
         """Overload method that is called when the dialog is rejected (canceled).
         """
-        QtGui.QDialog.reject(self)
+        QDialog.reject(self)

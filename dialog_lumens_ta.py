@@ -3,10 +3,12 @@
 
 import os, logging, datetime, glob
 from qgis.core import *
-# from processing.tools import *
+
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
+
+from tools import general
 
 from utils import QPlainTextEditLogger
 from dialog_lumens_base import DialogLumensBase
@@ -639,6 +641,8 @@ class DialogLumensTA(QDialog): # DialogLumensBase
             self.logger.addHandler(fh)
             self.logger.setLevel(logging.DEBUG)
         
+        self.base = DialogLumensBase(parent)
+
         self.setupUi(self)
         
         # History log
@@ -2209,7 +2213,7 @@ class DialogLumensTA(QDialog): # DialogLumensBase
         formName = 'DialogLumensTAAbacusOpportunityCostCurve'
         algName = 'r:ta_opcost_abacus'
         
-        if self.validForm(formName):
+        if self.base.validForm(formName):
             logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
             logging.getLogger(self.historyLog).info('alg start: %s' % formName)
             self.buttonProcessAbacusOpportunityCost.setDisabled(True)
@@ -2233,7 +2237,7 @@ class DialogLumensTA(QDialog): # DialogLumensBase
             # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
             self.main.setWindowState(Qt.WindowActive)
             
-            self.outputsMessageBox(algName, outputs, '', '')
+            self.base.outputsMessageBox(algName, outputs, '', '')
             
             self.buttonProcessAbacusOpportunityCost.setEnabled(True)
             logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
@@ -2252,7 +2256,7 @@ class DialogLumensTA(QDialog): # DialogLumensBase
         algName = 'r:ta_opcost_curve'
         activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
         
-        if self.validForm(formName):
+        if self.base.validForm(formName):
             logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
             logging.getLogger(self.historyLog).info('alg start: %s' % formName)
             self.buttonProcessOpportunityCostCurve.setDisabled(True)
@@ -2280,7 +2284,7 @@ class DialogLumensTA(QDialog): # DialogLumensBase
             # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
             self.main.setWindowState(Qt.WindowActive)
             
-            self.outputsMessageBox(algName, outputs, '', '')
+            self.base.outputsMessageBox(algName, outputs, '', '')
             
             self.buttonProcessOpportunityCostCurve.setEnabled(True)
             logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
@@ -2299,7 +2303,7 @@ class DialogLumensTA(QDialog): # DialogLumensBase
         algName = 'r:ta_opcost_map'
         activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
         
-        if self.validForm(formName):
+        if self.base.validForm(formName):
             logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
             logging.getLogger(self.historyLog).info('alg start: %s' % formName)
             self.buttonProcessOpportunityCostMap.setDisabled(True)
@@ -2330,7 +2334,7 @@ class DialogLumensTA(QDialog): # DialogLumensBase
             # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
             self.main.setWindowState(Qt.WindowActive)
             
-            self.outputsMessageBox(algName, outputs, '', '')
+            self.base.outputsMessageBox(algName, outputs, '', '')
             
             self.buttonProcessOpportunityCostMap.setEnabled(True)
             logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
@@ -2349,7 +2353,7 @@ class DialogLumensTA(QDialog): # DialogLumensBase
         algName = 'r:ta_re_singleio_descriptive'
         activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
         
-        if self.validForm(formName):
+        if self.base.validForm(formName):
             logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
             logging.getLogger(self.historyLog).info('alg start: %s' % formName)
             self.buttonProcessDescriptiveAnalysis.setDisabled(True)
@@ -2384,7 +2388,7 @@ class DialogLumensTA(QDialog): # DialogLumensBase
             # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
             self.main.setWindowState(Qt.WindowActive)
             
-            self.outputsMessageBox(algName, outputs, '', '')
+            self.base.outputsMessageBox(algName, outputs, '', '')
             
             self.buttonProcessDescriptiveAnalysis.setEnabled(True)
             logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
@@ -2403,7 +2407,7 @@ class DialogLumensTA(QDialog): # DialogLumensBase
         algName = 'r:ta_re_ld_lr'
         activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
         
-        if self.validForm(formName):
+        if self.base.validForm(formName):
             logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
             logging.getLogger(self.historyLog).info('alg start: %s' % formName)
             self.buttonProcessLandRequirementAnalysis.setDisabled(True)
@@ -2432,7 +2436,7 @@ class DialogLumensTA(QDialog): # DialogLumensBase
             # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
             self.main.setWindowState(Qt.WindowActive)
             
-            self.outputsMessageBox(algName, outputs, '', '')
+            self.base.outputsMessageBox(algName, outputs, '', '')
             
             self.buttonProcessLandRequirementAnalysis.setEnabled(True)
             logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
@@ -2451,7 +2455,7 @@ class DialogLumensTA(QDialog): # DialogLumensBase
             formName = 'DialogLumensTARegionalEconomyFinalDemandChangeMultiplierAnalysis'
             algName = 'r:ta_re_finaldemand'
             
-            if self.validForm(formName):
+            if self.base.validForm(formName):
                 logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
                 logging.getLogger(self.historyLog).info('alg start: %s' % formName)
                 self.buttonProcessRegionalEconomicScenarioImpact.setDisabled(True)
@@ -2477,7 +2481,7 @@ class DialogLumensTA(QDialog): # DialogLumensBase
                 # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
                 self.main.setWindowState(Qt.WindowActive)
                 
-                self.outputsMessageBox(algName, outputs, '', '')
+                self.base.outputsMessageBox(algName, outputs, '', '')
                 
                 self.buttonProcessRegionalEconomicScenarioImpact.setEnabled(True)
                 logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
@@ -2487,7 +2491,7 @@ class DialogLumensTA(QDialog): # DialogLumensBase
             formName = 'DialogLumensTARegionalEconomyGDPChangeMultiplierAnalysis'
             algName = 'r:ta_re_gdp'
             
-            if self.validForm(formName):
+            if self.base.validForm(formName):
                 logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
                 logging.getLogger(self.historyLog).info('alg start: %s' % formName)
                 self.buttonProcessRegionalEconomicScenarioImpact.setDisabled(True)
@@ -2513,7 +2517,7 @@ class DialogLumensTA(QDialog): # DialogLumensBase
                 # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
                 self.main.setWindowState(Qt.WindowActive)
                 
-                self.outputsMessageBox(algName, outputs, '', '')
+                self.base.outputsMessageBox(algName, outputs, '', '')
                 
                 self.buttonProcessRegionalEconomicScenarioImpact.setEnabled(True)
                 logging.getLogger(type(self).__name__).info('alg end: %s' % formName)
@@ -2531,7 +2535,7 @@ class DialogLumensTA(QDialog): # DialogLumensBase
         formName = 'DialogLumensTAImpactofLandUsetoRegionalEconomyIndicatorAnalysis'
         algName = 'r:ta_re_luc_impact'
         
-        if self.validForm(formName):
+        if self.base.validForm(formName):
             logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
             logging.getLogger(self.historyLog).info('alg start: %s' % formName)
             self.buttonProcessLandUseChangeImpact.setDisabled(True)
@@ -2557,7 +2561,7 @@ class DialogLumensTA(QDialog): # DialogLumensBase
             # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
             self.main.setWindowState(Qt.WindowActive)
             
-            self.outputsMessageBox(algName, outputs, '', '')
+            self.base.outputsMessageBox(algName, outputs, '', '')
             
             self.buttonProcessLandUseChangeImpact.setEnabled(True)
             logging.getLogger(type(self).__name__).info('alg end: %s' % formName)

@@ -1,4 +1,4 @@
-##DB-PostgreSQL=group
+##Database=group
 ##admin_data=vector
 ##field_attribute=field admin_data
 ##admin_output=output vector

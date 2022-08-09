@@ -3,15 +3,19 @@
 
 import os, logging
 from qgis.core import *
-from PyQt5 import QtCore, QtGui
-from processing.tools import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+
+
+from tools import general
 
 from dialog_lumens_base import DialogLumensBase
 from dialog_lumens_viewer import DialogLumensViewer
 
 from menu_factory import MenuFactory
 
-class DialogLumensDeleteData(QtGui.QDialog, DialogLumensBase):
+class DialogLumensDeleteData(QDialog): # DialogLumensBase
     """LUMENS "Delete Data" dialog class. 
     """
   
@@ -46,31 +50,31 @@ class DialogLumensDeleteData(QtGui.QDialog, DialogLumensBase):
         Args:
             parent: the dialog's parent instance.
         """
-        self.dialogLayout = QtGui.QVBoxLayout()
+        self.dialogLayout = QVBoxLayout()
 
-        self.groupBoxDeleteData = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.APP_PROJECT_DELETE_DATA))
-        self.layoutGroupBoxDeleteData = QtGui.QVBoxLayout()
-        self.layoutGroupBoxDeleteData.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.groupBoxDeleteData = QGroupBox(MenuFactory.getLabel(MenuFactory.APP_PROJECT_DELETE_DATA))
+        self.layoutGroupBoxDeleteData = QVBoxLayout()
+        self.layoutGroupBoxDeleteData.setAlignment(Qt.AlignLeft|Qt.AlignTop)
         self.groupBoxDeleteData.setLayout(self.layoutGroupBoxDeleteData)
-        self.layoutDeleteDataInfo = QtGui.QVBoxLayout()
-        self.layoutDeleteData = QtGui.QVBoxLayout()
+        self.layoutDeleteDataInfo = QVBoxLayout()
+        self.layoutDeleteData = QVBoxLayout()
         self.layoutGroupBoxDeleteData.addLayout(self.layoutDeleteDataInfo)
         self.layoutGroupBoxDeleteData.addLayout(self.layoutDeleteData)
 
-        self.labelDeleteDataInfo = QtGui.QLabel()
+        self.labelDeleteDataInfo = QLabel()
         self.labelDeleteDataInfo.setText('\n')
         self.labelDeleteDataInfo.setWordWrap(True)
         self.layoutDeleteDataInfo.addWidget(self.labelDeleteDataInfo)
 
-        self.dataTable = QtGui.QTableWidget()
+        self.dataTable = QTableWidget()
         self.dataTable.setDisabled(True)
         self.dataTable.verticalHeader().setVisible(False)
         self.layoutDeleteData.addWidget(self.dataTable)
 
-        self.layoutButtonProcessDeleteData = QtGui.QHBoxLayout()
-        self.buttonProcessDeleteData = QtGui.QPushButton()
+        self.layoutButtonProcessDeleteData = QHBoxLayout()
+        self.buttonProcessDeleteData = QPushButton()
         self.buttonProcessDeleteData.setText('&' + MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_PROSES))
-        self.layoutButtonProcessDeleteData.setAlignment(QtCore.Qt.AlignRight)
+        self.layoutButtonProcessDeleteData.setAlignment(Qt.AlignRight)
         self.layoutButtonProcessDeleteData.addWidget(self.buttonProcessDeleteData)
 
         self.dialogLayout.addWidget(self.groupBoxDeleteData)
@@ -100,22 +104,22 @@ class DialogLumensDeleteData(QtGui.QDialog, DialogLumensBase):
             for value in dataLandUseCover.values():
                 self.dataTable.insertRow(tableRow)
 
-                data = QtGui.QTableWidgetItem(value['RST_DATA'])
-                data.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+                data = QTableWidgetItem(value['RST_DATA'])
+                data.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
                 self.dataTable.setItem(tableRow, 0, data)
-                self.dataTable.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
+                self.dataTable.horizontalHeader().setResizeMode(0, QHeaderView.ResizeToContents)
 
-                description = QtGui.QTableWidgetItem(value['RST_NAME'])
-                description.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+                description = QTableWidgetItem(value['RST_NAME'])
+                description.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
                 self.dataTable.setItem(tableRow, 1, description)
-                self.dataTable.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.ResizeToContents)
+                self.dataTable.horizontalHeader().setResizeMode(1, QHeaderView.ResizeToContents)
 
                 # Additional checkbox column for marking the deleted data
-                fieldDelete = QtGui.QTableWidgetItem(MenuFactory.getLabel(MenuFactory.APP_DELETE_DATA_DELETE_ACTION))
-                fieldDelete.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
-                fieldDelete.setCheckState(QtCore.Qt.Unchecked)
+                fieldDelete = QTableWidgetItem(MenuFactory.getLabel(MenuFactory.APP_DELETE_DATA_DELETE_ACTION))
+                fieldDelete.setFlags(Qt.ItemIsUserCheckable | Qt.ItemIsEnabled)
+                fieldDelete.setCheckState(Qt.Unchecked)
                 self.dataTable.setItem(tableRow, 2, fieldDelete)
-                self.dataTable.horizontalHeader().setResizeMode(2, QtGui.QHeaderView.ResizeToContents)
+                self.dataTable.horizontalHeader().setResizeMode(2, QHeaderView.ResizeToContents)
 
                 tableRow += 1
 
@@ -125,22 +129,22 @@ class DialogLumensDeleteData(QtGui.QDialog, DialogLumensBase):
             for value in dataPlanningUnit.values():
                 self.dataTable.insertRow(tableRow)
 
-                data = QtGui.QTableWidgetItem(value['RST_DATA'])
-                data.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+                data = QTableWidgetItem(value['RST_DATA'])
+                data.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
                 self.dataTable.setItem(tableRow, 0, data)
-                self.dataTable.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
+                self.dataTable.horizontalHeader().setResizeMode(0, QHeaderView.ResizeToContents)
 
-                description = QtGui.QTableWidgetItem(value['RST_NAME'])
-                description.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+                description = QTableWidgetItem(value['RST_NAME'])
+                description.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
                 self.dataTable.setItem(tableRow, 1, description)
-                self.dataTable.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.ResizeToContents)
+                self.dataTable.horizontalHeader().setResizeMode(1, QHeaderView.ResizeToContents)
 
                 # Additional checkbox column for marking the deleted data
-                fieldDelete = QtGui.QTableWidgetItem(MenuFactory.getLabel(MenuFactory.APP_DELETE_DATA_DELETE_ACTION))
-                fieldDelete.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
-                fieldDelete.setCheckState(QtCore.Qt.Unchecked)
+                fieldDelete = QTableWidgetItem(MenuFactory.getLabel(MenuFactory.APP_DELETE_DATA_DELETE_ACTION))
+                fieldDelete.setFlags(Qt.ItemIsUserCheckable | Qt.ItemIsEnabled)
+                fieldDelete.setCheckState(Qt.Unchecked)
                 self.dataTable.setItem(tableRow, 2, fieldDelete)
-                self.dataTable.horizontalHeader().setResizeMode(2, QtGui.QHeaderView.ResizeToContents)
+                self.dataTable.horizontalHeader().setResizeMode(2, QHeaderView.ResizeToContents)
 
                 tableRow += 1
 
@@ -149,22 +153,22 @@ class DialogLumensDeleteData(QtGui.QDialog, DialogLumensBase):
             for value in dataFactor.values():
                 self.dataTable.insertRow(tableRow)
 
-                data = QtGui.QTableWidgetItem(value['RST_DATA'])
-                data.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+                data = QTableWidgetItem(value['RST_DATA'])
+                data.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
                 self.dataTable.setItem(tableRow, 0, data)
-                self.dataTable.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
+                self.dataTable.horizontalHeader().setResizeMode(0, QHeaderView.ResizeToContents)
 
-                description = QtGui.QTableWidgetItem(value['RST_NAME'])
-                description.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+                description = QTableWidgetItem(value['RST_NAME'])
+                description.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
                 self.dataTable.setItem(tableRow, 1, description)
-                self.dataTable.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.ResizeToContents)
+                self.dataTable.horizontalHeader().setResizeMode(1, QHeaderView.ResizeToContents)
 
                 # Additional checkbox column for marking the deleted data
-                fieldDelete = QtGui.QTableWidgetItem(MenuFactory.getLabel(MenuFactory.APP_DELETE_DATA_DELETE_ACTION))
-                fieldDelete.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
-                fieldDelete.setCheckState(QtCore.Qt.Unchecked)
+                fieldDelete = QTableWidgetItem(MenuFactory.getLabel(MenuFactory.APP_DELETE_DATA_DELETE_ACTION))
+                fieldDelete.setFlags(Qt.ItemIsUserCheckable | Qt.ItemIsEnabled)
+                fieldDelete.setCheckState(Qt.Unchecked)
                 self.dataTable.setItem(tableRow, 2, fieldDelete)
-                self.dataTable.horizontalHeader().setResizeMode(2, QtGui.QHeaderView.ResizeToContents)
+                self.dataTable.horizontalHeader().setResizeMode(2, QHeaderView.ResizeToContents)
 
                 tableRow += 1
 
@@ -173,22 +177,22 @@ class DialogLumensDeleteData(QtGui.QDialog, DialogLumensBase):
             for value in dataLookupTable.values():
                 self.dataTable.insertRow(tableRow)
 
-                data = QtGui.QTableWidgetItem(value['TBL_DATA'])
-                data.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+                data = QTableWidgetItem(value['TBL_DATA'])
+                data.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
                 self.dataTable.setItem(tableRow, 0, data)
-                self.dataTable.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
+                self.dataTable.horizontalHeader().setResizeMode(0, QHeaderView.ResizeToContents)
 
-                description = QtGui.QTableWidgetItem(value['TBL_NAME'])
-                description.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+                description = QTableWidgetItem(value['TBL_NAME'])
+                description.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
                 self.dataTable.setItem(tableRow, 1, description)
-                self.dataTable.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.ResizeToContents)
+                self.dataTable.horizontalHeader().setResizeMode(1, QHeaderView.ResizeToContents)
 
                 # Additional checkbox column for marking the deleted data
-                fieldDelete = QtGui.QTableWidgetItem(MenuFactory.getLabel(MenuFactory.APP_DELETE_DATA_DELETE_ACTION))
-                fieldDelete.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
-                fieldDelete.setCheckState(QtCore.Qt.Unchecked)
+                fieldDelete = QTableWidgetItem(MenuFactory.getLabel(MenuFactory.APP_DELETE_DATA_DELETE_ACTION))
+                fieldDelete.setFlags(Qt.ItemIsUserCheckable | Qt.ItemIsEnabled)
+                fieldDelete.setCheckState(Qt.Unchecked)
                 self.dataTable.setItem(tableRow, 2, fieldDelete)
-                self.dataTable.horizontalHeader().setResizeMode(2, QtGui.QHeaderView.ResizeToContents)
+                self.dataTable.horizontalHeader().setResizeMode(2, QHeaderView.ResizeToContents)
 
                 tableRow += 1
 
@@ -208,7 +212,7 @@ class DialogLumensDeleteData(QtGui.QDialog, DialogLumensBase):
         
         checkedDelete = []
         for i in range(self.dataTable.rowCount()):
-            if self.dataTable.item(i, 2).checkState() == QtCore.Qt.Checked:
+            if self.dataTable.item(i, 2).checkState() == Qt.Checked:
                 checkedDelete.append(self.dataTable.item(i, 0).text())
 
         if len(checkedDelete) > 0:
@@ -219,7 +223,7 @@ class DialogLumensDeleteData(QtGui.QDialog, DialogLumensBase):
             
             logging.getLogger(type(self).__name__).info('start: LUMENS Delete Data')
 
-            self.main.setWindowState(QtCore.Qt.WindowMinimized)
+            self.main.setWindowState(Qt.WindowMinimized)
 
             print 'DEBUG'
             print checkedDeleteCsv
@@ -237,7 +241,7 @@ class DialogLumensDeleteData(QtGui.QDialog, DialogLumensBase):
                 dialog = DialogLumensViewer(self, 'DEBUG "{0}" ({1})'.format(algName, 'processing_script.r.Rout'), 'text', self.main.appSettings['ROutFile'])
                 dialog.exec_()
                 
-            self.main.setWindowState(QtCore.Qt.WindowActive)
+            self.main.setWindowState(Qt.WindowActive)
 
             algSuccess = self.outputsMessageBox(algName, outputs, '', '')
             
@@ -248,5 +252,5 @@ class DialogLumensDeleteData(QtGui.QDialog, DialogLumensBase):
 
             logging.getLogger(type(self).__name__).info('end: LUMENS Delete Data')
         else:
-            QtGui.QMessageBox.information(self, self.dialogTitle, MenuFactory.getLabel(MenuFactory.MSG_DB_CHOOSE_DATA_TO_BE_DELETED))
+            QMessageBox.information(self, self.dialogTitle, MenuFactory.getLabel(MenuFactory.MSG_DB_CHOOSE_DATA_TO_BE_DELETED))
             return

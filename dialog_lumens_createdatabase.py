@@ -466,8 +466,9 @@ class DialogLumensCreateDatabase(QDialog): # DialogLumensBase
         self.setAppSettings()
         
         dissolvedTableCsv = self.getDissolvedTableCsv(True)
+        print(dissolvedTableCsv)
         
-        if self.validForm() and dissolvedTableCsv:
+        if self.base.validForm and dissolvedTableCsv:
             logging.getLogger(type(self).__name__).info('start: %s' % self.dialogTitle)
             
             self.buttonProcessCreateDatabase.setDisabled(True)
@@ -508,7 +509,7 @@ class DialogLumensCreateDatabase(QDialog): # DialogLumensBase
             # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
             # self.main.setWindowState(QtCore.Qt.WindowActive)
             
-            algSuccess = self.outputsMessageBox(algName, outputs, MenuFactory.getLabel(MenuFactory.MSG_DB_SUCCESS_CREATED), MenuFactory.getLabel(MenuFactory.MSG_DB_FAILED_CREATED))
+            algSuccess = self.base.outputsMessageBox(algName, outputs, MenuFactory.getLabel(MenuFactory.MSG_DB_SUCCESS_CREATED), MenuFactory.getLabel(MenuFactory.MSG_DB_FAILED_CREATED))
             
             self.buttonProcessCreateDatabase.setEnabled(True)
             logging.getLogger(type(self).__name__).info('end: %s' % self.dialogTitle)
@@ -529,6 +530,6 @@ class DialogLumensCreateDatabase(QDialog): # DialogLumensBase
                     dialog = DialogLumensViewer(self, MenuFactory.getLabel(MenuFactory.MSG_DB_HTML_REPORT), 'html', lumensHTMLReport)
                     dialog.exec_()
             else:
-                logging.getLogger(type(self).__name__).error('modeler:lumens_create_database failed...')
+                logging.getLogger(type(self).__name__).error('r:db_create failed...')
             
             

@@ -3,6 +3,7 @@
 
 import os, logging, csv, tempfile
 from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 
 from dialog_lumens_viewer import DialogLumensViewer
 

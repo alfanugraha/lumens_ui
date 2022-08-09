@@ -3,10 +3,11 @@
 
 import os, logging, glob, tempfile, csv
 from qgis.core import *
-# from processing.tools import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
+
+from tools import general
 
 from utils import QPlainTextEditLogger
 from dialog_lumens_base import DialogLumensBase
@@ -242,6 +243,8 @@ class DialogLumensPUR(QDialog): # DialogLumensBase
             self.logger.addHandler(fh)
             self.logger.setLevel(logging.DEBUG)
         
+        self.base = DialogLumensBase(parent)
+
         self.setupUi(self)
         
         # History log
@@ -1170,7 +1173,7 @@ class DialogLumensPUR(QDialog): # DialogLumensBase
         """
         self.setAppSettings()
         
-        if self.validForm():
+        if self.base.validForm:
             logging.getLogger(type(self).__name__).info('Processing PUR start: %s' % self.dialogTitle)
             logging.getLogger(self.historyLog).info('Processing PUR start: %s' % self.dialogTitle)
             self.buttonProcessSetup.setDisabled(True)

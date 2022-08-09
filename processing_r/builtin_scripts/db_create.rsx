@@ -1,5 +1,4 @@
-##DB-PostgreSQL=group
-#language=string
+##Database=group
 ##project=string (enter name of the project)
 ##working_directory=folder
 ##description=string
@@ -345,7 +344,6 @@ writeRastFile <- function(raster_in, raster_ou_path = character(), cat = FALSE, 
 #=Save all params into .RData objects
 save(LUMENS_path_user,
      LUMENS_path,
-     # language,
      pgEnvBatch,
      pathEnv,
      idx_landuse,
@@ -422,12 +420,6 @@ plot.admin<-gplot(ref, maxpixels=100000) + geom_raster(aes(fill=as.factor(value)
          legend.text = element_text(size=10),
          legend.key.height = unit(0.35, "cm"),
          legend.key.width = unit(0.35, "cm"))
-# write report   
-# if(language==){
-#   
-# } else {
-#   
-# }
 
 title1<-"{\\colortbl;\\red0\\green0\\blue0;\\red255\\green0\\blue0;\\red146\\green208\\blue80;\\red0\\green176\\blue240;\\red140\\green175\\blue71;\\red0\\green112\\blue192;\\red79\\green98\\blue40;} \\pard\\qr\\b\\fs70\\cf2 L\\cf3U\\cf4M\\cf5E\\cf6N\\cf7S \\cf1REPORT \\par\\b0\\fs20\\ql\\cf1"
 title2<-paste("\\pard\\qr\\b\\fs40\\cf1 Create LUMENS Project ", "for ", location, ", ", province, ", ", country, "\\par\\b0\\fs20\\ql\\cf1", sep="")
