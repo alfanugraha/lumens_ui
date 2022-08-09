@@ -72,7 +72,7 @@ class MainWindow(QMainWindow):
             'defaultLanguage': 'en',
             'defaultLanguageProperties': '',
             'defaultBasemapFile': 'basemap.tif',
-            'defaultBasemapFilePath': 'data/basemap/lu00_48s_100m.tif',
+            'defaultBasemapFilePath': '', #data/basemap/lu00_48s_100m.tif
             'defaultVectorFile': 'landmarks.shp',
             'defaultVectorFilePath': '',
             'defaultHabitatLookupTable': '',
