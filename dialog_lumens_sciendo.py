@@ -1761,7 +1761,7 @@ class DialogLumensSCIENDO(QDialog): # DialogLumensBase
         
         if self.checkBoxHistoricalBaselineProjection.isChecked():
             formName = 'DialogLumensSCIENDOHistoricalBaselineProjection'
-            algName = 'r:sciendoperiodprojection'
+            algName = 'r:sciendo_period_projection'
             
             if self.validForm(formName):
                 logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
@@ -1771,12 +1771,13 @@ class DialogLumensSCIENDO(QDialog): # DialogLumensBase
                 # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
                 self.main.setWindowState(Qt.WindowMinimized)
                 
-                outputs = general.runalg(
-                    algName,
-                    activeProject,
-                    self.main.appSettings[formName]['QUESCDatabase'],
-                    self.main.appSettings[formName]['iteration'],
-                    None,
+                outputs = general.run(
+                    algName, {
+                        'proj.file' : activeProject,
+                        'ques_c_db' : self.main.appSettings[formName]['QUESCDatabase'],
+                        'iteration' : self.main.appSettings[formName]['iteration'],
+                        'statusoutput' : 'TEMPORARY_OUTPUT'
+                    }
                 )
                 
                 # Display ROut file in debug mode
@@ -1799,7 +1800,7 @@ class DialogLumensSCIENDO(QDialog): # DialogLumensBase
         if self.checkBoxHistoricalBaselineAnnualProjection.isChecked():
             if len(self.listOfQUESCDatabase) > 1:
                 formName = 'DialogLumensSCIENDOHistoricalBaselineAnnualProjection'
-                algName = 'r:sciendoannualprojection'
+                algName = 'r:sciendo_annual_projection'
                 
                 self.listOfQUESCDatabase.sort()
                 QUESCDatabaseCsv = self.writeListCsv(self.listOfQUESCDatabase, True)
@@ -1812,13 +1813,14 @@ class DialogLumensSCIENDO(QDialog): # DialogLumensBase
                     # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
                     self.main.setWindowState(Qt.WindowMinimized)
                     
-                    outputs = general.runalg(
-                        algName,
-                        activeProject,
-                        QUESCDatabaseCsv,
-                        self.main.appSettings[formName]['iteration'],
-                        None,
-                    )
+                    outputs = general.run(
+                    algName, {
+                        'proj.file' : activeProject,
+                        'ques_c_db' : self.main.appSettings[formName]['QUESCDatabase'],
+                        'iteration' : self.main.appSettings[formName]['iteration'],
+                        'statusoutput' : 'TEMPORARY_OUTPUT'
+                    }
+                )
                     
                     # Display ROut file in debug mode
                     if self.main.appSettings['debug']:
@@ -1845,7 +1847,7 @@ class DialogLumensSCIENDO(QDialog): # DialogLumensBase
         
         if self.checkBoxDriversAnalysis.isChecked():
             formName = 'DialogLumensSCIENDODriversAnalysis'
-            algName = 'r:sciendodriversanalysis'
+            algName = 'r:sciendo_drivers_analysis'
             
             if self.validForm(formName):
                 logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
@@ -1855,10 +1857,11 @@ class DialogLumensSCIENDO(QDialog): # DialogLumensBase
                 # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
                 self.main.setWindowState(Qt.WindowMinimized)
                 
-                outputs = general.runalg(
-                    algName,
-                    self.main.appSettings[formName]['landUseCoverChangeDrivers'],
-                    self.main.appSettings[formName]['landUseCoverChangeType'],
+                outputs = general.run(
+                    algName, {
+                    'Drivers_data': self.main.appSettings[formName]['landUseCoverChangeDrivers'],
+                    'LUC_type': self.main.appSettings[formName]['landUseCoverChangeType'],
+                    }
                 )
                 
                 # Display ROut file in debug mode
@@ -1883,7 +1886,7 @@ class DialogLumensSCIENDO(QDialog): # DialogLumensBase
         
         if self.checkBoxBuildScenario.isChecked():
             formName = 'DialogLumensSCIENDOBuildScenario'
-            algName = 'r:sciendobuildscenario'
+            algName = 'r:sciendo_build_scenario'
             
             if self.validForm(formName):
                 logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
@@ -1893,9 +1896,10 @@ class DialogLumensSCIENDO(QDialog): # DialogLumensBase
                 # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
                 self.main.setWindowState(Qt.WindowMinimized)
                 
-                outputs = general.runalg(
-                    algName,
-                    self.main.appSettings[formName]['historicalBaselineCar'],
+                outputs = general.run(
+                    algName, {
+                    'Historical_Baseline_Car': self.main.appSettings[formName]['historicalBaselineCar'],
+                    }
                 )
                 
                 # Display ROut file in debug mode
@@ -1923,25 +1927,25 @@ class DialogLumensSCIENDO(QDialog): # DialogLumensBase
         """
         self.setAppSettings()
         
-        algName = 'r:sciendolusimcalculatetransition'
+        algName = 'r:sciendo_lusim_calculate_transition'
         formName = 'DialogLumensSCIENDOCalculateTransitionMatrix'
         activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
         
         if self.validForm(formName):
             logging.getLogger(type(self).__name__).info('alg start: %s' % formName)
             logging.getLogger(self.historyLog).info('alg start: %s' % formName)
-            self.buttonProcessTransitionMatrix.setDisabled(True)
+            self.buttonProcessTransitionMatrix.setDisabled(False)
             
             # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
-            self.main.setWindowState(Qt.WindowMinimized)
+            # self.main.setWindowState(Qt.WindowMinimized)
             
-            outputs = general.runalg(
-                algName,
-                activeProject,
-                self.main.appSettings[formName]['landUse1'],
-                self.main.appSettings[formName]['landUse2'],
-                self.main.appSettings[formName]['planningUnit'],
-                None,
+            outputs = general.run(
+                algName, {
+                'proj.file': activeProject,
+                'landuse_1': self.main.appSettings[formName]['landUse1'],
+                'landuse_2': self.main.appSettings[formName]['landUse2'],
+                'planning_unit': self.main.appSettings[formName]['planningUnit']
+                }
             )
             
             # Display ROut file in debug mode
@@ -1972,7 +1976,7 @@ class DialogLumensSCIENDO(QDialog): # DialogLumensBase
         """
         self.setAppSettings()
         
-        algName = 'r:sciendolusimrastercube'
+        algName = 'r:sciendo_lusim_raster_cube'
         formName = 'DialogLumensSCIENDOCreateRasterCube'
         activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
         
@@ -1984,12 +1988,13 @@ class DialogLumensSCIENDO(QDialog): # DialogLumensBase
             # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
             self.main.setWindowState(Qt.WindowMinimized)
             
-            outputs = general.runalg(
-                algName,
-                activeProject,
-                self.main.appSettings[formName]['simulationIndex'],
-                self.main.appSettings[formName]['factorsDir'],
-                None,
+            outputs = general.run(
+                algName, {
+                'proj.file': activeProject,
+                'SCIENDO_LUCM_index': self.main.appSettings[formName]['simulationIndex'],
+                'factor_folder': self.main.appSettings[formName]['factorsDir'],
+                'status_output': 'TEMPORARY_OUTPUT'
+                }
             )
             
             # Display ROut file in debug mode
@@ -2017,7 +2022,7 @@ class DialogLumensSCIENDO(QDialog): # DialogLumensBase
         """
         self.setAppSettings()
         
-        algName = 'r:sciendolusimwoe'
+        algName = 'r:sciendo_lusim_woe'
         formName = 'DialogLumensSCIENDOCalculateWeightofEvidence'
         activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
         
@@ -2029,12 +2034,13 @@ class DialogLumensSCIENDO(QDialog): # DialogLumensBase
             # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
             self.main.setWindowState(Qt.WindowMinimized)
             
-            outputs = general.runalg(
-                algName,
-                activeProject,
-                self.main.appSettings[formName]['simulationIndex'],
-                self.main.appSettings[formName]['landUseLookup'],
-                None,
+            outputs = general.run(
+                algName, {
+                'proj.file': activeProject,
+                'SCIENDO_LUCM_index': self.main.appSettings[formName]['simulationIndex'],
+                'lc_lut': self.main.appSettings[formName]['landUseLookup'],
+                'status_output': 'TEMPORARY_OUTPUT'
+                }
             )
             
             # Display ROut file in debug mode
@@ -2062,7 +2068,7 @@ class DialogLumensSCIENDO(QDialog): # DialogLumensBase
         """
         self.setAppSettings()
         
-        algName = 'r:sciendolusimsimulate'
+        algName = 'r:sciendo_lusim_simulate'
         formName = 'DialogLumensSCIENDOSimulateLandUseChange'
         activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
         
@@ -2074,12 +2080,13 @@ class DialogLumensSCIENDO(QDialog): # DialogLumensBase
             # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
             self.main.setWindowState(Qt.WindowMinimized)
             
-            outputs = general.runalg(
-                algName,
-                activeProject,
-                self.main.appSettings[formName]['simulationIndex'],
-                self.main.appSettings[formName]['iteration'],
-                None,
+            outputs = general.run(
+                algName, {
+                'proj.file': activeProject,
+                'SCIENDO_LUCM_index': self.main.appSettings[formName]['simulationIndex'],
+                'n_rep': self.main.appSettings[formName]['iteration'],
+                'status_output': 'TEMPORARY_OUTPUT'
+                }
             )
             
             # Display ROut file in debug mode
