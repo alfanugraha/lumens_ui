@@ -68,7 +68,7 @@ if(file.exists(pgconf_file)){
 }
 
 # check status of PostgreSQL server
-pg_isready<-paste0("pg_isready -p ", pgconf$port)
+pg_isready<-paste0("\"", postgre_path, "\\bin\\pg_isready\" -p ", pgconf$port)
 pg_response<-system(pg_isready)
 if(pg_response==2){
   # please check your connection
@@ -117,7 +117,6 @@ unlink(list.files(pattern="*"))
 #=Set reference data
 # save as temporary data 
 setwd(project_path)
-admin_attribute <- readOGR(admin_attribute)
 writeOGR(admin_attribute, dsn=project_path, "reference", overwrite_layer=TRUE, driver="ESRI Shapefile")
 # rasterizing the polygon data of reference (e.g administrative, such as district or province boundary map) using gdal_rasterize
 shp_dir<-paste(project_path,"/", "reference.shp", sep="")
@@ -147,6 +146,7 @@ colnames(cov_desc)[1]<-"Coverage"
 colnames(cov_desc)[2]<-"Description"
 # load reference attribute from csv dissolve table 
 lut_ref<-read.table(dissolve_table, header=TRUE, sep=",")
+lut_ref$fid<-NULL
 colnames(lut_ref)[2]="ADMIN_UNIT"
 
 # set batch parameter 
@@ -162,7 +162,8 @@ createNewPGTbl = pathEnv
 # project as a new pg_db name
 createNewPGTbl[6] = paste("createdb ", project, sep="")
 createNewPGTbl[7] = paste('psql -d ', project, ' -c "CREATE EXTENSION postgis;"', sep="")
-createNewPGTbl[8] = paste('psql -d ', project, ' -c "CREATE EXTENSION postgis_topology;"\n', sep="")
+createNewPGTbl[8] = paste('psql -d ', project, ' -c "CREATE EXTENSION postgis_topology;"', sep="")
+createNewPGTbl[9] = paste('psql -d ', project, ' -c "CREATE EXTENSION postgis_raster;"\n', sep="")
 
 newBatchFile <- file(pgEnvBatch)
 writeLines(createNewPGTbl, newBatchFile)

@@ -480,17 +480,17 @@ class DialogLumensCreateDatabase(QDialog): # DialogLumensBase
             
             outputs = general.run(
                 algName, {
-                'project': self.main.appSettings[type(self).__name__]['projectName'],
-                'working_directory': self.main.appSettings[type(self).__name__]['outputFolder'],
-                'description': self.main.appSettings[type(self).__name__]['projectDescription'],
-                'location': self.main.appSettings[type(self).__name__]['projectLocation'],
-                'province': self.main.appSettings[type(self).__name__]['projectProvince'],
-                'country': self.main.appSettings[type(self).__name__]['projectCountry'],
-                'admin_attribute': self.main.appSettings[type(self).__name__]['dissolvedShapefile'],
-                'field_attribute': self.main.appSettings[type(self).__name__]['shapefileAttr'],
-                'spat_res': self.main.appSettings[type(self).__name__]['projectSpatialRes'],
-                'dissolve_table': dissolvedTableCsv,
-                'statusoutput': 'TEMPORARY_OUTPUT'
+                    'project': self.main.appSettings[type(self).__name__]['projectName'],
+                    'working_directory': self.main.appSettings[type(self).__name__]['outputFolder'],
+                    'description': self.main.appSettings[type(self).__name__]['projectDescription'],
+                    'location': self.main.appSettings[type(self).__name__]['projectLocation'],
+                    'province': self.main.appSettings[type(self).__name__]['projectProvince'],
+                    'country': self.main.appSettings[type(self).__name__]['projectCountry'],
+                    'admin_attribute': self.main.appSettings[type(self).__name__]['dissolvedShapefile'],
+                    'field_attribute': self.main.appSettings[type(self).__name__]['shapefileAttr'],
+                    'spat_res': self.main.appSettings[type(self).__name__]['projectSpatialRes'],
+                    'dissolve_table': dissolvedTableCsv,
+                    'statusoutput': 'TEMPORARY_OUTPUT'
                 }
             )
             
