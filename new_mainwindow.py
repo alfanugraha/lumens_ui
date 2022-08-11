@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #-*- coding:utf-8 -*-
 
-import os, sys, logging, subprocess, csv, tempfile
+import os, sys, logging, subprocess, csv, tempfile, zipfile
 from qgis.core import *
 from qgis.gui import *
 
@@ -44,6 +44,8 @@ from utils import QPlainTextEditLogger
 
 # Import LUMENS dialog classes here
 from dialog_lumens_createdatabase import DialogLumensCreateDatabase
+from dialog_lumens_adddata import DialogLumensAddData
+from dialog_lumens_deletedata import DialogLumensDeleteData
 
 from dialog_lumens_pur import DialogLumensPUR
 from dialog_lumens_ques import DialogLumensQUES
@@ -319,12 +321,12 @@ class MainWindow(QMainWindow):
         # LUMENS action handlers
         # Database menu
         self.actionDialogLumensCreateDatabase.triggered.connect(self.handlerDialogLumensCreateDatabase)
-        # self.actionLumensOpenDatabase.triggered.connect(self.handlerLumensOpenDatabase)
-        # self.actionLumensCloseDatabase.triggered.connect(self.handlerLumensCloseDatabase)
-        # self.actionLumensExportDatabase.triggered.connect(self.handlerLumensExportDatabase)
-        # self.actionDialogLumensAddData.triggered.connect(self.handlerDialogLumensAddData)
-        # self.actionLumensDeleteData.triggered.connect(self.handlerLumensDeleteData)
-        # self.actionLumensDatabaseStatus.triggered.connect(self.handlerLumensDatabaseStatus)
+        self.actionLumensOpenDatabase.triggered.connect(self.handlerLumensOpenDatabase)
+        self.actionLumensCloseDatabase.triggered.connect(self.handlerLumensCloseDatabase)
+        self.actionLumensExportDatabase.triggered.connect(self.handlerLumensExportDatabase)
+        self.actionDialogLumensAddData.triggered.connect(self.handlerDialogLumensAddData)
+        self.actionLumensDeleteData.triggered.connect(self.handlerLumensDeleteData)
+        self.actionLumensDatabaseStatus.triggered.connect(self.handlerLumensDatabaseStatus)
         
         # PUR menu
         self.actionDialogLumensPUR.triggered.connect(self.handlerDialogLumensPUR)
@@ -1136,6 +1138,147 @@ class MainWindow(QMainWindow):
         """Slot method for opening a dialog window.
         """
         self.openDialog(DialogLumensCreateDatabase)
+
+
+    def handlerLumensOpenDatabase(self):
+        """Slot method for a file select dialog to open a LUMENS .lpj project database file.
+        """
+        lumensDatabase = str(QFileDialog.getOpenFileName(
+            self, MenuFactory.getLabel(MenuFactory.APP_SELECT_LUMENS_DATABASE), QDir.homePath(), 'LUMENS Project File (*{0});;LUMENS Project Archive (*{1})'
+            # self, MenuFactory.getLabel(MenuFactory.APP_SELECT_LUMENS_DATABASE), QtCore.QDir.homePath(), MenuFactory.getLabel(MenuFactory.APP_LUMENS_PROJ_FILE) + ' (*{0});;' + MenuFactory.getLabel(MenuFactory.APP_LUMENS_PROJ_ARCHIVE) + ' (*{1})'
+                .format(self.appSettings['selectProjectfileExt'], self.appSettings['selectZipfileExt'])))
+        
+        lumensDatabaseName, lumensDatabaseExt = os.path.splitext(lumensDatabase)
+        
+        if lumensDatabase:
+            logging.getLogger(type(self).__name__).info('Select LUMENS database: %s', lumensDatabase)
+            
+            if lumensDatabaseExt == self.appSettings['selectZipfileExt'] and zipfile.is_zipfile(lumensDatabase):
+                workingDir = str(QFileDialog.getExistingDirectory(self, MenuFactory.getLabel(MenuFactory.APP_SELECT_WORKING_DIRECTORY)))
+                if workingDir:
+                    logging.getLogger(type(self).__name__).info('Select new working directory: %s', workingDir)
+                    outputs = self.lumensImportDatabase(lumensDatabase, workingDir)
+                    
+                    if os.path.exists(outputs['statusoutput']):
+                        projectName = os.path.basename(lumensDatabaseName)
+                        importedDatabase = os.path.join(workingDir, projectName, projectName + '.lpj')
+                        self.lumensOpenDatabase(importedDatabase.replace(os.path.sep, '/'))
+                    else:
+                        QMessageBox.warning(self, 'ERROR', MenuFactory.getLabel(MenuFactory.MSG_DB_FAILED_OPENED))
+                        print('ERROR: Failed to open imported database!')
+                        return
+                else:
+                    QMessageBox.warning(self, 'ERROR', MenuFactory.getLabel(MenuFactory.MSG_APP_INVALID_WORKING_DIRECTORY))
+                    print('ERROR: Invalid working directory!')
+                    return
+            elif lumensDatabaseExt == self.appSettings['selectProjectfileExt']:
+                self.lumensOpenDatabase(lumensDatabase)  
+            else:
+                QMessageBox.warning(self, 'ERROR', MenuFactory.getLabel(MenuFactory.MSG_APP_INVALID_LUMENS_PROJECT))
+                print('ERROR: Invalid LUMENS project file!')
+                return
+
+
+    def lumensExportDatabase(self):
+        """Method for exporting a LUMENS project database
+
+        Export a whole directory, subdirectory, project files, database
+        and archive into a zip file
+        """
+        logging.getLogger(type(self).__name__).info('start: LUMENS Export Database')
+
+        run('r:db_export', {'proj.file': self.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')})
+
+        logging.getLogger(type(self).__name__).info('end: LUMENS Export Database')   
+
+
+    def lumensCloseDatabase(self):
+        """Method for closing a LUMENS project database.
+        
+        Closes an open LUMENS project using "modeler:lumens_close_database" R algorithm.
+        When a LUMENS project is closed, menus that depend on an open project will be disabled and all
+        of the project's module templates will be unlisted from the main window's dashboard tab.
+        """
+        logging.getLogger(type(self).__name__).info('start: LUMENS Close Database')
+        self.actionLumensCloseDatabase.setDisabled(True)
+        
+        outputs = run(
+            'r:db_close', {
+                'project_file': self.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
+            }
+        )        
+        
+        self.appSettings['DialogLumensOpenDatabase']['projectFile'] = ''
+        self.appSettings['DialogLumensOpenDatabase']['projectFolder'] = ''
+        
+        self.lineEditActiveProject.clear()
+        self.projectTreeView.setRootIndex(self.projectModel.index(QDir.rootPath()))
+        
+        # Unset everything
+        self.closeDialogs()
+        # self.clearModuleTemplates()
+        self.clearAddedDataInfo()
+        self.lumensDisableMenus()
+        
+        logging.getLogger(type(self).__name__).info('end: LUMENS Close Database')
+
+
+    def lumensDatabaseStatus(self):
+        """Method for display the project database stats in a popup dialog.
+        
+        Shows the database status of the current active LUMENS project in a
+        dialog window using the "r:lumensdatabasestatus" R algorithm.
+        """
+        logging.getLogger(type(self).__name__).info('start: lumensdatabasestatus')
+        self.actionLumensDatabaseStatus.setDisabled(True)
+        
+        outputs = run(
+            'r:db_status', 
+            {
+                'proj.file':self.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/'), 
+                'database_status': 'TEMPORARY_OUTPUT'
+            }
+        )
+        
+        if outputs:
+            self.webContentDatabaseStatus.load(QUrl.fromLocalFile(os.path.join(self.appSettings['DialogLumensOpenDatabase']['projectFolder'], "project_status.html")))
+            #dialog = DialogLumensViewer(self, 'Database Status', 'csv', outputs['database_status'])
+            #dialog = DialogLumensViewer(self, 'Database Status', 'html', os.path.join(self.appSettings['DialogLumensOpenDatabase']['projectFolder'], "status_LUMENS_database.html"))
+            #dialog.exec_()
+        
+        self.actionLumensDatabaseStatus.setEnabled(True)
+        logging.getLogger(type(self).__name__).info('end: lumensdatabasestatus')
+
+
+    def handlerLumensDeleteData(self):
+        """Slot method for triggering the delete data operation.
+        """
+        self.openDialog(DialogLumensDeleteData)
+
+
+    def handlerLumensCloseDatabase(self):
+        """Slot method for triggering the close database operation.
+        """
+        self.lumensCloseDatabase()
+        # self.handlerDeleteLayer()
+
+
+    def handlerLumensDatabaseStatus(self):
+        """Slot method for triggering the show database status operation.
+        """
+        self.lumensDatabaseStatus()
+
+
+    def handlerDialogLumensAddData(self):
+        """Slot method for opening a dialog window.
+        """
+        self.openDialog(DialogLumensAddData)        
+
+
+    def handlerLumensExportDatabase(self):
+        """Slot method for opening a dialog window.
+        """
+        self.lumensExportDatabase()
 
 
     def handlerDialogLumensPUR(self):

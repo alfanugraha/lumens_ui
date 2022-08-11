@@ -3,8 +3,11 @@
 
 import os, logging, datetime
 from qgis.core import *
-from PyQt5 import QtCore, QtGui
-from processing.tools import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+
+from tools import general
 
 from dialog_lumens_base import DialogLumensBase
 from dialog_lumens_viewer import DialogLumensViewer
@@ -12,7 +15,7 @@ from dialog_lumens_adddata_properties import DialogLumensAddDataProperties
 
 from menu_factory import MenuFactory
 
-class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
+class DialogLumensAddData(QDialog): 
     """LUMENS "Add Data" dialog class.
     """
     
@@ -25,7 +28,7 @@ class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
         self.tableAddData = []
         
         if self.main.appSettings['debug']:
-            print 'DEBUG: DialogLumensAddData init'
+            print ('DEBUG: DialogLumensAddData init')
             self.logger = logging.getLogger(type(self).__name__)
             formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
             ch = logging.StreamHandler()
@@ -36,6 +39,8 @@ class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
             self.logger.addHandler(fh)
             self.logger.setLevel(logging.DEBUG)
         
+        self.base = DialogLumensBase(parent)
+
         self.setupUi(self)
         
         self.buttonAddDataRow.clicked.connect(self.handlerButtonAddDataRow)
@@ -49,48 +54,48 @@ class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
             parent: the dialog's parent instance.
         """
         #self.setStyleSheet('background-color: rgb(173, 185, 202);')
-        self.dialogLayout = QtGui.QVBoxLayout()
+        self.dialogLayout = QVBoxLayout()
         
-        self.groupBoxAddData = QtGui.QGroupBox(MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_DEFINE_PROPERTIES))
-        self.layoutGroupBoxAddData = QtGui.QVBoxLayout()
-        self.layoutGroupBoxAddData.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.groupBoxAddData = QGroupBox(MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_DEFINE_PROPERTIES))
+        self.layoutGroupBoxAddData = QVBoxLayout()
+        self.layoutGroupBoxAddData.setAlignment(Qt.AlignLeft|Qt.AlignTop)
         self.groupBoxAddData.setLayout(self.layoutGroupBoxAddData)
-        self.layoutAddDataInfo = QtGui.QVBoxLayout()
-        self.layoutAddData = QtGui.QVBoxLayout()
+        self.layoutAddDataInfo = QVBoxLayout()
+        self.layoutAddData = QVBoxLayout()
         self.layoutGroupBoxAddData.addLayout(self.layoutAddDataInfo)
         self.layoutGroupBoxAddData.addLayout(self.layoutAddData)
         
-        self.labelAddDataInfo = QtGui.QLabel()
+        self.labelAddDataInfo = QLabel()
         self.labelAddDataInfo.setText('\n')
         self.labelAddDataInfo.setWordWrap(True)
         self.layoutAddDataInfo.addWidget(self.labelAddDataInfo)
         
-        self.layoutButtonAddData = QtGui.QHBoxLayout()
+        self.layoutButtonAddData = QHBoxLayout()
         self.layoutButtonAddData.setContentsMargins(0, 0, 0, 0)
-        self.layoutButtonAddData.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
-        self.buttonAddDataRow = QtGui.QPushButton()
+        self.layoutButtonAddData.setAlignment(Qt.AlignLeft|Qt.AlignTop)
+        self.buttonAddDataRow = QPushButton()
         self.buttonAddDataRow.setText(MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_ADD_ITEM))
-        self.buttonAddDataRow.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        self.buttonAddDataRow.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         self.layoutButtonAddData.addWidget(self.buttonAddDataRow)
         
-        self.layoutContentAddData = QtGui.QVBoxLayout()
+        self.layoutContentAddData = QVBoxLayout()
         self.layoutContentAddData.setContentsMargins(5, 5, 5, 5)
-        self.contentAddData = QtGui.QWidget()
+        self.contentAddData = QWidget()
         self.contentAddData.setLayout(self.layoutContentAddData)
-        self.scrollAddData = QtGui.QScrollArea()
+        self.scrollAddData = QScrollArea()
         self.scrollAddData.setWidgetResizable(True);
         self.scrollAddData.setWidget(self.contentAddData)
-        self.layoutTableAddData = QtGui.QVBoxLayout()
-        self.layoutTableAddData.setAlignment(QtCore.Qt.AlignTop)
+        self.layoutTableAddData = QVBoxLayout()
+        self.layoutTableAddData.setAlignment(Qt.AlignTop)
         self.layoutContentAddData.addLayout(self.layoutTableAddData)
         
         self.layoutAddData.addLayout(self.layoutButtonAddData)
         self.layoutAddData.addWidget(self.scrollAddData)
         
-        self.layoutButtonProcessAddData = QtGui.QHBoxLayout()
-        self.buttonProcessAddData = QtGui.QPushButton()
+        self.layoutButtonProcessAddData = QHBoxLayout()
+        self.buttonProcessAddData = QPushButton()
         self.buttonProcessAddData.setText('&' + MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_PROSES))
-        self.layoutButtonProcessAddData.setAlignment(QtCore.Qt.AlignRight)
+        self.layoutButtonProcessAddData.setAlignment(Qt.AlignRight)
         self.layoutButtonProcessAddData.addWidget(self.buttonProcessAddData)
         
         self.dialogLayout.addWidget(self.groupBoxAddData)
@@ -129,9 +134,9 @@ class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
         for i in reversed(range(layout.count())):
             item = layout.itemAt(i)
 
-            if isinstance(item, QtGui.QWidgetItem):
+            if isinstance(item, QWidgetItem):
                 item.widget().deleteLater() # use this to properly delete the widget
-            elif isinstance(item, QtGui.QSpacerItem):
+            elif isinstance(item, QSpacerItem):
                 pass
             else:
                 self.clearLayout(item.layout())
@@ -149,9 +154,9 @@ class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
             for j in reversed(range(layout.count())):
                 item = layout.itemAt(j)
 
-                if isinstance(item, QtGui.QWidgetItem):
+                if isinstance(item, QWidgetItem):
                     item.widget().deleteLater()  # use this to properly delete the widget
-                elif isinstance(item, QtGui.QSpacerItem):
+                elif isinstance(item, QSpacerItem):
                     pass
                 else:
                     self.clearLayout(item.layout())
@@ -164,58 +169,58 @@ class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
         """
         self.tableAddDataRowCount = self.tableAddDataRowCount + 1
         
-        layoutDataRow = QtGui.QHBoxLayout()
+        layoutDataRow = QHBoxLayout()
         
-        buttonDeleteDataRow = QtGui.QPushButton()
-        icon = QtGui.QIcon(':/ui/icons/iconActionClear.png')
+        buttonDeleteDataRow = QPushButton()
+        icon = QIcon(':/ui/icons/iconActionClear.png')
         buttonDeleteDataRow.setIcon(icon)
         buttonDeleteDataRow.setObjectName('buttonDeleteDataRow_{0}'.format(str(self.tableAddDataRowCount)))
         layoutDataRow.addWidget(buttonDeleteDataRow)
         
-        comboBoxDataType = QtGui.QComboBox()
+        comboBoxDataType = QComboBox()
         comboBoxDataType.addItems([MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_LAND_USE_COVER), MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_PLANNING_UNIT), MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_FACTOR), MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_TABLE)])
         comboBoxDataType.setObjectName('comboBoxDataType_{0}'.format(str(self.tableAddDataRowCount)))
         layoutDataRow.addWidget(comboBoxDataType)
         
-        lineEditDataFile = QtGui.QLineEdit()
+        lineEditDataFile = QLineEdit()
         lineEditDataFile.setReadOnly(True)
         lineEditDataFile.setObjectName('lineEditDataFile_{0}'.format(str(self.tableAddDataRowCount)))
         layoutDataRow.addWidget(lineEditDataFile)
         
-        buttonSelectDataFile = QtGui.QPushButton()
+        buttonSelectDataFile = QPushButton()
         buttonSelectDataFile.setText(MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_SELECT_FILE))
         buttonSelectDataFile.setObjectName('buttonSelectDataFile_{0}'.format(str(self.tableAddDataRowCount)))
         layoutDataRow.addWidget(buttonSelectDataFile)
 
-        buttonDataProperties = QtGui.QPushButton()
+        buttonDataProperties = QPushButton()
         buttonDataProperties.setDisabled(True)
         buttonDataProperties.setText(MenuFactory.getLabel(MenuFactory.APP_PROPERTIES))
         buttonDataProperties.setObjectName('buttonDataProperties_{0}'.format(str(self.tableAddDataRowCount)))
         layoutDataRow.addWidget(buttonDataProperties)
         
         # Hidden fields set from the data properties dialog
-        lineEditDataDescription = QtGui.QLineEdit()
+        lineEditDataDescription = QLineEdit()
         lineEditDataDescription.setObjectName('lineEditDataDescription_{0}'.format(str(self.tableAddDataRowCount)))
         lineEditDataDescription.setVisible(False)
         layoutDataRow.addWidget(lineEditDataDescription)
         
-        spinBoxDataPeriod = QtGui.QSpinBox()
+        spinBoxDataPeriod = QSpinBox()
         spinBoxDataPeriod.setRange(1, 9999)
         spinBoxDataPeriod.setObjectName('spinBoxDataPeriod_{0}'.format(str(self.tableAddDataRowCount)))
         spinBoxDataPeriod.setVisible(False)
         layoutDataRow.addWidget(spinBoxDataPeriod)
         
-        lineEditDataFieldAttribute = QtGui.QLineEdit()
+        lineEditDataFieldAttribute = QLineEdit()
         lineEditDataFieldAttribute.setObjectName('lineEditDataFieldAttribute_{0}'.format(str(self.tableAddDataRowCount)))
         lineEditDataFieldAttribute.setVisible(False)
         layoutDataRow.addWidget(lineEditDataFieldAttribute)
         
-        lineEditDataDissolvedShapefile = QtGui.QLineEdit()
+        lineEditDataDissolvedShapefile = QLineEdit()
         lineEditDataDissolvedShapefile.setObjectName('lineEditDataDissolvedShapefile_{0}'.format(str(self.tableAddDataRowCount)))
         lineEditDataDissolvedShapefile.setVisible(False)
         layoutDataRow.addWidget(lineEditDataDissolvedShapefile)
         
-        lineEditDataTableCsv = QtGui.QLineEdit()
+        lineEditDataTableCsv = QLineEdit()
         lineEditDataTableCsv.setObjectName('lineEditDataTableCsv_{0}'.format(str(self.tableAddDataRowCount)))
         lineEditDataTableCsv.setVisible(False)
         layoutDataRow.addWidget(lineEditDataTableCsv)
@@ -243,7 +248,7 @@ class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
         objectName = buttonSender.objectName()
         tableRow = objectName.split('_')[1]
         
-        comboBoxDataType = self.contentAddData.findChild(QtGui.QComboBox, 'comboBoxDataType_' + tableRow)
+        comboBoxDataType = self.contentAddData.findChild(QComboBox, 'comboBoxDataType_' + tableRow)
         dataType = unicode(comboBoxDataType.currentText())
         
         # Land use/cover and planning unit data types can be raster or vector
@@ -256,16 +261,16 @@ class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
         elif dataType == MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_TABLE):
             fileFilter = '*{0}'.format(self.main.appSettings['selectCsvfileExt'])
         
-        file = unicode(QtGui.QFileDialog.getOpenFileName(
-            self, MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_SELECT_FILE), QtCore.QDir.homePath(), MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_SELECT_FILE) + ' ({0})'.format(fileFilter)))
+        file = unicode(QFileDialog.getOpenFileName(
+            self, MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_SELECT_FILE), QDir.homePath(), MenuFactory.getLabel(MenuFactory.APP_ADD_DATA_SELECT_FILE) + ' ({0})'.format(fileFilter)))
         
         if file:
             # comboBoxDataType.setDisabled(True)
-            lineEditDataFile = self.contentAddData.findChild(QtGui.QLineEdit, 'lineEditDataFile_' + tableRow)
+            lineEditDataFile = self.contentAddData.findChild(QLineEdit, 'lineEditDataFile_' + tableRow)
             lineEditDataFile.setText(file)
-            buttonSelectDataFile = self.contentAddData.findChild(QtGui.QPushButton, 'buttonSelectDataFile_' + tableRow)
+            buttonSelectDataFile = self.contentAddData.findChild(QPushButton, 'buttonSelectDataFile_' + tableRow)
             buttonSelectDataFile.setDisabled(True)
-            buttonDataProperties = self.contentAddData.findChild(QtGui.QPushButton, 'buttonDataProperties_' + tableRow)
+            buttonDataProperties = self.contentAddData.findChild(QPushButton, 'buttonDataProperties_' + tableRow)
             buttonDataProperties.setEnabled(True)
     
     
@@ -278,24 +283,24 @@ class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
         objectName = buttonSender.objectName()
         tableRow = objectName.split('_')[1]
         
-        comboBoxDataType = self.contentAddData.findChild(QtGui.QComboBox, 'comboBoxDataType_' + tableRow)
+        comboBoxDataType = self.contentAddData.findChild(QComboBox, 'comboBoxDataType_' + tableRow)
         dataType = unicode(comboBoxDataType.currentText())
-        lineEditDataFile = self.contentAddData.findChild(QtGui.QLineEdit, 'lineEditDataFile_' + tableRow)
+        lineEditDataFile = self.contentAddData.findChild(QLineEdit, 'lineEditDataFile_' + tableRow)
         dataFile = unicode(lineEditDataFile.text())
         
         dialog = DialogLumensAddDataProperties(self, dataType, dataFile)
         if dialog.exec_():
-            buttonDataProperties = self.contentAddData.findChild(QtGui.QPushButton, 'buttonDataProperties_' + tableRow)
+            buttonDataProperties = self.contentAddData.findChild(QPushButton, 'buttonDataProperties_' + tableRow)
             # Set the hidden fields
-            lineEditDataDescription = self.contentAddData.findChild(QtGui.QLineEdit, 'lineEditDataDescription_' + tableRow)
+            lineEditDataDescription = self.contentAddData.findChild(QLineEdit, 'lineEditDataDescription_' + tableRow)
             lineEditDataDescription.setText(dialog.getDataDescription())
-            spinBoxDataPeriod = self.contentAddData.findChild(QtGui.QSpinBox, 'spinBoxDataPeriod_' + tableRow)
+            spinBoxDataPeriod = self.contentAddData.findChild(QSpinBox, 'spinBoxDataPeriod_' + tableRow)
             spinBoxDataPeriod.setValue(dialog.getDataPeriod())
-            lineEditDataFieldAttribute = self.contentAddData.findChild(QtGui.QLineEdit, 'lineEditDataFieldAttribute_' + tableRow)
+            lineEditDataFieldAttribute = self.contentAddData.findChild(QLineEdit, 'lineEditDataFieldAttribute_' + tableRow)
             lineEditDataFieldAttribute.setText(dialog.getDataFieldAttribute())
-            lineEditDataDissolvedShapefile = self.contentAddData.findChild(QtGui.QLineEdit, 'lineEditDataDissolvedShapefile_' + tableRow)
+            lineEditDataDissolvedShapefile = self.contentAddData.findChild(QLineEdit, 'lineEditDataDissolvedShapefile_' + tableRow)
             lineEditDataDissolvedShapefile.setText(dialog.getDataDissolvedShapefile())
-            lineEditDataTableCsv = self.contentAddData.findChild(QtGui.QLineEdit, 'lineEditDataTableCsv_' + tableRow)
+            lineEditDataTableCsv = self.contentAddData.findChild(QLineEdit, 'lineEditDataTableCsv_' + tableRow)
             lineEditDataTableCsv.setText(dialog.getDataTableCsv())
     
     
@@ -318,18 +323,18 @@ class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
         self.tableAddData = []
         
         for tableRow in range(1, self.tableAddDataRowCount + 1):
-            lineEditDataFile = self.findChild(QtGui.QLineEdit, 'lineEditDataFile_' + str(tableRow))
+            lineEditDataFile = self.findChild(QLineEdit, 'lineEditDataFile_' + str(tableRow))
             
             if not lineEditDataFile: # Row has been deleted
-                print 'DEBUG: skipping a deleted row.'
+                print ('DEBUG: skipping a deleted row.')
                 continue
             
-            comboBoxDataType = self.findChild(QtGui.QComboBox, 'comboBoxDataType_' + str(tableRow))
-            lineEditDataDescription = self.findChild(QtGui.QLineEdit, 'lineEditDataDescription_' + str(tableRow))
-            spinBoxDataPeriod = self.findChild(QtGui.QSpinBox, 'spinBoxDataPeriod_' + str(tableRow))
-            lineEditDataFieldAttribute = self.findChild(QtGui.QLineEdit, 'lineEditDataFieldAttribute_' + str(tableRow))
-            lineEditDataDissolvedShapefile = self.findChild(QtGui.QLineEdit, 'lineEditDataDissolvedShapefile_' + str(tableRow))
-            lineEditDataTableCsv = self.findChild(QtGui.QLineEdit, 'lineEditDataTableCsv_' + str(tableRow))
+            comboBoxDataType = self.findChild(QComboBox, 'comboBoxDataType_' + str(tableRow))
+            lineEditDataDescription = self.findChild(QLineEdit, 'lineEditDataDescription_' + str(tableRow))
+            spinBoxDataPeriod = self.findChild(QSpinBox, 'spinBoxDataPeriod_' + str(tableRow))
+            lineEditDataFieldAttribute = self.findChild(QLineEdit, 'lineEditDataFieldAttribute_' + str(tableRow))
+            lineEditDataDissolvedShapefile = self.findChild(QLineEdit, 'lineEditDataDissolvedShapefile_' + str(tableRow))
+            lineEditDataTableCsv = self.findChild(QLineEdit, 'lineEditDataTableCsv_' + str(tableRow))
             
             dataFile = unicode(lineEditDataFile.text())
             dataType = unicode(comboBoxDataType.currentText())
@@ -405,7 +410,7 @@ class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
             elif dataType == table and isCsvFile and dataDescription:
                 valid = True
             else:
-                QtGui.QMessageBox.critical(self, MenuFactory.getLabel(MenuFactory.MSG_ERROR), MenuFactory.getDescription(MenuFactory.MSG_ERROR))
+                QMessageBox.critical(self.main, MenuFactory.getLabel(MenuFactory.MSG_ERROR), MenuFactory.getDescription(MenuFactory.MSG_ERROR))
         
         return valid
     
@@ -432,13 +437,13 @@ class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
             activeProject = self.main.appSettings['DialogLumensOpenDatabase']['projectFile'].replace(os.path.sep, '/')
             
             # WORKAROUND: minimize LUMENS so MessageBarProgress does not show under LUMENS
-            # self.main.setWindowState(QtCore.Qt.WindowMinimized)
+            # self.main.setWindowState(Qt.WindowMinimized)
             
             for tableRowData in self.tableAddData:
                 # The algName to be used depends on the type of the dataFile (vector or raster)
                 
-                print 'DEBUG'
-                print tableRowData
+                print ('DEBUG')
+                print (tableRowData)
                 
                 if tableRowData['dataFile'].lower().endswith(self.main.appSettings['selectRasterfileExt']):
                     algName = 'r:db_add_raster'
@@ -475,7 +480,7 @@ class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
                     tableRowDataFile = tableRowData['dataFile'].replace(os.path.sep, '/')
                     if 'habitat' in tableRowData['dataDescription']:
                         self.main.appSettings['defaultHabitatLookupTable'] = tableRowDataFile
-                        print self.main.appSettings['defaultHabitatLookupTable']
+                        print (self.main.appSettings['defaultHabitatLookupTable'])
                     
                     outputs = general.run(
                         algName, {
@@ -492,7 +497,7 @@ class DialogLumensAddData(QtGui.QDialog, DialogLumensBase):
                     dialog.exec_()
             
             # WORKAROUND: once MessageBarProgress is done, activate LUMENS window again
-            # self.main.setWindowState(QtCore.Qt.WindowActive)
+            # self.main.setWindowState(Qt.WindowActive)
             
             algSuccess = self.outputsMessageBox(algName, outputs, 'Data successfully added to LUMENS database!', 'Failed to add data to LUMENS database.')
             

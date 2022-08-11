@@ -26,7 +26,7 @@ class DialogLumensDeleteData(QDialog): # DialogLumensBase
         self.dialogTitle = MenuFactory.getLabel(MenuFactory.APP_PROJECT_DELETE_DATA)
 
         if self.main.appSettings['debug']:
-            print 'DEBUG: DialogLumensDeleteData init'
+            print ('DEBUG: DialogLumensDeleteData init')
             self.logger = logging.getLogger(type(self).__name__)
             formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
             ch = logging.StreamHandler()
@@ -36,6 +36,8 @@ class DialogLumensDeleteData(QDialog): # DialogLumensBase
             self.logger.addHandler(ch)
             self.logger.addHandler(fh)
             self.logger.setLevel(logging.DEBUG)
+
+        self.base = DialogLumensBase(parent)
 
         self.setupUi(self)
 
@@ -225,8 +227,8 @@ class DialogLumensDeleteData(QDialog): # DialogLumensBase
 
             self.main.setWindowState(Qt.WindowMinimized)
 
-            print 'DEBUG'
-            print checkedDeleteCsv
+            print ('DEBUG')
+            print (checkedDeleteCsv)
 
             outputs = general.run(
                 algName, {
@@ -243,7 +245,7 @@ class DialogLumensDeleteData(QDialog): # DialogLumensBase
                 
             self.main.setWindowState(Qt.WindowActive)
 
-            algSuccess = self.outputsMessageBox(algName, outputs, '', '')
+            algSuccess = self.base.outputsMessageBox(algName, outputs, '', '')
             
             if algSuccess:
                 self.main.loadAddedDataInfo()
@@ -252,5 +254,5 @@ class DialogLumensDeleteData(QDialog): # DialogLumensBase
 
             logging.getLogger(type(self).__name__).info('end: LUMENS Delete Data')
         else:
-            QMessageBox.information(self, self.dialogTitle, MenuFactory.getLabel(MenuFactory.MSG_DB_CHOOSE_DATA_TO_BE_DELETED))
+            QMessageBox.information(self.main, self.dialogTitle, MenuFactory.getLabel(MenuFactory.MSG_DB_CHOOSE_DATA_TO_BE_DELETED))
             return

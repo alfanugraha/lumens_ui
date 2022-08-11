@@ -71,7 +71,7 @@ class DialogLumensAddDataProperties(QDialog):
             self.isCsvFile = True
         
         if self.parent.main.appSettings['debug']:
-            print 'DEBUG: DialogLumensAddDataProperties init'
+            print ('DEBUG: DialogLumensAddDataProperties init')
             self.logger = logging.getLogger(type(self).__name__)
             formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
             ch = logging.StreamHandler()
