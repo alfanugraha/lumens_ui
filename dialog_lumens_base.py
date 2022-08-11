@@ -71,7 +71,7 @@ class DialogLumensBase:
             dialog = DialogLumensViewer(self, MenuFactory.getLabel(MenuFactory.APP_LUMENS_HELP) + ' - {0}'.format(dialogName), 'html', filePath)
             dialog.exec_()
         else:
-            QMessageBox.critical(self, MenuFactory.getLabel(MenuFactory.MSG_APP_HELP_NOT_FOUND), MenuFactory.getDescription(MenuFactory.MSG_APP_HELP_NOT_FOUND) + " '{0}'.".format(filePath))
+            QMessageBox.critical(self.main, MenuFactory.getLabel(MenuFactory.MSG_APP_HELP_NOT_FOUND), MenuFactory.getDescription(MenuFactory.MSG_APP_HELP_NOT_FOUND) + " '{0}'.".format(filePath))
     
     
     def validForm(self, formName=False):
@@ -99,7 +99,7 @@ class DialogLumensBase:
                 valid = False
         
         if not valid:
-            QMessageBox.critical(self, MenuFactory.getLabel(MenuFactory.MSG_ERROR),  MenuFactory.getDescription(MenuFactory.MSG_ERROR))
+            QMessageBox.critical(self.main, MenuFactory.getLabel(MenuFactory.MSG_ERROR),  MenuFactory.getDescription(MenuFactory.MSG_ERROR))
         
         return valid
     
@@ -115,19 +115,13 @@ class DialogLumensBase:
         """
         success = False
         outputMessage = 'Algorithm "{0}"'.format(algName)
-        
+
         # R script key
         statusOutputKey = 'statusoutput'
         
-        # Modeler script key
-        if algName.lower().startswith('modeler:'):
-            statusOutputKey = 'statusoutput_ALG1'
-            if statusOutputKey not in outputs:
-                statusOutputKey = 'statusoutput_ALG0'
-        
         if outputs and statusOutputKey in outputs:
             if os.path.exists(outputs[statusOutputKey]):
-                with open(outputs[statusOutputKey], 'rb') as f:
+                with open(outputs[statusOutputKey], 'r') as f:
                     hasHeader = csv.Sniffer().has_header(f.read(1024))
                     f.seek(0)
                     reader = csv.reader(f)
@@ -135,8 +129,8 @@ class DialogLumensBase:
                         next(reader)
                     for row in reader: # Just read the first row
                         verb = 'failed'
-                        statusCode = row[0]
-                        successMessage = errorMessage = statusMessage = row[1] # a bit weird, still need to be simplified
+                        statusCode = row[1]
+                        successMessage = errorMessage = statusMessage = row[2] # a bit weird, still need to be simplified
                         if int(statusCode) == 1:
                             success = True
                             verb = 'succeeded'
@@ -147,11 +141,11 @@ class DialogLumensBase:
         
         if success:
             logging.getLogger(type(self).__name__).info(outputMessage)
-            QMessageBox.information(self, MenuFactory.getLabel(MenuFactory.MSG_APP_RESULT_SUCCESS), successMessage)
+            QMessageBox.information(self.main, MenuFactory.getLabel(MenuFactory.MSG_APP_RESULT_SUCCESS), successMessage)
             return True
         
         logging.getLogger(type(self).__name__).error(outputMessage)
-        QMessageBox.critical(self, MenuFactory.getLabel(MenuFactory.MSG_APP_RESULT_ERROR), errorMessage)
+        QMessageBox.critical(self.main, MenuFactory.getLabel(MenuFactory.MSG_APP_RESULT_ERROR), errorMessage)
         return False
     
 
@@ -195,7 +189,7 @@ class DialogLumensBase:
                 widget = tableWidget.cellWidget(tableRow, tableColumn)
                 
                 # Check if cell is a combobox widget
-                if widget and isinstance(widget, QtGui.QComboBox):
+                if widget and isinstance(widget, QComboBox):
                     dataRow.append(widget.currentText())
                 else:
                     itemText = item.text()

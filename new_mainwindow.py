@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #-*- coding:utf-8 -*-
 
-import os, sys, logging, subprocess, tempfile
+import os, sys, logging, subprocess, csv, tempfile
 from qgis.core import *
 from qgis.gui import *
 
@@ -38,6 +38,7 @@ ProcessingConfig.setSettingValue('RSCRIPTS_FOLDER', os.environ['RSCRIPTS'])
 ProcessingConfig.setSettingValue('R_USE64', os.environ['R_USE64'])
 Processing.initialize()
 from tools.system import *
+from tools.general import *
 
 from utils import QPlainTextEditLogger
 
@@ -58,7 +59,7 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__(parent)
 
         self.appSettings = {
-            'debug': False,
+            'debug': True,
             'appDir': os.path.dirname(os.path.realpath(__file__)),
             'appSettingsFile': 'settings.ini',
             'ROutFile': os.path.join(userFolder(), 'processing_script.r.Rout'),
@@ -289,7 +290,11 @@ class MainWindow(QMainWindow):
             },
         }
 
+        # For keeping track of open dialogs
         self.openDialogs = []
+
+        # Recently opened LUMENS project databases
+        self.recentProjects = []
 
         # For keeping track of data added to the project
         self.dataLandUseCover = {}
@@ -821,6 +826,23 @@ class MainWindow(QMainWindow):
         ##self.resize(self.sizeHint())
 
 
+    def addRecentProject(self, projectFile):
+        """Add a project file to the "recentProjects" list.
+        
+        Method that is called when a LUMENS project file (*.lpj) is opened. Limited to 10
+        recently opened projects.
+        
+        Args:
+            projectFile (str): a file path to a LUMENS project file.
+        """
+        if projectFile is None:
+            return
+        if projectFile not in self.recentProjects:
+            self.recentProjects.insert(0, projectFile)
+            while len(self.recentProjects) > 10:
+                self.recentProjects.pop()
+
+
     def openDialog(self, DialogClass, tabName='', showDialog=True):
         """Method for opening and keeping track of opened module dialogs instances.
         
@@ -873,6 +895,241 @@ class MainWindow(QMainWindow):
             dialog.exec_()
         else:
             return dialog
+
+
+    def closeDialogs(self):
+        """Method for closing all opened dialogs and mark for deletion by Qt.
+        
+        All dialogs in "openDialogs" list are marked for deletion and cleared.
+        This is called when a LUMENS project is closed.
+        """
+        for dlg in self.openDialogs:
+            dlg.deleteLater()
+        
+        self.openDialogs = []
+
+
+    def lumensEnableMenus(self):
+        """Method for enabling menus that require an open LUMENS project.
+        """
+        # Database menu
+        self.actionLumensCloseDatabase.setEnabled(True)
+        self.actionLumensExportDatabase.setEnabled(True)
+        self.actionLumensDatabaseStatus.setEnabled(True)
+        self.actionLumensDeleteData.setEnabled(True)
+        self.actionDialogLumensAddData.setEnabled(True)
+        self.actionTableEditor.setEnabled(True)
+        
+        # PUR menu
+        self.actionDialogLumensPUR.setEnabled(True)
+        # self.buttonConfigurePUR.setEnabled(True)
+        
+        # QUES menu
+        self.actionDialogLumensQUES.setEnabled(True)
+        # self.buttonConfigurePreQUES.setEnabled(True)
+        # self.buttonConfigureQUESC.setEnabled(True)
+        # self.buttonConfigureQUESB.setEnabled(True)
+        # self.buttonConfigureQUESH.setEnabled(True)
+        
+        # TA menu
+        self.actionDialogLumensTA.setEnabled(True)
+        self.actionDialogLumensTAOpportunityCost.setEnabled(True)
+        self.actionDialogLumensTARegionalEconomy.setEnabled(True)
+        # self.buttonConfigureTAOpportunityCost.setEnabled(True)
+        # self.buttonConfigureTARegionalEconomy.setEnabled(True)
+        
+        # SCIENDO menu
+        self.actionDialogLumensSCIENDO.setEnabled(True)
+        # self.buttonConfigureSCIENDOLowEmissionDevelopmentAnalysis.setEnabled(True)
+        # self.buttonConfigureSCIENDOLandUseChangeModeling.setEnabled(True)
+
+
+    def lumensDisableMenus(self):
+        """Method for disabling menus that require an open LUMENS project.
+        """
+        # Database menu
+        self.actionLumensExportDatabase.setDisabled(True)
+        self.actionLumensDatabaseStatus.setDisabled(True)
+        self.actionDialogLumensAddData.setDisabled(True)
+        self.actionLumensDeleteData.setDisabled(True)
+        self.actionTableEditor.setDisabled(True)
+        
+        # PUR menu
+        self.actionDialogLumensPUR.setDisabled(True)
+        # self.buttonConfigurePUR.setDisabled(True)
+        
+        # QUES menu
+        self.actionDialogLumensQUES.setDisabled(True)
+        # self.buttonConfigureQUESC.setDisabled(True)
+        # self.buttonConfigureQUESB.setDisabled(True)
+        # self.buttonConfigureQUESH.setDisabled(True)
+        
+        # TA menu
+        self.actionDialogLumensTA.setDisabled(True)
+        self.actionDialogLumensTAOpportunityCost.setDisabled(True)
+        self.actionDialogLumensTARegionalEconomy.setDisabled(True)
+        # self.buttonConfigureTAOpportunityCost.setDisabled(True)
+        # self.buttonConfigureTARegionalEconomy.setDisabled(True)
+        
+        # SCIENDO menu
+        self.actionDialogLumensSCIENDO.setDisabled(True)
+        # self.buttonConfigureSCIENDOLowEmissionDevelopmentAnalysis.setDisabled(True)
+        # self.buttonConfigureSCIENDOLandUseChangeModeling.setDisabled(True)
+
+
+    def loadAddedDataInfo(self):
+        """Method for loading the list of added data.
+        
+        Looks in the DATA dir of the currently open project.
+        """
+        self.clearAddedDataInfo()
+        
+        csvDataLandUseCover = os.path.join(self.appSettings['folderTemp'], 'csv_land_use_cover.csv')
+        csvDataPlanningUnit = os.path.join(self.appSettings['folderTemp'], 'csv_planning_unit.csv')
+        csvDataFactor = os.path.join(self.appSettings['folderTemp'], 'csv_factor_data.csv')
+        csvDataTable = os.path.join(self.appSettings['folderTemp'], 'csv_lookup_table.csv')
+        
+        if os.path.exists(csvDataLandUseCover):
+            with open(csvDataLandUseCover, 'r') as f:
+              reader = csv.reader(f)
+              
+              # Skip header row
+              headerRow = next(reader)
+              headerColumns = [str(column) for column in headerRow]
+              
+              dataLandUseCover = {}
+              
+              for row in reader:
+                  dataLandUseCover[row[0]] = {
+                      'RST_DATA': row[0],
+                      'RST_NAME': row[1],
+                      'PERIOD': row[2],
+                      'LUT_NAME': row[3],
+                  }
+                  
+              self.dataLandUseCover = dataLandUseCover
+        
+        if os.path.exists(csvDataPlanningUnit):
+            with open(csvDataPlanningUnit, 'r') as f:
+              reader = csv.reader(f)
+              
+              # Skip header row
+              headerRow = next(reader)
+              headerColumns = [str(column) for column in headerRow]
+              
+              dataPlanningUnit = {}
+              
+              for row in reader:
+                  dataPlanningUnit[row[0]] = {
+                      'RST_DATA': row[0],
+                      'RST_NAME': row[1],
+                      'LUT_NAME': row[2],
+                  }
+              
+              self.dataPlanningUnit = dataPlanningUnit
+        
+        if os.path.exists(csvDataFactor):
+            with open(csvDataFactor, 'r') as f:
+              reader = csv.reader(f)
+              
+              # Skip header row
+              headerRow = next(reader)
+              headerColumns = [str(column) for column in headerRow]
+              
+              dataFactor = {}
+              
+              for row in reader:
+                  dataFactor[row[0]] = {
+                      'RST_DATA': row[0],
+                      'RST_NAME': row[1],
+                  }
+              
+              self.dataFactor = dataFactor
+      
+        if os.path.exists(csvDataTable):
+            with open(csvDataTable, 'r') as f:
+              reader = csv.reader(f)
+              
+              # Skip header row
+              headerRow = next(reader)
+              headerColumns = [str(column) for column in headerRow]
+              
+              dataTable = {}
+              
+              for row in reader:
+                  dataTable[row[0]] = {
+                      'TBL_DATA': row[0],
+                      'TBL_NAME': row[1],
+                  }
+              
+              self.dataTable = dataTable
+
+
+    def clearAddedDataInfo(self):
+        """Method for clearing the list of added data info.
+        
+        This is called when a LUMENS project is closed.
+        """
+        self.dataLandUseCover = {}
+        self.dataPlanningUnit = {}
+        self.dataFactor = {}
+        self.dataTable = {}
+
+
+    def lumensOpenDatabase(self, lumensDatabase=False):
+            """Method for opening a LUMENS project database.
+            
+            Opens a LUMENS project database file (*.lpj) using "r:dbopen" R algorithm.
+            This is called when opening a recent project from the file menu or the "Open LUMENS database" menu.
+            When a LUMENS project is opened, menus that depend on an open project will be enabled and all
+            of the project's module templates will be listed on the main window's dashboard tab.
+            
+            Args:
+                lumensDatabase (bool): if False then open the LUMENS project from the "recentProjects" list.
+            """
+            if lumensDatabase is False: # Recent projects
+                action = self.sender()
+                if isinstance(action, QAction):
+                    lumensDatabase = str(action.data())
+                else:
+                    return
+            
+            # Close the currently opened database first
+            if self.appSettings['DialogLumensOpenDatabase']['projectFile']:
+                self.lumensCloseDatabase()
+            
+            logging.getLogger(type(self).__name__).info('start: LUMENS Open Database')
+            self.actionLumensOpenDatabase.setDisabled(True)
+            
+            outputs = run(
+                'r:db_open', {
+                    'project_file': lumensDatabase.replace(os.path.sep, '/'),
+                    'overview': 'TEMPORARY_OUTPUT'
+                }
+            )
+            
+            if outputs:
+                ##print outputs
+                self.addLayer(outputs['overview'])
+                
+                self.appSettings['DialogLumensOpenDatabase']['projectFile'] = lumensDatabase
+                self.appSettings['DialogLumensOpenDatabase']['projectFolder'] = projectFolder = os.path.dirname(lumensDatabase)
+                
+                self.lineEditActiveProject.setText(os.path.normpath(lumensDatabase))
+                self.projectTreeView.setRootIndex(self.projectModel.index(self.appSettings['DialogLumensOpenDatabase']['projectFolder']))
+                self.addRecentProject(lumensDatabase)
+                
+                # Keep track of added data stored in the open project's DATA dir
+                self.loadAddedDataInfo()
+                
+                # Load all module templates in the open project
+                # self.loadModuleTemplates()
+                
+                # Enable the menus
+                self.lumensEnableMenus()
+            
+            self.actionLumensOpenDatabase.setEnabled(True)
+            logging.getLogger(type(self).__name__).info('end: LUMENS Open Database')    
 
 
     def handlerDialogLumensCreateDatabase(self):
